@@ -43,7 +43,6 @@
     "react/sort-comp": 1,
     "react/sort-prop-types": 1,
     "react/wrap-multilines": 1,
-
     "react/jsx-boolean-value": 1,
     "react/jsx-closing-bracket-location": 1,
     "react/jsx-curly-spacing": 1,
