@@ -43,7 +43,7 @@
     "postbuild": "npm run copy",
     "clean": "rimraf build",
     "copy": "cp -r public/* build",
-    "test": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js \"src/**/*.test.js\"",
-    "test:watch": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js --watch \"src/**/*.test.js\""
+    "test": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js \"src/**/*test.js\"",
+    "test:watch": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js --watch \"src/**/*test.js\""
   }
 }
