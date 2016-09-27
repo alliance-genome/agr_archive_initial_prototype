@@ -37,12 +37,10 @@
     "webpack-node-externals": "^1.4.3"
   },
   "scripts": {
-    "start": "webpack-dev-server --history-api-fallback --host 0.0.0.0 --hot --inline --progress",
+    "start": "webpack-dev-server --history-api-fallback --port 2992 --hot --inline",
     "prebuild": "npm run clean",
     "build": "cross-env NODE_ENV=production webpack -p",
-    "postbuild": "npm run copy",
-    "clean": "rimraf build",
-    "copy": "cp -r public/* build",
+    "clean": "rimraf build && mkdir build",
     "test": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js \"src/**/*test.js\"",
     "test:watch": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js --watch \"src/**/*test.js\""
   }

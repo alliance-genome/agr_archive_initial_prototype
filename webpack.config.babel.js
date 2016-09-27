@@ -4,7 +4,12 @@ import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import ManifestRevisionPlugin from 'manifest-revision-webpack-plugin';
 
-const ROOT_ASSET_PATH = './script';
+let isProduction = process.env.NODE_ENV === 'production';
+
+// Development asset host, asset location and build output path.
+const publicHost = isProduction ? '': 'http://localhost:2992';
+const rootAssetPath = './assets';
+const buildOutputPath = './build';
 
 let config = {
   context: path.join(__dirname, 'src'),
@@ -13,9 +18,10 @@ let config = {
     './index.js'
   ],
   output: {
-    path: path.join(__dirname, 'build/scripts'),
-    publicPath: 'scripts/',
-    filename: 'app.js'
+    path: buildOutputPath,
+    publicPath: publicHost + '/assets/',
+    filename: isProduction ? '[name].js' : '[name].[hash].js',
+    chunkFilename: isProduction ? '[id].js' : '[id].[hash].js'
   },
   devtool: 'eval-source-map',
   devServer: {
@@ -56,13 +62,13 @@ let config = {
   plugins: [
     new ExtractTextPlugin('[name].[chunkhash].css'),
     new ManifestRevisionPlugin(path.join('build', 'manifest.json'), {
-        rootAssetPath: ROOT_ASSET_PATH,
+        rootAssetPath: rootAssetPath,
         ignorePaths: ['/styles', '/scripts']
     })
   ]
 };
 
-if (process.env.NODE_ENV === 'production') {
+if (isProduction) {
   config.devtool = 'source-map';
   config.devServer = {};
   config.plugins = [
