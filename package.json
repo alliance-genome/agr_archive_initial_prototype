@@ -12,6 +12,8 @@
     "url": "http://rblab.com"
   },
   "dependencies": {
+    "extract-text-webpack-plugin": "^1.0.1",
+    "manifest-revision-webpack-plugin": "^0.3.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-router": "^2.8.1"

@@ -1,6 +1,11 @@
 import path from 'path';
 import webpack from 'webpack';
 
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import ManifestRevisionPlugin from 'manifest-revision-webpack-plugin';
+
+const ROOT_ASSET_PATH = './script';
+
 let config = {
   context: path.join(__dirname, 'src'),
   debug: true,
@@ -48,7 +53,13 @@ let config = {
       }
     ]
   },
-  plugins: []
+  plugins: [
+    new ExtractTextPlugin('[name].[chunkhash].css'),
+    new ManifestRevisionPlugin(path.join('build', 'manifest.json'), {
+        rootAssetPath: ROOT_ASSET_PATH,
+        ignorePaths: ['/styles', '/scripts']
+    })
+  ]
 };
 
 if (process.env.NODE_ENV === 'production') {
