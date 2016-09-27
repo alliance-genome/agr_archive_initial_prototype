@@ -1,15 +1,10 @@
 {
-  "name": "react-boilerplate",
-  "version": "0.5.0",
+  "name": "agr",
+  "version": "0.0.1",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rbartoli/react-boilerplate"
-  },
   "author": {
-    "name": "Riccardo Bartoli",
-    "email": "info@rblab.com",
-    "url": "http://rblab.com"
+    "name": "Travis Sheppard",
+    "email": "travisksheppard@gmail.com",
   },
   "dependencies": {
     "extract-text-webpack-plugin": "^1.0.1",

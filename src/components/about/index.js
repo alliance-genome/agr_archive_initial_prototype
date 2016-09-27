@@ -6,7 +6,7 @@ class About extends Component {
   render() {
     return (
         <div className={style.root}>
-            <h1>{'About'}</h1>
+        <h1>{'About'}</h1>
         </div>
     );
   }

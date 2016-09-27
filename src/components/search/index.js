@@ -6,7 +6,7 @@ class Search extends Component {
   render() {
     return (
         <div className={style.root}>
-            <h1>{'Search'}</h1>
+          <h1>{'Search'}</h1>
         </div>
     );
   }

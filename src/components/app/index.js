@@ -1,31 +1,36 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import style from './style.css';
+import logo from './agr_logo.png';
 
 class App extends Component {
   render() {
     return (
-        <div className={style.root}>
-            <nav className='navbar navbar-static-top navbar-light bg-faded'>
-                <Link className='navbar-brand' to='/'>{'AGR'}</Link>
-                <ul className='nav navbar-nav'>
-                    <li className='nav-item active'>
-                        <Link className='nav-link' to='/'>{'Home'}</Link>
-                    </li>
-                    <li className='nav-item active'>
-                        <Link className='nav-link' to='/about'>{'About'}</Link>
-                    </li>
-                    <li className='nav-item active'>
-                        <Link className='nav-link' to='/search'>{'Search'}</Link>
-                    </li>
-                </ul>
-            </nav>
-            <div className='container'>
-                {this.props.children}
-            </div>
-            <footer>
-              <p>&copy; 2016 Company, Inc.</p>
-            </footer>
+        <div className={style.appContainer}>
+          <div className={style.topHeader}>
+            <Link to='/'>
+              <img src={logo} />
+            </Link>
+          </div>
+          <nav className={`navbar navbar-light bg-faded ${style.midHeader}`}>
+            <ul className='nav navbar-nav'>
+              <li className='nav-item active'>
+                <Link className={`nav-link ${style.navLink}`} to='/'>{'Home'}</Link>
+              </li>
+              <li className='nav-item active'>
+                <Link className={`nav-link ${style.navLink}`} to='/about'>{'About'}</Link>
+              </li>
+              <li className='nav-item active'>
+                <Link className={`nav-link ${style.navLink}`} to='/search'>{'Search'}</Link>
+              </li>
+            </ul>
+          </nav>
+          <div className={style.contentContainer}>
+            {this.props.children}
+          </div>
+          <footer className={style.footer}>
+            <p>&copy; 2016 Alliance of Genome Resources</p>
+          </footer>
         </div>
     );
   }
