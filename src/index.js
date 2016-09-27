@@ -1,16 +1,22 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, browserHistory } from 'react-router';
+import { BrowserRouter, Match } from 'react-router';
 
 import About from './components/about';
-import App from './components/app';
+import Home from './components/home';
+import Layout from './components/layout';
 import Search from './components/search';
 
-render((
-    <Router history={browserHistory}>
-        <Route component={App} path='/'>
-            <Route component={About} path='/about' />
-            <Route component={Search} path='/search' />
-        </Route>       
-    </Router>
-), document.getElementById('app'));
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Layout>
+        <Match component={Home} exactly pattern='/' />
+        <Match component={About} pattern='/about' />
+        <Match component={Search} pattern='/search' />
+      </Layout>
+    </BrowserRouter>
+  );
+};
+
+render(<App />, document.getElementById('app'));

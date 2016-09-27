@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import style from './style.css';
 import logo from './agr_logo.png';
 
-class App extends Component {
+class Layout extends Component {
   render() {
     return (
         <div className={style.appContainer}>
@@ -36,8 +36,8 @@ class App extends Component {
   }
 }
 
-App.propTypes = {
+Layout.propTypes = {
   children: PropTypes.node
 };
 
-export default App;
+export default Layout;

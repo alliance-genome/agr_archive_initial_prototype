@@ -4,14 +4,14 @@
   "license": "MIT",
   "author": {
     "name": "Travis Sheppard",
-    "email": "travisksheppard@gmail.com",
+    "email": "travisksheppard@gmail.com"
   },
   "dependencies": {
     "extract-text-webpack-plugin": "^1.0.1",
     "manifest-revision-webpack-plugin": "^0.3.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
-    "react-router": "^2.8.1"
+    "react-router": "^4.0.0-alpha.3"
   },
   "devDependencies": {
     "babel-core": "^6.14.0",
