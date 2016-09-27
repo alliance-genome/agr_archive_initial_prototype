@@ -1,9 +1,12 @@
 import assert from 'assert';
+import React from 'react';
+import { renderToString } from 'react-dom/server';
 
-describe('Array', function() {
-  describe('#indexOf()', function() {
-    it('should return -1 when the value is not present', function() {
-      assert.equal(-1, [1,2,3].indexOf(4));
-    });
+import ReactApp from '../react_application';
+
+describe('ReactApp', () => {
+  it('should be able to render to an HTML string', () => {
+    let htmlString = renderToString(<ReactApp />);
+    assert.equal(typeof htmlString, 'string');
   });
 });
