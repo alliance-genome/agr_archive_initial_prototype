@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
+
+import SearchBar from './search_bar';
 import style from './style.css';
 import logo from './agr_logo.png';
 
@@ -7,23 +9,21 @@ class Layout extends Component {
   render() {
     return (
       <div className={style.appContainer}>
+        <div className={`alert alert-info ${style.appAlert}`} role='alert'>
+          This website is a prototype and information may not be verified.
+        </div>
         <div className={style.topHeader}>
           <Link to='/'>
             <img src={logo} />
           </Link>
         </div>
         <nav className={`navbar navbar-light bg-faded ${style.midHeader}`}>
-          <ul className='nav navbar-nav'>
-            <li className='nav-item active'>
-              <Link className={`nav-link ${style.navLink}`} to='/'>{'Home'}</Link>
-            </li>
-            <li className='nav-item active'>
-              <Link className={`nav-link ${style.navLink}`} to='/about'>{'About'}</Link>
-            </li>
-            <li className='nav-item active'>
-              <Link className={`nav-link ${style.navLink}`} to='/search'>{'Search'}</Link>
-            </li>
-          </ul>
+          <div className={style.nav}>
+            <Link className={`nav-link ${style.navLink}`} to='/'><i className='fa fa-home' /> Home</Link>
+            <Link className={`nav-link ${style.navLink}`} to='/about'><i className='fa fa-info-circle' /> About</Link>
+            <Link className={`nav-link ${style.navLink}`} to='/help'><i className='fa fa-question-circle' /> Help</Link>
+          </div>
+          <SearchBar />
         </nav>
         <div className={style.contentContainer}>
           {this.props.children}

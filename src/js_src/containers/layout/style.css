@@ -1,3 +1,10 @@
+.appAlert {
+	margin-bottom: 0;
+	border-radius: 0;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+}
+
 .appContainer {
 	font-family: Lato, Helvetica, sans-serif;
 }
@@ -9,10 +16,19 @@
 .midHeader {
 	border-radius: 0;
 	background: black;
+	display: flex;
+	justify-content: space-between;
+}
+
+.nav {
+	width: 250px;
+	display: flex;
+	justify-content: space-between;
+	padding: 0.5rem 0;
 }
 
 .navLink {
-	color: white !important;
+	color: #e2e2e2 !important;
 }
 
 .contentContainer {

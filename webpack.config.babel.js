@@ -32,7 +32,8 @@ let config = {
     preLoaders: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        // need to exclude a directory that is copied from a forked github repo (NPM version doesn't work)
+        exclude: [/node_modules/, /src\/js_src\/containers\/layout\/search_bar\/react-typeahead-component/],
         loader: 'eslint'
       }
     ],
@@ -79,8 +80,8 @@ if (isProduction) {
     }),
     new ExtractTextPlugin('[name].[chunkhash].css'),
     new ManifestRevisionPlugin(path.join('src/build', 'manifest.json'), {
-        rootAssetPath: rootAssetPath,
-        ignorePaths: ['/styles', '/scripts']
+      rootAssetPath: rootAssetPath,
+      ignorePaths: ['/styles', '/scripts']
     })
   ]
 }
