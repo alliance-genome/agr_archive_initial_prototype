@@ -9,10 +9,10 @@ let isProduction = process.env.NODE_ENV === 'production';
 // Development asset host, asset location and build output path.
 const publicHost = isProduction ? '': 'http://localhost:2992';
 const rootAssetPath = './assets';
-const buildOutputPath = './build';
+const buildOutputPath = './src/build';
 
 let config = {
-  context: path.join(__dirname, 'src'),
+  context: path.join(__dirname, 'src/js_src'),
   debug: true,
   entry: [
     './index.js'
@@ -61,7 +61,7 @@ let config = {
   },
   plugins: [
     new ExtractTextPlugin('[name].[chunkhash].css'),
-    new ManifestRevisionPlugin(path.join('build', 'manifest.json'), {
+    new ManifestRevisionPlugin(path.join('src/build', 'manifest.json'), {
         rootAssetPath: rootAssetPath,
         ignorePaths: ['/styles', '/scripts']
     })

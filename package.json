@@ -40,8 +40,8 @@
     "start": "webpack-dev-server --history-api-fallback --port 2992 --hot --inline",
     "prebuild": "npm run clean",
     "build": "cross-env NODE_ENV=production webpack -p",
-    "clean": "rimraf build && mkdir build",
-    "test": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js \"src/**/*test.js\"",
-    "test:watch": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js --watch \"src/**/*test.js\""
+    "clean": "rimraf src/build && mkdir src/build",
+    "test": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js \"src/js_src/**/*test.js\"",
+    "test:watch": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js --watch \"src/js_src/**/*test.js\""
   }
 }

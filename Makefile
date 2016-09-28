@@ -7,7 +7,7 @@ build:
 	pip install -r requirements.txt
 
 run:
-	FLASK_APP=server.py flask run
+	FLASK_APP=src/server.py flask run
 
 tests:
 	npm test

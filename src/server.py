@@ -1,7 +1,7 @@
 from flask import Flask, render_template, send_from_directory
 from flask_webpack import Webpack
 
-use_webpack = False
+use_webpack = True
 
 app = Flask(__name__)
 

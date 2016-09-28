@@ -1,5 +1,6 @@
+*.DS_Store
 node_modules
 .tmp
-*.DS_Store
 build
 npm-debug.log
+src/server.pyc
