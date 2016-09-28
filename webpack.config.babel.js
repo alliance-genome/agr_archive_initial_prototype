@@ -20,8 +20,8 @@ let config = {
   output: {
     path: buildOutputPath,
     publicPath: publicHost + '/assets/',
-    filename: isProduction ? '[name].js' : '[name].[hash].js',
-    chunkFilename: isProduction ? '[id].js' : '[id].[hash].js'
+    filename: '[name].[hash].js',
+    chunkFilename: '[id].[hash].js'
   },
   devtool: 'eval-source-map',
   devServer: {
@@ -76,8 +76,13 @@ if (isProduction) {
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
+    }),
+    new ExtractTextPlugin('[name].[chunkhash].css'),
+    new ManifestRevisionPlugin(path.join('src/build', 'manifest.json'), {
+        rootAssetPath: rootAssetPath,
+        ignorePaths: ['/styles', '/scripts']
     })
-  ];
+  ]
 }
 
 export default config;
