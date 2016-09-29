@@ -32,8 +32,7 @@ let config = {
     preLoaders: [
       {
         test: /\.js$/,
-        // need to exclude a directory that is copied from a forked github repo (NPM version doesn't work)
-        exclude: [/node_modules/, /src\/js_src\/containers\/layout\/search_bar\/react-typeahead-component/],
+        exclude: /node_modules/,
         loader: 'eslint'
       }
     ],

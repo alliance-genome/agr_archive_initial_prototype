@@ -13,7 +13,7 @@ To run tests
 $ make tests
 ```
 
-## Development Environment Pro
+## Development Environment Pro Tips
 Assets are compiles using [webpack](https://webpack.github.io/).  To enable [hot module replacement](https://webpack.github.io/docs/hot-module-replacement.html) in your development environment, run `npm start` while the dev server is running and refresh the page.  Subsequent JavaScript changes will go to your browser as a "hot update" without refreshing.
 
 You can run JavaScript unit tests automatically on each file change by running `npm run test:watch`.

@@ -18,12 +18,18 @@ class Layout extends Component {
           </Link>
         </div>
         <nav className={`navbar navbar-light bg-faded ${style.midHeader}`}>
-          <div className={style.nav}>
-            <Link className={`nav-link ${style.navLink}`} to='/'><i className='fa fa-home' /> Home</Link>
-            <Link className={`nav-link ${style.navLink}`} to='/about'><i className='fa fa-info-circle' /> About</Link>
-            <Link className={`nav-link ${style.navLink}`} to='/help'><i className='fa fa-question-circle' /> Help</Link>
+          <div className='row'>
+            <div className='col-sm-6'>
+              <div className={style.nav}>
+                <Link className={`nav-link ${style.navLink}`} to='/'><i className='fa fa-home' /> Home</Link>
+                <Link className={`nav-link ${style.navLink}`} to='/about'><i className='fa fa-info-circle' /> About</Link>
+                <Link className={`nav-link ${style.navLink}`} to='/help'><i className='fa fa-question-circle' /> Help</Link>
+              </div>
+            </div>
+            <div className='col-sm-6'>
+              <SearchBar />
+            </div>
           </div>
-          <SearchBar />
         </nav>
         <div className={style.contentContainer}>
           {this.props.children}
