@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Typeahead } from 'react-typeahead';
-// import { push } from 'react-router-redux';
+import { push } from 'react-router-redux';
 
 import style from './style.css';
 
 class SearchBarComponent extends Component {
   handleSubmit(e) {
     e.preventDefault();
+    this.props.dispatch(push('/search'));
   }
 
   render() {
@@ -26,6 +27,7 @@ class SearchBarComponent extends Component {
 }
 
 SearchBarComponent.propTypes = {
+  dispatch: React.PropTypes.func,
   query: React.PropTypes.string
 };
 

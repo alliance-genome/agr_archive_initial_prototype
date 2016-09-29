@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import SearchBar from './search_bar';
+import SearchBar from './searchBar';
 import style from './style.css';
-import logo from './agr_logo.png';
+import logo from './agrLogo.png';
 
 class Layout extends Component {
   render() {
