@@ -12,8 +12,8 @@
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.5",
-    "react-router": "^4.0.0-alpha.3",
-    "react-router-redux": "https://github.com/timdorr/react-router-redux/tarball/5.0.x",
+    "react-router": "^2.8.1",
+    "react-router-redux": "^4.0.6",
     "react-typeahead": "^2.0.0-alpha.5",
     "redux": "^3.6.0"
   },
@@ -41,7 +41,6 @@
     "webpack-node-externals": "^1.4.3"
   },
   "scripts": {
-    "postinstall": "cd node_modules/react-router-redux && npm install && npm run build-lib",
     "start": "webpack-dev-server --history-api-fallback --port 2992 --hot --inline",
     "prebuild": "npm run clean",
     "build": "cross-env NODE_ENV=production webpack -p --optimize-minimize",

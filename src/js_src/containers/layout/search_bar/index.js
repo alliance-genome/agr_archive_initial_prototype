@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Typeahead } from 'react-typeahead';
+// import { push } from 'react-router-redux';
 
 import style from './style.css';
 
-class SearchBar extends Component {
+class SearchBarComponent extends Component {
   handleSubmit(e) {
     e.preventDefault();
   }
@@ -11,7 +13,7 @@ class SearchBar extends Component {
   render() {
     return (
       <div className={style.container}>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit.bind(this)}>
           <Typeahead
             className={style.typeahead}
             options={[]}
@@ -23,4 +25,14 @@ class SearchBar extends Component {
   }
 }
 
-export default SearchBar;
+SearchBarComponent.propTypes = {
+  query: React.PropTypes.string
+};
+
+function mapStateToProps() {
+  return {
+  };
+}
+
+export { SearchBarComponent as SearchBarComponent };
+export default connect(mapStateToProps)(SearchBarComponent);
