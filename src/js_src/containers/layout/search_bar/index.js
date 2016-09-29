@@ -14,7 +14,7 @@ class SearchBar extends Component {
         <form onSubmit={this.handleSubmit}>
           <Typeahead
             className={style.typeahead}
-            options={['John', 'Paul', 'George', 'Ringo']}
+            options={[]}
           />
         </form>
         <span className={style.searchIcon}><i className='fa fa-search' /></span>

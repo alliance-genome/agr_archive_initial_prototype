@@ -17,6 +17,10 @@ webpack.init_app(app)
 def send_static(path):
 	return send_from_directory('build', path)
 
+# render user interfaces in client JS
 @app.route('/')
+@app.route('/about')
+@app.route('/help')
+@app.route('/search')
 def react_render():
      return render_template('index.jinja2')

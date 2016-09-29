@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
-
-import { BrowserRouter, Match, MemoryRouter } from 'react-router';
+import { createStore, combineReducers } from 'redux';
+import { Match, MemoryRouter } from 'react-router';
+import { ConnectedRouter, routerReducer } from 'react-router-redux';
+import { Provider } from 'react-redux';
 
 import About from './containers/about';
 import Home from './containers/home';
 import Layout from './containers/layout';
 import Search from './containers/search';
+
+// init redux store a la https://github.com/reactjs/react-router-redux
+let store = createStore(
+  combineReducers({
+    router: routerReducer
+  })
+);
 
 class ReactApp extends Component {
   render() {
@@ -16,11 +25,13 @@ class ReactApp extends Component {
         <Match component={Search} pattern='/search' />
       </Layout>
     );
-    // use browser history if in the browser, otherwise use memory for history (like node or testing env)
-    if (typeof window === 'object') {
-      return <BrowserRouter>{layoutNode}</BrowserRouter>;
-    }
-    return <MemoryRouter>{layoutNode}</MemoryRouter>;
+    let isBrowser = typeof window === 'object';
+    let routerNode = isBrowser ? <ConnectedRouter>{layoutNode}</ConnectedRouter> :  <MemoryRouter>{layoutNode}</MemoryRouter>;
+    return (
+      <Provider store={store}>
+        {routerNode}
+      </Provider>
+    );
   }
 }
 
