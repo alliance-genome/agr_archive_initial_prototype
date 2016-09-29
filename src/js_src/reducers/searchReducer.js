@@ -1,8 +1,9 @@
 const DEFAULT_STATE = {
-  results: []
+  results: [],
+  query: ''
 };
 
-const searchReducer = function (_state, action) {
+const searchReducer = function () {
   return DEFAULT_STATE;
 };
 
