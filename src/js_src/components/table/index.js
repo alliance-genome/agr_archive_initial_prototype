@@ -39,7 +39,10 @@ class Table extends Component {
       </div>
     );
   }
-
 }
+
+Table.propTypes = {
+  entries: React.PropTypes.array
+};
 
 export default Table;

@@ -6,7 +6,7 @@ class ResultsList extends Component {
   renderRows() {
     return this.props.entries.map( (d, i) => {
       return (
-        <div key={`sr${i}`} className={style.resultContainer}>
+        <div className={style.resultContainer} key={`sr${i}`} >
           <h3>
             <a href='#'>{d.symbol}</a>
           </h3>
@@ -30,7 +30,10 @@ class ResultsList extends Component {
       </div>
     );
   }
-
 }
+
+ResultsList.propTypes = {
+  entries: React.PropTypes.array
+};
 
 export default ResultsList;

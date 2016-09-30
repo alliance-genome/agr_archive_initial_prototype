@@ -52,6 +52,11 @@ class SearchComponent extends Component {
   }
 }
 
+SearchComponent.propTypes = {
+  isTable: React.PropTypes.bool,
+  results: React.PropTypes.array
+};
+
 function mapStateToProps(state) {
   let _isList = (state.routing.locationBeforeTransitions.query.mode === 'list');
   return {
