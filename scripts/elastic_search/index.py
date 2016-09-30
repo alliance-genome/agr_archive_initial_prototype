@@ -1,16 +1,16 @@
-from elasticsearch import Elasticsearch
-from intermine.webservice import Service
-
-from mapping import mapping
 import os
 import requests
 import pickle
 import time
 
+from elasticsearch import Elasticsearch
+from intermine.webservice import Service
+
+from mapping import mapping
+
 INDEX_NAME = 'searchable_items_prototype'
 DOC_TYPE = 'searchable_item'
-ES_ADDRESS = os.environ['ES_URI']
-es = Elasticsearch(ES_ADDRESS, retry_on_timeout=True)
+es = Elasticsearch(os.environ['ES_URI'], retry_on_timeout=True)
 
 def delete_mapping():
     print "Deleting mapping..."
@@ -28,68 +28,85 @@ def put_mapping():
     else:
         print "SUCCESS"
 
-def index_yeast_genes():
-    backup_filename = "yeastmine_genes_" + time.strftime("%m_%d_%Y") + ".bkp"
+def index_genes(organism, mod):
+    backup_filename = organism + "mine_genes_" + time.strftime("%m_%d_%Y") + ".bkp"
     if os.path.isfile(backup_filename):
-        print "Restoring fetched data from today from Yeastmine"
+        print "Restoring fetched data from today from " + organism + "mine"
 
         backup = open(backup_filename, 'rb')
-        yeast_genes = pickle.load(backup)
+        genes = pickle.load(backup)
     else:
-        print "Fetching data from YeastMine"
-        service = Service("http://yeastmine.yeastgenome.org/yeastmine/service")
+        print "Fetching data from " + organism + "mine"
+        service = Service(mod["mine_service_url"])
 
         query = service.new_query("Gene")
-        query.add_view(
-            "primaryIdentifier", "secondaryIdentifier", "symbol", "name",
-            "goAnnotation.ontologyTerm.identifier", "goAnnotation.ontologyTerm.name"
-        )
-        query.add_constraint("organism.name", "=", "Saccharomyces cerevisiae", code = "B")
+        query.add_view(mod["gene_fields"].values())
+        
+        query.add_constraint("organism.name", "=", mod["mine_organism_name"], code = "B")
 
         rows = query.rows()
 
-        yeast_genes = {}
+        genes = {}
 
         for row in rows:
-            id = row["primaryIdentifier"]
+            id = row[mod["gene_fields"]["id"]]
     
-            if id in yeast_genes:
-                yeast_genes[id]["go_ids"].append(row["goAnnotation.ontologyTerm.identifier"])
-                yeast_genes[id]["go_names"].append(row["goAnnotation.ontologyTerm.name"])
+            if id in genes:
+                genes[id]["go_ids"].append(row[mod["gene_fields"]["go_id"]])
+                genes[id]["go_names"].append(row[mod["gene_fields"]["go_name"]])
             else:
-                yeast_genes[id] = {
-                    "name": row["name"],
-                    "symbol": row["symbol"],
-                    "synonym": row["secondaryIdentifier"],
-                    "go_ids": [row["goAnnotation.ontologyTerm.identifier"]],
-                    "go_names": [row["goAnnotation.ontologyTerm.name"]],
-                    "href": "http://www.yeastgenome.org/" + row["primaryIdentifier"] + "/overview",
+                genes[id] = {
+                    "name": row[mod["gene_fields"]["gene_name"]],
+                    "symbol": row[mod["gene_fields"]["gene_symbol"]],
+                    "synonym": row[mod["gene_fields"]["gene_synonym"]],
+                    "go_ids": [row[mod["gene_fields"]["go_id"]]],
+                    "go_names": [row[mod["gene_fields"]["go_name"]]],
+                    "href": mod["url_prefix"] + row["primaryIdentifier"] + mod["url_sufix"],
                     "type": "gene"
                 }
 
         with open(backup_filename, 'wb') as backup:
-            pickle.dump(yeast_genes, backup)
+            pickle.dump(genes, backup)
 
-    print "Indexing " + str(len(yeast_genes)) + " yeast genes"
+    print "Indexing " + str(len(genes)) + " " + organism + " genes"
 
     bulk_data = []
-    for gene in yeast_genes.keys():
+    for gene in genes.keys():
         bulk_data.append({
             'index': {
                 '_index': INDEX_NAME,
                 '_type': DOC_TYPE,
-                '_id': "yeast_" + gene
+                '_id': organism + "_" + gene
             }
         })
-        bulk_data.append(yeast_genes[gene])
+        bulk_data.append(genes[gene])
 
         if len(bulk_data) % 500 == 0:
             es.bulk(index=INDEX_NAME, body=bulk_data, refresh=True)
             bulk_data = []
 
     if len(bulk_data) > 0:
-        es.bulk(index=INDEX_NAME, body=bulk_data, refresh=True)
+        es.bulk(index=INDEX_NAME, body=bulk_data, refresh=True)        
         
 delete_mapping()
 put_mapping()
-index_yeast_genes()
+
+mods = {
+    "yeast": {
+        "mine_service_url": "http://yeastmine.yeastgenome.org/yeastmine/service",
+        "mine_organism_name": "Saccharomyces cerevisiae",
+        "gene_fields": {
+            "id": "primaryIdentifier",
+            "go_id": "goAnnotation.ontologyTerm.identifier",
+            "go_name": "goAnnotation.ontologyTerm.name",
+            "gene_name": "name",
+            "gene_symbol": "symbol",
+            "gene_synonym": "secondaryIdentifier"
+        },
+        "url_prefix": "http://www.yeastgenome.org/",
+        "url_sufix": "/overview"
+    }
+}
+
+for organism in mods:
+    index_genes(organism, mods[organism])
