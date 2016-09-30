@@ -62,7 +62,7 @@ def index_genes(organism, mod):
                     "synonym": row[mod["gene_fields"]["gene_synonym"]],
                     "go_ids": [row[mod["gene_fields"]["go_id"]]],
                     "go_names": [row[mod["gene_fields"]["go_name"]]],
-                    "href": mod["url_prefix"] + row["primaryIdentifier"] + mod["url_sufix"],
+                    "href": mod["url_prefix"] + row["primaryIdentifier"] + mod["url_suffix"],
                     "type": "gene"
                 }
 
@@ -106,7 +106,7 @@ mods = {
             "gene_synonym": "secondaryIdentifier"
         },
         "url_prefix": "http://www.yeastgenome.org/",
-        "url_sufix": "/overview"
+        "url_suffix": "/overview"
     }
 }
 
