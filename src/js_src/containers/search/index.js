@@ -10,7 +10,7 @@ class SearchComponent extends Component {
       <div className={style.root}>
         <div className='row'>
           <div className={`col-sm-2 ${style.filterContainer}`}>
-            <label className={style.filterLabel}>Categories</label>
+            <p className={style.filterLabel}>Categories</p>
             <ul className='nav nav-pills nav-stacked'>
               <li className='nav-item'>
                 <a className='nav-link active'>Genes (3)</a>
@@ -24,7 +24,8 @@ class SearchComponent extends Component {
             </ul>
           </div>
           <div className='col-sm-9'>
-            <h1>Search Results</h1>
+            <p>99 results for "lorem"</p>
+            <label>Genes</label>
             <Table entries={this.props.results} />
           </div>
         </div>
