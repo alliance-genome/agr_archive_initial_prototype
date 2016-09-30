@@ -14,7 +14,7 @@ class Layout extends Component {
         </div>
         <div className={style.topHeader}>
           <Link to='/'>
-            <img src={logo} />
+            <img className={style.logo} src={logo} />
           </Link>
         </div>
         <nav className={`navbar navbar-light bg-faded ${style.midHeader}`}>

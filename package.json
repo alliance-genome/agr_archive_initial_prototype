@@ -6,6 +6,10 @@
     "name": "Travis Sheppard",
     "email": "travisksheppard@gmail.com"
   },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/alliance-genome/agr_prototype.git"
+  },
   "dependencies": {
     "extract-text-webpack-plugin": "^1.0.1",
     "manifest-revision-webpack-plugin": "^0.3.0",
