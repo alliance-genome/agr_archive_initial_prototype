@@ -34,9 +34,6 @@ class Layout extends Component {
         <div className={style.contentContainer}>
           {this.props.children}
         </div>
-        <footer className={style.footer}>
-          <p>&copy; 2016 Alliance of Genome Resources</p>
-        </footer>
       </div>
     );
   }

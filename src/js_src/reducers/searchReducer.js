@@ -8,6 +8,34 @@ const FIXTURE_STATE = {
       genomicStopCoordinates: 1000,
       relativeStartCoordinates: 100,
       relativeStopCoordinates: 1000
+    },
+    {
+      symbol: 'dog1',
+      genomicStartCoordinates: 100,
+      genomicStopCoordinates: 1000,
+      relativeStartCoordinates: 100,
+      relativeStopCoordinates: 1000
+    },
+    {
+      symbol: 'ke4',
+      genomicStartCoordinates: 100,
+      genomicStopCoordinates: 1000,
+      relativeStartCoordinates: 100,
+      relativeStopCoordinates: 1000
+    },
+    {
+      symbol: 'ke4',
+      genomicStartCoordinates: 100,
+      genomicStopCoordinates: 1000,
+      relativeStartCoordinates: 100,
+      relativeStopCoordinates: 1000
+    },
+    {
+      symbol: 'ke4',
+      genomicStartCoordinates: 100,
+      genomicStopCoordinates: 1000,
+      relativeStartCoordinates: 100,
+      relativeStopCoordinates: 1000
     }
   ]
 };

@@ -28,14 +28,6 @@ class Table extends Component {
   render() {
     return (
       <div>
-        <ul className='nav nav-tabs'>
-          <li className='nav-item'>
-            <a className='nav-link active'><i className='fa fa-table' /> Table</a>
-          </li>
-          <li className='nav-item'>
-            <a className='nav-link'><i className='fa fa-th-list' /> List</a>
-          </li>
-        </ul>
         <table className='table'>
           <thead className='thead-default'>
             {this.renderHeader()}

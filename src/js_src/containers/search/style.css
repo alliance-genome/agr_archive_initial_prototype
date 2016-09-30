@@ -1,3 +1,11 @@
 .filterContainer {
   width: 280px;
 }
+
+.resultContainer {
+  margin-top: 1rem;
+}
+
+.resultContainer dl {
+  margin-left: 0.5rem;
+}
