@@ -5,9 +5,11 @@ class Table extends Component {
     return (
       <tr>
         <th>Symbol</th>
+        <th>Organism</th>
         <th>Source</th>
         <th>Genomic Coordinates</th>
         <th>Relative Coordinates</th>
+        <th>Description</th>
       </tr>
     );
   }
@@ -17,9 +19,11 @@ class Table extends Component {
       return (
         <tr key={`tr${i}`}>
           <td>{d.symbol}</td>
-          <td>SGD</td>
+          <td><i>{d.organism}</i></td>
+          <td><a href='#'>{d.source}</a></td>
           <td>{`${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</td>
           <td>{`chri${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</td>
+          <td>Lorem ipsum <mark>dolor</mark> sit amet, consectetur adipiscing elit, sed do eiusmod tempor</td>
         </tr>
       );
     });

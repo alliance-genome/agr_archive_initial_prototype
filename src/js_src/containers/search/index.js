@@ -35,7 +35,8 @@ class SearchComponent extends Component {
             </ul>
           </div>
           <div className='col-sm-9'>
-            <p>5 results for "lorem"</p>
+            <p>5 results for "{this.props.query}"</p>
+            <a className={`btn btn-sm btn-secondary ${style.agrDownloadBtn}`}><i className='fa fa-download' /> Download</a>
             <ul className='nav nav-tabs'>
               <li className='nav-item'>
                 <Link className={`nav-link${!this.props.isTable ? ' active': ''}`} to={listHref}><i className='fa fa-list' /> List</Link>
@@ -54,13 +55,16 @@ class SearchComponent extends Component {
 
 SearchComponent.propTypes = {
   isTable: React.PropTypes.bool,
+  query: React.PropTypes.string,
   results: React.PropTypes.array
 };
 
 function mapStateToProps(state) {
-  let _isList = (state.routing.locationBeforeTransitions.query.mode === 'list');
+  let query = state.routing.locationBeforeTransitions.query;
+  let _isList = (query.mode === 'list');
   return {
     isTable: !_isList,
+    query: query.q,
     results: state.search.results
   };
 }

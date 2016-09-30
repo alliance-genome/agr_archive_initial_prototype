@@ -6,6 +6,18 @@
   margin-top: 1rem;
 }
 
-.resultContainer dl {
-  margin-left: 0.5rem;
+.resultContainer dt {
+	display: inline-block;
+	float: left;
+	clear: left;
+	width: 10rem;
+}
+
+.resultContainer dd {
+	display: block;
+	margin-left: 11rem;
+}
+
+.agrDownloadBtn {
+	float: right;
 }
