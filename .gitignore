@@ -4,3 +4,8 @@ node_modules
 src/build
 npm-debug.log
 src/server.pyc
+\#*\#
+.\#*
+*~
+*.pyc
+*.bkp
