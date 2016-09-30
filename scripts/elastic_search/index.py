@@ -12,13 +12,14 @@ INDEX_NAME = 'searchable_items_prototype'
 DOC_TYPE = 'searchable_item'
 es = Elasticsearch(os.environ['ES_URI'], retry_on_timeout=True)
 
+
 def delete_mapping():
     print "Deleting mapping..."
     response = requests.delete(ES_ADDRESS + INDEX_NAME + "/")
     if response.status_code != 200:
         print "ERROR: " + str(response.json())
     else:
-        print "SUCCESS"        
+        print "SUCCESS"
 
 def put_mapping():
     print "Putting mapping... "
@@ -41,7 +42,7 @@ def index_genes(organism, mod):
 
         query = service.new_query("Gene")
         query.add_view(mod["gene_fields"].values())
-        
+
         query.add_constraint("organism.name", "=", mod["mine_organism_name"], code = "B")
 
         rows = query.rows()
@@ -50,7 +51,7 @@ def index_genes(organism, mod):
 
         for row in rows:
             id = row[mod["gene_fields"]["id"]]
-    
+
             if id in genes:
                 genes[id]["go_ids"].append(row[mod["gene_fields"]["go_id"]])
                 genes[id]["go_names"].append(row[mod["gene_fields"]["go_name"]])
@@ -86,8 +87,9 @@ def index_genes(organism, mod):
             bulk_data = []
 
     if len(bulk_data) > 0:
-        es.bulk(index=INDEX_NAME, body=bulk_data, refresh=True)        
-        
+        es.bulk(index=INDEX_NAME, body=bulk_data, refresh=True)
+
+
 delete_mapping()
 put_mapping()
 
