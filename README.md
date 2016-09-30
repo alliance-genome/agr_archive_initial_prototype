@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/alliance-genome/agr_prototype.svg?branch=master)](https://travis-ci.org/alliance-genome/agr_prototype)
+
 # Alliance of Genome Resources Prototype
 An initial prototype for the web portal of the Alliance of Genome Resources
 
