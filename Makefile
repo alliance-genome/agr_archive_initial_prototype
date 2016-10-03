@@ -9,7 +9,7 @@ build:
 	pip install -r requirements.txt
 
 run:
-	FLASK_APP=src/server.py flask run
+	ES_URI=$(ES_URI) python src/server.py
 
 tests:
 	npm test
