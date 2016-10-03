@@ -15,19 +15,21 @@ es = Elasticsearch(os.environ['ES_URI'], retry_on_timeout=True)
 
 def delete_mapping():
     print "Deleting mapping..."
-    response = requests.delete(ES_ADDRESS + INDEX_NAME + "/")
+    response = requests.delete(os.environ['ES_URI'] + INDEX_NAME + "/")
     if response.status_code != 200:
         print "ERROR: " + str(response.json())
     else:
         print "SUCCESS"
 
+
 def put_mapping():
     print "Putting mapping... "
-    response = requests.put(ES_ADDRESS + INDEX_NAME + "/", json=mapping)
+    response = requests.put(os.environ['ES_URI'] + INDEX_NAME + "/", json=mapping)
     if response.status_code != 200:
         print "ERROR: " + str(response.json())
     else:
         print "SUCCESS"
+
 
 def index_genes(organism, mod):
     backup_filename = organism + "mine_genes_" + time.strftime("%m_%d_%Y") + ".bkp"
@@ -43,7 +45,7 @@ def index_genes(organism, mod):
         query = service.new_query("Gene")
         query.add_view(mod["gene_fields"].values())
 
-        query.add_constraint("organism.name", "=", mod["mine_organism_name"], code = "B")
+        query.add_constraint("organism.name", "=", mod["mine_organism_name"], code="B")
 
         rows = query.rows()
 
