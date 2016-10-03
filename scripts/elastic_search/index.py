@@ -65,6 +65,7 @@ def index_genes(organism, mod):
                     "go_ids": [row[mod["gene_fields"]["go_id"]]],
                     "go_names": [row[mod["gene_fields"]["go_name"]]],
                     "href": mod["url_prefix"] + row["primaryIdentifier"] + mod["url_suffix"],
+                    "organism": organism,
                     "type": "gene"
                 }
 

@@ -27,7 +27,7 @@ def search():
     offset = request.args.get('offset', 0)
     sort_by = request.args.get('sort_by', '')
 
-    fields = ['name', 'symbol', 'synonym', 'go_ids', 'go_names', 'href', 'type']
+    fields = ['name', 'symbol', 'synonym', 'go_ids', 'go_names', 'href', 'type', 'organism']
 
     for special_char in ['-', '.']:
         if special_char in query:
@@ -133,6 +133,7 @@ def search():
                 'synonym': result['_source']['synonym'],
                 'go_ids': result['_source']['go_ids'],
                 'type': result['_source']['type'],
+                'organism': result['_source']['organism'],
                 'highlight': result['highlight']
             })
 
