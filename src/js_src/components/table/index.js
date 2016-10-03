@@ -5,11 +5,13 @@ class Table extends Component {
     return (
       <tr>
         <th>Symbol</th>
-        <th>Organism</th>
+        <th>Name</th>
+        <th>Synonym</th>
         <th>Source</th>
+        <th>Species</th>
+        <th>Gene Type</th>
         <th>Genomic Coordinates</th>
         <th>Relative Coordinates</th>
-        <th>Description</th>
       </tr>
     );
   }
@@ -19,11 +21,13 @@ class Table extends Component {
       return (
         <tr key={`tr${i}`}>
           <td>{d.symbol}</td>
-          <td><i>{d.organism}</i></td>
-          <td><a href='#'>{d.source}</a></td>
+          <td>{d.name}</td>
+          <td>{d.synonyms}</td>
+          <td><a href={d.sourceHref} target='_new'>{d.geneId}</a></td>
+          <td><i>{d.species}</i></td>
+          <td>{d.geneType}</td>
           <td>{`${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</td>
           <td>{`chri${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</td>
-          <td>Lorem ipsum <mark>dolor</mark> sit amet, consectetur adipiscing elit, sed do eiusmod tempor</td>
         </tr>
       );
     });

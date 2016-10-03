@@ -4,50 +4,91 @@ const FIXTURE_STATE = {
   results: [
     {
       symbol: 'NTPCR',
-      source: 'MGI',
+      name: 'RADiation sensitive',
+      geneId: 'MGI:12345678',
+      sourceHref: 'https://www.google.com',
+      synonyms: 'geneA, geneB',
+      geneType: 'ORF',
       genomicStartCoordinates: 100,
       genomicStopCoordinates: 1000,
       relativeStartCoordinates: 100,
       relativeStopCoordinates: 1000,
-      organism: 'Mus musculus'
+      species: 'Mus musculus',
+      description: 'lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
+      highlights: {
+        description: ['lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
+      }
     },
     {
       symbol: 'Brca2',
-      source: 'ZFIN',
+      name: 'RADiation sensitive',
+      geneId: 'ZFIN:12345678',
+      sourceHref: 'https://www.google.com',
+      synonyms: 'geneA, geneB',
+      geneType: 'ORF',
       genomicStartCoordinates: 100,
       genomicStopCoordinates: 1000,
       relativeStartCoordinates: 100,
       relativeStopCoordinates: 1000,
-      organism: 'Danio rerio'
+      species: 'Danio rerio',
+      description: 'lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
+      highlights: {
+        description: ['lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
+      }
     },
     {
       symbol: 'Ctag2',
-      source: 'MGI',
+      name: 'RADiation sensitive',
+      geneId: 'MGI:12345678',
+      sourceHref: 'https://www.google.com',
+      synonyms: 'geneA, geneB',
+      geneType: 'ORF',
       genomicStartCoordinates: 100,
       genomicStopCoordinates: 1000,
       relativeStartCoordinates: 100,
       relativeStopCoordinates: 1000,
-      organism: 'Mus musculus'
+      species: 'Mus musculus',
+      description: 'lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
+      highlights: {
+        description: ['lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
+      }
     },
     {
       symbol: 'ntpcr',
-      source: 'ZFIN',
+      name: 'RADiation sensitive',
+      geneId: 'ZFIN:12345678',
+      sourceHref: 'https://www.google.com',
+      synonyms: 'geneA, geneB',
+      geneType: 'ORF',
       genomicStartCoordinates: 100,
       genomicStopCoordinates: 1000,
       relativeStartCoordinates: 100,
       relativeStopCoordinates: 1000,
-      organism: 'Danio rerio'
+      species: 'Danio rerio',
+      description: 'lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
+      highlights: {
+        description: ['lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
+      }
     },
     {
       symbol: 'rad54',
-      source: 'SGD',
+      geneId: 'SGD:12345678',
+      sourceHref: 'https://www.google.com',
+      synonyms: 'geneA, geneB',
+      geneType: 'ORF',
       genomicStartCoordinates: 100,
       genomicStopCoordinates: 1000,
       relativeStartCoordinates: 100,
       relativeStopCoordinates: 1000,
-      organism: 'Saccharomyces cerevisiae'
+      species: 'Saccharomyces cerevisiae',
+      description: 'lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
+      highlights: {
+        description: ['lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
+      }
     }
-  ]
+  ],
+  total: 5,
+  isPending: false
 };
 
 const searchReducer = function () {

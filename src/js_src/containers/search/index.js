@@ -61,9 +61,9 @@ SearchComponent.propTypes = {
 
 function mapStateToProps(state) {
   let query = state.routing.locationBeforeTransitions.query;
-  let _isList = (query.mode === 'list');
+  let _isTable = (query.mode === 'table');
   return {
-    isTable: !_isList,
+    isTable: _isTable,
     query: query.q,
     results: state.search.results
   };

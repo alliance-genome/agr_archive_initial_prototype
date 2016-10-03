@@ -6,16 +6,22 @@
   margin-top: 1rem;
 }
 
+.resultContainer mark {
+	background: yellow;
+}
+
 .resultContainer dt {
 	display: inline-block;
 	float: left;
 	clear: left;
 	width: 10rem;
+	margin-left: 1rem;
 }
 
 .resultContainer dd {
 	display: block;
-	margin-left: 11rem;
+	margin-left: 12rem;
+	margin-bottom: 0;
 }
 
 .agrDownloadBtn {

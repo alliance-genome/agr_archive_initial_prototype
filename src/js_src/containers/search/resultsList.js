@@ -11,10 +11,16 @@ class ResultsList extends Component {
             <a href='#'>{d.symbol}</a>
           </h3>
           <dl>
+            <dt>Name:</dt>
+            <dd>{d.name}</dd>
+            <dt>Synonym:</dt>
+            <dd>{d.synonyms}</dd>
             <dt>Source:</dt>
-            <dd><a href='#'>{d.source}</a></dd>
-            <dt>Organism:</dt>
-            <dd><i>{d.organism}</i></dd>
+            <dd><a href={d.sourceHref} target='_new'>{d.geneId}</a></dd>
+            <dt>Species:</dt>
+            <dd><i>{d.species}</i></dd>
+            <dt>Gene Type:</dt>
+            <dd>{d.geneType}</dd>
             <dt>Genomic Coordinates:</dt>
             <dd>{`${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</dd>
             <dt>Relative Coordinates:</dt>
@@ -22,6 +28,7 @@ class ResultsList extends Component {
             <dt>Description:</dt>
             <dd>Lorem ipsum <mark>dolor</mark> sit amet, consectetur adipiscing elit, sed do eiusmod tempor</dd>
           </dl>
+          <hr />
         </div>
       );
     });
