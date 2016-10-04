@@ -20,6 +20,7 @@
 .midHeader {
 	border-radius: 0;
 	background: black;
+	padding: 0.55rem 1rem;
 }
 
 .nav {

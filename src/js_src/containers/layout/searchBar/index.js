@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Typeahead } from 'react-typeahead';
 import { push } from 'react-router-redux';
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 import style from './style.css';
 
@@ -22,14 +23,20 @@ class SearchBarComponent extends Component {
   render() {
     return (
       <div className={style.container}>
-        <form onSubmit={this.handleSubmit.bind(this)}>
+        <form onSubmit={this.handleSubmit.bind(this)} ref='form'>
+          <DropdownButton className={style.dropdown} id='bg-nested-dropdown' title='Genes'>
+            <MenuItem eventKey='1'>Dropdown link</MenuItem>
+            <MenuItem eventKey='2'>Dropdown link</MenuItem>
+          </DropdownButton>
+
           <Typeahead
             className={style.typeahead}
             customClasses={{ input: INPUT_CLASS }}
             options={[]}
           />
+          <a className={`btn btn-primary ${style.searchBtn}`} href='#' onClick={this.handleSubmit.bind(this)}><i className='fa fa-search' /></a>
         </form>
-        <span className={style.searchIcon}><i className='fa fa-search' /></span>
+        
       </div>
     );
   }
