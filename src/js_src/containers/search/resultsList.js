@@ -21,8 +21,8 @@ class ResultsList extends Component {
             <dd><i>{d.species}</i></dd>
             <dt>Gene Type:</dt>
             <dd>{d.geneType}</dd>
-            <dt>Description:</dt>
-            <dd dangerouslySetInnerHTML={{ __html: d.description }} />
+            <dt>Disease:</dt>
+            <dd dangerouslySetInnerHTML={{ __html: d.disease }} />
           </dl>
           <hr />
         </div>

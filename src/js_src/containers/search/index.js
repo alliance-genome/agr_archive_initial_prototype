@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 import style from './style.css';
+import FilterSelector from './filterSelector';
 import ResultsList from './resultsList';
 import ResultsTable from './resultsTable';
 
@@ -24,18 +25,7 @@ class SearchComponent extends Component {
       <div className={style.root}>
         <div className='row'>
           <div className={SMALL_COL_CLASS}>
-            <p className={style.filterLabel}>Categories</p>
-            <ul className='nav nav-pills nav-stacked'>
-              <li className='nav-item'>
-                <a className='nav-link active'>Genes (5)</a>
-              </li>
-              <li className='nav-item'>
-                <a className='nav-link'>Diseases (3)</a>
-              </li>
-              <li className='nav-item'>
-                <a className='nav-link'>Ortholog Groups (3)</a>
-              </li>
-            </ul>
+            <FilterSelector />
           </div>
           <div className={LARGE_COL_CLASS}>
             <div>
@@ -84,7 +74,7 @@ function mapStateToProps(state) {
     isTable: _isTable,
     query: query.q,
     results: state.search.results,
-    total: 5
+    total: state.search.total
   };
 }
 
