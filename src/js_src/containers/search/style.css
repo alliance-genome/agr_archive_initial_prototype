@@ -3,6 +3,14 @@
 	margin-top: 0.25rem;
 }
 
+.sortLabel {
+	margin-right: 0.5rem;
+}
+
+.sortDropdown {
+	margin-right: 1rem;
+}
+
 .resultContainer {
   margin-top: 1rem;
 }

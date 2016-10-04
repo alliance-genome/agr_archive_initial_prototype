@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 import style from './style.css';
 import ResultsList from './resultsList';
@@ -37,6 +38,11 @@ class SearchComponent extends Component {
           <div className='col-sm-10'>
             <div>
               <div className={style.controlContainer}>
+              <label className={style.sortLabel}>Sort By</label>
+                <DropdownButton className={`btn-secondary ${style.sortDropdown}`} id='bg-nested-dropdown' title='Relevance'>
+                  <MenuItem eventKey='1'>Dropdown link</MenuItem>
+                  <MenuItem eventKey='2'>Dropdown link</MenuItem>
+                </DropdownButton>
                 <a className={`btn btn-secondary ${style.agrDownloadBtn}`}><i className='fa fa-download' /> Download</a>
               </div>
               <p>{this.props.total.toLocaleString()} results for "{this.props.query}"</p>
