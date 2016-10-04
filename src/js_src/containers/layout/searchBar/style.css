@@ -2,7 +2,6 @@
 	float: right;
 	width: 100%;
 	margin-top: 0.15rem;
-	max-width: 30rem;
 }
 
 .container form {
@@ -23,7 +22,7 @@
 .typeahead input {
 	border: none;
 	padding: 0.29rem;
-	width: 20rem;
+	width: 25.25rem;
 }
 
 .searchBtn {

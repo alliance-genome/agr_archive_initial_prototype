@@ -38,8 +38,13 @@ class SearchComponent extends Component {
           <div className='col-sm-10'>
             <div>
               <div className={style.controlContainer}>
+              <label className={style.sortLabel}>Page 1 of 1</label>
+              <div className={`btn-group ${style.control}`} role='group'>
+                <button className='btn btn-secondary'><i className='fa fa-chevron-left' /></button>
+                <button className='btn btn-secondary'><i className='fa fa-chevron-right' /></button>
+              </div>
               <label className={style.sortLabel}>Sort By</label>
-                <DropdownButton className={`btn-secondary ${style.sortDropdown}`} id='bg-nested-dropdown' title='Relevance'>
+                <DropdownButton className={`btn-secondary ${style.control}`} id='bg-nested-dropdown' title='Relevance'>
                   <MenuItem eventKey='1'>Dropdown link</MenuItem>
                   <MenuItem eventKey='2'>Dropdown link</MenuItem>
                 </DropdownButton>
