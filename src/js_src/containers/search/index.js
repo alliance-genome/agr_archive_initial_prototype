@@ -3,13 +3,13 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 import style from './style.css';
-import Table from '../../components/table';
 import ResultsList from './resultsList';
+import ResultsTable from './resultsTable';
 
 class SearchComponent extends Component {
   renderResultsNode() {
     if (this.props.isTable) {
-      return <Table entries={this.props.results} />;
+      return <ResultsTable entries={this.props.results} />;
     }
     return <ResultsList entries={this.props.results} />;
   }
@@ -20,7 +20,7 @@ class SearchComponent extends Component {
     return (
       <div className={style.root}>
         <div className='row'>
-          <div className={`col-sm-2 ${style.filterContainer}`}>
+          <div className='col-sm-2'>
             <p className={style.filterLabel}>Categories</p>
             <ul className='nav nav-pills nav-stacked'>
               <li className='nav-item'>
@@ -34,9 +34,13 @@ class SearchComponent extends Component {
               </li>
             </ul>
           </div>
-          <div className='col-sm-9'>
-            <p>5 results for "{this.props.query}"</p>
-            <a className={`btn btn-sm btn-secondary ${style.agrDownloadBtn}`}><i className='fa fa-download' /> Download</a>
+          <div className='col-sm-10'>
+            <div>
+              <div className={style.controlContainer}>
+                <a className={`btn btn-secondary ${style.agrDownloadBtn}`}><i className='fa fa-download' /> Download</a>
+              </div>
+              <p>{this.props.total.toLocaleString()} results for "{this.props.query}"</p>
+            </div>
             <ul className='nav nav-tabs'>
               <li className='nav-item'>
                 <Link className={`nav-link${!this.props.isTable ? ' active': ''}`} to={listHref}><i className='fa fa-list' /> List</Link>
@@ -56,7 +60,8 @@ class SearchComponent extends Component {
 SearchComponent.propTypes = {
   isTable: React.PropTypes.bool,
   query: React.PropTypes.string,
-  results: React.PropTypes.array
+  results: React.PropTypes.array,
+  total: React.PropTypes.number
 };
 
 function mapStateToProps(state) {
@@ -65,7 +70,8 @@ function mapStateToProps(state) {
   return {
     isTable: _isTable,
     query: query.q,
-    results: state.search.results
+    results: state.search.results,
+    total: 5
   };
 }
 

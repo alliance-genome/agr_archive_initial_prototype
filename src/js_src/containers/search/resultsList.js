@@ -21,12 +21,8 @@ class ResultsList extends Component {
             <dd><i>{d.species}</i></dd>
             <dt>Gene Type:</dt>
             <dd>{d.geneType}</dd>
-            <dt>Genomic Coordinates:</dt>
-            <dd>{`${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</dd>
-            <dt>Relative Coordinates:</dt>
-            <dd>{`chri${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</dd>
             <dt>Description:</dt>
-            <dd>Lorem ipsum <mark>dolor</mark> sit amet, consectetur adipiscing elit, sed do eiusmod tempor</dd>
+            <dd dangerouslySetInnerHTML={{ __html: d.description }} />
           </dl>
           <hr />
         </div>

@@ -13,20 +13,25 @@ class Layout extends Component {
           This website is a prototype and information may not be verified.
         </div>
         <div className={style.topHeader}>
-          <Link to='/'>
-            <img className={style.logo} src={logo} />
-          </Link>
+          <div className='row'>
+            <div className='col-sm-2'>
+              <Link to='/'>
+                <img className={style.logo} src={logo} />
+              </Link>
+            </div>
+            <div className='col-sm-10' />
+          </div>
         </div>
         <nav className={`navbar navbar-light bg-faded ${style.midHeader}`}>
           <div className='row'>
-            <div className='col-sm-6'>
+            <div className='col-sm-2'>
               <div className={style.nav}>
                 <Link className={`nav-link ${style.navLink}`} to='/'><i className='fa fa-home' /> Home</Link>
                 <Link className={`nav-link ${style.navLink}`} to='/about'><i className='fa fa-info-circle' /> About</Link>
                 <Link className={`nav-link ${style.navLink}`} to='/help'><i className='fa fa-question-circle' /> Help</Link>
               </div>
             </div>
-            <div className='col-sm-6'>
+            <div className='col-sm-10'>
               <SearchBar />
             </div>
           </div>

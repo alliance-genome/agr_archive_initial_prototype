@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Table extends Component {
+class ResultsTable extends Component {
   renderHeader() {
     return (
       <tr>
@@ -49,8 +49,8 @@ class Table extends Component {
   }
 }
 
-Table.propTypes = {
+ResultsTable.propTypes = {
   entries: React.PropTypes.array
 };
 
-export default Table;
+export default ResultsTable;

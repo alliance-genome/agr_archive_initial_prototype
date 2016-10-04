@@ -22,7 +22,6 @@
     "semi": ["error", "always"],
     "no-console": 1,
     "react/display-name": 0,
-    "react/no-danger": 1,
     "react/no-deprecated": 1,
     "react/no-did-mount-set-state": 1,
     "react/no-did-update-set-state": 1,

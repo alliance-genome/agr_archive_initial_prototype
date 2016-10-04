@@ -1,5 +1,6 @@
-.filterContainer {
-  width: 280px;
+.controlContainer {
+	float: right;
+	margin-top: 0.25rem;
 }
 
 .resultContainer {
@@ -25,5 +26,4 @@
 }
 
 .agrDownloadBtn {
-	float: right;
 }

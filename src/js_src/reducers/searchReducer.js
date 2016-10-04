@@ -16,7 +16,7 @@ const FIXTURE_STATE = {
       species: 'Mus musculus',
       description: 'lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
       highlights: {
-        description: ['lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
+        description: ['lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
       }
     },
     {
@@ -31,9 +31,9 @@ const FIXTURE_STATE = {
       relativeStartCoordinates: 100,
       relativeStopCoordinates: 1000,
       species: 'Danio rerio',
-      description: 'lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
+      description: 'lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
       highlights: {
-        description: ['lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
+        description: ['lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
       }
     },
     {
@@ -48,9 +48,9 @@ const FIXTURE_STATE = {
       relativeStartCoordinates: 100,
       relativeStopCoordinates: 1000,
       species: 'Mus musculus',
-      description: 'lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
+      description: 'lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
       highlights: {
-        description: ['lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
+        description: ['lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
       }
     },
     {
@@ -65,9 +65,9 @@ const FIXTURE_STATE = {
       relativeStartCoordinates: 100,
       relativeStopCoordinates: 1000,
       species: 'Danio rerio',
-      description: 'lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
+      description: 'lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
       highlights: {
-        description: ['lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
+        description: ['lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
       }
     },
     {
@@ -81,9 +81,9 @@ const FIXTURE_STATE = {
       relativeStartCoordinates: 100,
       relativeStopCoordinates: 1000,
       species: 'Saccharomyces cerevisiae',
-      description: 'lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
+      description: 'lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
       highlights: {
-        description: ['lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
+        description: ['lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
       }
     }
   ],

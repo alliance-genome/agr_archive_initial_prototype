@@ -6,7 +6,7 @@
 }
 
 .logo {
-	width: 250px;
+	width: 100%;
 }
 
 .appContainer {
@@ -23,7 +23,6 @@
 }
 
 .nav {
-	width: 250px;
 	display: flex;
 	justify-content: space-between;
 	padding: 0.5rem 0;
