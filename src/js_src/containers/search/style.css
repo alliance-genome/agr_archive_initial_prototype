@@ -15,7 +15,7 @@
   margin-top: 1rem;
 }
 
-.resultContainer mark {
+.detailList mark {
 	background: yellow;
 }
 
@@ -31,6 +31,7 @@
 	display: block;
 	margin-left: 12rem;
 	margin-bottom: 0;
+	min-height: 1.5rem;
 }
 
 .agrDownloadBtn {

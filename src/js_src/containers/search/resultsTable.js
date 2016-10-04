@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import style from './style.css';
+
 class ResultsTable extends Component {
   renderHeader() {
     return (
@@ -12,6 +14,7 @@ class ResultsTable extends Component {
         <th>Gene Type</th>
         <th>Genomic Coordinates</th>
         <th>Relative Coordinates</th>
+        <th>Match By</th>
       </tr>
     );
   }
@@ -28,9 +31,27 @@ class ResultsTable extends Component {
           <td>{d.geneType}</td>
           <td>{`${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</td>
           <td>{`chri${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</td>
+          <td>{this.renderHighlight(d.highlight)}</td>
         </tr>
       );
     });
+  }
+
+  renderHighlight(highlight) {
+    let keys = Object.keys(highlight);
+    let nodes = keys.map( d => {
+      return (
+        <div key={`srh${d}`}>
+          <dt>{d}:</dt>
+          <dd dangerouslySetInnerHTML={{ __html: highlight[d] }} />
+        </div>
+      );
+    });
+    return (
+      <dl className={style.detailList}>
+        {nodes}
+      </dl>
+    );
   }
 
   render() {

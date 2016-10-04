@@ -10,7 +10,7 @@ class ResultsList extends Component {
           <h3>
             <a href='#'>{d.symbol}</a>
           </h3>
-          <dl>
+          <dl className={style.detailList}>
             <dt>Name:</dt>
             <dd>{d.name}</dd>
             <dt>Synonym:</dt>

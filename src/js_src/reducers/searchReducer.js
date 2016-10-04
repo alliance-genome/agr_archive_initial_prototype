@@ -15,7 +15,7 @@ const FIXTURE_STATE = {
       relativeStopCoordinates: 1000,
       species: 'Mus musculus',
       description: 'lore ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
-      highlights: {
+      highlight: {
         description: ['lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
       }
     },
@@ -32,7 +32,7 @@ const FIXTURE_STATE = {
       relativeStopCoordinates: 1000,
       species: 'Danio rerio',
       description: 'lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
-      highlights: {
+      highlight: {
         description: ['lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
       }
     },
@@ -49,7 +49,7 @@ const FIXTURE_STATE = {
       relativeStopCoordinates: 1000,
       species: 'Mus musculus',
       description: 'lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
-      highlights: {
+      highlight: {
         description: ['lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
       }
     },
@@ -66,12 +66,13 @@ const FIXTURE_STATE = {
       relativeStopCoordinates: 1000,
       species: 'Danio rerio',
       description: 'lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
-      highlights: {
+      highlight: {
         description: ['lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
       }
     },
     {
       symbol: 'rad54',
+      name: '',
       geneId: 'SGD:12345678',
       sourceHref: 'https://www.google.com',
       synonyms: 'geneA, geneB',
@@ -82,7 +83,7 @@ const FIXTURE_STATE = {
       relativeStopCoordinates: 1000,
       species: 'Saccharomyces cerevisiae',
       description: 'lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod',
-      highlights: {
+      highlight: {
         description: ['lorem ipsum <mark>kinase</mark> sit onsectetur adipiscing elit, sed do eiusmod']
       }
     }
