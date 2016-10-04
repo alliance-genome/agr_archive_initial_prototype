@@ -7,6 +7,8 @@ import style from './style.css';
 import ResultsList from './resultsList';
 import ResultsTable from './resultsTable';
 
+import { SMALL_COL_CLASS, LARGE_COL_CLASS } from '../../constants';
+
 class SearchComponent extends Component {
   renderResultsNode() {
     if (this.props.isTable) {
@@ -21,7 +23,7 @@ class SearchComponent extends Component {
     return (
       <div className={style.root}>
         <div className='row'>
-          <div className='col-sm-2'>
+          <div className={SMALL_COL_CLASS}>
             <p className={style.filterLabel}>Categories</p>
             <ul className='nav nav-pills nav-stacked'>
               <li className='nav-item'>
@@ -35,7 +37,7 @@ class SearchComponent extends Component {
               </li>
             </ul>
           </div>
-          <div className='col-sm-10'>
+          <div className={LARGE_COL_CLASS}>
             <div>
               <div className={style.controlContainer}>
               <label className={style.sortLabel}>Page 1 of 1</label>

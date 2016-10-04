@@ -5,6 +5,8 @@ import SearchBar from './searchBar';
 import style from './style.css';
 import logo from './agrLogo.png';
 
+import { SMALL_COL_CLASS, LARGE_COL_CLASS } from '../../constants';
+
 class Layout extends Component {
   render() {
     return (
@@ -14,24 +16,24 @@ class Layout extends Component {
         </div>
         <div className={style.topHeader}>
           <div className='row'>
-            <div className='col-sm-2'>
+            <div className={SMALL_COL_CLASS}>
               <Link to='/'>
                 <img className={style.logo} src={logo} />
               </Link>
             </div>
-            <div className='col-sm-10' />
+            <div className={LARGE_COL_CLASS} />
           </div>
         </div>
         <nav className={`navbar navbar-light bg-faded ${style.midHeader}`}>
           <div className='row'>
-            <div className='col-sm-2'>
+            <div className={SMALL_COL_CLASS}>
               <div className={style.nav}>
                 <Link className={`nav-link ${style.navLink}`} to='/'><i className='fa fa-home' /> Home</Link>
                 <Link className={`nav-link ${style.navLink}`} to='/about'><i className='fa fa-info-circle' /> About</Link>
                 <Link className={`nav-link ${style.navLink}`} to='/help'><i className='fa fa-question-circle' /> Help</Link>
               </div>
             </div>
-            <div className='col-sm-10'>
+            <div className={LARGE_COL_CLASS}>
               <SearchBar />
             </div>
           </div>
