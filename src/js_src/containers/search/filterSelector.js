@@ -27,7 +27,7 @@ class FilterSelectorComponent extends Component {
     return this.props.aggregations.map( d => {
       return (
         <div className={style.aggValContainer} key={`filter${d.name}`}>
-          <p className={style.filterLabel}>{d.displayName}</p>
+          <p className={style.filterLabel}><b>{d.displayName}</b></p>
           <ul className='nav nav-pills nav-stacked'>
             {this.renderFilterValues(d)}
           </ul>

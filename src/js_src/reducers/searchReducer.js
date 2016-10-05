@@ -1,5 +1,5 @@
 const FIXTURE_STATE = {
-  query: 'hungtington\'s',
+  query: 'huntington\'s',
   href: '',
   results: [
     {
@@ -14,9 +14,9 @@ const FIXTURE_STATE = {
       relativeStartCoordinates: 100,
       relativeStopCoordinates: 1000,
       species: 'Mus musculus',
-      disease: 'lore ipsum <mark>hungtington\'s</mark> sit onsectetur adipiscing elit, sed do eiusmod',
+      disease: 'lore ipsum <mark>huntington\'s</mark> sit onsectetur adipiscing elit, sed do eiusmod',
       highlight: {
-        disease: ['lorem ipsum <mark>hungtington\'s</mark> sit onsectetur adipiscing elit, sed do eiusmod']
+        disease: ['lorem ipsum <mark>huntington\'s</mark> sit onsectetur adipiscing elit, sed do eiusmod']
       }
     },
     {
@@ -31,11 +31,11 @@ const FIXTURE_STATE = {
       relativeStartCoordinates: 100,
       relativeStopCoordinates: 1000,
       species: 'Mus musculus',
-      disease: 'lorem ipsum <mark>hungtington\'s</mark> sit onsectetur adipiscing elit, sed do eiusmod',
+      disease: 'lorem ipsum <mark>huntington\'s</mark> sit onsectetur adipiscing elit, sed do eiusmod',
       highlight: {
-        disease: ['lorem ipsum <mark>hungtington\'s</mark> sit onsectetur adipiscing elit, sed do eiusmod']
+        disease: ['lorem ipsum <mark>huntington\'s</mark> sit onsectetur adipiscing elit, sed do eiusmod']
       }
-    },
+    }
   ],
   activeCategory: 'gene',
   aggregations: [
@@ -83,6 +83,18 @@ const FIXTURE_STATE = {
           name: 'cell periphery',
           displayName: 'Cell Periphery',
           total: 1,
+          isActive: false
+        }
+      ]
+    },
+    {
+      name: 'disease',
+      displayName: 'Disease',
+      values: [
+        {
+          name: 'huntington\'s Disease',
+          displayName: 'Huntington\'s disease',
+          total: 5,
           isActive: false
         }
       ]
