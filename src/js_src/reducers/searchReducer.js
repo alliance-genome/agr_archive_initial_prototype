@@ -1,5 +1,7 @@
 import _ from 'underscore';
 
+import { injectHighlightIntoResponse } from '../lib/searchHelpers';
+
 const DEFAULT_STATE = {
   activeCategory: 'none',
   aggregations: [],
@@ -11,6 +13,7 @@ const DEFAULT_STATE = {
 };
 
 const searchReducer = function (_state, action) {
+  // simple way to not alter original state
   let state = _.clone(_state);
   if (typeof state === 'undefined') {
     return DEFAULT_STATE;
@@ -24,7 +27,8 @@ const searchReducer = function (_state, action) {
     state.aggregations = [];
     state.isPending = false;
     state.total = action.payload.total;
-    state.results = action.payload.results.map( d => {
+    state.results = action.payload.results.map( _d => {
+      let d = injectHighlightIntoResponse(_d);
       return {
         symbol: d.symbol,
         name: d.name,
@@ -37,9 +41,7 @@ const searchReducer = function (_state, action) {
         relativeStartCoordinates: '',
         relativeStopCoordinates: '',
         species: d.organism,
-        highlight: {
-          disease: ['lorem ipsum <mark>huntington\'s</mark> sit onsectetur adipiscing elit, sed do eiusmod']
-        }
+        highlight: d.highlights
       };
     });
     return state;

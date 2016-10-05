@@ -27,8 +27,12 @@ class ReactApp extends Component {
       let queryUrl = location.search;
       fetchSearchData(queryUrl).then( response => {
         store.dispatch(receiveResponse(response));
-      }).catch( () => {
-        store.dispatch(setError(SEARCH_API_ERROR_MESSAGE));
+      }).catch( (e) => {
+        if (process.env.NODE_ENV === 'production') {
+          store.dispatch(setError(SEARCH_API_ERROR_MESSAGE));
+        } else {
+          throw(e);
+        }
       });
     }
     return (

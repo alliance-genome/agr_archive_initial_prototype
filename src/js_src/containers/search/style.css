@@ -32,7 +32,7 @@
   margin-top: 1rem;
 }
 
-.detailList mark {
+.detailList mark, em {
 	background: yellow;
 }
 
@@ -40,6 +40,7 @@
 	display: inline-block;
 	float: left;
 	clear: left;
+	text-transform: capitalize;
 	width: 10rem;
 	margin-left: 1rem;
 }

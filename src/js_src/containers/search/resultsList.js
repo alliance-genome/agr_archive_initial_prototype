@@ -1,28 +1,50 @@
 import React, { Component } from 'react';
 
 import style from './style.css';
+import { makeFieldDisplayName } from '../../lib/searchHelpers';
+
+const DEFAULT_FIELDS = ['name', 'synonym', 'sourceHref', 'geneId', 'species', 'type'];
 
 class ResultsList extends Component {
+  renderHighlightedValues(highlight) {
+    let displayedVals = Object.keys(highlight).filter( d => {
+      return (DEFAULT_FIELDS.indexOf(d) < 0);
+    });
+
+    let nodes = displayedVals.map( d => {
+      return (
+        <div key={`srHigh.${d}`}>
+          <dt>{makeFieldDisplayName(d)}:</dt>
+          <dd dangerouslySetInnerHTML={{ __html: highlight[d] }} />
+        </div>
+      );
+    });
+    return (
+      <div>
+        {nodes}
+      </div>
+    );
+  }
+
   renderRows() {
     return this.props.entries.map( (d, i) => {
       return (
         <div className={style.resultContainer} key={`sr${i}`} >
           <h3>
-            <a href='#'>{d.symbol}</a>
+            <a dangerouslySetInnerHTML={{ __html: d.symbol }} href='#' />
           </h3>
           <dl className={style.detailList}>
             <dt>Name:</dt>
-            <dd>{d.name}</dd>
+            <dd dangerouslySetInnerHTML={{ __html: d.name }} />
             <dt>Synonym:</dt>
-            <dd>{d.synonyms}</dd>
+            <dd dangerouslySetInnerHTML={{ __html: d.synonym }} />
             <dt>Source:</dt>
-            <dd><a href={d.sourceHref} target='_new'>{d.geneId}</a></dd>
+            <dd><a dangerouslySetInnerHTML={{ __html: d.geneId }} href={d.sourceHref} target='_new' /></dd>
             <dt>Species:</dt>
-            <dd><i>{d.species}</i></dd>
+            <dd><i dangerouslySetInnerHTML={{ __html: d.species }} /></dd>
             <dt>Gene Type:</dt>
-            <dd>{d.geneType}</dd>
-            <dt>Disease:</dt>
-            <dd dangerouslySetInnerHTML={{ __html: d.disease }} />
+            <dd dangerouslySetInnerHTML={{ __html: d.geneType }} />
+            {this.renderHighlightedValues(d.highlight)}
           </dl>
           <hr />
         </div>
