@@ -1,6 +1,4 @@
-import _ from 'underscore';
-
-const FIXTURE_STATE = {
+export const FIXTURE_STATE = {
   query: 'huntington\'s',
   results: [
     {
@@ -122,14 +120,3 @@ const FIXTURE_STATE = {
   total: 2,
   isPending: false
 };
-
-const searchReducer = function (_state, action) {
-  let state = _.clone(_state);
-  if (action.type === 'SEARCH_RESPONSE'){
-    state.results = FIXTURE_STATE.results;
-    return state;
-  }
-  return FIXTURE_STATE;
-};
-
-export default searchReducer;

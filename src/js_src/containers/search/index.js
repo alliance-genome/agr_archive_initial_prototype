@@ -7,10 +7,15 @@ import style from './style.css';
 import FilterSelector from './filterSelector';
 import ResultsList from './resultsList';
 import ResultsTable from './resultsTable';
+import { fetchData } from './searchActions';
 
 import { SMALL_COL_CLASS, LARGE_COL_CLASS } from '../../constants';
 
 class SearchComponent extends Component {
+  componentDidMount() {
+    this.props.dispatch(fetchData());
+  }
+
   renderResultsNode() {
     if (this.props.isTable) {
       return <ResultsTable entries={this.props.results} />;
@@ -19,6 +24,7 @@ class SearchComponent extends Component {
   }
 
   render() {
+    
     const listHref = '/search?mode=list';
     const tableHref = '/search?mode=table';
     return (
@@ -61,6 +67,7 @@ class SearchComponent extends Component {
 }
 
 SearchComponent.propTypes = {
+  dispatch: React.PropTypes.func,
   isTable: React.PropTypes.bool,
   query: React.PropTypes.string,
   results: React.PropTypes.array,
