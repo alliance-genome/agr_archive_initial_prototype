@@ -4,7 +4,6 @@ import { Typeahead } from 'react-typeahead';
 import { push } from 'react-router-redux';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
-import { fetchData } from '../../search/searchActions';
 import style from './style.css';
 
 const INPUT_CLASS = 'agr-search-input';
@@ -14,7 +13,6 @@ class SearchBarComponent extends Component {
     e.preventDefault();
     let query = this.getQuery();
     this.props.dispatch(push({ pathname: '/search', query: { q: query } }));
-    this.props.dispatch(fetchData());
   }
 
   getQuery() {
@@ -46,12 +44,12 @@ class SearchBarComponent extends Component {
 
 SearchBarComponent.propTypes = {
   dispatch: React.PropTypes.func,
-  query: React.PropTypes.string
+  query: React.PropTypes.string,
+  searchUrl: React.PropTypes.string
 };
 
 function mapStateToProps() {
-  return {
-  };
+  return {};
 }
 
 export { SearchBarComponent as SearchBarComponent };

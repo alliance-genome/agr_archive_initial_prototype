@@ -7,15 +7,10 @@ import style from './style.css';
 import FilterSelector from './filterSelector';
 import ResultsList from './resultsList';
 import ResultsTable from './resultsTable';
-import { fetchData } from './searchActions';
 
 import { SMALL_COL_CLASS, LARGE_COL_CLASS } from '../../constants';
 
 class SearchComponent extends Component {
-  componentDidMount() {
-    this.props.dispatch(fetchData());
-  }
-
   renderResultsNode() {
     if (this.props.isTable) {
       return <ResultsTable entries={this.props.results} />;
@@ -23,12 +18,24 @@ class SearchComponent extends Component {
     return <ResultsList entries={this.props.results} />;
   }
 
+  renderErrorNode() {
+    if (!this.props.isError) {
+      return null;
+    }
+    return (
+      <div className='alert alert-warning'>
+        <h3>Oops, Error</h3>
+        <p>{this.props.errorMessage}</p>
+      </div>
+    );
+  }
+
   render() {
-    
     const listHref = '/search?mode=list';
     const tableHref = '/search?mode=table';
     return (
       <div className={style.root}>
+        {this.renderErrorNode()}
         <div className='row'>
           <div className={SMALL_COL_CLASS}>
             <FilterSelector />
@@ -68,6 +75,9 @@ class SearchComponent extends Component {
 
 SearchComponent.propTypes = {
   dispatch: React.PropTypes.func,
+  errorMessage: React.PropTypes.string,
+  history: React.PropTypes.object,
+  isError: React.PropTypes.bool,
   isTable: React.PropTypes.bool,
   query: React.PropTypes.string,
   results: React.PropTypes.array,
@@ -75,9 +85,12 @@ SearchComponent.propTypes = {
 };
 
 function mapStateToProps(state) {
-  let query = state.routing.locationBeforeTransitions.query;
+  let location = state.routing.locationBeforeTransitions;
+  let query = location.query;
   let _isTable = (query.mode === 'table');
   return {
+    errorMessage: state.search.errorMessage,
+    isError: state.search.isError,
     isTable: _isTable,
     query: query.q,
     results: state.search.results,

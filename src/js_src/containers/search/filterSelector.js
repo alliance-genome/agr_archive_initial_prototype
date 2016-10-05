@@ -24,7 +24,11 @@ class FilterSelectorComponent extends Component {
   }
 
   renderFilters() {
-    return this.props.aggregations.map( d => {
+    let aggs = this.props.aggregations;
+    if (aggs.length === 0) {
+      return <p>No filters available.</p>;
+    }
+    return aggs.map( d => {
       return (
         <div className={style.aggValContainer} key={`filter${d.name}`}>
           <p className={style.filterLabel}><b>{d.displayName}</b></p>

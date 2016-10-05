@@ -1,4 +1,5 @@
-export const FIXTURE_STATE = {
+export const FIXTURE_SEARCH_STATE = {
+  query: 'huntington\'s',
   results: [
     {
       symbol: 'NTPCR',
