@@ -6,10 +6,11 @@ import os
 
 from elasticsearch import Elasticsearch
 
-from search import build_search_query, build_es_search_body_request
+from search import build_search_query, build_es_search_body_request, \
+    build_es_aggregation_body_request, format_search_results, format_aggregation_results
 
 es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=True)
-SEARCH_ES_INDEX = 'searchable_items_prototype'
+ES_INDEX = 'searchable_items_prototype'
 
 app = Flask(__name__)
 
@@ -31,8 +32,8 @@ def search():
     sort_by = request.args.get('sort_by', '')
 
     category_filters = {
-        "genes": ['go_ids', 'go_names'],
-        "go": ['gene'],
+        "gene": ['go_ids', 'go_names'],
+        "go": ['gene']
     }
 
     search_fields = ['name', 'symbol', 'synonym', 'go_ids', 'go_names']
@@ -41,7 +42,7 @@ def search():
                             'go_names', 'href', 'type', 'organism']
 
     es_query = build_search_query(query, search_fields, category,
-                                  category_filters, request)
+                                  category_filters, request.args)
 
     search_body = build_es_search_body_request(query,
                                                category,
@@ -51,7 +52,7 @@ def search():
                                                sort_by)
 
     search_results = es.search(
-        index=SEARCH_ES_INDEX,
+        index=ES_INDEX,
         body=search_body,
         size=limit,
         from_=offset
@@ -64,21 +65,17 @@ def search():
             'aggregations': []
         })
 
+    aggregation_body = build_es_aggregation_body_request(es_query, category, category_filters)
+    aggregation_results = es.search(
+        index=ES_INDEX,
+        body=aggregation_body
+    )
+
     response = {
         'total': search_results['hits']['total'],
-        'results': []
+        'results': format_search_results(search_results, json_response_fields),
+        'aggregations': format_aggregation_results(aggregation_results, category, category_filters)
     }
-
-    for result in search_results['hits']['hits']:
-        response['results'].append({
-            'name': result['_source']['name'],
-            'symbol': result['_source']['symbol'],
-            'synonym': result['_source']['synonym'],
-            'go_ids': result['_source']['go_ids'],
-            'type': result['_source']['type'],
-            'organism': result['_source']['organism'],
-            'highlight': result['highlight']
-        })
 
     return jsonify(response)
 
