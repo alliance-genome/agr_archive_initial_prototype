@@ -9,8 +9,11 @@ build:
 run:
 	ES_URI=$(ES_URI) python src/server.py
 
-tests:
+tests: test-py
 	npm test
 
 index:
 	cd scripts/elastic_search && ES_URI=$(ES_URI) python index.py
+
+test-py:
+	nosetests -s
