@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import style from './style.css';
 import { makeFieldDisplayName } from '../../lib/searchHelpers';
 
-const DEFAULT_FIELDS = ['name', 'synonym', 'sourceHref', 'geneId', 'species', 'type'];
+const DEFAULT_FIELDS = ['symbol', 'name', 'synonym', 'sourceHref', 'geneId', 'species', 'type'];
 
 class ResultsList extends Component {
   renderHighlightedValues(highlight) {

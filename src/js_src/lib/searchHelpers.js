@@ -1,10 +1,12 @@
+import _ from 'underscore';
+
 const NON_HIGHLIGHTED_FIELDS = ['sourceHref'];
 const JOIN_HIGHLIGHT_BY = '...';
 
 // takes the fields in responseObj.highlights and replaces the shallow values in responseObj
 // also return highlight values as strings like '<em>val</em>...<em>val2</em>' instead of array
 export function injectHighlightIntoResponse(responseObj) {
-  let high = responseObj.highlights;
+  let high = responseObj.highlights || {};
   let highKeys = Object.keys(high);
   let simpleHighObj = {};
   highKeys.forEach( key => {
@@ -25,4 +27,10 @@ export function injectHighlightIntoResponse(responseObj) {
 
 export function makeFieldDisplayName(unformattedName) {
   return unformattedName.replace('_', ' ');
+}
+
+export function getQueryParamWithValueChanged(key, val, locationObj) {
+  let qp = locationObj ? _.clone(locationObj.query) : {};
+  qp[key] = val;
+  return qp;
 }

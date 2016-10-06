@@ -9,6 +9,7 @@ import ResultsList from './resultsList';
 import ResultsTable from './resultsTable';
 
 import { SMALL_COL_CLASS, LARGE_COL_CLASS } from '../../constants';
+import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
 
 class SearchComponent extends Component {
   renderResultsNode() {
@@ -31,8 +32,10 @@ class SearchComponent extends Component {
   }
 
   render() {
-    const listHref = '/search?mode=list';
-    const tableHref = '/search?mode=table';
+    let listQp = getQueryParamWithValueChanged('mode', 'list', this.props.location);
+    let tableQp = getQueryParamWithValueChanged('mode', 'table', this.props.location);
+    let listHref = { pathname: '/search', query: listQp };
+    let tableHref = { pathname: '/search', query: tableQp };
     return (
       <div className={style.root}>
         {this.renderErrorNode()}
@@ -77,6 +80,7 @@ SearchComponent.propTypes = {
   dispatch: React.PropTypes.func,
   errorMessage: React.PropTypes.string,
   history: React.PropTypes.object,
+  location: React.PropTypes.object,
   isError: React.PropTypes.bool,
   isTable: React.PropTypes.bool,
   query: React.PropTypes.string,
@@ -85,13 +89,14 @@ SearchComponent.propTypes = {
 };
 
 function mapStateToProps(state) {
-  let location = state.routing.locationBeforeTransitions;
-  let query = location.query;
+  let _location = state.routing.locationBeforeTransitions;
+  let query = _location.query;
   let _isTable = (query.mode === 'table');
   return {
     errorMessage: state.search.errorMessage,
     isError: state.search.isError,
     isTable: _isTable,
+    location: _location,
     query: query.q,
     results: state.search.results,
     total: state.search.total

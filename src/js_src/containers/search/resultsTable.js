@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import style from './style.css';
+import { makeFieldDisplayName } from '../../lib/searchHelpers';
 
 class ResultsTable extends Component {
   renderHeader() {
@@ -23,12 +24,12 @@ class ResultsTable extends Component {
     return this.props.entries.map( (d, i) => {
       return (
         <tr key={`tr${i}`}>
-          <td>{d.symbol}</td>
-          <td>{d.name}</td>
-          <td>{d.synonyms}</td>
-          <td><a href={d.sourceHref} target='_new'>{d.geneId}</a></td>
-          <td><i>{d.species}</i></td>
-          <td>{d.geneType}</td>
+          <td dangerouslySetInnerHTML={{ __html: d.symbol }} />
+          <td dangerouslySetInnerHTML={{ __html: d.name }} />
+          <td dangerouslySetInnerHTML={{ __html: d.synonyms }} />
+          <td><a href={d.sourceHref} dangerouslySetInnerHTML={{ __html: d.geneId }} target='_new' /></td>
+          <td><i dangerouslySetInnerHTML={{ __html: d.species }} /></td>
+          <td dangerouslySetInnerHTML={{ __html: d.geneType }} />
           <td>{`${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</td>
           <td>{`chri${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</td>
           <td>{this.renderHighlight(d.highlight)}</td>
@@ -41,8 +42,8 @@ class ResultsTable extends Component {
     let keys = Object.keys(highlight);
     let nodes = keys.map( d => {
       return (
-        <div key={`srh${d}`}>
-          <dt>{d}:</dt>
+        <div className={style.resultContainer} key={`srh${d}`}>
+          <dt>{makeFieldDisplayName(d)}:</dt>
           <dd dangerouslySetInnerHTML={{ __html: highlight[d] }} />
         </div>
       );

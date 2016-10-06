@@ -12,7 +12,7 @@ class SearchBarComponent extends Component {
   handleSubmit(e) {
     e.preventDefault();
     let query = this.getQuery();
-    this.props.dispatch(push({ pathname: '/search', query: { q: query } }));
+    this.props.dispatch(push({ pathname: '/search', query: { q: query }}));
   }
 
   getQuery() {
