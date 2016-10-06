@@ -1,3 +1,4 @@
+/*eslint-disable no-undef */
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
@@ -7,11 +8,45 @@ import style from './style.css';
 import FilterSelector from './filterSelector';
 import ResultsList from './resultsList';
 import ResultsTable from './resultsTable';
-
-import { SMALL_COL_CLASS, LARGE_COL_CLASS } from '../../constants';
+import { SMALL_COL_CLASS, LARGE_COL_CLASS, SEARCH_API_ERROR_MESSAGE } from '../../constants';
 import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
+import { receiveResponse, setError } from './searchActions';
+
+const BASE_SEARCH_URL = '/api/search';
 
 class SearchComponent extends Component {
+  // fetch data at start
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  // fetch data whenever URL changes within /search
+  componentDidUpdate (prevProps) {
+    if (prevProps.location !== this.props.location) {
+      this.fetchData();
+    }
+  }
+
+  fetchData() {
+    let searchUrl = BASE_SEARCH_URL + this.props.location.search;
+    // depends on global $
+    $.ajax({
+      url : searchUrl,
+      type : 'GET',
+      dataType:'json',
+      success: data => {              
+        this.props.dispatch(receiveResponse(data, this.props.location));
+      },
+      error: (request, e) => {
+        if (process.env.NODE_ENV === 'production') {
+          this.props.dispatch(setError(SEARCH_API_ERROR_MESSAGE));
+        } else {
+          throw(e);
+        }
+      }
+    });
+  }
+
   renderResultsNode() {
     if (this.props.isTable) {
       return <ResultsTable entries={this.props.results} />;

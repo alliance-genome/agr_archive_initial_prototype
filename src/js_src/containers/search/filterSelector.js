@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 
 import style from './style.css';
 import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
@@ -18,13 +18,9 @@ class FilterSelectorComponent extends Component {
         nameNode = <span>{d.displayName}</span>;
       }
       let newQueryObj = getQueryParamWithValueChanged(filterObj.key, d.key, this.props.location);
-      let _handleClick = e => {
-        e.preventDefault();
-        this.props.dispatch(push({ pathname: '/search', query: newQueryObj }));
-      };
       return (
         <li className='nav-item' key={_key}>
-          <a className={`nav-link${classSuffix}`} href='#' onClick={_handleClick}>{nameNode} ({d.total})</a>
+          <Link className={`nav-link${classSuffix}`} to={{ pathname: '/search', query: newQueryObj }}>{nameNode} ({d.total})</Link>
         </li>
       );
     });

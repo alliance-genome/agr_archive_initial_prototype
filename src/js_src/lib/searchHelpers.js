@@ -34,7 +34,12 @@ export function getQueryParamWithValueChanged(key, val, locationObj) {
   qp[key] = val;
   if (key === 'go_names') {
     let newVals = locationObj.query.go_names ? [locationObj.query.go_names]: [];
-    newVals.push(val);
+    let isInside = (newVals.indexOf(val) >= 0);
+    if (isInside) {
+      newVals = _.without(newVals, val);
+    } else {
+      newVals.push(val);
+    }
     qp[key] = newVals;
   }
   return qp;
