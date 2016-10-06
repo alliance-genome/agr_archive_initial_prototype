@@ -32,5 +32,10 @@ export function makeFieldDisplayName(unformattedName) {
 export function getQueryParamWithValueChanged(key, val, locationObj) {
   let qp = locationObj ? _.clone(locationObj.query) : {};
   qp[key] = val;
+  if (key === 'go_names') {
+    let newVals = locationObj.query.go_names ? [locationObj.query.go_names]: [];
+    newVals.push(val);
+    qp[key] = newVals;
+  }
   return qp;
 }

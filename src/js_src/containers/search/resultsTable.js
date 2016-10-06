@@ -27,7 +27,7 @@ class ResultsTable extends Component {
           <td dangerouslySetInnerHTML={{ __html: d.symbol }} />
           <td dangerouslySetInnerHTML={{ __html: d.name }} />
           <td dangerouslySetInnerHTML={{ __html: d.synonyms }} />
-          <td><a href={d.sourceHref} dangerouslySetInnerHTML={{ __html: d.geneId }} target='_new' /></td>
+          <td><a dangerouslySetInnerHTML={{ __html: d.geneId }} href={d.sourceHref} target='_new' /></td>
           <td><i dangerouslySetInnerHTML={{ __html: d.species }} /></td>
           <td dangerouslySetInnerHTML={{ __html: d.geneType }} />
           <td>{`${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</td>

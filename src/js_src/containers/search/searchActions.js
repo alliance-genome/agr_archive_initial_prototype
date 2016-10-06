@@ -1,7 +1,8 @@
-export function receiveResponse (response) {
+export function receiveResponse (response, locationObj) {
   return {
     type: 'SEARCH_RESPONSE',
-    payload: response
+    payload: response,
+    queryObject: locationObj.query
   };
 }
 

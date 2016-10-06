@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import style from './style.css';
+import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
 
 class FilterSelectorComponent extends Component {
   renderFilterValues(filterObj) {
@@ -15,9 +17,14 @@ class FilterSelectorComponent extends Component {
       } else {
         nameNode = <span>{d.displayName}</span>;
       }
+      let newQueryObj = getQueryParamWithValueChanged(filterObj.key, d.key, this.props.location);
+      let _handleClick = e => {
+        e.preventDefault();
+        this.props.dispatch(push({ pathname: '/search', query: newQueryObj }));
+      };
       return (
         <li className='nav-item' key={_key}>
-          <a className={`nav-link${classSuffix}`}>{nameNode} ({d.total})</a>
+          <a className={`nav-link${classSuffix}`} href='#' onClick={_handleClick}>{nameNode} ({d.total})</a>
         </li>
       );
     });
@@ -68,12 +75,15 @@ class FilterSelectorComponent extends Component {
 FilterSelectorComponent.propTypes = {
   activeCategory: React.PropTypes.string,
   aggregations: React.PropTypes.array,
+  dispatch: React.PropTypes.func,
+  location: React.PropTypes.object
 };
 
 function mapStateToProps(state) {
   return {
     activeCategory:  state.search.activeCategory,
     aggregations: state.search.aggregations,
+    location: state.routing.locationBeforeTransitions
   };
 }
 

@@ -2,6 +2,8 @@ import _ from 'underscore';
 
 import { injectHighlightIntoResponse } from '../lib/searchHelpers';
 
+const MAX_AGGS = 100;
+
 const DEFAULT_STATE = {
   activeCategory: 'none',
   aggregations: [],
@@ -24,9 +26,36 @@ const searchReducer = function (_state, action) {
     state.isError = true;
     return state;
   case 'SEARCH_RESPONSE':
-    state.aggregations = [];
+    // parse meta
     state.isPending = false;
     state.total = action.payload.total;
+    // parse aggregations
+    state.aggregations = action.payload.aggregations.map( d => {
+      let _values = d.values.splice(0, MAX_AGGS).map( _d => {
+        let currentValue = action.queryObject[d.key];
+        let _isActive;
+        // look at array fields differently
+        if (typeof currentValue === 'object') { 
+          _isActive = (currentValue.indexOf(_d.key) >= 0);
+        } else {
+          _isActive = _d.key === currentValue;
+        }
+        return {
+          name: _d.key,
+          displayName: _d.key,
+          key: _d.key,
+          total: _d.total,
+          isActive: _isActive
+        };
+      });
+      return {
+        name: d.key,
+        displayName: d.key,
+        key: d.key,
+        values: _values
+      };
+    });
+    // parse results
     state.results = action.payload.results.map( _d => {
       let d = injectHighlightIntoResponse(_d);
       return {

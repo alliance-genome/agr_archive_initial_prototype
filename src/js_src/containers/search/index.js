@@ -80,9 +80,9 @@ SearchComponent.propTypes = {
   dispatch: React.PropTypes.func,
   errorMessage: React.PropTypes.string,
   history: React.PropTypes.object,
-  location: React.PropTypes.object,
   isError: React.PropTypes.bool,
   isTable: React.PropTypes.bool,
+  location: React.PropTypes.object,
   query: React.PropTypes.string,
   results: React.PropTypes.array,
   total: React.PropTypes.number

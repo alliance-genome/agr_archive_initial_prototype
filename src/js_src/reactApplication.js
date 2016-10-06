@@ -26,7 +26,7 @@ class ReactApp extends Component {
       let location = nextState.location || prevState.location;
       let queryUrl = location.search;
       fetchSearchData(queryUrl).then( response => {
-        store.dispatch(receiveResponse(response));
+        store.dispatch(receiveResponse(response, location));
       }).catch( (e) => {
         if (process.env.NODE_ENV === 'production') {
           store.dispatch(setError(SEARCH_API_ERROR_MESSAGE));
