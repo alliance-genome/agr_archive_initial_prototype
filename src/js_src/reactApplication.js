@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { Router, browserHistory, createMemoryHistory, IndexRoute, Route  } from 'react-router';
+import { Router, browserHistory, createMemoryHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import { syncHistoryWithStore } from 'react-router-redux';
 import configureStore from './lib/configureStore';
 
-import About from './containers/about';
-import Home from './containers/home';
-import Layout from './containers/layout';
-import Search from './containers/search';
+import routes from './routes';
 
 class ReactApp extends Component {
   render() {
@@ -18,11 +15,7 @@ class ReactApp extends Component {
     return (
       <Provider store={store}>
         <Router history={history}>
-          <Route component={Layout} path='/'>
-            <IndexRoute component={Home} />
-            <Route component={About} path='about' />
-            <Route component={Search} path='search' />
-          </Route>
+          {routes}
         </Router>
       </Provider>
     );
