@@ -1,7 +1,8 @@
 import unittest
 from src.search import build_search_query, build_search_params, \
     build_es_search_body_request, format_search_results, \
-    build_es_aggregation_body_request, format_aggregation_results
+    build_es_aggregation_body_request, format_aggregation_results, \
+    build_autocomplete_search_body_request, format_autocomplete_results
 
 
 class SearchHelpersTest(unittest.TestCase):
@@ -494,3 +495,169 @@ class SearchHelpersTest(unittest.TestCase):
         }
         aggregation_results = {}
         self.assertEqual(format_aggregation_results(aggregation_results, category, category_filters), [])
+
+    def test_build_autocomplete_search_body_default_request(self):
+        query = "act"
+        es_query = build_autocomplete_search_body_request(query, '')
+
+        self.assertEqual(es_query, {
+            "query": {
+                "bool": {
+                    "must": [{
+                        "match": {
+                            "name": {
+                                "query": query,
+                                "analyzer": "standard"
+                            }
+                        }
+                    }],
+                    "should": [
+                        {
+                            "match": {
+                                "category": {
+                                    "query": "gene",
+                                    "boost": 4
+                                }
+                            }
+                        }
+                    ]
+                }
+            }, '_source': ['name', 'href', 'category']
+        })
+
+    def test_build_autocomplete_search_body_request_with_category(self):
+        query = "act"
+        es_query = build_autocomplete_search_body_request(query, 'go')
+        self.assertEqual(es_query, {
+            "query": {
+                "bool": {
+                    "must": [{
+                        "match": {
+                            "name": {
+                                "query": query,
+                                "analyzer": "standard"
+                            }
+                        }
+                    }, {
+                        "match": {"category": "go"}
+                    }]
+                }
+            }, '_source': ['name', 'href', 'category']
+        })
+
+    def test_build_autocomplete_search_body_request_with_field(self):
+        query = "act"
+        es_query = build_autocomplete_search_body_request(query, 'go', 'go_id')
+        self.assertEqual(es_query, {
+            "query": {
+                "bool": {
+                    "must": [{
+                        "match": {
+                            "go_id.autocomplete": {
+                                "query": query,
+                                "analyzer": "standard"
+                            }
+                        }
+                    }, {
+                        "match": {"category": "go"}
+                    }]
+                }
+            }, 'aggs': {
+                'go_id': {
+                    'terms': {'field': 'go_id.raw', 'size': 999}
+                }
+            }, '_source': ['go_id', 'href', 'category']
+        })
+
+    def test_format_autocomplete_results_default(self):
+        es_response = {
+            "took": 4,
+            "timed_out": False,
+            "_shards": {
+                "total": 5,
+                "successful": 5,
+                "failed": 0
+            },
+            "hits": {
+                "total": 3016,
+                "max_score": 3.8131394,
+                "hits": [{
+                    "_index": "searchable_items_prototype",
+                    "_type": "searchable_item",
+                    "_id": "S000001855",
+                    "_score": 3.8131394,
+                    "_source": {
+                        "name": "ACT1 / YFL039C",
+                        "href": "/locus/S000001855/overview",
+                        "category": "gene"
+                    }
+                }, {
+                    "_index": "searchable_items_prototype",
+                    "_type": "searchable_item",
+                    "_id": "GO:0000185",
+                    "_score": 0.46771955,
+                    "_source": {
+                        "name": "activation of MAPKKK activity",
+                        "href": "/go/GO:0000185/overview",
+                        "category": "go"
+                    }
+                }]
+            }
+        }
+
+        self.assertEqual(format_autocomplete_results(es_response), [
+            {
+                "name": "ACT1 / YFL039C",
+                "href": "/locus/S000001855/overview",
+                "category": "gene"
+            },
+            {
+                "name": "activation of MAPKKK activity",
+                "href": "/go/GO:0000185/overview",
+                "category": "go"
+            }
+        ])
+
+    def test_format_autocomplete_results_with_field(self):
+        es_response = {
+            "took": 12,
+            "timed_out": False,
+            "_shards": {
+                "total": 5,
+                "successful": 5,
+                "failed": 0
+            },
+            "hits": {
+                "total": 120735,
+                "max_score": 0.0,
+                "hits": []
+            },
+            "aggregations": {
+                "go_name": {
+                    "doc_count_error_upper_bound": 0,
+                    "sum_other_doc_count": 312,
+                    "buckets": [{
+                        "key": "cytoplasm",
+                        "doc_count": 6691
+                    }, {
+                        "key": "nucleus",
+                        "doc_count": 387
+                    }, {
+                        "key": "DNA repair",
+                        "doc_count": 352
+                    }]
+                }
+            }
+        }
+
+        self.assertEqual(format_autocomplete_results(es_response, 'go_name'), [
+            {
+                'name': "cytoplasm"
+            },
+            {
+                'name': 'nucleus'
+            },
+            {
+                'name': 'DNA repair'
+            }
+        ])
