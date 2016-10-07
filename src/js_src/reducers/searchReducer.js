@@ -17,39 +17,39 @@ const DEFAULT_STATE = fromJS({
 });
 
 const searchReducer = function (state = DEFAULT_STATE, action) {
-    switch(action.type) {
-        case 'SEARCH_ERROR':
-            return state.set('errorMessage', action.payload).set('isError',true);
-        case '@@router/LOCATION_CHANGE':
-            // parse aggs to update active state during route change
-            return state.set('aggregations', parseAggs(state.aggregations, action.payload.query));
-        case 'SEARCH_RESPONSE':
-            // parse meta
-            return state.set('isPending',false)
-                        .set('total', action.payload.total) 
-                        // parse aggregations
-                        .set('aggregations', parseAggs(action.payload.aggregations, action.queryObject)) 
-                        // parse results
-                        .set('results',action.payload.results.map( _d => { 
-                            let d = injectHighlightIntoResponse(_d);
-                            return {
-                                symbol: d.symbol,
-                                name: d.name,
-                                geneId: 'ID:12345678',
-                                sourceHref: 'https://www.google.com',
-                                synonyms: d.synonym,
-                                geneType: 'TYPE',
-                                genomicStartCoordinates: '',
-                                genomicStopCoordinates: '',
-                                relativeStartCoordinates: '',
-                                relativeStopCoordinates: '',
-                                species: d.organism,
-                                highlight: d.highlights
-                            };
-                        }));
-        default:
-            return state;
-    }
+  switch(action.type) {
+  case 'SEARCH_ERROR':
+    return state.set('errorMessage', action.payload).set('isError',true);
+  case '@@router/LOCATION_CHANGE':
+     // parse aggs to update active state during route change
+    return state.set('aggregations', parseAggs(state.aggregations, action.payload.query));
+  case 'SEARCH_RESPONSE':
+     // parse meta
+    return state.set('isPending',false)
+               .set('total', action.payload.total) 
+               // parse aggregations
+               .set('aggregations', parseAggs(action.payload.aggregations, action.queryObject)) 
+               // parse results
+               .set('results',action.payload.results.map( _d => { 
+                 let d = injectHighlightIntoResponse(_d);
+                 return {
+                   symbol: d.symbol,
+                   name: d.name,
+                   geneId: 'ID:12345678',
+                   sourceHref: 'https://www.google.com',
+                   synonyms: d.synonym,
+                   geneType: 'TYPE',
+                   genomicStartCoordinates: '',
+                   genomicStopCoordinates: '',
+                   relativeStartCoordinates: '',
+                   relativeStopCoordinates: '',
+                   species: d.organism,
+                   highlight: d.highlights
+                 };
+               }));
+  default:
+    return state;
+  }
 };
 
 function parseAggs(rawAggs, queryObject) {
