@@ -13,7 +13,12 @@ def build_es_aggregation_body_request(es_query, category, category_filters):
         }
     elif category in category_filters.keys():
         for subcategory in category_filters[category]:
-            agg_query_body['aggs'][subcategory] = {'terms': {'field': subcategory + '.raw', 'size': 999}}
+            agg_query_body['aggs'][subcategory] = {
+                'terms': {
+                    'field': subcategory + '.raw',
+                    'size': 999
+                }
+            }
     else:
         return {}
 

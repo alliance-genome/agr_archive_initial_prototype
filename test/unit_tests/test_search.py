@@ -1,5 +1,7 @@
 import unittest
-from src.search import build_search_query, build_search_params, build_es_search_body_request
+from src.search import build_search_query, build_search_params, \
+    build_es_search_body_request, format_search_results, \
+    build_es_aggregation_body_request, format_aggregation_results
 
 
 class SearchHelpersTest(unittest.TestCase):
@@ -102,7 +104,7 @@ class SearchHelpersTest(unittest.TestCase):
         query = "gene"
         fields = ["name", "symbol"]
         category = ''
-        category_filters =  {
+        category_filters = {
             "genes": ['go_ids', 'go_names'],
             "go": ['gene'],
         }
@@ -116,7 +118,7 @@ class SearchHelpersTest(unittest.TestCase):
         query = "gene"
         fields = ["name", "symbol"]
         category = 'genes'
-        category_filters =  {
+        category_filters = {
             "genes": ['go_ids', 'go_names'],
             "go": ['gene'],
         }
@@ -139,7 +141,7 @@ class SearchHelpersTest(unittest.TestCase):
         query = "act1"
         fields = ["name", "symbol"]
         category = "genes"
-        category_filters =  {
+        category_filters = {
             "genes": ['go_ids', 'go_names'],
             "go": ['gene'],
         }
@@ -278,3 +280,217 @@ class SearchHelpersTest(unittest.TestCase):
                 }
             ]
         })
+
+    def test_format_search_results(self):
+        json_response_fields = ['name', 'symbol']
+        search_results = {
+            "took": 4,
+            "timed_out": False,
+            "_shards": {
+                "total": 5,
+                "successful": 5,
+                "failed": 0
+            },
+            "hits": {
+                "total": 120735,
+                "max_score": 1.0,
+                "hits": [
+                    {
+                        "_index": "searchable_items_prototype",
+                        "_type": "searchable_item",
+                        "_id": "yeast_S00001",
+                        "_score": 1.0,
+                        "_source": {
+                            "name": "ACTin 1",
+                            "symbol": "ACT1",
+                            "href": "yeastgenome.org/locus/act1/overview",
+                            "category": "gene"
+                        }
+                    }
+                ]
+            }
+        }
+
+        self.assertEqual(format_search_results(search_results, json_response_fields), [{
+            'highlights': None,
+            'name': 'ACTin 1',
+            'symbol': 'ACT1'
+        }])
+
+    def test_build_es_aggregation_body_request_should_return_empty_for_invalid_category(self):
+        query = ""
+        fields = ["name", "symbol"]
+        category = "invalid_category"
+        category_filters = {
+            "genes": ['go_ids', 'go_names'],
+            "go": ['gene'],
+        }
+        args = {'go_names': 'A,B,C'}
+
+        es_query = build_search_query(query, fields, category, category_filters, args)
+
+        self.assertEqual(build_es_aggregation_body_request(es_query, category, category_filters), {})
+
+    def test_build_es_aggregation_body_request_should_aggregate_just_categories_if_empty(self):
+        query = ""
+        fields = ["name", "symbol"]
+        category = ""
+        category_filters = {
+            "genes": ['go_ids', 'go_names'],
+            "go": ['gene'],
+        }
+        args = {'go_names': 'A,B,C'}
+
+        es_query = build_search_query(query, fields, category, category_filters, args)
+
+        self.assertEqual(build_es_aggregation_body_request(es_query, category, category_filters), {
+            'query': es_query,
+            'size': 0,
+            'aggs': {
+                'categories': {
+                    'terms': {'field': 'category', 'size': 50}
+                }}
+        })
+
+    def test_build_es_aggregation_body_request_should_aggregate_each_subcategory(self):
+        query = ""
+        fields = ["name", "symbol"]
+        category = "genes"
+        category_filters = {
+            "genes": ['go_ids', 'go_names'],
+            "go": ['gene'],
+        }
+        args = {'go_names': 'A,B,C'}
+
+        es_query = build_search_query(query, fields, category, category_filters, args)
+
+        self.assertEqual(build_es_aggregation_body_request(es_query, category, category_filters), {
+            'query': es_query,
+            'size': 0,
+            'aggs': {
+                'go_ids': {
+                    'terms': {'field': 'go_ids.raw', 'size': 999}
+                },
+                'go_names': {
+                    'terms': {'field': 'go_names.raw', 'size': 999}
+                }
+            }
+        })
+
+    def test_format_aggregation_results_should_include_all_categories_for_empty_category_as_param(self):
+        category = ""
+        category_filters = {
+            "genes": ['go_ids', 'go_names'],
+            "go": ['gene'],
+        }
+        aggregation_results = {
+            "took": 12,
+            "timed_out": False,
+            "_shards": {
+                "total": 5,
+                "successful": 5,
+                "failed": 0
+            },
+            "hits": {
+                "total": 120735,
+                "max_score": 0.0,
+                "hits": []
+            },
+            "aggregations": {
+                "categories": {
+                    "doc_count_error_upper_bound": 0,
+                    "sum_other_doc_count": 312,
+                    "buckets": [{
+                        "key": "gene",
+                        "doc_count": 6691
+                    }, {
+                        "key": "go",
+                        "doc_count": 387
+                    }, {
+                        "key": "diseases",
+                        "doc_count": 352
+                    }]
+                }
+            }
+        }
+
+        self.assertEqual(format_aggregation_results(aggregation_results, category, category_filters), [
+            {
+                'key': 'category',
+                'values': [{
+                    'total': 6691,
+                    'key': 'gene'
+                }, {
+                    'total': 387,
+                    'key': 'go'
+                }, {
+                    'total': 352,
+                    'key': 'diseases'
+                }]
+            }
+        ])
+
+    def test_format_aggregation_results_should_include_all_subcategories(self):
+        category = "genes"
+        category_filters = {
+            "genes": ['go_ids', 'go_names'],
+            "go": ['gene'],
+        }
+        aggregation_results = {
+            "took": 12,
+            "timed_out": False,
+            "_shards": {
+                "total": 5,
+                "successful": 5,
+                "failed": 0
+            },
+            "hits": {
+                "total": 120735,
+                "max_score": 0.0,
+                "hits": []
+            },
+            "aggregations": {
+                "go_names": {
+                    "doc_count_error_upper_bound": 0,
+                    "sum_other_doc_count": 312,
+                    "buckets": [{
+                        "key": "mitochondrion",
+                        "doc_count": 6691
+                    }, {
+                        "key": "cytoplasm",
+                        "doc_count": 387
+                    }, {
+                        "key": "membrane",
+                        "doc_count": 352
+                    }]
+                }
+            }
+        }
+
+        self.assertEqual(format_aggregation_results(aggregation_results, category, category_filters), [
+            {
+                'key': 'go_ids',
+                'values': []
+            }, {
+                'key': 'go_names',
+                'values': [{
+                    'key': 'mitochondrion',
+                    'total': 6691
+                }, {
+                    'key': 'cytoplasm',
+                    'total': 387
+                }, {
+                    'key': 'membrane',
+                    'total': 352
+                }]
+            }]
+        )
+
+    def test_format_aggregation_results_should_return_empty_for_invalid_category(self):
+        category = "invalid_category"
+        category_filters = {
+            "genes": ['go_ids', 'go_names'],
+            "go": ['gene'],
+        }
+        aggregation_results = {}
+        self.assertEqual(format_aggregation_results(aggregation_results, category, category_filters), [])
