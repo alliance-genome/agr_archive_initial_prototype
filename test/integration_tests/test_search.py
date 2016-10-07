@@ -4,7 +4,8 @@ import mock
 import json
 from src.search import build_es_search_body_request, \
     build_search_query, build_es_aggregation_body_request, \
-    format_search_results, format_aggregation_results
+    format_search_results, format_aggregation_results, \
+    format_autocomplete_results, build_autocomplete_search_body_request
 
 
 class SearchEndpointsTest(unittest.TestCase):
@@ -275,4 +276,86 @@ class SearchEndpointsTest(unittest.TestCase):
                 'gene',
                 self.category_filters
             )
+        })
+
+    @mock.patch('src.server.es.search')
+    def test_search_autocomplete_es_params(self, mock_es):
+        mock_es.return_value = self.es_search_response
+
+        self.app.get('/api/search_autocomplete?q=act')
+
+        mock_es.assert_called_with(
+            index=self.index,
+            body=build_autocomplete_search_body_request('act', '', 'name')
+        )
+
+        self.app.get('/api/search_autocomplete?q=act&category=go')
+
+        mock_es.assert_called_with(
+            index=self.index,
+            body=build_autocomplete_search_body_request('act', 'go', 'name')
+        )
+
+        mock_es.return_value = {
+            "took": 12,
+            "timed_out": False,
+            "_shards": {
+                "total": 5,
+                "successful": 5,
+                "failed": 0
+            },
+            "hits": {
+                "total": 120735,
+                "max_score": 0.0,
+                "hits": []
+            },
+            "aggregations": {
+                "go_name": {
+                    "doc_count_error_upper_bound": 0,
+                    "sum_other_doc_count": 312,
+                    "buckets": [{
+                        "key": "cytoplasm",
+                        "doc_count": 6691
+                    }, {
+                        "key": "nucleus",
+                        "doc_count": 387
+                    }, {
+                        "key": "DNA repair",
+                        "doc_count": 352
+                    }]
+                }
+            }
+        }
+
+        self.app.get('/api/search_autocomplete?q=act&category=go&field=go_name')
+
+        mock_es.assert_called_with(
+            index=self.index,
+            body=build_autocomplete_search_body_request('act', 'go', 'go_name')
+        )
+
+    @mock.patch('src.server.es.search')
+    def test_search_autocomplete_returns_object(self, mock_es):
+        mock_es.return_value = self.es_search_response
+
+        response = self.app.get('/api/search_autocomplete?q=act')
+
+        self.assertEqual(response.status_code, 200)
+
+        data = json.loads(response.data)
+        self.assertEqual(data, {
+            'results': format_autocomplete_results(self.es_search_response)
+        })
+
+    def test_search_autocomplete_returns_none_for_empty_query(self):
+        response = self.app.get('/api/search_autocomplete')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.data), {
+            'results': None
+        })
+
+        response = self.app.get('/api/search_autocomplete?q=')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.data), {
+            'results': None
         })

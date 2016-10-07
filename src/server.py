@@ -8,7 +8,9 @@ from elasticsearch import Elasticsearch
 
 from search import build_search_query, build_es_search_body_request, \
     build_es_aggregation_body_request, format_search_results, \
-    format_aggregation_results
+    format_aggregation_results, build_autocomplete_search_body_request, \
+    format_autocomplete_results
+
 
 es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
 ES_INDEX = 'searchable_items_prototype'
@@ -88,6 +90,27 @@ def search():
     }
 
     return jsonify(response)
+
+
+@app.route('/api/search_autocomplete')
+def search_autocomplete():
+    query = request.args.get('q', '')
+    category = request.args.get('category', '')
+    field = request.args.get('field', 'name')
+
+    if query == '':
+        return jsonify({
+            "results": None
+        })
+
+    autocomplete_results = es.search(
+        index=ES_INDEX,
+        body=build_autocomplete_search_body_request(query, category, field)
+    )
+
+    return jsonify({
+        "results": format_autocomplete_results(autocomplete_results, field)
+    })
 
 
 # make static assets available anyway
