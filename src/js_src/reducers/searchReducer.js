@@ -22,7 +22,7 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
     return state.set('errorMessage', action.payload).set('isError',true);
   case '@@router/LOCATION_CHANGE':
      // parse aggs to update active state during route change
-    return state.set('aggregations', parseAggs(state.aggregations, action.payload.query));
+    return state.set('aggregations', parseAggs(state.get('aggregations').toJS(), action.payload.query));
   case 'SEARCH_RESPONSE':
      // parse meta
     return state.set('isPending',false)

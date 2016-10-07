@@ -135,13 +135,13 @@ function mapStateToProps(state) {
   let query = _location.query;
   let _isTable = (query.mode === 'table');
   return {
-    errorMessage: selectErrorMessage(),
-    isError: selectIsError(),
+    errorMessage: selectErrorMessage(state),
+    isError: selectIsError(state),
     isTable: _isTable,
     location: _location,
     query: query.q,
-    results: selectResults(),
-    total: selectTotal(),
+    results: selectResults(state),
+    total: selectTotal(state),
   };
 }
 

@@ -5,6 +5,11 @@ import { connect } from 'react-redux';
 import style from './style.css';
 import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
 
+import {
+    selectActiveCategory,
+    selectAggregations,
+} from '../../selectors/searchSelectors';
+
 class FilterSelectorComponent extends Component {
   renderFilterValues(filterObj) {
     let values = filterObj.values;
@@ -77,8 +82,8 @@ FilterSelectorComponent.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    activeCategory:  state.search.activeCategory,
-    aggregations: state.search.aggregations,
+    activeCategory:  selectActiveCategory(state),
+    aggregations: selectAggregations(state),
     location: state.routing.locationBeforeTransitions
   };
 }

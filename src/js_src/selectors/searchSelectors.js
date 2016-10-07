@@ -25,7 +25,7 @@ const selectIsError = () => createSelector(
 
 const selectResults = () => createSelector(
     selectSearchDomain(),
-    (search) => search.get('results').toArray()
+    (search) => search.get('results').toJS()
 );
 
 const selectTotal = () => createSelector(
