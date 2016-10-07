@@ -8,6 +8,8 @@ import configureStore from '../../lib/configureStore';
 import { SearchComponent } from './index';
 import { FilterSelectorComponent } from './filterSelector';
 import ResultsTable from './resultsTable';
+import { SearchBreadcrumbsComponent } from './searchBreadcrumbs';
+import { SearchControlsComponent } from './searchControls';
 
 let historyObj = createMemoryHistory('/search');
 let store = configureStore(historyObj);
@@ -15,6 +17,28 @@ let store = configureStore(historyObj);
 describe('Search', () => {
   it('should be able to render to an HTML string', () => {
     let htmlString = renderToString(<Provider store={store}><SearchComponent results={[]} total={0} /></Provider>);
+    assert.equal(typeof htmlString, 'string');
+  });
+});
+
+describe('SearchBreadcrumbs', () => {
+  it('should be able to render to an HTML string', () => {
+    let htmlString = renderToString(<SearchBreadcrumbsComponent queryParams={{ page: 0, query: 'actin' }} total={5} />);
+    assert.equal(typeof htmlString, 'string');
+  });
+});
+
+
+describe('SearchControls', () => {
+  it('should be able to render to an HTML string', () => {
+    let htmlString = renderToString(
+      <SearchControlsComponent
+        currentPage={1}
+        isTable={true}
+        queryParams={{}}
+        totalPages={5}
+      />
+    );
     assert.equal(typeof htmlString, 'string');
   });
 });

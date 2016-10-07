@@ -1,15 +1,14 @@
 /*eslint-disable no-undef */
 import React, { Component } from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 import style from './style.css';
 import FilterSelector from './filterSelector';
+import SearchBreadcrumbs from './searchBreadcrumbs';
+import SearchControls from './searchControls';
 import ResultsList from './resultsList';
 import ResultsTable from './resultsTable';
 import { SMALL_COL_CLASS, LARGE_COL_CLASS, SEARCH_API_ERROR_MESSAGE } from '../../constants';
-import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
 import { receiveResponse, setError } from './searchActions';
 
 const BASE_SEARCH_URL = '/api/search';
@@ -67,10 +66,6 @@ class SearchComponent extends Component {
   }
 
   render() {
-    let listQp = getQueryParamWithValueChanged('mode', 'list', this.props.location);
-    let tableQp = getQueryParamWithValueChanged('mode', 'table', this.props.location);
-    let listHref = { pathname: '/search', query: listQp };
-    let tableHref = { pathname: '/search', query: tableQp };
     return (
       <div className={style.root}>
         {this.renderErrorNode()}
@@ -79,30 +74,8 @@ class SearchComponent extends Component {
             <FilterSelector />
           </div>
           <div className={LARGE_COL_CLASS}>
-            <div>
-              <div className={style.controlContainer}>
-              <label className={style.sortLabel}>Page 1 of 1</label>
-              <div className={`btn-group ${style.control}`} role='group'>
-                <button className='btn btn-secondary'><i className='fa fa-chevron-left' /></button>
-                <button className='btn btn-secondary'><i className='fa fa-chevron-right' /></button>
-              </div>
-              <label className={style.sortLabel}>Sort By</label>
-                <DropdownButton className={`btn-secondary ${style.control}`} id='bg-nested-dropdown' title='Relevance'>
-                  <MenuItem eventKey='1'>Dropdown link</MenuItem>
-                  <MenuItem eventKey='2'>Dropdown link</MenuItem>
-                </DropdownButton>
-                <a className={`btn btn-secondary ${style.agrDownloadBtn}`}><i className='fa fa-download' /> Download</a>
-              </div>
-              <p>{this.props.total.toLocaleString()} results for "{this.props.query}"</p>
-            </div>
-            <ul className='nav nav-tabs'>
-              <li className='nav-item'>
-                <Link className={`nav-link${!this.props.isTable ? ' active': ''}`} to={listHref}><i className='fa fa-list' /> List</Link>
-              </li>
-              <li className='nav-item'>
-                <Link className={`nav-link${this.props.isTable ? ' active': ''}`} to={tableHref}><i className='fa fa-table' /> Table</Link>
-              </li>
-            </ul>
+            <SearchBreadcrumbs />
+            <SearchControls />
             {this.renderResultsNode()}
           </div>
         </div>
@@ -118,9 +91,7 @@ SearchComponent.propTypes = {
   isError: React.PropTypes.bool,
   isTable: React.PropTypes.bool,
   location: React.PropTypes.object,
-  query: React.PropTypes.string,
   results: React.PropTypes.array,
-  total: React.PropTypes.number
 };
 
 function mapStateToProps(state) {
@@ -132,9 +103,7 @@ function mapStateToProps(state) {
     isError: state.search.isError,
     isTable: _isTable,
     location: _location,
-    query: query.q,
     results: state.search.results,
-    total: state.search.total
   };
 }
 
