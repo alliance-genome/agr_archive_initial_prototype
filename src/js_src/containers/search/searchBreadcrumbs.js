@@ -27,7 +27,7 @@ class SearchBreadcrumbsComponent extends Component {
     keys = keys.sort( (a, b) => (SORT_PRIORITY.indexOf(a) < SORT_PRIORITY.indexOf(b)) );
     return keys.map( d => {
       let values = qp[d];
-      if (typeof values === 'string') values = [values];
+      if (typeof values !== 'object') values = [values];
       return this.renderCrumbValues(d, values);
     });
   }

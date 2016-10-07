@@ -2,6 +2,7 @@ import _ from 'underscore';
 
 import { injectHighlightIntoResponse } from '../lib/searchHelpers';
 
+const DEFAULT_PAGE_SIZE = 50;
 const MAX_AGGS = 50;
 
 const DEFAULT_STATE = {
@@ -10,8 +11,10 @@ const DEFAULT_STATE = {
   errorMessage: '',
   isError: false,
   isPending: false,
+  pageSize: DEFAULT_PAGE_SIZE,
   results: [],
   total: 0,
+  totalPages: 0
 };
 
 const searchReducer = function (_state, action) {
@@ -33,6 +36,7 @@ const searchReducer = function (_state, action) {
     // parse meta
     state.isPending = false;
     state.total = action.payload.total;
+    state.totalPages = Math.floor(state.total / state.pageSize) + ((state.total % state.pageSize === 0) ? 0 : 1);
     // parse aggregations
     state.aggregations = parseAggs(action.payload.aggregations, action.queryObject);
     // parse results
@@ -42,9 +46,9 @@ const searchReducer = function (_state, action) {
         symbol: d.symbol,
         name: d.name,
         geneId: 'ID:12345678',
-        sourceHref: 'https://www.google.com',
+        sourceHref: d.href,
         synonyms: d.synonym,
-        geneType: 'TYPE',
+        geneType: d.type,
         genomicStartCoordinates: '',
         genomicStopCoordinates: '',
         relativeStartCoordinates: '',

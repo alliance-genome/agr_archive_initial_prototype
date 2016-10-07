@@ -57,7 +57,7 @@ class ResultsTable extends Component {
 
   render() {
     return (
-      <div>
+      <div className={style.tableContainer}>
         <table className='table'>
           <thead className='thead-default'>
             {this.renderHeader()}

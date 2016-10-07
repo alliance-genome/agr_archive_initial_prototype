@@ -1,6 +1,8 @@
 /*eslint-disable no-undef */
 import React, { Component } from 'react';
+import { createMemoryHistory } from 'react-router';
 import { connect } from 'react-redux';
+import _ from 'underscore';
 
 import style from './style.css';
 import FilterSelector from './filterSelector';
@@ -27,7 +29,15 @@ class SearchComponent extends Component {
   }
 
   fetchData() {
-    let searchUrl = BASE_SEARCH_URL + this.props.location.search;
+    // edit for pagination
+    let size = this.props.pageSize;
+    let _limit = size;
+    let _offset = (this.props.currentPage - 1) * size;
+    let qp = _.clone(this.props.location.query);
+    qp.limit = _limit;
+    qp.offset = _offset;
+    let tempHistory = createMemoryHistory('/');
+    let searchUrl = tempHistory.createPath({ pathname: BASE_SEARCH_URL, query: qp });
     // depends on global $
     $.ajax({
       url : searchUrl,
@@ -85,12 +95,14 @@ class SearchComponent extends Component {
 }
 
 SearchComponent.propTypes = {
+  currentPage: React.PropTypes.number,
   dispatch: React.PropTypes.func,
   errorMessage: React.PropTypes.string,
   history: React.PropTypes.object,
   isError: React.PropTypes.bool,
   isTable: React.PropTypes.bool,
   location: React.PropTypes.object,
+  pageSize: React.PropTypes.number,
   results: React.PropTypes.array,
 };
 
@@ -99,10 +111,12 @@ function mapStateToProps(state) {
   let query = _location.query;
   let _isTable = (query.mode === 'table');
   return {
+    currentPage: parseInt(query.page) || 1,
     errorMessage: state.search.errorMessage,
     isError: state.search.isError,
     isTable: _isTable,
     location: _location,
+    pageSize: state.search.pageSize,
     results: state.search.results,
   };
 }

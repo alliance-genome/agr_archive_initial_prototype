@@ -1,9 +1,9 @@
 import _ from 'underscore';
 
-const NON_HIGHLIGHTED_FIELDS = ['sourceHref'];
+const NON_HIGHLIGHTED_FIELDS = ['sourceHref', 'href'];
 const JOIN_HIGHLIGHT_BY = '...';
 
-const SINGLE_VAL_FIELDS = ['mode'];
+const SINGLE_VAL_FIELDS = ['mode', 'page'];
 const CLEARING_FIELDS = ['category'];
 
 // takes the fields in responseObj.highlights and replaces the shallow values in responseObj
@@ -40,7 +40,7 @@ export function getQueryParamWithValueChanged(key, val, queryParams) {
     qp[key] = val;
     return qp;
   }
-  if (typeof oldVal === 'string') {
+  if (typeof oldVal !== 'object') {
     oldVal = [oldVal];
   }
   let newVal;
