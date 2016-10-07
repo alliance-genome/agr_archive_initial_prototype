@@ -34,7 +34,7 @@ class SearchControlsComponent extends Component {
     let nextQp = getQueryParamWithValueChanged('page', nextPage, this.props.queryParams);
     let prevHef = { pathname: SEARCH_PATH, query: prevQp };
     let nextHef = { pathname: SEARCH_PATH, query: nextQp };
-    let isPrevDisabled = prevPage <= 1;
+    let isPrevDisabled = curPage <= 1;
     let isNextDisabled = curPage >= totPage;
     return (
       <div className={style.control}>
