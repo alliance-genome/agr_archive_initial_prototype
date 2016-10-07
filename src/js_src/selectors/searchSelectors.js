@@ -14,23 +14,32 @@ const selectSearch = () => createSelector(
 );
 
 const selectErrorMessage = () => createSelector(
-    selectSearch(),
-    (search) => search.errorMessage
+    selectSearchDomain(),
+    (search) => search.get('errorMessage')
 );
 
 const selectIsError = () => createSelector(
-    selectSearch(),
-    (search) => search.isError
+    selectSearchDomain(),
+    (search) => search.get('isError')
 );
 
 const selectResults = () => createSelector(
-    selectSearch(),
-    (search) => search.results
+    selectSearchDomain(),
+    (search) => search.get('results').toArray()
 );
 
 const selectTotal = () => createSelector(
-    selectSearch(),
-    (search) => search.total
+    selectSearchDomain(),
+    (search) => search.get('total')
+);
+
+const selectActiveCategory = () => createSelector(
+    selectSearchDomain(),
+    (search) => search.get('activeCategory')
+);
+const selectAggregations = () => createSelector(
+    selectSearchDomain(),
+    (search) => search.get('aggregations').toJS()
 );
 
 export {
@@ -40,4 +49,6 @@ export {
     selectIsError,
     selectResults,
     selectTotal,
+    selectActiveCategory,
+    selectAggregations,
 };
