@@ -12,6 +12,13 @@ import { SMALL_COL_CLASS, LARGE_COL_CLASS, SEARCH_API_ERROR_MESSAGE } from '../.
 import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
 import { receiveResponse, setError } from './searchActions';
 
+import {
+    selectErrorMessage,
+    selectIsError,
+    selectResults,
+    selectTotal,
+} from '../../selectors/searchSelectors';
+
 const BASE_SEARCH_URL = '/api/search';
 
 class SearchComponent extends Component {
@@ -128,13 +135,13 @@ function mapStateToProps(state) {
   let query = _location.query;
   let _isTable = (query.mode === 'table');
   return {
-    errorMessage: state.search.errorMessage,
-    isError: state.search.isError,
+    errorMessage: selectErrorMessage(),
+    isError: selectIsError(),
     isTable: _isTable,
     location: _location,
     query: query.q,
-    results: state.search.results,
-    total: state.search.total
+    results: selectResults(),
+    total: selectTotal(),
   };
 }
 
