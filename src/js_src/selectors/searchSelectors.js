@@ -6,39 +6,39 @@ import { createSelector } from 'reselect';
 /**
  * Direct selector to the search state.
  */
-const selectSearchDomain = () => state => state.get('search');
+const selectSearchDomain = (state) => state.search;
 
-const selectSearch = () => createSelector(
-    selectSearchDomain(),
+const selectSearch = createSelector(
+    [selectSearchDomain],
     (searchDomain) => searchDomain.toJS()
 );
 
-const selectErrorMessage = () => createSelector(
-    selectSearchDomain(),
+const selectErrorMessage = createSelector(
+    [selectSearchDomain],
     (search) => search.get('errorMessage')
 );
 
-const selectIsError = () => createSelector(
-    selectSearchDomain(),
+const selectIsError = createSelector(
+    [selectSearchDomain],
     (search) => search.get('isError')
 );
 
-const selectResults = () => createSelector(
-    selectSearchDomain(),
+const selectResults = createSelector(
+    [selectSearchDomain],
     (search) => search.get('results').toJS()
 );
 
-const selectTotal = () => createSelector(
-    selectSearchDomain(),
+const selectTotal = createSelector(
+    [selectSearchDomain],
     (search) => search.get('total')
 );
 
-const selectActiveCategory = () => createSelector(
-    selectSearchDomain(),
+const selectActiveCategory = createSelector(
+    [selectSearchDomain],
     (search) => search.get('activeCategory')
 );
-const selectAggregations = () => createSelector(
-    selectSearchDomain(),
+const selectAggregations = createSelector(
+    [selectSearchDomain],
     (search) => search.get('aggregations').toJS()
 );
 

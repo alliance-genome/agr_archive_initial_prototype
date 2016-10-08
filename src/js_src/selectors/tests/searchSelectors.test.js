@@ -12,84 +12,75 @@ import {
     selectAggregations,
 } from '../searchSelectors';
 
-/*const stateJS = {
-    search: {
-        errorMessage: 'This is an error',
-    }
-};
-const state = fromJS(stateJS);*/
-
 describe('SearchSelectors', () => {
-    const searchDomainSelector = selectSearchDomain();
     it('selectSearchDomain', () => {
-        const searchState = fromJS({});
-        const mockedState = fromJS({
-            search: searchState,
+        const searchState = fromJS({
+            isError: true,
+            results: [],
         });
-        assert.equal(searchDomainSelector(mockedState),searchState);
+        const mockedState = {
+            search: fromJS(searchState),
+        };
+        assert.equal(selectSearchDomain(mockedState),searchState);
     });
 
-    const searchSelector = selectSearch();
     it('selectSearch', () => {
-        const searchState = {};
-        const mockedState = fromJS({
-            search: searchState,
-        });
-        assert.deepEqual(searchSelector(mockedState),searchState);
+        const searchState = {
+            isError: true,
+            results: [],
+        };
+        const mockedState = {
+            search: fromJS(searchState),
+        };
+        assert.deepEqual(selectSearch(mockedState),searchState);
     });
 
-    const resultsSelector = selectResults();
     it('selectResults', () => {
         const searchState = { results: [1,2,3,4] };
-        const mockedState = fromJS({
-            search: searchState,
-        });
-        assert.deepEqual(resultsSelector(mockedState),searchState.results);
+        const mockedState = {
+            search: fromJS(searchState),
+        };
+        assert.deepEqual(selectResults(mockedState),searchState.results);
     });
 
-    const errorMessageSelector = selectErrorMessage();
     it('selectErrorMessage', () => {
         const searchState = { errorMessage: 'This is an error' };
-        const mockedState = fromJS({
-            search: searchState,
-        });
-        assert.deepEqual(errorMessageSelector(mockedState),searchState.errorMessage);
+        const mockedState = {
+            search: fromJS(searchState),
+        };
+        assert.deepEqual(selectErrorMessage(mockedState),searchState.errorMessage);
     });
-
-    const isErrorSelector = selectIsError();
+    
     it('selectIsError', () => {
         const searchState = { isError: true };
-        const mockedState = fromJS({
-            search: searchState,
-        });
-        assert.equal(isErrorSelector(mockedState),searchState.isError);
+        const mockedState = {
+            search: fromJS(searchState),
+        };
+        assert.equal(selectIsError(mockedState),searchState.isError);
     });
 
-    const totalSelector = selectTotal();
     it('selectTotal', () => {
         const searchState = { total: 10 };
-        const mockedState = fromJS({
-            search: searchState,
-        });
-        assert.equal(totalSelector(mockedState),searchState.total);
+        const mockedState = {
+            search: fromJS(searchState),
+        };
+        assert.equal(selectTotal(mockedState),searchState.total);
     });
 
-    const activeCategorySelector = selectActiveCategory();
     it('selectActiveCategory', () => {
         const searchState = { activeCategory: 'my category' };
-        const mockedState = fromJS({
-            search: searchState,
-        });
-        assert.equal(activeCategorySelector(mockedState),searchState.activeCategory);
+        const mockedState = {
+            search: fromJS(searchState),
+        };
+        assert.equal(selectActiveCategory(mockedState),searchState.activeCategory);
     });
 
-    const aggregationsSelector = selectAggregations();
     it('selectAggregations', () => {
         const searchState = { aggregations: [{name:'myagg1', displayName:'My agg1'},{name:'myagg2', displayName:'My agg2'}]};
-        const mockedState = fromJS({
-            search: searchState,
+        const mockedState = {
+            search: fromJS(searchState),
+        };
+        assert.deepEqual(selectAggregations(mockedState),searchState.aggregations);
         });
-        assert.deepEqual(aggregationsSelector(mockedState),searchState.aggregations);
-    });
 });
 
