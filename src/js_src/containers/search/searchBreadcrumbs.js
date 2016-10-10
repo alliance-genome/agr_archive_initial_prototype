@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import style from './style.css';
 import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
 
+import { selectTotal } from '../../selectors/searchSelectors.js';
+
 const IGNORED_PARAMS = ['page', 'mode'];
 const SORT_PRIORITY = ['category', 'q'];
 
@@ -51,7 +53,7 @@ function mapStateToProps(state) {
   let _queryParams = location ? state.routing.locationBeforeTransitions.query : {};
   return {
     queryParams: _queryParams,
-    total: state.search.total
+    total: selectTotal(state)
   };
 }
 

@@ -6,6 +6,8 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 import style from './style.css';
 import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
 
+import { selectTotalPages } from '../../selectors/searchSelectors';
+
 const SEARCH_PATH = '/search';
 
 class SearchControlsComponent extends Component {
@@ -92,7 +94,7 @@ function mapStateToProps(state) {
     currentPage: parseInt(_queryParams.page) || 1,
     isTable: _isTable,
     queryParams: _queryParams,
-    totalPages: state.search.totalPages
+    totalPages: selectTotalPages(state),
   };
 }
 

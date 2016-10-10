@@ -13,6 +13,13 @@ import ResultsTable from './resultsTable';
 import { SMALL_COL_CLASS, LARGE_COL_CLASS, SEARCH_API_ERROR_MESSAGE } from '../../constants';
 import { receiveResponse, setError } from './searchActions';
 
+import {
+    selectErrorMessage,
+    selectIsError,
+    selectResults,
+    selectPageSize,
+} from '../../selectors/searchSelectors';
+
 const BASE_SEARCH_URL = '/api/search';
 
 class SearchComponent extends Component {
@@ -112,12 +119,12 @@ function mapStateToProps(state) {
   let _isTable = (query.mode === 'table');
   return {
     currentPage: parseInt(query.page) || 1,
-    errorMessage: state.search.errorMessage,
-    isError: state.search.isError,
+    errorMessage: selectErrorMessage(state),
+    isError: selectIsError(state),
     isTable: _isTable,
     location: _location,
-    pageSize: state.search.pageSize,
-    results: state.search.results,
+    pageSize: selectPageSize(state),
+    results: selectResults(state),
   };
 }
 

@@ -1,11 +1,13 @@
-import _ from 'underscore';
+// import _ from 'underscore';
 
 import { injectHighlightIntoResponse } from '../lib/searchHelpers';
+
+import { fromJS } from 'immutable';
 
 const DEFAULT_PAGE_SIZE = 50;
 const MAX_AGGS = 50;
 
-const DEFAULT_STATE = {
+const DEFAULT_STATE = fromJS({
   activeCategory: 'none',
   aggregations: [],
   errorMessage: '',
@@ -14,50 +16,40 @@ const DEFAULT_STATE = {
   pageSize: DEFAULT_PAGE_SIZE,
   results: [],
   total: 0,
-  totalPages: 0
-};
+});
 
-const searchReducer = function (_state, action) {
-  // simple way to not alter original state
-  let state = _.clone(_state);
-  if (typeof state === 'undefined') {
-    return DEFAULT_STATE;
-  }
+const searchReducer = function (state = DEFAULT_STATE, action) {
+  //TODO cleanup fromJS/toJS handling here.
   switch(action.type) {
   case 'SEARCH_ERROR':
-    state.errorMessage = action.payload;
-    state.isError = true;
-    return state;
+    return state.set('errorMessage', action.payload).set('isError',true);
   case '@@router/LOCATION_CHANGE':
-    // parse aggs to update active state during route change
-    state.aggregations = parseAggs(state.aggregations, action.payload.query);
-    return state;
+     // parse aggs to update active state during route change
+    return state.set('aggregations', fromJS(parseAggs(state.get('aggregations').toJS(), action.payload.query)));
   case 'SEARCH_RESPONSE':
     // parse meta
-    state.isPending = false;
-    state.total = action.payload.total;
-    state.totalPages = Math.floor(state.total / state.pageSize) + ((state.total % state.pageSize === 0) ? 0 : 1);
-    // parse aggregations
-    state.aggregations = parseAggs(action.payload.aggregations, action.queryObject);
-    // parse results
-    state.results = action.payload.results.map( _d => {
-      let d = injectHighlightIntoResponse(_d);
-      return {
-        symbol: d.symbol,
-        name: d.name,
-        geneId: 'ID:12345678',
-        sourceHref: d.href,
-        synonyms: d.synonym,
-        geneType: d.type,
-        genomicStartCoordinates: '',
-        genomicStopCoordinates: '',
-        relativeStartCoordinates: '',
-        relativeStopCoordinates: '',
-        species: d.organism,
-        highlight: d.highlights
-      };
-    });
-    return state;
+    return state.set('isPending',false)
+                .set('total', action.payload.total)
+                // parse aggregations
+                .set('aggregations', fromJS(parseAggs(action.payload.aggregations, action.queryObject))) 
+                // parse results
+                .set('results',fromJS(action.payload.results.map( _d => { 
+                  let d = injectHighlightIntoResponse(_d);
+                  return {
+                    symbol: d.symbol,
+                    name: d.name,
+                    geneId: 'ID:12345678',
+                    sourceHref: d.href,
+                    synonyms: d.synonym,
+                    geneType: d.type,
+                    genomicStartCoordinates: '',
+                    genomicStopCoordinates: '',
+                    relativeStartCoordinates: '',
+                    relativeStopCoordinates: '',
+                    species: d.organism,
+                    highlight: d.highlights
+                  };
+                })));
   default:
     return state;
   }
