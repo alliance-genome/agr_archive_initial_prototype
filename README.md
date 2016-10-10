@@ -6,7 +6,7 @@ An initial prototype for the web portal of the Alliance of Genome Resources
 ## Getting started
 ```bash
 $ make build
-$ make start
+$ make run
 ```
 
 To run tests
