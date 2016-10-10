@@ -22,7 +22,7 @@ class FilterSelectorComponent extends Component {
       } else {
         nameNode = <span>{d.displayName}</span>;
       }
-      let newQueryObj = getQueryParamWithValueChanged(filterObj.key, d.key, this.props.location);
+      let newQueryObj = getQueryParamWithValueChanged(filterObj.key, d.key, this.props.location.query);
       return (
         <li className='nav-item' key={_key}>
           <Link className={`nav-link${classSuffix}`} to={{ pathname: '/search', query: newQueryObj }}>{nameNode} ({d.total})</Link>

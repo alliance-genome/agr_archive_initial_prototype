@@ -4,6 +4,7 @@ import { injectHighlightIntoResponse } from '../lib/searchHelpers';
 
 import { fromJS } from 'immutable';
 
+const DEFAULT_PAGE_SIZE = 50;
 const MAX_AGGS = 50;
 
 const DEFAULT_STATE = fromJS({
@@ -12,6 +13,7 @@ const DEFAULT_STATE = fromJS({
   errorMessage: '',
   isError: false,
   isPending: false,
+  pageSize: DEFAULT_PAGE_SIZE,
   results: [],
   total: 0,
 });
@@ -24,29 +26,29 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
      // parse aggs to update active state during route change
     return state.set('aggregations', parseAggs(state.get('aggregations').toJS(), action.payload.query));
   case 'SEARCH_RESPONSE':
-     // parse meta
+    // parse meta
     return state.set('isPending',false)
-               .set('total', action.payload.total) 
-               // parse aggregations
-               .set('aggregations', parseAggs(action.payload.aggregations, action.queryObject)) 
-               // parse results
-               .set('results',action.payload.results.map( _d => { 
-                 let d = injectHighlightIntoResponse(_d);
-                 return {
-                   symbol: d.symbol,
-                   name: d.name,
-                   geneId: 'ID:12345678',
-                   sourceHref: 'https://www.google.com',
-                   synonyms: d.synonym,
-                   geneType: 'TYPE',
-                   genomicStartCoordinates: '',
-                   genomicStopCoordinates: '',
-                   relativeStartCoordinates: '',
-                   relativeStopCoordinates: '',
-                   species: d.organism,
-                   highlight: d.highlights
-                 };
-               }));
+                .set('total', action.payload.total)
+                // parse aggregations
+                .set('aggregations', parseAggs(action.payload.aggregations, action.queryObject)) 
+                // parse results
+                .set('results',action.payload.results.map( _d => { 
+                  let d = injectHighlightIntoResponse(_d);
+                  return {
+                    symbol: d.symbol,
+                    name: d.name,
+                    geneId: 'ID:12345678',
+                    sourceHref: d.href,
+                    synonyms: d.synonym,
+                    geneType: d.type,
+                    genomicStartCoordinates: '',
+                    genomicStopCoordinates: '',
+                    relativeStartCoordinates: '',
+                    relativeStopCoordinates: '',
+                    species: d.organism,
+                    highlight: d.highlights
+                  };
+                }));
   default:
     return state;
   }

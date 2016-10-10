@@ -18,18 +18,31 @@
 .controlContainer {
 	float: right;
 	margin-top: 0.25rem;
+	width: 516px;
+	display: flex;
+	justify-content: space-between;
 }
 
 .sortLabel {
 	margin-right: 0.5rem;
 }
 
+.searchLabel {
+	display: block;
+	margin-bottom: 0.25rem;
+}
+
 .control {
 	margin-right: 1rem;
+	display: inline-block;
 }
 
 .resultContainer {
   margin-top: 1rem;
+}
+
+.tableContainer {
+	margin-top: 1rem;
 }
 
 .detailList mark, em {

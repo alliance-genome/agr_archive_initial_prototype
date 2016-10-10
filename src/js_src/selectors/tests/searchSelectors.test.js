@@ -8,6 +8,8 @@ import {
     selectIsError,
     selectResults,
     selectTotal,
+    selectPageSize,
+    selectTotalPages,
     selectActiveCategory,
     selectAggregations,
 } from '../searchSelectors';
@@ -65,6 +67,28 @@ describe('SearchSelectors', () => {
             search: fromJS(searchState),
         };
         assert.equal(selectTotal(mockedState),searchState.total);
+    });
+
+    it('selectPageSize', () => {
+        const searchState = { pageSize: 33 };
+        const mockedState = {
+            search: fromJS(searchState),
+        };
+        assert.equal(selectPageSize(mockedState),searchState.pageSize);
+    });
+
+    it('selectTotalPages', () => {
+        let searchState = { total: 10, pageSize: 50 };
+        let mockedState = {
+            search: fromJS(searchState),
+        };
+        assert.equal(selectTotalPages(mockedState),1);
+
+        searchState = { total: 101, pageSize: 50 };
+        mockedState = {
+            search: fromJS(searchState),
+        };
+        assert.equal(selectTotalPages(mockedState),3);
     });
 
     it('selectActiveCategory', () => {

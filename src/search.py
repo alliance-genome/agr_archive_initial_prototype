@@ -13,7 +13,12 @@ def build_es_aggregation_body_request(es_query, category, category_filters):
         }
     elif category in category_filters.keys():
         for subcategory in category_filters[category]:
-            agg_query_body['aggs'][subcategory] = {'terms': {'field': subcategory + '.raw', 'size': 999}}
+            agg_query_body['aggs'][subcategory] = {
+                'terms': {
+                    'field': subcategory + '.raw',
+                    'size': 999
+                }
+            }
     else:
         return {}
 
@@ -195,5 +200,76 @@ def format_search_results(search_results, json_response_fields):
         obj['highlights'] = r.get('highlight')
 
         formatted_results.append(obj)
+
+    return formatted_results
+
+
+def build_autocomplete_search_body_request(query, category='gene', field='name'):
+    es_query = {
+        "query": {
+            "bool": {
+                "must": [{
+                    "match": {
+                        "name": {
+                            "query": query,
+                            "analyzer": "standard"
+                        }
+                    }
+                }],
+                "should": [
+                    {
+                        "match": {
+                            "category": {
+                                "query": "gene",
+                                "boost": 4
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        '_source': ['name', 'href', 'category']
+    }
+
+    if category != '':
+        es_query["query"]["bool"]["must"].append({"match": {"category": category}})
+        if category != "gene":
+            es_query["query"]["bool"].pop("should")
+
+    if field != 'name':
+        es_query['aggs'] = {}
+        es_query['aggs'][field] = {
+            'terms': {'field': field + '.raw', 'size': 999}
+        }
+
+        es_query['query']['bool']['must'][0]['match'] = {}
+        es_query['query']['bool']['must'][0]['match'][field + '.autocomplete'] = {
+            'query': query,
+            'analyzer': 'standard'
+        }
+
+        es_query['_source'] = [field, 'href', 'category']
+
+    return es_query
+
+
+def format_autocomplete_results(es_response, field='name'):
+    formatted_results = []
+
+    if field != 'name':
+        results = es_response['aggregations'][field]['buckets']
+        for r in results:
+            obj = {
+                'name': r['key']
+            }
+            formatted_results.append(obj)
+    else:
+        for hit in es_response['hits']['hits']:
+            obj = {
+                'name': hit['_source']['name'],
+                'href': hit['_source']['href'],
+                'category': hit['_source']['category']
+            }
+            formatted_results.append(obj)
 
     return formatted_results

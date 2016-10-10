@@ -33,6 +33,16 @@ const selectTotal = createSelector(
     (search) => search.get('total')
 );
 
+const selectPageSize = createSelector(
+    [selectSearchDomain],
+    (search) => search.get('pageSize')
+);
+
+const selectTotalPages = createSelector(
+    [selectTotal,selectPageSize],
+    (total, pageSize) => Math.floor(total / pageSize) + ((total % pageSize === 0) ? 0 : 1)
+);
+
 const selectActiveCategory = createSelector(
     [selectSearchDomain],
     (search) => search.get('activeCategory')
@@ -49,6 +59,8 @@ export {
     selectIsError,
     selectResults,
     selectTotal,
+    selectPageSize,
+    selectTotalPages,
     selectActiveCategory,
     selectAggregations,
 };

@@ -66,7 +66,7 @@ def index_genes(organism, mod):
                     "go_names": [row[mod["gene_fields"]["go_name"]]],
                     "href": mod["url_prefix"] + row["primaryIdentifier"] + mod["url_suffix"],
                     "organism": organism,
-                    "type": "gene"
+                    "category": "gene"
                 }
 
         with open(backup_filename, 'wb') as backup:

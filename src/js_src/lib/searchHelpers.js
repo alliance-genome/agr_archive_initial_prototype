@@ -1,9 +1,10 @@
 import _ from 'underscore';
 
-const NON_HIGHLIGHTED_FIELDS = ['sourceHref'];
+const NON_HIGHLIGHTED_FIELDS = ['sourceHref', 'href'];
 const JOIN_HIGHLIGHT_BY = '...';
 
-const SINGLE_VAL_FIELDS = ['mode'];
+const SINGLE_VAL_FIELDS = ['mode', 'page'];
+const CLEARING_FIELDS = ['category'];
 
 // takes the fields in responseObj.highlights and replaces the shallow values in responseObj
 // also return highlight values as strings like '<em>val</em>...<em>val2</em>' instead of array
@@ -31,15 +32,15 @@ export function makeFieldDisplayName(unformattedName) {
   return unformattedName.replace('_', ' ');
 }
 
-export function getQueryParamWithValueChanged(key, val, locationObj) {
-  let qp = locationObj ? _.clone(locationObj.query) : {};
-  let oldVal = locationObj ? _.clone(locationObj.query[key]) : null;
+export function getQueryParamWithValueChanged(key, val, queryParams) {
+  let qp = _.clone(queryParams || {});
+  let oldVal = _.clone(qp[key]);
   let isSingleValField = (SINGLE_VAL_FIELDS.indexOf(key) > -1);
   if (isSingleValField || oldVal === null || typeof oldVal === 'undefined') {
     qp[key] = val;
     return qp;
   }
-  if (typeof oldVal === 'string') {
+  if (typeof oldVal !== 'object') {
     oldVal = [oldVal];
   }
   let newVal;
@@ -50,5 +51,10 @@ export function getQueryParamWithValueChanged(key, val, locationObj) {
     newVal.push(val);
   }
   qp[key] = newVal;
+  if (CLEARING_FIELDS.indexOf(key) > -1) {
+    qp = { q: qp.q };
+    qp[key] = newVal;
+    return qp;
+  }
   return qp;
 }
