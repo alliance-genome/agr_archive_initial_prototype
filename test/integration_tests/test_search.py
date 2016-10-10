@@ -6,6 +6,7 @@ from src.search import build_es_search_body_request, \
     build_search_query, build_es_aggregation_body_request, \
     format_search_results, format_aggregation_results, \
     format_autocomplete_results, build_autocomplete_search_body_request
+from werkzeug.datastructures import ImmutableMultiDict
 
 
 class SearchEndpointsTest(unittest.TestCase):
@@ -144,13 +145,13 @@ class SearchEndpointsTest(unittest.TestCase):
             self.search_fields,
             "gene",
             self.category_filters,
-            {
-                "q": "act1",
-                "category": "gene",
-                "limit": 25,
-                "offset": 10,
-                "sort_by": "alphabetical"
-            }
+            ImmutableMultiDict([
+                ("q", "act1"),
+                ("category", "gene"),
+                ("limit", 25),
+                ("offset", 10),
+                ("sort_by", "alphabetical")
+            ])
         )
 
         mock_es.assert_has_calls([mock.call(
@@ -195,11 +196,11 @@ class SearchEndpointsTest(unittest.TestCase):
             self.search_fields,
             "gene",
             self.category_filters,
-            {
-                "q": "act1",
-                "category": "gene",
-                "go_names": "cytoplasm"
-            }
+            ImmutableMultiDict([
+                ("q", "act1"),
+                ("category", "gene"),
+                ("go_names", "cytoplasm")
+            ])
         )
 
         mock_es.assert_has_calls([mock.call(
