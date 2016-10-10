@@ -3,6 +3,7 @@ from src.search import build_search_query, build_search_params, \
     build_es_search_body_request, format_search_results, \
     build_es_aggregation_body_request, format_aggregation_results, \
     build_autocomplete_search_body_request, format_autocomplete_results
+from werkzeug.datastructures import ImmutableMultiDict
 
 
 class SearchHelpersTest(unittest.TestCase):
@@ -109,7 +110,7 @@ class SearchHelpersTest(unittest.TestCase):
             "genes": ['go_ids', 'go_names'],
             "go": ['gene'],
         }
-        args = {}
+        args = ImmutableMultiDict()
 
         es_query = build_search_params(query, fields)
 
@@ -123,7 +124,7 @@ class SearchHelpersTest(unittest.TestCase):
             "genes": ['go_ids', 'go_names'],
             "go": ['gene'],
         }
-        args = {}
+        args = ImmutableMultiDict()
 
         es_query = build_search_params(query, fields)
 
@@ -146,7 +147,11 @@ class SearchHelpersTest(unittest.TestCase):
             "genes": ['go_ids', 'go_names'],
             "go": ['gene'],
         }
-        args = {'go_names': 'A,B,C'}
+        args = ImmutableMultiDict([
+            ('go_names', 'A'),
+            ('go_names', 'B'),
+            ('go_names', 'C')
+        ])
 
         es_query = build_search_params(query, fields)
 
@@ -155,7 +160,12 @@ class SearchHelpersTest(unittest.TestCase):
                 'query': es_query,
                 'filter': {
                     'bool': {
-                        'must': [{'term': {'category': category}}, {'term': {'go_names.raw': 'A,B,C'}}]
+                        'must': [
+                            {'term': {'category': category}},
+                            {'term': {'go_names.raw': 'A'}},
+                            {'term': {'go_names.raw': 'B'}},
+                            {'term': {'go_names.raw': 'C'}}
+                        ]
                     }
                 }
             }
@@ -170,7 +180,11 @@ class SearchHelpersTest(unittest.TestCase):
             "go": ['gene'],
         }
         sort_by = "relevance"
-        args = {'go_names': 'A,B,C'}
+        args = ImmutableMultiDict([
+            ('go_names', 'A'),
+            ('go_names', 'B'),
+            ('go_names', 'C')
+        ])
         search_fields = []
         json_response_fields = ['name', 'symbol', 'synonym']
 
@@ -198,7 +212,11 @@ class SearchHelpersTest(unittest.TestCase):
             "go": ['gene'],
         }
         sort_by = "relevance"
-        args = {'go_names': 'A,B,C'}
+        args = ImmutableMultiDict([
+            ('go_names', 'A'),
+            ('go_names', 'B'),
+            ('go_names', 'C')
+        ])
         search_fields = ["name", "symbol"]
         json_response_fields = ['name', 'symbol', 'synonym']
 
@@ -226,7 +244,11 @@ class SearchHelpersTest(unittest.TestCase):
             "go": ['gene'],
         }
         sort_by = "alphabetical"
-        args = {'go_names': 'A,B,C'}
+        args = ImmutableMultiDict([
+            ('go_names', 'A'),
+            ('go_names', 'B'),
+            ('go_names', 'C')
+        ])
         search_fields = ["name", "symbol"]
         json_response_fields = ['name', 'symbol', 'synonym']
 
@@ -261,7 +283,11 @@ class SearchHelpersTest(unittest.TestCase):
             "go": ['gene'],
         }
         sort_by = "alphabetical"
-        args = {'go_names': 'A,B,C'}
+        args = ImmutableMultiDict([
+            ('go_names', 'A'),
+            ('go_names', 'B'),
+            ('go_names', 'C')
+        ])
         search_fields = ["name", "symbol"]
         json_response_fields = ['name', 'symbol', 'synonym']
 
@@ -326,7 +352,11 @@ class SearchHelpersTest(unittest.TestCase):
             "genes": ['go_ids', 'go_names'],
             "go": ['gene'],
         }
-        args = {'go_names': 'A,B,C'}
+        args = ImmutableMultiDict([
+            ('go_names', 'A'),
+            ('go_names', 'B'),
+            ('go_names', 'C')
+        ])
 
         es_query = build_search_query(query, fields, category, category_filters, args)
 
@@ -340,7 +370,11 @@ class SearchHelpersTest(unittest.TestCase):
             "genes": ['go_ids', 'go_names'],
             "go": ['gene'],
         }
-        args = {'go_names': 'A,B,C'}
+        args = ImmutableMultiDict([
+            ('go_names', 'A'),
+            ('go_names', 'B'),
+            ('go_names', 'C')
+        ])
 
         es_query = build_search_query(query, fields, category, category_filters, args)
 
@@ -361,7 +395,11 @@ class SearchHelpersTest(unittest.TestCase):
             "genes": ['go_ids', 'go_names'],
             "go": ['gene'],
         }
-        args = {'go_names': 'A,B,C'}
+        args = ImmutableMultiDict([
+            ('go_names', 'A'),
+            ('go_names', 'B'),
+            ('go_names', 'C')
+        ])
 
         es_query = build_search_query(query, fields, category, category_filters, args)
 
