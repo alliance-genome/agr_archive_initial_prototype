@@ -76,12 +76,11 @@ def index_genes(organism, mod):
             }
         })
         bulk_data.append(genes[gene])
-
         if len(bulk_data) % 500 == 0:
             es.bulk(index=INDEX_NAME, body=bulk_data, refresh=True)
             bulk_data = []
 
-    if len(bulk_data) > 0:
+    if bulk_data:
         es.bulk(index=INDEX_NAME, body=bulk_data, refresh=True)
 
 
