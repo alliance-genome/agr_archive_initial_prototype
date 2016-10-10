@@ -19,20 +19,21 @@ const DEFAULT_STATE = fromJS({
 });
 
 const searchReducer = function (state = DEFAULT_STATE, action) {
+  //TODO cleanup fromJS/toJS handling here.
   switch(action.type) {
   case 'SEARCH_ERROR':
     return state.set('errorMessage', action.payload).set('isError',true);
   case '@@router/LOCATION_CHANGE':
      // parse aggs to update active state during route change
-    return state.set('aggregations', parseAggs(state.get('aggregations').toJS(), action.payload.query));
+    return state.set('aggregations', fromJS(parseAggs(state.get('aggregations').toJS(), action.payload.query)));
   case 'SEARCH_RESPONSE':
     // parse meta
     return state.set('isPending',false)
                 .set('total', action.payload.total)
                 // parse aggregations
-                .set('aggregations', parseAggs(action.payload.aggregations, action.queryObject)) 
+                .set('aggregations', fromJS(parseAggs(action.payload.aggregations, action.queryObject))) 
                 // parse results
-                .set('results',action.payload.results.map( _d => { 
+                .set('results',fromJS(action.payload.results.map( _d => { 
                   let d = injectHighlightIntoResponse(_d);
                   return {
                     symbol: d.symbol,
@@ -48,7 +49,7 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
                     species: d.organism,
                     highlight: d.highlights
                   };
-                }));
+                })));
   default:
     return state;
   }
