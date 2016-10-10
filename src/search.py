@@ -114,10 +114,10 @@ def build_search_query(query, fields, category, category_filters, args):
 
     if category in category_filters.keys():
         for item in category_filters[category]:
-            if args.get(item, None):
+            for param in args.getlist(item, None):
                 query['filtered']['filter']['bool']['must'].append({
                     'term': {
-                        (item + ".raw"): args.get(item)
+                        (item + ".raw"): param
                     }
                 })
 
