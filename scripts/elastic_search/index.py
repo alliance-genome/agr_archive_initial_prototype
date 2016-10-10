@@ -108,7 +108,7 @@ mods = {
             "gene_symbol": "symbol",
             "gene_synonym": "secondaryIdentifier"
         },
-        "url_prefix": "http://www.yeastgenome.org/locus",
+        "url_prefix": "http://www.yeastgenome.org/locus/",
         "url_suffix": "/overview"
     }
 }
