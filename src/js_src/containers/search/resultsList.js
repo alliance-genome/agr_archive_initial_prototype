@@ -31,10 +31,12 @@ class ResultsList extends Component {
     return this.props.entries.map( (d, i) => {
       return (
         <div className={style.resultContainer} key={`sr${i}`}>
-          <CategoryLabel category={d.category} />
-          <h3>
-            <a dangerouslySetInnerHTML={{ __html: d.symbol }} href='#' />
-          </h3>
+          <div>
+            <span className={style.resultCatLabel}>Category: <CategoryLabel category='gene' /></span>
+            <h3>
+              <a dangerouslySetInnerHTML={{ __html: d.symbol }} href='#' />
+            </h3>
+          </div>
           <dl className={style.detailList}>
             <dt>Name:</dt>
             <dd dangerouslySetInnerHTML={{ __html: d.name }} />

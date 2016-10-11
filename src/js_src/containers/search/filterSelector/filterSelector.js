@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import style from './style.css';
 import SingleFilterSelector from './singleFilterSelector';
 import { getQueryParamWithValueChanged } from '../../../lib/searchHelpers';
+import CategoryLabel from '../categoryLabel';
 
 import {
   selectActiveCategory,
@@ -31,7 +32,7 @@ class FilterSelectorComponent extends Component {
     let newHref = { pathname: '/search', query: newQp };
     return (
       <div>
-          <h5>Category: {this.props.activeCategory}</h5>
+        <p><CategoryLabel category={this.props.activeCategory} /></p>
         <p>
           <Link to={newHref}><i className='fa fa-chevron-left' /> Show all Categories</Link>
         </p>

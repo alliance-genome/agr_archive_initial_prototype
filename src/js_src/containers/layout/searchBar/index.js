@@ -6,6 +6,7 @@ import { push } from 'react-router-redux';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 import style from './style.css';
+import CategoryLabel from '../../search/categoryLabel';
 
 const INPUT_CLASS = 'agr-search-input';
 const CATEGORY_OPTIONS = [
@@ -30,12 +31,13 @@ const CATEGORY_OPTIONS = [
     displayName: 'Ortholog Groups'
   }
 ];
+const DEFAULT_CAT = CATEGORY_OPTIONS[0];
 
 class SearchBarComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      catOption: CATEGORY_OPTIONS[0]
+      catOption: DEFAULT_CAT
     };
   }
 
@@ -61,7 +63,8 @@ class SearchBarComponent extends Component {
   renderDropdown() {
     let _title = this.state.catOption.displayName;
     let nodes = CATEGORY_OPTIONS.map( d => {
-      return <MenuItem className={style.dropdownItem} eventKey={d.name} key={d.name}>{d.displayName}</MenuItem>;
+      let labelNode = (d.name === DEFAULT_CAT.name) ? 'All' : <CategoryLabel category={d.name} />;
+      return <MenuItem className={style.dropdownItem} eventKey={d.name} key={d.name}>{labelNode}</MenuItem>;
     });
     return (
       <DropdownButton className={style.dropdown} id='bg-nested-dropdown' onSelect={this.handleSelect.bind(this)} title={_title}>
