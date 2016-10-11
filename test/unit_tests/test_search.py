@@ -1,10 +1,8 @@
 import unittest
+
 from werkzeug.datastructures import ImmutableMultiDict
 
 from src import search
-
-class SearchHelpersTest(unittest.TestCase):
-    pass
 
 
 class TestBuildSearchParams(unittest.TestCase):
@@ -60,8 +58,7 @@ class TestBuildSearchParams(unittest.TestCase):
     def test_should_quote_queries_with_special_chars(self):
         query = "eu-gene"
         fields = ["name", "symbol"]
-
-        self.assertEqual(search.build_search_params(query, fields), {
+        expected = {
             'dis_max': {
                 'queries': [{
                     'match_phrase_prefix': {
@@ -80,7 +77,9 @@ class TestBuildSearchParams(unittest.TestCase):
                     }
                 }]
             }
-        })
+        }
+        actual = search.build_search_params(query, fields)
+        self.assertEqual(actual, expected)
 
     def test_should_treat_quoted_query(self):
         query = '"gene"'
@@ -507,7 +506,6 @@ class TestBuildEsAggregationBodyRequest(unittest.TestCase):
             category,
             category_filters)
         self.assertEqual(actual, expected)
-
 
 
 class TestFormatAggregationResults(unittest.TestCase):

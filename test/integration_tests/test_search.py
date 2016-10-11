@@ -2,14 +2,13 @@ import os
 import unittest
 import mock
 import json
-from src.search import build_es_search_body_request, \
-    build_search_query, build_es_aggregation_body_request, \
-    format_search_results, format_aggregation_results, \
-    format_autocomplete_results, build_autocomplete_search_body_request
 from werkzeug.datastructures import ImmutableMultiDict
+
+from src import search
 
 
 class SearchEndpointsTest(unittest.TestCase):
+
     def setUp(self):
         os.environ['ES_URI'] = 'http://localhost:9200/'
         from src.server import app
@@ -25,20 +24,18 @@ class SearchEndpointsTest(unittest.TestCase):
             "hits": {
                 "total": 120735,
                 "max_score": 1.0,
-                "hits": [
-                    {
-                        "_index": "searchable_items_prototype",
-                        "_type": "searchable_item",
-                        "_id": "yeast_S00001",
-                        "_score": 1.0,
-                        "_source": {
-                            "name": "ACTin 1",
-                            "symbol": "ACT1",
-                            "href": "yeastgenome.org/locus/act1/overview",
-                            "category": "gene"
-                        }
+                "hits": [{
+                    "_index": "searchable_items_prototype",
+                    "_type": "searchable_item",
+                    "_id": "yeast_S00001",
+                    "_score": 1.0,
+                    "_source": {
+                        "name": "ACTin 1",
+                        "symbol": "ACT1",
+                        "href": "yeastgenome.org/locus/act1/overview",
+                        "category": "gene"
                     }
-                ]
+                }]
             }
         }
 
@@ -73,13 +70,27 @@ class SearchEndpointsTest(unittest.TestCase):
             }
         }
         self.index = 'searchable_items_prototype'
-        self.search_fields = ['name', 'symbol', 'synonym', 'go_ids', 'go_names']
-        self.json_response_fields = ['name', 'symbol', 'synonym', 'go_ids', 'go_names', 'href', 'type', 'organism']
+        self.search_fields = [
+            'name',
+            'symbol',
+            'synonym',
+            'go_ids',
+            'go_names'
+        ]
+        self.json_response_fields = [
+            'name',
+            'symbol',
+            'synonym',
+            'go_ids',
+            'go_names',
+            'href',
+            'type',
+            'organism'
+        ]
         self.category_filters = {
             "gene": ['go_ids', 'go_names'],
             "go": ['gene']
         }
-
         self.app = app.test_client()
         self.app.testing = True
 
@@ -95,7 +106,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         response = self.app.get('/api/search')
 
-        es_query = build_search_query(
+        es_query = search.build_search_query(
             '',
             self.search_fields,
             '',
@@ -105,7 +116,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.assert_has_calls([mock.call(
             index=self.index,
-            body=build_es_search_body_request(
+            body=search.build_es_search_body_request(
                 '',
                 '',
                 es_query,
@@ -119,7 +130,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.assert_has_calls([mock.call(
             index=self.index,
-            body=build_es_aggregation_body_request(
+            body=search.build_es_aggregation_body_request(
                 es_query,
                 '',
                 self.category_filters
@@ -138,9 +149,16 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.side_effect = side_effect
 
-        response = self.app.get('/api/search?q=act1&category=gene&limit=25&offset=10&sort_by=alphabetical')
+        response = self.app.get(
+            ('/api/search?'
+             'q=act1&'
+             'category=gene&'
+             'limit=25&'
+             'offset=10&'
+             'sort_by=alphabetical')
+        )
 
-        es_query = build_search_query(
+        es_query = search.build_search_query(
             "act1",
             self.search_fields,
             "gene",
@@ -156,7 +174,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.assert_has_calls([mock.call(
             index=self.index,
-            body=build_es_search_body_request(
+            body=search.build_es_search_body_request(
                 "act1",
                 "gene",
                 es_query,
@@ -170,7 +188,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.assert_has_calls([mock.call(
             index=self.index,
-            body=build_es_aggregation_body_request(
+            body=search.build_es_aggregation_body_request(
                 es_query,
                 "gene",
                 self.category_filters
@@ -189,9 +207,14 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.side_effect = side_effect
 
-        response = self.app.get('/api/search?q=act1&category=gene&go_names=cytoplasm')
+        response = self.app.get(
+            ('/api/search?'
+             'q=act1&'
+             'category=gene&'
+             'go_names=cytoplasm')
+        )
 
-        es_query = build_search_query(
+        es_query = search.build_search_query(
             "act1",
             self.search_fields,
             "gene",
@@ -205,7 +228,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.assert_has_calls([mock.call(
             index=self.index,
-            body=build_es_search_body_request(
+            body=search.build_es_search_body_request(
                 "act1",
                 "gene",
                 es_query,
@@ -219,7 +242,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.assert_has_calls([mock.call(
             index=self.index,
-            body=build_es_aggregation_body_request(
+            body=search.build_es_aggregation_body_request(
                 es_query,
                 "gene",
                 self.category_filters
@@ -239,7 +262,11 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.side_effect = side_effect
 
-        response = self.app.get('/api/search?q=act1&category=gene&go_names=cytoplasm')
+        response = self.app.get((
+            '/api/search?'
+            'q=act1&'
+            'category=gene&'
+            'go_names=cytoplasm'))
 
         self.assertEqual(response.status_code, 200)
 
@@ -261,18 +288,23 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.side_effect = side_effect
 
-        response = self.app.get('/api/search?q=act1&category=gene&go_names=cytoplasm')
+        response = self.app.get(
+            ('/api/search?'
+             'q=act1&'
+             'category=gene&'
+             'go_names=cytoplasm')
+        )
 
         self.assertEqual(response.status_code, 200)
 
         data = json.loads(response.data)
         self.assertEqual(data, {
             'total': self.es_search_response['hits']['total'],
-            'results': format_search_results(
+            'results': search.format_search_results(
                 self.es_search_response,
                 self.json_response_fields
             ),
-            'aggregations': format_aggregation_results(
+            'aggregations': search.format_aggregation_results(
                 self.es_aggregation_response,
                 'gene',
                 self.category_filters
@@ -287,14 +319,20 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.assert_called_with(
             index=self.index,
-            body=build_autocomplete_search_body_request('act', '', 'name')
+            body=search.build_autocomplete_search_body_request(
+                'act',
+                '',
+                'name')
         )
 
         self.app.get('/api/search_autocomplete?q=act&category=go')
 
         mock_es.assert_called_with(
             index=self.index,
-            body=build_autocomplete_search_body_request('act', 'go', 'name')
+            body=search.build_autocomplete_search_body_request(
+                'act',
+                'go',
+                'name')
         )
 
         mock_es.return_value = {
@@ -328,11 +366,18 @@ class SearchEndpointsTest(unittest.TestCase):
             }
         }
 
-        self.app.get('/api/search_autocomplete?q=act&category=go&field=go_name')
-
+        self.app.get(
+            ('/api/search_autocomplete?'
+             'q=act&'
+             'category=go&'
+             'field=go_name')
+        )
         mock_es.assert_called_with(
             index=self.index,
-            body=build_autocomplete_search_body_request('act', 'go', 'go_name')
+            body=search.build_autocomplete_search_body_request(
+                'act',
+                'go',
+                'go_name')
         )
 
     @mock.patch('src.server.es.search')
@@ -344,9 +389,9 @@ class SearchEndpointsTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
         data = json.loads(response.data)
-        self.assertEqual(data, {
-            'results': format_autocomplete_results(self.es_search_response)
-        })
+        results = search.format_autocomplete_results(self.es_search_response)
+        expected = dict(results=results)
+        self.assertEqual(data, expected)
 
     def test_search_autocomplete_returns_none_for_empty_query(self):
         response = self.app.get('/api/search_autocomplete')
