@@ -1,7 +1,6 @@
 .container {
 	float: right;
 	width: 100%;
-	margin-top: 0.15rem;
 }
 
 .container form {
@@ -10,25 +9,23 @@
 
 .dropdown {
 	border-radius: 0.25rem 0 0 0.25rem;
-	padding: 0.35rem 0.5rem;
 }
 
 .typeahead {
 	display: inline-block;
 	position: relative;
-	top: 1px;
+	top: 2px;
 }
 
 .typeahead input {
 	border: none;
-	padding: 0.29rem;
+	padding: 7px;
 	width: 25.25rem;
 }
 
 .searchBtn {
 	display: inline-block;
 	border-radius: 0 0.25rem 0.25rem 0;
-	padding: 0.35rem 0.5rem;
 }
 
 .typeahead input:focus {

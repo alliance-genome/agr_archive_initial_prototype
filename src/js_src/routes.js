@@ -6,7 +6,6 @@ import Home from './containers/home';
 import Layout from './containers/layout';
 import Search from './containers/search';
 
-
 export default (
   <Route component={Layout} path='/'>
     <IndexRoute component={Home} />

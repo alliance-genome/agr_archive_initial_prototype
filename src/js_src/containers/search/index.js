@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import _ from 'underscore';
 
 import style from './style.css';
-import FilterSelector from './filterSelector';
+import FilterSelector from './filterSelector/filterSelector';
 import SearchBreadcrumbs from './searchBreadcrumbs';
 import SearchControls from './searchControls';
 import ResultsList from './resultsList';

@@ -1,12 +1,9 @@
-// import _ from 'underscore';
+/*eslint-disable no-case-declarations */
+import { fromJS } from 'immutable';
 
 import { injectHighlightIntoResponse } from '../lib/searchHelpers';
 
-import { fromJS } from 'immutable';
-
 const DEFAULT_PAGE_SIZE = 50;
-const MAX_AGGS = 50;
-
 const DEFAULT_STATE = fromJS({
   activeCategory: 'none',
   aggregations: [],
@@ -24,8 +21,11 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
   case 'SEARCH_ERROR':
     return state.set('errorMessage', action.payload).set('isError',true);
   case '@@router/LOCATION_CHANGE':
-     // parse aggs to update active state during route change
-    return state.set('aggregations', fromJS(parseAggs(state.get('aggregations').toJS(), action.payload.query)));
+    // update active cat
+    let newActiveCat = action.payload.query.category || 'none';
+    // parse aggs to update active state during route change
+    return state.set('aggregations', fromJS(parseAggs(state.get('aggregations').toJS(), action.payload.query)))
+                .set('activeCategory', newActiveCat);
   case 'SEARCH_RESPONSE':
     // parse meta
     return state.set('isPending',false)
@@ -57,7 +57,7 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
 
 function parseAggs(rawAggs, queryObject) {
   return rawAggs.map( d => {
-    let _values = d.values.splice(0, MAX_AGGS).map( _d => {
+    let _values = d.values.map( _d => {
       let currentValue = queryObject[d.key];
       let _isActive;
       // look at array fields differently

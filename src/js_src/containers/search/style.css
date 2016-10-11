@@ -1,24 +1,7 @@
-.aggContainer h5 {
-	margin-bottom: 1rem;
-}
-
-.aggValContainer {
-	margin-bottom: 1rem;
-}
-
-
-.aggValContainer a {
-	padding: 0.25rem 0.5rem !important;
-}
-
-.filterLabel {
-	margin-bottom: 0.5rem;
-}
-
 .controlContainer {
 	float: right;
 	margin-top: 0.25rem;
-	width: 516px;
+	width: 548px;
 	display: flex;
 	justify-content: space-between;
 }

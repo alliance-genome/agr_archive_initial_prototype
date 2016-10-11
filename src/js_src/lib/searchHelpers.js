@@ -32,7 +32,7 @@ export function makeFieldDisplayName(unformattedName) {
   return unformattedName.replace('_', ' ');
 }
 
-export function getQueryParamWithValueChanged(key, val, queryParams) {
+export function getQueryParamWithValueChanged(key, val, queryParams, isClear=false) {
   let qp = _.clone(queryParams || {});
   let oldVal = _.clone(qp[key]);
   let isSingleValField = (SINGLE_VAL_FIELDS.indexOf(key) > -1);
@@ -54,6 +54,9 @@ export function getQueryParamWithValueChanged(key, val, queryParams) {
   if (CLEARING_FIELDS.indexOf(key) > -1) {
     qp = { q: qp.q };
     qp[key] = newVal;
+    if (isClear) {
+      delete qp[key];
+    }
     return qp;
   }
   return qp;

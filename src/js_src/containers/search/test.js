@@ -6,7 +6,7 @@ import { Provider } from 'react-redux'
 
 import configureStore from '../../lib/configureStore';
 import { SearchComponent } from './index';
-import { FilterSelectorComponent } from './filterSelector';
+import { FilterSelectorComponent } from './filterSelector/filterSelector';
 import ResultsTable from './resultsTable';
 import { SearchBreadcrumbsComponent } from './searchBreadcrumbs';
 import { SearchControlsComponent } from './searchControls';
