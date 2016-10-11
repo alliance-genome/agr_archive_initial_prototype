@@ -2,12 +2,38 @@ import os
 import unittest
 import mock
 import json
+try:
+    from urllib.parse import urlencode
+except ImportError:
+    # Py2 compat
+    from urllib import urlencode
+
 from werkzeug.datastructures import ImmutableMultiDict
 
 from src import search
 
 
-class SearchEndpointsTest(unittest.TestCase):
+class ResponseWrapper(object):
+
+    def __init__(self, flask_response):
+        self._response = flask_response
+
+    def __getattr__(self, name):
+        return getattr(self._response, name)
+
+    @property
+    def json(self):
+        return json.loads(self._response.data.decode('utf-8'))
+
+
+class TestHelperMixin(object):
+
+    def app_get(self, url, **params):
+        fresponse = self.app.get('{}?{}'.format(url, urlencode(params)))
+        return ResponseWrapper(fresponse)
+
+
+class SearchEndpointsTest(unittest.TestCase, TestHelperMixin):
 
     def setUp(self):
         os.environ['ES_URI'] = 'http://localhost:9200/'
@@ -104,7 +130,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.side_effect = side_effect
 
-        response = self.app.get('/api/search')
+        response = self.app_get('/api/search')
 
         es_query = search.build_search_query(
             '',
@@ -149,15 +175,12 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.side_effect = side_effect
 
-        response = self.app.get(
-            ('/api/search?'
-             'q=act1&'
-             'category=gene&'
-             'limit=25&'
-             'offset=10&'
-             'sort_by=alphabetical')
-        )
-
+        response = self.app_get('/api/search',
+                                q='act1',
+                                category='gene',
+                                limit=25,
+                                offset=10,
+                                sort_by='alphabetical')
         es_query = search.build_search_query(
             "act1",
             self.search_fields,
@@ -207,13 +230,10 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.side_effect = side_effect
 
-        response = self.app.get(
-            ('/api/search?'
-             'q=act1&'
-             'category=gene&'
-             'go_names=cytoplasm')
-        )
-
+        response = self.app_get('/api/search',
+                                q='act1',
+                                category='gene',
+                                go_names='cytoplasm')
         es_query = search.build_search_query(
             "act1",
             self.search_fields,
@@ -262,17 +282,12 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.side_effect = side_effect
 
-        response = self.app.get((
-            '/api/search?'
-            'q=act1&'
-            'category=gene&'
-            'go_names=cytoplasm'))
-
+        response = self.app_get('/api/search',
+                                q='act1',
+                                category='gene',
+                                go_names='cytoplasm')
         self.assertEqual(response.status_code, 200)
-
-        data = json.loads(response.data)
-
-        self.assertEqual(data, {
+        self.assertEqual(response.json, {
             'total': 0,
             'results': [],
             'aggregations': []
@@ -288,17 +303,12 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.side_effect = side_effect
 
-        response = self.app.get(
-            ('/api/search?'
-             'q=act1&'
-             'category=gene&'
-             'go_names=cytoplasm')
-        )
-
+        response = self.app_get('/api/search',
+                                q='act1',
+                                category='gene',
+                                go_names='cytoplasm')
         self.assertEqual(response.status_code, 200)
-
-        data = json.loads(response.data)
-        self.assertEqual(data, {
+        self.assertEqual(response.json, {
             'total': self.es_search_response['hits']['total'],
             'results': search.format_search_results(
                 self.es_search_response,
@@ -315,8 +325,7 @@ class SearchEndpointsTest(unittest.TestCase):
     def test_search_autocomplete_es_params(self, mock_es):
         mock_es.return_value = self.es_search_response
 
-        self.app.get('/api/search_autocomplete?q=act')
-
+        self.app_get('/api/search_autocomplete', q='act')
         mock_es.assert_called_with(
             index=self.index,
             body=search.build_autocomplete_search_body_request(
@@ -325,7 +334,7 @@ class SearchEndpointsTest(unittest.TestCase):
                 'name')
         )
 
-        self.app.get('/api/search_autocomplete?q=act&category=go')
+        self.app_get('/api/search_autocomplete', q='act', category='go')
 
         mock_es.assert_called_with(
             index=self.index,
@@ -366,12 +375,10 @@ class SearchEndpointsTest(unittest.TestCase):
             }
         }
 
-        self.app.get(
-            ('/api/search_autocomplete?'
-             'q=act&'
-             'category=go&'
-             'field=go_name')
-        )
+        self.app_get('/api/search_autocomplete',
+                     q='act',
+                     category='go',
+                     field='go_name')
         mock_es.assert_called_with(
             index=self.index,
             body=search.build_autocomplete_search_body_request(
@@ -384,24 +391,18 @@ class SearchEndpointsTest(unittest.TestCase):
     def test_search_autocomplete_returns_object(self, mock_es):
         mock_es.return_value = self.es_search_response
 
-        response = self.app.get('/api/search_autocomplete?q=act')
-
+        response = self.app_get('/api/search_autocomplete', q='act')
         self.assertEqual(response.status_code, 200)
-
-        data = json.loads(response.data)
-        results = search.format_autocomplete_results(self.es_search_response)
+        results = search.format_autocomplete_results(
+            self.es_search_response)
         expected = dict(results=results)
-        self.assertEqual(data, expected)
+        self.assertEqual(response.json, expected)
 
     def test_search_autocomplete_returns_none_for_empty_query(self):
-        response = self.app.get('/api/search_autocomplete')
+        response = self.app_get('/api/search_autocomplete')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.data), {
-            'results': None
-        })
+        self.assertEqual(response.json, {'results': None})
 
-        response = self.app.get('/api/search_autocomplete?q=')
+        response = self.app_get('/api/search_autocomplete', q='')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.data), {
-            'results': None
-        })
+        self.assertEqual(response.json, {'results': None})
