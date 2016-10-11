@@ -26,6 +26,7 @@ params = {
 app.config.update(params)
 webpack.init_app(app)
 
+
 @app.route('/api/search')
 def search():
     query = request.args.get('q', '')

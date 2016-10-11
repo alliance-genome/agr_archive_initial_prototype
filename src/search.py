@@ -1,3 +1,4 @@
+
 def build_es_aggregation_body_request(es_query, category, category_filters):
     agg_query_body = {
         'query': es_query,
@@ -25,14 +26,17 @@ def build_es_aggregation_body_request(es_query, category, category_filters):
     return agg_query_body
 
 
-def format_aggregation_results(aggregation_results, category, category_filters):
+def format_aggregation_results(aggregation_results,
+                               category,
+                               category_filters):
     if category == '':
         category_obj = {
             'values': [],
             'key': 'category'
         }
 
-        for bucket in aggregation_results['aggregations']['categories']['buckets']:
+        aggs = aggregation_results['aggregations']
+        for bucket in aggs['categories']['buckets']:
             category_obj['values'].append({
                 'key': bucket['key'],
                 'total': bucket['doc_count']
@@ -48,8 +52,8 @@ def format_aggregation_results(aggregation_results, category, category_filters):
                 'values': []
             }
 
-            if subcategory in aggregation_results['aggregations']:
-                for agg in aggregation_results['aggregations'][subcategory]['buckets']:
+            if subcategory in aggs:
+                for agg in aggs[subcategory]['buckets']:
                     agg_obj['values'].append({
                         'key': agg['key'],
                         'total': agg['doc_count']
@@ -61,7 +65,12 @@ def format_aggregation_results(aggregation_results, category, category_filters):
         return []
 
 
-def build_es_search_body_request(query, category, es_query, json_response_fields, search_fields, sort_by):
+def build_es_search_body_request(query,
+                                 category,
+                                 es_query,
+                                 json_response_fields,
+                                 search_fields,
+                                 sort_by):
     es_search_body = {
         '_source': json_response_fields,
         'highlight': {
@@ -71,14 +80,14 @@ def build_es_search_body_request(query, category, es_query, json_response_fields
     }
 
     if query == '' and category == '':
-        es_search_body["query"] = {
-            "function_score": {
-                "query": es_query,
-                "random_score": {"seed": 12345}
+        es_search_body['query'] = {
+            'function_score': {
+                'query': es_query,
+                'random_score': {'seed': 12345}
             }
         }
     else:
-        es_search_body["query"] = es_query
+        es_search_body['query'] = es_query
 
     for field in search_fields:
         es_search_body['highlight']['fields'][field] = {}
@@ -86,8 +95,8 @@ def build_es_search_body_request(query, category, es_query, json_response_fields
     if sort_by == 'alphabetical':
         es_search_body['sort'] = [
             {
-                "name.raw": {
-                    "order": "asc"
+                'name.raw': {
+                    'order': 'asc'
                 }
             }
         ]
@@ -117,73 +126,72 @@ def build_search_query(query, fields, category, category_filters, args):
             for param in args.getlist(item, None):
                 query['filtered']['filter']['bool']['must'].append({
                     'term': {
-                        (item + ".raw"): param
+                        (item + '.raw'): param
                     }
                 })
 
     return query
 
 
-def build_search_params(query, fields):
+def build_search_params(query, fields,
+                        quote_chars=('"', "'")):
     for special_char in ['-', '.']:
         if special_char in query:
-            query = "\"" + query + "\""
+            query = '"' + query + '"'
             break
 
-    if query is "":
-        es_query = {"match_all": {}}
+    if query == '':
+        es_query = {'match_all': {}}
     else:
         es_query = {'dis_max': {'queries': []}}
 
-        if (query[0] in ('"', "'") and query[-1] in ('"', "'")):
+        if query.startswith(quote_chars) or query.endswith(quote_chars):
             es_query['dis_max']['queries'] = [
                 {
-                    "match_phrase_prefix": {
-                        "name": {
-                            "query": query,
-                            "analyzer": "standard",
-                            "boost": 10
+                    'match_phrase_prefix': {
+                        'name': {
+                            'query': query,
+                            'analyzer': 'standard',
+                            'boost': 10
                         }
                     }
                 }, {
-                    "multi_match": {
-                        "query": query,
-                        "type": "phrase_prefix",
-                        "fields": fields,
-                        "boost": 3
+                    'multi_match': {
+                        'query': query,
+                        'type': 'phrase_prefix',
+                        'fields': fields,
+                        'boost': 3
                     }
                 }
             ]
         else:
-            es_query['dis_max']['queries'] = [
-                    {
-                        "term": {
-                            "name.simple": {
-                                "value": query,
-                                "boost": 100
-                            }
-                        }
-                    },
-                    {
-                        "multi_match": {
-                            "query": query,
-                            "type": "most_fields",
-                            "fields": fields + ['description', 'name.fulltext^2'],
-                            "boost": 25
-                        }
-                    },
-                    {
-                        "match_phrase_prefix": {
-                            "name": {
-                                "query": query,
-                                "analyzer": "standard",
-                                "max_expansions": 30,
-                                "boost": 1
-                            }
-                        }
+            es_query['dis_max']['queries'] = [{
+                'term': {
+                    'name.simple': {
+                        'value': query,
+                        'boost': 100
                     }
-                ]
-
+                }
+            }, {
+                'multi_match': {
+                    'query': query,
+                    'type': 'most_fields',
+                    'fields': fields + [
+                        'description',
+                        'name.fulltext^2'
+                    ],
+                    'boost': 25
+                }
+            }, {
+                'match_phrase_prefix': {
+                    'name': {
+                        'query': query,
+                        'analyzer': 'standard',
+                        'max_expansions': 30,
+                        'boost': 1
+                    }
+                }
+            }]
     return es_query
 
 
@@ -204,24 +212,26 @@ def format_search_results(search_results, json_response_fields):
     return formatted_results
 
 
-def build_autocomplete_search_body_request(query, category='gene', field='name'):
+def build_autocomplete_search_body_request(query,
+                                           category='gene',
+                                           field='name'):
     es_query = {
-        "query": {
-            "bool": {
-                "must": [{
-                    "match": {
-                        "name": {
-                            "query": query,
-                            "analyzer": "standard"
+        'query': {
+            'bool': {
+                'must': [{
+                    'match': {
+                        'name': {
+                            'query': query,
+                            'analyzer': 'standard'
                         }
                     }
                 }],
-                "should": [
+                'should': [
                     {
-                        "match": {
-                            "category": {
-                                "query": "gene",
-                                "boost": 4
+                        'match': {
+                            'category': {
+                                'query': 'gene',
+                                'boost': 4
                             }
                         }
                     }
@@ -232,9 +242,10 @@ def build_autocomplete_search_body_request(query, category='gene', field='name')
     }
 
     if category != '':
-        es_query["query"]["bool"]["must"].append({"match": {"category": category}})
-        if category != "gene":
-            es_query["query"]["bool"].pop("should")
+        q_bool = es_query['query']['bool']
+        q_bool['must'].append({'match': {'category': category}})
+        if category != 'gene':
+            q_bool.pop('should')
 
     if field != 'name':
         es_query['aggs'] = {}
@@ -242,12 +253,13 @@ def build_autocomplete_search_body_request(query, category='gene', field='name')
             'terms': {'field': field + '.raw', 'size': 999}
         }
 
-        es_query['query']['bool']['must'][0]['match'] = {}
-        es_query['query']['bool']['must'][0]['match'][field + '.autocomplete'] = {
-            'query': query,
-            'analyzer': 'standard'
+        q_bool_match = {
+            field + '.autocomplete': {
+                'query': query,
+                'analyzer': 'standard'
+            }
         }
-
+        q_bool['must'][0]['match'] = q_bool_match
         es_query['_source'] = [field, 'href', 'category']
 
     return es_query
