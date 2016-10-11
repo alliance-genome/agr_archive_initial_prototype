@@ -125,7 +125,8 @@ def send_static(path):
 @app.route('/help')
 @app.route('/search')
 def react_render():
-        return render_template('index.jinja2')
+    return render_template('index.jinja2')
+
 
 if __name__ == '__main__':
     if os.environ.get('PRODUCTION', ''):
