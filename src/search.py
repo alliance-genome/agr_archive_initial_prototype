@@ -36,7 +36,6 @@ def format_aggregation_results(aggregation_results,
             'key': 'category'
         }
 
-
         for bucket in aggs['categories']['buckets']:
             category_obj['values'].append({
                 'key': bucket['key'],
