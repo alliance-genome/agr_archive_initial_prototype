@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import style from './style.css';
 import { makeFieldDisplayName } from '../../lib/searchHelpers';
+import CategoryLabel from './categoryLabel';
 
 const DEFAULT_FIELDS = ['symbol', 'name', 'synonym', 'sourceHref', 'geneId', 'species', 'type'];
 
@@ -29,7 +30,8 @@ class ResultsList extends Component {
   renderRows() {
     return this.props.entries.map( (d, i) => {
       return (
-        <div className={style.resultContainer} key={`sr${i}`} >
+        <div className={style.resultContainer} key={`sr${i}`}>
+          <CategoryLabel category={d.category} />
           <h3>
             <a dangerouslySetInnerHTML={{ __html: d.symbol }} href='#' />
           </h3>

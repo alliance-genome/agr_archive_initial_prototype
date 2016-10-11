@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 import style from './style.css';
 import { getQueryParamWithValueChanged } from '../../../lib/searchHelpers';
+import CategoryLabel from '../categoryLabel';
 
 const SMALL_NUM_VISIBLE = 5;
 const MED_NUM_VISIBLE = 20;
@@ -25,6 +26,8 @@ class SingleFilterSelector extends Component {
       let nameNode;
       if (this.props.name === 'species') {
         nameNode = <i>{d.displayName}</i>;
+      } else if (this.props.name === 'category') {
+        nameNode = <CategoryLabel category={d.name} />;
       } else {
         nameNode = <span>{d.displayName}</span>;
       }
