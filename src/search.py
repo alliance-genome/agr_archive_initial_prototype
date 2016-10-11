@@ -29,13 +29,14 @@ def build_es_aggregation_body_request(es_query, category, category_filters):
 def format_aggregation_results(aggregation_results,
                                category,
                                category_filters):
+    aggs = aggregation_results.get('aggregations', {})
     if category == '':
         category_obj = {
             'values': [],
             'key': 'category'
         }
 
-        aggs = aggregation_results['aggregations']
+
         for bucket in aggs['categories']['buckets']:
             category_obj['values'].append({
                 'key': bucket['key'],
