@@ -4,19 +4,28 @@ import { renderToString } from 'react-dom/server';
 import { createMemoryHistory } from 'react-router';
 import { Provider } from 'react-redux'
 
-import configureStore from '../../lib/configureStore';
-import { SearchComponent } from './index';
-import { FilterSelectorComponent } from './filterSelector/filterSelector';
-import ResultsTable from './resultsTable';
-import { SearchBreadcrumbsComponent } from './searchBreadcrumbs';
-import { SearchControlsComponent } from './searchControls';
+import configureStore from '../../../lib/configureStore';
+import SearchContainer from '../search';
+import { FilterSelectorComponent } from '../filterSelector/filterSelector';
+import ResultsTable from '../resultsTable';
+import { SearchBreadcrumbsComponent } from '../searchBreadcrumbs';
+import { SearchControlsComponent } from '../searchControls';
+import fixtureResponse from './fixtureResponse';
+import { receiveResponse } from '../searchActions';
 
 let historyObj = createMemoryHistory('/search');
-let store = configureStore(historyObj);
 
 describe('Search', () => {
   it('should be able to render to an HTML string', () => {
-    let htmlString = renderToString(<Provider store={store}><SearchComponent results={[]} total={0} /></Provider>);
+    let store = configureStore(historyObj);
+    let htmlString = renderToString(<Provider store={store}><SearchContainer /></Provider>);
+    assert.equal(typeof htmlString, 'string');
+  });
+
+  it('should be able to render after getting a response', () => {
+    let store = configureStore(historyObj);
+    store.dispatch(receiveResponse(fixtureResponse, { q: 'kinase' }))
+    let htmlString = renderToString(<Provider store={store}><SearchContainer /></Provider>);
     assert.equal(typeof htmlString, 'string');
   });
 });

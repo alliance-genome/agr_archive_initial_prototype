@@ -16,6 +16,7 @@ import { receiveResponse, setError, setPending } from './searchActions';
 import {
   selectErrorMessage,
   selectIsError,
+  selectQueryParams,
   selectResults,
   selectPageSize,
 } from '../../selectors/searchSelectors';
@@ -30,7 +31,7 @@ class SearchComponent extends Component {
 
   // fetch data whenever URL changes within /search
   componentDidUpdate (prevProps) {
-    if (prevProps.location !== this.props.location) {
+    if (prevProps.queryParams !== this.props.queryParams) {
       this.fetchData();
     }
   }
@@ -40,7 +41,7 @@ class SearchComponent extends Component {
     let size = this.props.pageSize;
     let _limit = size;
     let _offset = (this.props.currentPage - 1) * size;
-    let qp = _.clone(this.props.location.query);
+    let qp = _.clone(this.props.queryParams);
     qp.limit = _limit;
     qp.offset = _offset;
     let tempHistory = createMemoryHistory('/');
@@ -54,7 +55,7 @@ class SearchComponent extends Component {
       type : 'GET',
       dataType:'json',
       success: data => {              
-        this.props.dispatch(receiveResponse(data, this.props.location));
+        this.props.dispatch(receiveResponse(data, this.props.queryParams));
         this.props.dispatch(setError(false));
         this.props.dispatch(setPending(false));
       },
@@ -114,23 +115,23 @@ SearchComponent.propTypes = {
   history: React.PropTypes.object,
   isError: React.PropTypes.bool,
   isTable: React.PropTypes.bool,
-  location: React.PropTypes.object,
   pageSize: React.PropTypes.number,
+  queryParams: React.PropTypes.object,
   results: React.PropTypes.array,
 };
 
 function mapStateToProps(state) {
-  let _location = state.routing.locationBeforeTransitions;
-  let query = _location.query;
-  let _isTable = (query.mode === 'table');
+  let _queryParams = selectQueryParams(state);
+  let _isTable = (_queryParams.mode === 'table');
+  let _currentPage =  parseInt(_queryParams.page) || 1;
   return {
-    currentPage: parseInt(query.page) || 1,
+    currentPage: _currentPage,
     errorMessage: selectErrorMessage(state),
     isError: selectIsError(state),
     isTable: _isTable,
-    location: _location,
     pageSize: selectPageSize(state),
-    results: selectResults(state),
+    queryParams: _queryParams,
+    results: selectResults(state)
   };
 }
 

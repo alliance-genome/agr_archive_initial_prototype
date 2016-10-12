@@ -7,6 +7,7 @@ import { createSelector } from 'reselect';
  * Direct selector to the search state.
  */
 const selectSearchDomain = (state) => state.search;
+const selectRoutingDomain = (state) => state.routing;
 
 const selectSearch = createSelector(
   [selectSearchDomain],
@@ -26,6 +27,15 @@ const selectIsError = createSelector(
 const selectIsPending = createSelector(
   [selectSearchDomain],
   (search) => search.get('isPending')
+);
+
+const selectQueryParams = createSelector(
+  [selectRoutingDomain],
+  (routing) => {
+    let location = routing.locationBeforeTransitions;
+    let queryParams = location ? routing.locationBeforeTransitions.query : {};
+    return queryParams;
+  }
 );
 
 const selectResults = createSelector(
@@ -63,6 +73,7 @@ export {
   selectErrorMessage,
   selectIsError,
   selectIsPending,
+  selectQueryParams,
   selectResults,
   selectTotal,
   selectPageSize,

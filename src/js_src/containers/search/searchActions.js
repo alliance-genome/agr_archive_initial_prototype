@@ -5,11 +5,11 @@ export function clearError () {
   };
 }
 
-export function receiveResponse (response, locationObj) {
+export function receiveResponse (response, _queryParams) {
   return {
     type: 'SEARCH_RESPONSE',
     payload: response,
-    queryObject: locationObj.query
+    queryParams: _queryParams
   };
 }
 

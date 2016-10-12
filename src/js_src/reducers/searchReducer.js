@@ -36,12 +36,13 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
     return state.set('isPending',false)
                 .set('total', action.payload.total)
                 // parse aggregations
-                .set('aggregations', fromJS(parseAggs(action.payload.aggregations, action.queryObject))) 
+                .set('aggregations', fromJS(parseAggs(action.payload.aggregations, action.queryParams))) 
                 // parse results
                 .set('results',fromJS(action.payload.results.map( _d => { 
                   let d = injectHighlightIntoResponse(_d);
                   return {
                     symbol: d.symbol,
+                    category: d.category || 'gene',
                     name: d.name,
                     geneId: 'ID:12345678',
                     sourceHref: d.href,
