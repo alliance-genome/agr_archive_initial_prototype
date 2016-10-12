@@ -1,4 +1,3 @@
-# if possible have a virtualenv setup first
 PY_VERSION ?= $(shell python -c 'import sys;print(sys.version_info.major)')
 VENV_HOME := ${HOME}/.virtualenvs
 VENV_NAME := agr_prototype-py${PY_VERSION}
