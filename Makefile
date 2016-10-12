@@ -1,19 +1,48 @@
-ES_URI=http://52.43.223.105:9200/
-
 # if possible have a virtualenv setup first
-build:
-	npm install
-	npm run build
-	pip install -r requirements.txt
+PY_VERSION ?= $(shell python -c 'import sys;print(sys.version_info.major)')
+VENV_HOME := ${HOME}/.virtualenvs
+VENV_NAME := agr_prototype-py${PY_VERSION}
+VENV_PATH := ${VENV_HOME}/${VENV_NAME}
+VENV_BIN := ${VENV_PATH}/bin
+VENV_PIP := ${VENV_BIN}/pip
+VENV_PYTHON := ${VENV_BIN}/python
+VENV_NOSETESTS := ${VENV_BIN}/nosetests
 
-run:
-	ES_URI=$(ES_URI) python src/server.py
+define print-help
+        $(if $(need-help),$(warning $1 -- $2))
+endef
 
-tests: test-py
-	npm test
+need-help := $(filter help,$(MAKECMDGOALS))
 
-index:
-	cd scripts/elastic_search && ES_URI=$(ES_URI) python index.py
+help: ; @echo $(if $(need-help),,\
+	Type \'$(MAKE)$(dash-f) help\' to get help)
 
-test-py:
-	nosetests -s
+.PHONY: py-virtualenv
+py-virtualenv: $(call print-help,py-virtualenv,"Creates a Python virtualenv")
+	@mkdir -p ${VENV_PATH}
+	@virtualenv -p python${PY_VERSION} ${VENV_PATH}
+
+.PHONY: build
+build: $(call print-help,build,"Builds all dependencies for the project.") \
+	py-virtualenv
+	@npm install
+	@npm run build
+	@${VENV_PIP} install -r requirements.txt
+
+.PHONY: run
+run: $(call print-help,run,"Runs the application server.")
+	ES_URI=${ES_URI} ${VENV_PYTHON} src/server.py
+
+.PHONY: tests
+tests: $(call print-help,tests,"Runs all tests for the project.") \
+	test-py
+	@npm test
+
+.PHONY: index
+index: $(call print-help,index,"Indexes data into elasticsearch.")
+	@cd scripts/elastic_search
+	ES_URI=${ES_URI} python index.py
+
+.PHONY: test-py
+test-py: $(call print-help,test-py,"Runs the Python test suite.")
+	@${VENV_NOSETESTS} -s
