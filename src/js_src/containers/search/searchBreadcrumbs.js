@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import style from './style.css';
 import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
 
-import { selectTotal } from '../../selectors/searchSelectors.js';
+import { selectIsPending, selectTotal } from '../../selectors/searchSelectors.js';
 
 const IGNORED_PARAMS = ['page', 'mode'];
 const SORT_PRIORITY = ['category', 'q'];
@@ -34,10 +34,15 @@ class SearchBreadcrumbsComponent extends Component {
     });
   }
 
+  renderTotalNode() {
+    if (this.props.isPending) return <span className={style.totalPending} />;
+    return <span>{this.props.total.toLocaleString()}</span>;
+  }
+
   render() {
     return (
       <div>
-        <p>{this.props.total.toLocaleString()} results for {this.renderCrumbs()}</p>
+        <p>{this.renderTotalNode()} results for {this.renderCrumbs()}</p>
       </div>
     );
   }
@@ -45,6 +50,7 @@ class SearchBreadcrumbsComponent extends Component {
 
 SearchBreadcrumbsComponent.propTypes = {
   queryParams: React.PropTypes.object,
+  isPending: React.PropTypes.bool,
   total: React.PropTypes.number
 };
 
@@ -53,6 +59,7 @@ function mapStateToProps(state) {
   let _queryParams = location ? state.routing.locationBeforeTransitions.query : {};
   return {
     queryParams: _queryParams,
+    isPending: selectIsPending(state),
     total: selectTotal(state)
   };
 }

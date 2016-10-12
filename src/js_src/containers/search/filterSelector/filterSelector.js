@@ -9,7 +9,8 @@ import CategoryLabel from '../categoryLabel';
 
 import {
   selectActiveCategory,
-  selectAggregations
+  selectAggregations,
+  selectIsPending
 } from '../../../selectors/searchSelectors';
 
 class FilterSelectorComponent extends Component {
@@ -17,6 +18,10 @@ class FilterSelectorComponent extends Component {
     let aggs = this.props.aggregations;
     if (aggs.length === 0) {
       return <p>No filters available.</p>;
+    }
+    // if on cat selector and pending, render nothing
+    if (this.props.activeCategory === 'none' && this.props.isPending) {
+      return null;
     }
     return aggs.map( d => {
       return <div key={`filter${d.name}`}><SingleFilterSelector {...d} queryParams={this.props.queryParams} /></div>;
@@ -53,6 +58,7 @@ class FilterSelectorComponent extends Component {
 FilterSelectorComponent.propTypes = {
   activeCategory: React.PropTypes.string,
   aggregations: React.PropTypes.array,
+  isPending: React.PropTypes.bool,
   queryParams: React.PropTypes.object
 };
 
@@ -62,6 +68,7 @@ function mapStateToProps(state) {
   return {
     activeCategory:  selectActiveCategory(state),
     aggregations: selectAggregations(state),
+    isPending: selectIsPending(state),
     queryParams: _queryParams
   };
 }

@@ -19,7 +19,12 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
   //TODO cleanup fromJS/toJS handling here.
   switch(action.type) {
   case 'SEARCH_ERROR':
-    return state.set('errorMessage', action.payload).set('isError',true);
+    if (!action.payload) {
+      return state.set('errorMessage', '').set('isError', false);
+    }
+    return state.set('errorMessage', action.payload).set('isError', true);
+  case 'SEARCH_SET_PENDING':
+    return state.set('isPending', action.payload);
   case '@@router/LOCATION_CHANGE':
     // update active cat
     let newActiveCat = action.payload.query.category || 'none';

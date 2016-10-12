@@ -19,7 +19,7 @@ class SingleFilterSelector extends Component {
   }
 
   renderFilterValues() {
-    let values = this.props.values.splice(0, this.state.numVisible);
+    let values = this.props.values.slice(0, this.state.numVisible);
     return values.map( d => {
       let classSuffix = d.isActive ? ' active' : '';
       let _key = `fv.${this.props.name}.${d.name}`;

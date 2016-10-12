@@ -55,6 +55,15 @@
 	float: right;
 }
 
+.totalPending {
+    width: 2rem;
+    height: 1rem;
+    background: #e2e2e2;
+    display: inline-block;
+    position: relative;
+    top: 0.2rem;
+}
+
 a > span > .sprite {
 	background-position-x: -2.25rem;
 }
