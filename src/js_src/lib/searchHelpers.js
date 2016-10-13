@@ -7,6 +7,8 @@ export function makeFieldDisplayName(unformattedName) {
   switch(unformattedName) {
   case 'go_branch':
     return 'GO Branch';
+  case 'omim_id':
+    return 'OMIM ID';
   default:
     return unformattedName.replace('_', ' ');
   }

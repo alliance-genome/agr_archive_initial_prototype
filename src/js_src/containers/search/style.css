@@ -32,6 +32,10 @@
 	background: yellow;
 }
 
+.detailLineContainer {
+	clear: both;
+}
+
 .resultContainer dt {
 	display: inline-block;
 	float: left;

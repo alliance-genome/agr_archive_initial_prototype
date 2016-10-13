@@ -14,7 +14,7 @@ class ResultsList extends Component {
 
     let nodes = displayedVals.map( d => {
       return (
-        <div key={`srHigh.${d}`}>
+        <div className={style.detailLineContainer} key={`srHigh.${d}`}>
           <dt>{makeFieldDisplayName(d)}:</dt>
           <dd dangerouslySetInnerHTML={{ __html: highlight[d] }} />
         </div>
@@ -41,7 +41,7 @@ class ResultsList extends Component {
   renderDetailFromFields(d, fields) {
     let nodes = fields.map( (field) => {
       return (
-        <div key={`srField.${field}`}>
+        <div className={style.detailLineContainer} key={`srField.${field}`}>
           <dt>{makeFieldDisplayName(field)}:</dt>
           <dd dangerouslySetInnerHTML={{ __html: d[field] }} />
         </div>
@@ -51,12 +51,13 @@ class ResultsList extends Component {
       <dl className={style.detailList}>
         {nodes}
         {this.renderHighlightedValues(d.highlight)}
+        <div className={style.detailLineContainer} />
       </dl>
     );
   }
 
   renderDiseaseEntry(d, i) {
-    let fields = ['synonyms', 'OMIM_ID', 'associated_genes'];
+    let fields = ['synonyms', 'omim_id'];
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
         {this.renderHeader(d)}

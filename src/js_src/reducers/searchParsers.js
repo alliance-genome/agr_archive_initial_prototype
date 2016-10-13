@@ -90,12 +90,32 @@ function parseGeneResult(_d) {
   };
 }
 
-function parseGoResult(d) {
-  return parseDefaultResult(d);
+function parseGoResult(_d) {
+  let d = injectHighlightIntoResponse(_d);
+  return {
+    category: d.category,
+    displayName: d.name,
+    go_branch: d.go_branch,
+    highlight: d.highlights,
+    href: d.href,
+    name: d.name,
+    synonyms: d.synonym
+  };
 }
 
-function parseDiseaseResult(d) {
-  return parseDefaultResult(d);
+function parseDiseaseResult(_d) {
+  let d = injectHighlightIntoResponse(_d);
+  return {
+    associated_genes: d.associated_genes,
+    category: d.category,
+    displayName: d.name,
+    go_branch: d.go_branch,
+    highlight: d.highlights,
+    href: d.href,
+    name: d.name,
+    omim_id: d.omim_id,
+    synonyms: d.synonym
+  };
 }
 
 function parseOrthoGroupResult(d) {
@@ -105,6 +125,7 @@ function parseOrthoGroupResult(d) {
 function parseDefaultResult(_d) {
   let d = injectHighlightIntoResponse(_d);
   return {
+    associated_genes: d.associated_genes,
     category: d.category || 'gene',
     displayName: d.name,
     highlight: d.highlights,

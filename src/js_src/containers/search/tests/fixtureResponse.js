@@ -14,61 +14,46 @@ export default {
   "results": [
     {
       "highlights": {
-        "go_names": [
-          "<em>kinase</em> activity", 
-          "protein <em>kinase</em> activity", 
-          "protein serine/threonine <em>kinase</em> activity"
+        "description": [
+          "<em>kinase</em> activity"
         ], 
         "name": [
           "<em>GTPase</em> activity"
         ]
       }, 
       "href": "http://www.yeastgenome.org/locus/S000005759/overview", 
-      "name": "GTPase activity", 
-      "symbol": "KIN4", 
+      "name": "GTPase activity",
+      "go_branch": "Molecular Function",
       "synonym": "YOR233W", 
       "type": null,
       "category": "go"
     }, 
     {
       "highlights": {
-        "go_names": [
-          "<em>kinase</em> activity", 
-          "protein <em>kinase</em> activity", 
-          "protein serine/threonine <em>kinase</em> activity"
+        "description": [
+          "<em>Huntington's</em> disease", 
         ], 
         "name": [
-          "<em>KINase</em>"
+          "<em>Huntington's</em> disease"
         ]
       }, 
-      "href": "http://www.yeastgenome.org/locus/S000002529/overview", 
-      "name": "KINase", 
-      "organism": "yeast", 
-      "symbol": "KIN1", 
-      "synonym": "YDR122W", 
-      "type": null,
-      "category": "gene"
+      "href": "http://omim.org/entry/143100", 
+      "name": "Huntington's disease", 
+      "omim_id": "143100", 
+      "synonym": "HUNTINGTON CHOREA", 
+      "category": "disease"
     }, 
     {
       "highlights": {
-        "go_names": [
-          "<em>kinase</em> activity", 
-          "protein <em>kinase</em> activity", 
-          "protein serine/threonine <em>kinase</em> activity"
-        ], 
         "name": [
-          "<em>KINase</em>"
+          "<em>Group</em>123"
         ]
       }, 
-      "href": "http://www.yeastgenome.org/locus/S000004086/overview", 
-      "name": "KINase", 
-      "organism": "yeast", 
-      "symbol": "KIN2", 
-      "synonym": "YLR096W", 
-      "type": null,
-      "category": "gene"
-    }, 
-    {
+      "href": "http://omim.org/entry/143100", 
+      "name": "Group 123", 
+      "synonym": "syn1243", 
+      "category": "ortholog group"
+    },     {
       "highlights": {
         "go_names": [
           "adenylate <em>kinase</em> activity", 
