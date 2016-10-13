@@ -36,6 +36,10 @@
 	margin-left: 1rem;
 }
 
+td > .detailContainer {
+	margin-left: 0;
+}
+
 .detailLabel {
 	text-transform: capitalize;
 }

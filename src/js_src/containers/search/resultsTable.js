@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import style from './style.css';
-import { makeFieldDisplayName } from '../../lib/searchHelpers';
+import DetailList from './detailList';
 
 class ResultsTable extends Component {
   renderHeader() {
@@ -39,20 +39,9 @@ class ResultsTable extends Component {
   }
 
   renderHighlight(highlight) {
-    let keys = Object.keys(highlight);
-    let nodes = keys.map( d => {
-      return (
-        <div className={style.resultContainer} key={`srh${d}`}>
-          <dt>{makeFieldDisplayName(d)}:</dt>
-          <dd dangerouslySetInnerHTML={{ __html: highlight[d] }} />
-        </div>
-      );
-    });
-    return (
-      <dl className={style.detailList}>
-        {nodes}
-      </dl>
-    );
+    let _data = highlight;
+    let _fields = Object.keys(_data);
+    return <DetailList data={_data} fields={_fields} />;
   }
 
   render() {

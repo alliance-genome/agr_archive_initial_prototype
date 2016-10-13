@@ -1,5 +1,6 @@
 const NON_HIGHLIGHTED_FIELDS = ['sourceHref', 'href', 'category'];
 const JOIN_HIGHLIGHT_BY = '...';
+const FILTER_ORDER = ['gene_type', 'species'];
 
 import { makeFieldDisplayName } from '../lib/searchHelpers';
 
@@ -43,6 +44,8 @@ export function parseResults(results) {
 }
 
 export function parseAggs(rawAggs, queryObject) {
+  // first sort them
+  rawAggs = rawAggs.sort( (a, b) => (FILTER_ORDER.indexOf(a.key) < FILTER_ORDER.indexOf(b.key)) );
   return rawAggs.map( d => {
     let _values = d.values.map( _d => {
       let currentValue = queryObject[d.key];
@@ -82,7 +85,7 @@ function parseGeneResult(_d) {
     geneId: 'ID:12345678',
     sourceHref: d.href,
     synonyms: d.gene_synonyms,
-    geneType: d.type,
+    geneType: makeFieldDisplayName(d.gene_type),
     genomicStartCoordinates: '',
     genomicStopCoordinates: '',
     relativeStartCoordinates: '',
