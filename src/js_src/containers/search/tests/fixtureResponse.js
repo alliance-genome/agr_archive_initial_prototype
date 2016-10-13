@@ -1,3 +1,4 @@
+/*eslint-disable quotes */
 export default {
   "aggregations": [
     {
@@ -19,15 +20,15 @@ export default {
           "protein serine/threonine <em>kinase</em> activity"
         ], 
         "name": [
-          "<em>KINase</em>"
+          "<em>GTPase</em> activity"
         ]
       }, 
       "href": "http://www.yeastgenome.org/locus/S000005759/overview", 
-      "name": "KINase", 
-      "organism": "yeast", 
+      "name": "GTPase activity", 
       "symbol": "KIN4", 
       "synonym": "YOR233W", 
-      "type": null
+      "type": null,
+      "category": "go"
     }, 
     {
       "highlights": {
@@ -45,7 +46,8 @@ export default {
       "organism": "yeast", 
       "symbol": "KIN1", 
       "synonym": "YDR122W", 
-      "type": null
+      "type": null,
+      "category": "gene"
     }, 
     {
       "highlights": {
@@ -63,7 +65,8 @@ export default {
       "organism": "yeast", 
       "symbol": "KIN2", 
       "synonym": "YLR096W", 
-      "type": null
+      "type": null,
+      "category": "gene"
     }, 
     {
       "highlights": {
@@ -81,7 +84,8 @@ export default {
       "organism": "yeast", 
       "symbol": "ADK1", 
       "synonym": "YDR226W", 
-      "type": null
+      "type": null,
+      "category": "gene"
     }, 
     {
       "highlights": {
@@ -99,7 +103,8 @@ export default {
       "organism": "yeast", 
       "symbol": "EKI1", 
       "synonym": "YDR147W", 
-      "type": null
+      "type": null,
+      "category": "gene"
     }, 
     {
       "highlights": {
@@ -119,7 +124,8 @@ export default {
       "organism": "yeast", 
       "symbol": "MKK2", 
       "synonym": "YPL140C", 
-      "type": null
+      "type": null,
+      "category": "gene"
     }, 
     {
       "highlights": {
@@ -136,7 +142,8 @@ export default {
       "organism": "yeast", 
       "symbol": "DAK2", 
       "synonym": "YFL053W", 
-      "type": null
+      "type": null,
+      "category": "gene"
     }, 
     {
       "highlights": {
@@ -155,7 +162,8 @@ export default {
       "organism": "yeast", 
       "symbol": "ADK2", 
       "synonym": "YER170W", 
-      "type": null
+      "type": null,
+      "category": "gene"
     }, 
     {
       "highlights": {
@@ -173,7 +181,8 @@ export default {
       "organism": "yeast", 
       "symbol": "CHK1", 
       "synonym": "YBR274W", 
-      "type": null
+      "type": null,
+      "category": "gene"
     }, 
     {
       "highlights": {
@@ -190,7 +199,8 @@ export default {
       "organism": "yeast", 
       "symbol": "GUK1", 
       "synonym": "YDR454C", 
-      "type": null
+      "type": null,
+      "category": "gene"
     }
   ], 
   "total": 322

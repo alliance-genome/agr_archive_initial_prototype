@@ -27,20 +27,49 @@ class ResultsList extends Component {
     );
   }
 
+  renderHeader(d) {
+    return (
+      <div>
+        <span className={style.resultCatLabel}>Category: <CategoryLabel category={d.category} /></span>
+        <h4>
+          <a dangerouslySetInnerHTML={{ __html: d.displayName }} href={d.href} />
+        </h4>
+      </div>
+    );
+  }
+
+  renderDetailFromFields(d, fields) {
+    let nodes = fields.map( (field) => {
+      return (
+        <div key={`srField.${field}`}>
+          <dt>{makeFieldDisplayName(field)}:</dt>
+          <dd dangerouslySetInnerHTML={{ __html: d[field] }} />
+        </div>
+      );
+    });
+    return (
+      <dl className={style.detailList}>
+        {nodes}
+        {this.renderHighlightedValues(d.highlight)}
+      </dl>
+    );
+  }
+
   renderDiseaseEntry(d, i) {
-    // let fields = ['disease_name', 'synonyms', 'OMIM_ID', 'associated_genes'];
-    return <div>{d}{i}</div>;
+    let fields = ['synonyms', 'OMIM_ID', 'associated_genes'];
+    return (
+      <div className={style.resultContainer} key={`sr${i}`}>
+        {this.renderHeader(d)}
+        {this.renderDetailFromFields(d, fields)}
+        <hr />
+      </div>
+    );
   }
 
   renderGeneEntry(d, i) {
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
-        <div>
-          <span className={style.resultCatLabel}>Category: <CategoryLabel category={d.category} /></span>
-          <h4>
-            <a dangerouslySetInnerHTML={{ __html: d.symbol }} href='#' />
-          </h4>
-        </div>
+        {this.renderHeader(d)}
         <dl className={style.detailList}>
           <dt>Name:</dt>
           <dd dangerouslySetInnerHTML={{ __html: d.name }} />
@@ -60,13 +89,25 @@ class ResultsList extends Component {
   }
 
   renderGoEntry(d, i) {
-    // let fields = ['go_name', 'synonyms', 'OMIM_ID', 'associated_genes'];
-    return <div>{d}{i}</div>;
+    let fields = ['synonyms', 'go_branch'];
+    return (
+      <div className={style.resultContainer} key={`sr${i}`}>
+        {this.renderHeader(d)}
+        {this.renderDetailFromFields(d, fields)}
+        <hr />
+      </div>
+    );
   }
 
   renderOrthologGroupEntry(d, i) {
-    // let fields = ['group_name', 'associated_genes'];
-    return <div>{d}{i}</div>;
+    let fields = ['associated_genes'];
+    return (
+      <div className={style.resultContainer} key={`sr${i}`}>
+        {this.renderHeader(d)}
+        {this.renderDetailFromFields(d, fields)}
+        <hr />
+      </div>
+    );
   }
 
   renderRows() {
