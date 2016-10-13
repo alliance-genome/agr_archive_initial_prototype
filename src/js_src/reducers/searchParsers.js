@@ -1,6 +1,8 @@
 const NON_HIGHLIGHTED_FIELDS = ['sourceHref', 'href', 'category'];
 const JOIN_HIGHLIGHT_BY = '...';
 
+import { makeFieldDisplayName } from '../lib/searchHelpers';
+
 // takes the fields in responseObj.highlights and replaces the shallow values in responseObj
 // also return highlight values as strings like '<em>val</em>...<em>val2</em>' instead of array
 export function injectHighlightIntoResponse(responseObj) {
@@ -53,7 +55,7 @@ export function parseAggs(rawAggs, queryObject) {
       }
       return {
         name: _d.key,
-        displayName: _d.key,
+        displayName: makeFieldDisplayName(_d.key),
         key: _d.key,
         total: _d.total,
         isActive: _isActive
@@ -61,7 +63,7 @@ export function parseAggs(rawAggs, queryObject) {
     });
     return {
       name: d.key,
-      displayName: d.key,
+      displayName: makeFieldDisplayName(d.key),
       key: d.key,
       values: _values
     };
@@ -72,20 +74,20 @@ export function parseAggs(rawAggs, queryObject) {
 function parseGeneResult(_d) {
   let d = injectHighlightIntoResponse(_d);
   return {
-    symbol: d.symbol,
+    symbol: d.gene_symbol,
     category: d.category || 'gene',
-    displayName: d.symbol,
+    displayName: d.gene_symbol,
     href: d.href,
     name: d.name,
     geneId: 'ID:12345678',
     sourceHref: d.href,
-    synonyms: d.synonym,
+    synonyms: d.gene_synonyms,
     geneType: d.type,
     genomicStartCoordinates: '',
     genomicStopCoordinates: '',
     relativeStartCoordinates: '',
     relativeStopCoordinates: '',
-    species: d.organism,
+    species: d.species,
     highlight: d.highlights
   };
 }
@@ -95,11 +97,11 @@ function parseGoResult(_d) {
   return {
     category: d.category,
     displayName: d.name,
-    go_branch: d.go_branch,
+    go_branch: makeFieldDisplayName(d.go_type),
     highlight: d.highlights,
     href: d.href,
     name: d.name,
-    synonyms: d.synonym
+    synonyms: d.go_synonyms
   };
 }
 
