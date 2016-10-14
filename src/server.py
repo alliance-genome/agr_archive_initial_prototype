@@ -28,7 +28,7 @@ webpack.init_app(app)
 
 @app.route('/api/search')
 def search():
-    query = request.args.get('q', '')
+    query = request.args.get('q', '').lower()
     limit = int(request.args.get('limit', 10))
     offset = int(request.args.get('offset', 0))
     category = request.args.get('category', '')
