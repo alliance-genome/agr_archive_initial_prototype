@@ -35,8 +35,8 @@ def search():
     sort_by = request.args.get('sort_by', '')
 
     category_filters = {
-        "gene": ['gene_type', 'gene_chromosomes', 'gene_chromosome_strand', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species'],
-        "go": ['go_type', 'go_genes']
+        "gene": ['gene_type', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species'],
+        "go": ['go_type', 'go_genes', 'go_species']
     }
 
     search_fields = ['name', 'gene_symbol', 'gene_synonyms', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes']
