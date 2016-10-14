@@ -217,6 +217,7 @@ def format_search_results(search_results, json_response_fields):
             obj[field] = raw_obj.get(field)
 
         obj['highlights'] = r.get('highlight')
+        obj['id'] = r.get('_id')
 
         formatted_results.append(obj)
 
