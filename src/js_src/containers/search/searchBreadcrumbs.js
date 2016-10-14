@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 import style from './style.css';
-import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
+import { getQueryParamWithValueChanged, makeFieldDisplayName } from '../../lib/searchHelpers';
 
 import { selectIsPending, selectQueryParams, selectTotal } from '../../selectors/searchSelectors.js';
 
@@ -15,7 +15,8 @@ class SearchBreadcrumbsComponent extends Component {
     return values.map( (d, i) => {
       let newQp = getQueryParamWithValueChanged(key, d, this.props.queryParams);
       let newPath = { pathname: '/search', query: newQp };
-      let labelNode = (key === 'q') ? `"${d}"` : d;
+      let label = makeFieldDisplayName(d);
+      let labelNode = (key === 'q') ? `"${label}"` : label;
       if (key === 'species') {
         labelNode = <i>{labelNode}</i>;
       }
