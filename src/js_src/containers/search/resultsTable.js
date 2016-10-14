@@ -5,6 +5,7 @@ import DetailList from './detailList';
 import { makeFieldDisplayName } from '../../lib/searchHelpers';
 
 const MATCH_LABEL = 'match_by';
+const MAX_CHAR = 100;
 
 class ResultsTable extends Component {
   getFields() {
@@ -43,6 +44,17 @@ class ResultsTable extends Component {
     );
   }
 
+  renderTruncatedContent(original='') {
+    if (Array.isArray(original)) {
+      original = original.join(', ');
+    }
+    if (original.length > MAX_CHAR) {
+      return original.slice(0, MAX_CHAR) + '...';
+    } else {
+      return original;
+    }
+  }
+
   renderRows() {
     let fields = this.getFields();
     return this.props.entries.map( (d, i) => {
@@ -59,7 +71,7 @@ class ResultsTable extends Component {
         case 'species':
           return <td key={_key}><i dangerouslySetInnerHTML={{ __html: d.species }} /></td>;
         default:
-          return <td dangerouslySetInnerHTML={{ __html: d[field] }} key={_key} />;
+          return <td dangerouslySetInnerHTML={{ __html: this.renderTruncatedContent(d[field]) }} key={_key} />;
         }        
       });
       return (

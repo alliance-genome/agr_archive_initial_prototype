@@ -24,7 +24,7 @@ class SingleFilterSelector extends Component {
       let classSuffix = d.isActive ? ' active' : '';
       let _key = `fv.${this.props.name}.${d.name}`;
       let nameNode;
-      if (this.props.name === 'species') {
+      if (this.props.name.match('species')) {
         nameNode = <i>{d.displayName}</i>;
       } else if (this.props.name === 'category') {
         nameNode = <CategoryLabel category={d.name} />;
