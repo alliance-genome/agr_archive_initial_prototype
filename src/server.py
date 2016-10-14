@@ -36,7 +36,7 @@ def search():
 
     category_filters = {
         "gene": ['gene_type', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species'],
-        "go": ['go_type', 'go_genes', 'go_species']
+        "go": ['go_species', 'go_genes', 'go_type']
     }
 
     search_fields = ['name', 'gene_symbol', 'gene_synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes']
