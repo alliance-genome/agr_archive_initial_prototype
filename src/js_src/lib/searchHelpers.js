@@ -5,6 +5,8 @@ const CLEARING_FIELDS = ['category'];
 
 export function makeFieldDisplayName(unformattedName='') {
   switch(unformattedName) {
+  case 'go':
+    return 'Gene Ontology';
   case 'go_type':
   case 'go_branch':
     return 'GO Branch';
