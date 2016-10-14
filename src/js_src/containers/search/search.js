@@ -14,6 +14,7 @@ import { SMALL_COL_CLASS, LARGE_COL_CLASS, SEARCH_API_ERROR_MESSAGE } from '../.
 import { receiveResponse, setError, setPending } from './searchActions';
 
 import {
+  selectActiveCategory,
   selectErrorMessage,
   selectIsError,
   selectQueryParams,
@@ -72,7 +73,7 @@ class SearchComponent extends Component {
 
   renderResultsNode() {
     if (this.props.isTable) {
-      return <ResultsTable entries={this.props.results} />;
+      return <ResultsTable activeCategory={this.props.activeCategory} entries={this.props.results} />;
     }
     return <ResultsList entries={this.props.results} />;
   }
@@ -109,6 +110,7 @@ class SearchComponent extends Component {
 }
 
 SearchComponent.propTypes = {
+  activeCategory: React.PropTypes.string,
   currentPage: React.PropTypes.number,
   dispatch: React.PropTypes.func,
   errorMessage: React.PropTypes.string,
@@ -123,8 +125,9 @@ SearchComponent.propTypes = {
 function mapStateToProps(state) {
   let _queryParams = selectQueryParams(state);
   let _isTable = (_queryParams.mode === 'table');
-  let _currentPage =  parseInt(_queryParams.page) || 1;
+  let _currentPage = parseInt(_queryParams.page) || 1;
   return {
+    activeCategory:  selectActiveCategory(state),
     currentPage: _currentPage,
     errorMessage: selectErrorMessage(state),
     isError: selectIsError(state),

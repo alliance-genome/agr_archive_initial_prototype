@@ -74,7 +74,6 @@ class SearchControlsComponent extends Component {
             <a className={`btn btn-secondary ${style.agrDownloadBtn}`} href='#'><i className='fa fa-download' /> Download</a>
           </div>
         </div>
-        <hr />
       </div>
     );
   }

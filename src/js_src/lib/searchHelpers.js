@@ -5,6 +5,7 @@ const CLEARING_FIELDS = ['category'];
 
 export function makeFieldDisplayName(unformattedName='') {
   switch(unformattedName) {
+  case 'go_type':
   case 'go_branch':
     return 'GO Branch';
   case 'omim_id':
@@ -20,6 +21,8 @@ export function makeFieldDisplayName(unformattedName='') {
     return 'Molecular Function';
   case 'geneType':
     return 'Gene Type';
+  case 'go_genes':
+    return 'Associated Genes';
   default:
     return unformattedName.replace(/_/g, ' ');
   }

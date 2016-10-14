@@ -15,9 +15,12 @@ class SearchBreadcrumbsComponent extends Component {
     return values.map( (d, i) => {
       let newQp = getQueryParamWithValueChanged(key, d, this.props.queryParams);
       let newPath = { pathname: '/search', query: newQp };
-      let label = (key === 'q') ? `"${d}"` : d;
+      let labelNode = (key === 'q') ? `"${d}"` : d;
+      if (key === 'species') {
+        labelNode = <i>{labelNode}</i>;
+      }
       return (
-        <Link className={`btn btn-primary ${style.sortLabel}`} key={`bc${key}.${i}`} to={newPath}><span>{label} <i className='fa fa-times' /></span></Link>
+        <Link className={`btn btn-primary ${style.sortLabel}`} key={`bc${key}.${i}`} to={newPath}><span>{labelNode} <i className='fa fa-times' /></span></Link>
       );
     });
   }

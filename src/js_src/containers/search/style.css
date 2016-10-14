@@ -28,6 +28,10 @@
 	margin-top: 1rem;
 }
 
+.tableHeadCell {
+	text-transform: capitalize;
+}
+
 .detailList mark, em {
 	background: yellow;
 }

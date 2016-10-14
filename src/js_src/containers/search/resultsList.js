@@ -18,9 +18,9 @@ class ResultsList extends Component {
   renderHeader(d) {
     return (
       <div>
-        <span className={style.resultCatLabel}>Category: <CategoryLabel category={d.category} /></span>
+        <span className={style.resultCatLabel}><CategoryLabel category={d.category} /></span>
         <h4>
-          <a dangerouslySetInnerHTML={{ __html: d.displayName }} href={d.href} target='_new' />
+          <a dangerouslySetInnerHTML={{ __html: d.display_name }} href={d.href} target='_new' />
         </h4>
       </div>
     );
@@ -43,7 +43,7 @@ class ResultsList extends Component {
 
   renderGeneEntry(d, i) {
     let topFields = ['name', 'synonyms'];
-    let bottomFields = ['species', 'geneType'];
+    let bottomFields = ['species', 'gene_type'];
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
         {this.renderHeader(d)}

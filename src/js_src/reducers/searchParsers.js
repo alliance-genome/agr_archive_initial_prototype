@@ -77,19 +77,17 @@ export function parseAggs(rawAggs, queryObject) {
 function parseGeneResult(_d) {
   let d = injectHighlightIntoResponse(_d);
   return {
-    symbol: d.gene_symbol,
+    symbol: d.gene_symbol || '(no symbol)',
     category: d.category || 'gene',
-    displayName: d.gene_symbol,
+    display_name: d.gene_symbol,
     href: d.href,
     name: d.name,
-    geneId: 'ID:12345678',
+    gene_id: d.gene_id || '(no ID)',
     sourceHref: d.href,
     synonyms: d.gene_synonyms,
-    geneType: makeFieldDisplayName(d.gene_type),
-    genomicStartCoordinates: '',
-    genomicStopCoordinates: '',
-    relativeStartCoordinates: '',
-    relativeStopCoordinates: '',
+    gene_type: makeFieldDisplayName(d.gene_type),
+    genomic_coordinates: d.genomic_coordinates,
+    relative_coordinates: d.relative_coordinates,
     species: d.species,
     highlight: d.highlights
   };
@@ -99,7 +97,7 @@ function parseGoResult(_d) {
   let d = injectHighlightIntoResponse(_d);
   return {
     category: d.category,
-    displayName: d.name,
+    display_name: d.name,
     go_branch: makeFieldDisplayName(d.go_type),
     highlight: d.highlights,
     href: d.href,
@@ -113,7 +111,7 @@ function parseDiseaseResult(_d) {
   return {
     associated_genes: d.associated_genes,
     category: d.category,
-    displayName: d.name,
+    display_name: d.name,
     go_branch: d.go_branch,
     highlight: d.highlights,
     href: d.href,
@@ -132,7 +130,7 @@ function parseDefaultResult(_d) {
   return {
     associated_genes: d.associated_genes,
     category: d.category || 'gene',
-    displayName: d.name,
+    display_name: d.name,
     highlight: d.highlights,
     href: d.href,
     name: d.name,
