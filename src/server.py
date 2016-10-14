@@ -36,12 +36,12 @@ def search():
 
     category_filters = {
         "gene": ['gene_type', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species'],
-        "go": ['go_type', 'go_genes', 'go_species']
+        "go": ['go_type', 'go_species', 'go_genes']
     }
 
-    search_fields = ['name', 'gene_symbol', 'gene_synonyms', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes']
+    search_fields = ['name', 'gene_symbol', 'gene_synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes']
 
-    json_response_fields = ['name', 'gene_symbol', 'gene_synonyms', 'gene_type', 'gene_chromosome_starts', 'gene_chromosome_ends', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'category', 'href']
+    json_response_fields = ['name', 'gene_symbol', 'gene_synonyms', 'gene_type', 'gene_chromosome_starts', 'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'category', 'href']
 
     es_query = build_search_query(query, search_fields, category,
                                   category_filters, request.args)
