@@ -1,59 +1,33 @@
 import React, { Component } from 'react';
 
 import style from './style.css';
-import { makeFieldDisplayName } from '../../lib/searchHelpers';
 import CategoryLabel from './categoryLabel';
+import DetailList from './detailList';
 
-const DEFAULT_FIELDS = ['symbol', 'name', 'synonym', 'sourceHref', 'geneId', 'species', 'type'];
+const DEFAULT_FIELDS = ['symbol', 'gene_symbol', 'name', 'gene_synonyms', 'synonyms', 'sourceHref', 'geneId', 'species', 'type'];
 
 class ResultsList extends Component {
   renderHighlightedValues(highlight) {
-    let displayedVals = Object.keys(highlight).filter( d => {
+    let _data = highlight;
+    let _fields = Object.keys(_data).filter( d => {
       return (DEFAULT_FIELDS.indexOf(d) < 0);
     });
-
-    let nodes = displayedVals.map( d => {
-      return (
-        <div className={style.detailLineContainer} key={`srHigh.${d}`}>
-          <dt>{makeFieldDisplayName(d)}:</dt>
-          <dd dangerouslySetInnerHTML={{ __html: highlight[d] }} />
-        </div>
-      );
-    });
-    return (
-      <div>
-        {nodes}
-      </div>
-    );
+    return <DetailList data={_data} fields={_fields} />;
   }
 
   renderHeader(d) {
     return (
       <div>
-        <span className={style.resultCatLabel}>Category: <CategoryLabel category={d.category} /></span>
+        <span className={style.resultCatLabel}><CategoryLabel category={d.category} /></span>
         <h4>
-          <a dangerouslySetInnerHTML={{ __html: d.displayName }} href={d.href} />
+          <a dangerouslySetInnerHTML={{ __html: d.display_name }} href={d.href} target='_new' />
         </h4>
       </div>
     );
   }
 
   renderDetailFromFields(d, fields) {
-    let nodes = fields.map( (field) => {
-      return (
-        <div className={style.detailLineContainer} key={`srField.${field}`}>
-          <dt>{makeFieldDisplayName(field)}:</dt>
-          <dd dangerouslySetInnerHTML={{ __html: d[field] }} />
-        </div>
-      );
-    });
-    return (
-      <dl className={style.detailList}>
-        {nodes}
-        {this.renderHighlightedValues(d.highlight)}
-        <div className={style.detailLineContainer} />
-      </dl>
-    );
+    return <DetailList data={d} fields={fields} />;
   }
 
   renderDiseaseEntry(d, i) {
@@ -68,22 +42,18 @@ class ResultsList extends Component {
   }
 
   renderGeneEntry(d, i) {
+    let topFields = ['name', 'synonyms'];
+    let bottomFields = ['species', 'gene_type'];
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
         {this.renderHeader(d)}
-        <dl className={style.detailList}>
-          <dt>Name:</dt>
-          <dd dangerouslySetInnerHTML={{ __html: d.name }} />
-          <dt>Synonym:</dt>
-          <dd dangerouslySetInnerHTML={{ __html: d.synonym }} />
-          <dt>Source:</dt>
-          <dd><a dangerouslySetInnerHTML={{ __html: d.geneId }} href={d.sourceHref} target='_new' /></dd>
-          <dt>Species:</dt>
-          <dd><i dangerouslySetInnerHTML={{ __html: d.species }} /></dd>
-          <dt>Gene Type:</dt>
-          <dd dangerouslySetInnerHTML={{ __html: d.geneType }} />
+          {this.renderDetailFromFields(d, topFields)}
+          <div className={style.detailContainer}>
+            <span className={style.detailLabel}><strong>Source:</strong> </span>
+            <span><a dangerouslySetInnerHTML={{ __html: d.geneId }} href={d.sourceHref} target='_new' /></span>
+          </div>
+          {this.renderDetailFromFields(d, bottomFields)}
           {this.renderHighlightedValues(d.highlight)}
-        </dl>
         <hr />
       </div>
     );

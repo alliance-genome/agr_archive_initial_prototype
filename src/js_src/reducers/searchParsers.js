@@ -1,5 +1,8 @@
 const NON_HIGHLIGHTED_FIELDS = ['sourceHref', 'href', 'category'];
 const JOIN_HIGHLIGHT_BY = '...';
+const FILTER_ORDER = ['gene_type', 'species'];
+
+import { makeFieldDisplayName } from '../lib/searchHelpers';
 
 // takes the fields in responseObj.highlights and replaces the shallow values in responseObj
 // also return highlight values as strings like '<em>val</em>...<em>val2</em>' instead of array
@@ -41,6 +44,8 @@ export function parseResults(results) {
 }
 
 export function parseAggs(rawAggs, queryObject) {
+  // first sort them
+  rawAggs = rawAggs.sort( (a, b) => (FILTER_ORDER.indexOf(a.key) < FILTER_ORDER.indexOf(b.key)) );
   return rawAggs.map( d => {
     let _values = d.values.map( _d => {
       let currentValue = queryObject[d.key];
@@ -53,7 +58,7 @@ export function parseAggs(rawAggs, queryObject) {
       }
       return {
         name: _d.key,
-        displayName: _d.key,
+        displayName: makeFieldDisplayName(_d.key),
         key: _d.key,
         total: _d.total,
         isActive: _isActive
@@ -61,7 +66,7 @@ export function parseAggs(rawAggs, queryObject) {
     });
     return {
       name: d.key,
-      displayName: d.key,
+      displayName: makeFieldDisplayName(d.key),
       key: d.key,
       values: _values
     };
@@ -72,20 +77,18 @@ export function parseAggs(rawAggs, queryObject) {
 function parseGeneResult(_d) {
   let d = injectHighlightIntoResponse(_d);
   return {
-    symbol: d.symbol,
+    symbol: d.gene_symbol || '(no symbol)',
     category: d.category || 'gene',
-    displayName: d.symbol,
+    display_name: d.gene_symbol,
     href: d.href,
     name: d.name,
-    geneId: 'ID:12345678',
+    gene_id: d.gene_id || '(no ID)',
     sourceHref: d.href,
-    synonyms: d.synonym,
-    geneType: d.type,
-    genomicStartCoordinates: '',
-    genomicStopCoordinates: '',
-    relativeStartCoordinates: '',
-    relativeStopCoordinates: '',
-    species: d.organism,
+    synonyms: d.gene_synonyms,
+    gene_type: makeFieldDisplayName(d.gene_type),
+    genomic_coordinates: d.genomic_coordinates,
+    relative_coordinates: d.relative_coordinates,
+    species: d.species,
     highlight: d.highlights
   };
 }
@@ -94,12 +97,12 @@ function parseGoResult(_d) {
   let d = injectHighlightIntoResponse(_d);
   return {
     category: d.category,
-    displayName: d.name,
-    go_branch: d.go_branch,
+    display_name: d.name,
+    go_branch: makeFieldDisplayName(d.go_type),
     highlight: d.highlights,
     href: d.href,
     name: d.name,
-    synonyms: d.synonym
+    synonyms: d.go_synonyms
   };
 }
 
@@ -108,7 +111,7 @@ function parseDiseaseResult(_d) {
   return {
     associated_genes: d.associated_genes,
     category: d.category,
-    displayName: d.name,
+    display_name: d.name,
     go_branch: d.go_branch,
     highlight: d.highlights,
     href: d.href,
@@ -127,7 +130,7 @@ function parseDefaultResult(_d) {
   return {
     associated_genes: d.associated_genes,
     category: d.category || 'gene',
-    displayName: d.name,
+    display_name: d.name,
     highlight: d.highlights,
     href: d.href,
     name: d.name,

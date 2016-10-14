@@ -13,4 +13,5 @@
 
 .filterLabel {
 	margin-bottom: 0.5rem;
+	text-transform: capitalize;
 }

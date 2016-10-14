@@ -3,14 +3,28 @@ import _ from 'underscore';
 const SINGLE_VAL_FIELDS = ['mode', 'page'];
 const CLEARING_FIELDS = ['category'];
 
-export function makeFieldDisplayName(unformattedName) {
+export function makeFieldDisplayName(unformattedName='') {
   switch(unformattedName) {
+  case 'go_type':
   case 'go_branch':
     return 'GO Branch';
   case 'omim_id':
     return 'OMIM ID';
+  case 'biological_process':
+  case 'gene_biological_process':
+    return 'Biological Process';
+  case 'cellular_component':
+  case 'gene_cellular_component':
+    return 'Cellular Component';
+  case 'molecular_function':
+  case 'gene_molecular_function':
+    return 'Molecular Function';
+  case 'geneType':
+    return 'Gene Type';
+  case 'go_genes':
+    return 'Associated Genes';
   default:
-    return unformattedName.replace('_', ' ');
+    return unformattedName.replace(/_/g, ' ');
   }
 }
 
