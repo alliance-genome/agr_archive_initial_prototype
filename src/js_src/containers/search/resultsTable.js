@@ -11,7 +11,7 @@ class ResultsTable extends Component {
     let fields;
     switch(this.props.activeCategory) {
     case 'gene':
-      fields = ['display_name', 'name', 'synonym', 'source', 'species', 'gene_type', 'genomic_coordinates', 'relative_coordinates'];
+      fields = ['display_name', 'name', 'synonyms', 'source', 'species', 'gene_type', 'genomic_coordinates', 'relative_coordinates'];
       break;
     case 'go':
       fields = ['display_name', 'synonyms', 'go_branch'];

@@ -1,4 +1,4 @@
-const NON_HIGHLIGHTED_FIELDS = ['sourceHref', 'href', 'category'];
+const NON_HIGHLIGHTED_FIELDS = ['id', 'sourceHref', 'href', 'category'];
 const JOIN_HIGHLIGHT_BY = '...';
 const FILTER_ORDER = ['gene_type', 'species'];
 
@@ -82,7 +82,7 @@ function parseGeneResult(_d) {
     display_name: d.gene_symbol,
     href: d.href,
     name: d.name,
-    gene_id: d.gene_id || '(no ID)',
+    gene_id: d.id || '(no ID)',
     sourceHref: d.href,
     synonyms: d.gene_synonyms,
     gene_type: makeFieldDisplayName(d.gene_type),

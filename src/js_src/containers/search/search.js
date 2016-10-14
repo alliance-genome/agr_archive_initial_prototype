@@ -1,10 +1,10 @@
-/*eslint-disable no-undef */
 import React, { Component } from 'react';
 import { createMemoryHistory } from 'react-router';
 import { connect } from 'react-redux';
 import _ from 'underscore';
 
 import style from './style.css';
+import fetchData from '../../lib/fetchData';
 import FilterSelector from './filterSelector/filterSelector';
 import SearchBreadcrumbs from './searchBreadcrumbs';
 import SearchControls from './searchControls';
@@ -29,7 +29,7 @@ const BASE_SEARCH_URL = '/api/search';
 class SearchComponent extends Component {
   // fetch data at start
   componentDidMount() {
-    this.fetchData();
+    this.fetchSearchData();
   }
 
   // fetch data whenever URL changes within /search
@@ -37,11 +37,11 @@ class SearchComponent extends Component {
     if (prevProps.queryParams !== this.props.queryParams) {
       // only set loading state if changing something besided the page
       var isPaginationChange = (prevProps.queryParams.page !== this.props.queryParams.page && this.props.queryParams.page !== '1');
-      this.fetchData(isPaginationChange);
+      this.fetchSearchData(isPaginationChange);
     }
   }
 
-  fetchData(ignoreLoadingState) {
+  fetchSearchData(ignoreLoadingState) {
     // edit for pagination
     let size = this.props.pageSize;
     let _limit = size;
@@ -51,28 +51,22 @@ class SearchComponent extends Component {
     qp.offset = _offset;
     let tempHistory = createMemoryHistory('/');
     let searchUrl = tempHistory.createPath({ pathname: BASE_SEARCH_URL, query: qp });
-    // cancel request if exists
-    if (this._xhr) this._xhr.abort();
     if (!ignoreLoadingState) this.props.dispatch(setPending(true));
     // depends on global $
-    this._xhr = $.ajax({
-      url : searchUrl,
-      type : 'GET',
-      dataType:'json',
-      success: data => {              
+    fetchData(searchUrl)
+      .then( (data) => {
         this.props.dispatch(receiveResponse(data, this.props.queryParams));
         this.props.dispatch(setError(false));
         this.props.dispatch(setPending(false));
-      },
-      error: (request, e) => {
+      })
+      .catch( (e) => {
         this.props.dispatch(setPending(false));
         if (process.env.NODE_ENV === 'production') {
           this.props.dispatch(setError(SEARCH_API_ERROR_MESSAGE));
         } else {
           throw(e);
         }
-      }
-    });
+      });
   }
 
   renderResultsNode() {
