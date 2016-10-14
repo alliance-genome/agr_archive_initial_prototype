@@ -25,6 +25,8 @@ export function makeFieldDisplayName(unformattedName='') {
     return 'Gene Type';
   case 'go_genes':
     return 'Associated Genes';
+  case 'go_species':
+    return 'GO Species';
   default:
     return unformattedName.replace(/_/g, ' ');
   }

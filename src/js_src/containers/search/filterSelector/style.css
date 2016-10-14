@@ -15,3 +15,8 @@
 	margin-bottom: 0.5rem;
 	text-transform: capitalize;
 }
+
+.aggLink {
+	display: flex;
+	justify-content: space-between;
+}

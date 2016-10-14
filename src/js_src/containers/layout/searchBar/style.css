@@ -5,6 +5,7 @@
 
 .container form {
 	float: right;
+	margin-top: -1px;
 }
 
 .dropdown {

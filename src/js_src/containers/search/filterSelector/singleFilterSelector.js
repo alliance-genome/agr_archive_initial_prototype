@@ -34,7 +34,11 @@ class SingleFilterSelector extends Component {
       let newQueryObj = getQueryParamWithValueChanged(this.props.name, d.key, this.props.queryParams);
       return (
         <li className='nav-item' key={_key}>
-          <Link className={`nav-link${classSuffix}`} to={{ pathname: '/search', query: newQueryObj }}>{nameNode} ({d.total.toLocaleString()})</Link>
+          <Link className={`nav-link${classSuffix}`} to={{ pathname: '/search', query: newQueryObj }}>
+            <span className={style.aggLink}>
+              <span>{nameNode}</span><span>{d.total.toLocaleString()}</span>
+            </span>
+          </Link>
         </li>
       );
     });
