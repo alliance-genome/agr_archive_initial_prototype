@@ -4,7 +4,7 @@ import style from './style.css';
 import CategoryLabel from './categoryLabel';
 import DetailList from './detailList';
 
-const DEFAULT_FIELDS = ['symbol', 'gene_symbol', 'name', 'gene_synonyms', 'synonyms', 'sourceHref', 'geneId', 'species', 'type'];
+const DEFAULT_FIELDS = ['symbol', 'gene_symbol', 'name', 'gene_synonyms', 'synonyms', 'sourceHref', 'gene_id', 'species', 'type'];
 
 class ResultsList extends Component {
   renderHighlightedValues(highlight) {
@@ -30,12 +30,12 @@ class ResultsList extends Component {
     return <DetailList data={d} fields={fields} />;
   }
 
-  renderDiseaseEntry(d, i) {
-    let fields = ['synonyms', 'omim_id'];
+  renderNonGeneEntry(d, i, fields) {
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
         {this.renderHeader(d)}
         {this.renderDetailFromFields(d, fields)}
+        {this.renderHighlightedValues(d.highlight)}
         <hr />
       </div>
     );
@@ -50,7 +50,7 @@ class ResultsList extends Component {
           {this.renderDetailFromFields(d, topFields)}
           <div className={style.detailContainer}>
             <span className={style.detailLabel}><strong>Source:</strong> </span>
-            <span><a dangerouslySetInnerHTML={{ __html: d.geneId }} href={d.sourceHref} target='_new' /></span>
+            <span><a dangerouslySetInnerHTML={{ __html: d.gene_id }} href={d.sourceHref} target='_new' /></span>
           </div>
           {this.renderDetailFromFields(d, bottomFields)}
           {this.renderHighlightedValues(d.highlight)}
@@ -59,41 +59,18 @@ class ResultsList extends Component {
     );
   }
 
-  renderGoEntry(d, i) {
-    let fields = ['synonyms', 'go_branch'];
-    return (
-      <div className={style.resultContainer} key={`sr${i}`}>
-        {this.renderHeader(d)}
-        {this.renderDetailFromFields(d, fields)}
-        <hr />
-      </div>
-    );
-  }
-
-  renderOrthologGroupEntry(d, i) {
-    let fields = ['associated_genes'];
-    return (
-      <div className={style.resultContainer} key={`sr${i}`}>
-        {this.renderHeader(d)}
-        {this.renderDetailFromFields(d, fields)}
-        <hr />
-      </div>
-    );
-  }
-
   renderRows() {
     return this.props.entries.map( (d, i) => {
-      switch(d.category) {
-      case 'ortholog group':
-        return this.renderOrthologGroupEntry(d, i);
-      case 'disease':
-        return this.renderDiseaseEntry(d, i);
-      case 'gene':
+      if (d.category === 'gene') {
         return this.renderGeneEntry(d, i);
-      case 'go':
-        return this.renderGoEntry(d, i);
-      default:
-        return this.renderGeneEntry(d, i);
+      } else {
+        let fieldVals = {
+          'disease': ['synonyms', 'omim_id'],
+          'go': ['synonyms', 'go_branch'],
+          'ortholog group': ['associated_genes']
+        };
+        let fields = fieldVals[d.category] || [];
+        return this.renderNonGeneEntry(d, i, fields);
       }
     });
   }
