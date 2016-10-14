@@ -12,11 +12,13 @@ import ResultsList from './resultsList';
 import ResultsTable from './resultsTable';
 import { SMALL_COL_CLASS, LARGE_COL_CLASS, SEARCH_API_ERROR_MESSAGE } from '../../constants';
 import { receiveResponse, setError, setPending } from './searchActions';
+import Loader from '../../components/loader';
 
 import {
   selectActiveCategory,
   selectErrorMessage,
   selectIsError,
+  selectIsPending,
   selectQueryParams,
   selectResults,
   selectPageSize,
@@ -33,11 +35,13 @@ class SearchComponent extends Component {
   // fetch data whenever URL changes within /search
   componentDidUpdate (prevProps) {
     if (prevProps.queryParams !== this.props.queryParams) {
-      this.fetchData();
+      // only set loading state if changing something besided the page
+      var isPaginationChange = (prevProps.queryParams.page !== this.props.queryParams.page && this.props.queryParams.page !== '1');
+      this.fetchData(isPaginationChange);
     }
   }
 
-  fetchData() {
+  fetchData(ignoreLoadingState) {
     // edit for pagination
     let size = this.props.pageSize;
     let _limit = size;
@@ -49,8 +53,8 @@ class SearchComponent extends Component {
     let searchUrl = tempHistory.createPath({ pathname: BASE_SEARCH_URL, query: qp });
     // cancel request if exists
     if (this._xhr) this._xhr.abort();
+    if (!ignoreLoadingState) this.props.dispatch(setPending(true));
     // depends on global $
-    this.props.dispatch(setPending(true));
     this._xhr = $.ajax({
       url : searchUrl,
       type : 'GET',
@@ -72,6 +76,9 @@ class SearchComponent extends Component {
   }
 
   renderResultsNode() {
+    if (this.props.isPending) {
+      return <Loader />;
+    }
     if (this.props.isTable) {
       return <ResultsTable activeCategory={this.props.activeCategory} entries={this.props.results} />;
     }
@@ -116,6 +123,7 @@ SearchComponent.propTypes = {
   errorMessage: React.PropTypes.string,
   history: React.PropTypes.object,
   isError: React.PropTypes.bool,
+  isPending: React.PropTypes.bool,
   isTable: React.PropTypes.bool,
   pageSize: React.PropTypes.number,
   queryParams: React.PropTypes.object,
@@ -131,6 +139,7 @@ function mapStateToProps(state) {
     currentPage: _currentPage,
     errorMessage: selectErrorMessage(state),
     isError: selectIsError(state),
+    isPending: selectIsPending(state),
     isTable: _isTable,
     pageSize: selectPageSize(state),
     queryParams: _queryParams,
