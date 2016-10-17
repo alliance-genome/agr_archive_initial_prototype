@@ -46,3 +46,21 @@
 .typeahead input:focus {
 	outline: none;
 }
+
+.autoList {
+	position: absolute;
+	background: white;
+	border: 1px solid #ccc;
+	border-top: none;
+	border-radius: 0 0 0.25rem 0.25rem;
+	width: 100%;
+	z-index: 1;
+}
+
+.autoListItem {
+	padding: 0.1rem 0.5rem;
+}
+
+.autoListItem:hover, .activeAutoListItem {
+	background: #E8F2FE;
+}

@@ -7,7 +7,10 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 import style from './style.css';
 import CategoryLabel from '../../search/categoryLabel';
+import fetchData from '../../../lib/fetchData';
+import OptionsList from './optionsList';
 
+const AUTO_BASE_URL = '/api/search_autocomplete';
 const INPUT_CLASS = 'agr-search-input';
 const CATEGORY_OPTIONS = [
   {
@@ -37,8 +40,29 @@ class SearchBarComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      catOption: DEFAULT_CAT
+      autoOptions: [],
+      catOption: DEFAULT_CAT,
+      isFocused: false
     };
+  }
+
+  dispatchSearchFromQuery(query) {
+    let newCat = this.state.catOption.name;
+    let newQp = { q: query };
+    if (newCat !== 'all') newQp.category = newCat;
+    this.props.dispatch(push({ pathname: '/search', query: newQp }));
+  }
+
+  handleBlur() {
+    this.setState({ isFocused: false }) ;
+  }
+
+  handleFocus() {
+    this.setState({ isFocused: true }) ;
+  }
+
+  handleOptionSelected(selected) {
+    this.dispatchSearchFromQuery(selected);
   }
 
   handleSelect(eventKey) {
@@ -47,12 +71,25 @@ class SearchBarComponent extends Component {
   }
 
   handleSubmit(e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
+    this.dispatchSearchFromQuery(this.getQuery());
+  }
+
+  handleKeyUp() {
     let query = this.getQuery();
-    let newCat = this.state.catOption.name;
-    let newQp = { q: query };
-    if (newCat !== 'all') newQp.category = newCat;
-    this.props.dispatch(push({ pathname: '/search', query: newQp }));
+    let cat = this.state.catOption.name;
+    let catSegment = cat === DEFAULT_CAT.name ? '' : ('&category=' + cat);
+    let url = AUTO_BASE_URL + '?q=' + query + catSegment;
+    fetchData(url)
+      .then( (data) => {
+        let raw = data.results || [];
+        let newOptions = raw.map( d => d.name );
+        this.setState({ autoOptions: newOptions });
+      });
+  }
+
+  getOptions() {
+    return (this.state.isFocused) ? this.state.autoOptions : [];
   }
 
   getQuery() {
@@ -81,8 +118,14 @@ class SearchBarComponent extends Component {
           {this.renderDropdown()}
           <Typeahead
             className={style.typeahead}
+            customListComponent={OptionsList}
             customClasses={{ input: INPUT_CLASS }}
-            options={[]}
+            onBlur={this.handleBlur.bind(this)}
+            onFocus={this.handleFocus.bind(this)}
+            onOptionSelected={this.handleOptionSelected.bind(this)}
+            filterOption={(d) => d}
+            onKeyUp={this.handleKeyUp.bind(this)}
+            options={this.getOptions()}
             value={query}
           />
           <a className={`btn btn-primary ${style.searchBtn}`} href='#' onClick={this.handleSubmit.bind(this)}><i className='fa fa-search' /></a>
@@ -106,6 +149,5 @@ function mapStateToProps(state) {
     queryParams: _queryParams
   };
 }
-
 export { SearchBarComponent as SearchBarComponent };
 export default connect(mapStateToProps)(SearchBarComponent);

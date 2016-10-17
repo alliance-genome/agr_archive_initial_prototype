@@ -36,7 +36,7 @@ class SingleFilterSelector extends Component {
         <li className='nav-item' key={_key}>
           <Link className={`nav-link${classSuffix}`} to={{ pathname: '/search', query: newQueryObj }}>
             <span className={style.aggLink}>
-              <span>{nameNode}</span><span>{d.total.toLocaleString()}</span>
+              <span className={style.aggLinkLabel}>{nameNode}</span><span>{d.total.toLocaleString()}</span>
             </span>
           </Link>
         </li>

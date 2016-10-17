@@ -3,7 +3,8 @@ import _ from 'underscore';
 const SINGLE_VAL_FIELDS = ['mode', 'page'];
 const CLEARING_FIELDS = ['category'];
 
-export function makeFieldDisplayName(unformattedName='') {
+export function makeFieldDisplayName(unformattedName) {
+  unformattedName = unformattedName || '';
   switch(unformattedName) {
   case 'go':
     return 'Gene Ontology';
