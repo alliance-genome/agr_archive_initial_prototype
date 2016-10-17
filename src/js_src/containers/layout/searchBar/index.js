@@ -1,17 +1,17 @@
 /*eslint-disable react/no-set-state */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Typeahead } from 'react-typeahead';
+import Autosuggest from 'react-autosuggest';
 import { push } from 'react-router-redux';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 import style from './style.css';
 import CategoryLabel from '../../search/categoryLabel';
 import fetchData from '../../../lib/fetchData';
-import OptionsList from './optionsList';
+// import OptionsList from './optionsList';
 
 const AUTO_BASE_URL = '/api/search_autocomplete';
-const INPUT_CLASS = 'agr-search-input';
+const INPUT_CLASS = 'react-autosuggest__input';
 const CATEGORY_OPTIONS = [
   {
     name: 'all',
@@ -61,6 +61,10 @@ class SearchBarComponent extends Component {
     this.setState({ isFocused: true }) ;
   }
 
+  handleClear() {
+    this.setState({ autoOptions: [] });
+  }
+
   handleOptionSelected(selected) {
     this.dispatchSearchFromQuery(selected);
   }
@@ -75,15 +79,14 @@ class SearchBarComponent extends Component {
     this.dispatchSearchFromQuery(this.getQuery());
   }
 
-  handleKeyUp() {
+  handleFetchData() {
     let query = this.getQuery();
     let cat = this.state.catOption.name;
     let catSegment = cat === DEFAULT_CAT.name ? '' : ('&category=' + cat);
     let url = AUTO_BASE_URL + '?q=' + query + catSegment;
     fetchData(url)
       .then( (data) => {
-        let raw = data.results || [];
-        let newOptions = raw.map( d => d.name );
+        let newOptions = data.results || [];
         this.setState({ autoOptions: newOptions });
       });
   }
@@ -112,21 +115,26 @@ class SearchBarComponent extends Component {
 
   render() {
     let query = this.props.queryParams.q || '';
+    let _getSuggestionValue = ( d => d.name );
+    let _inputProps = {
+      placeholder: 'search a gene, GO term, or disease',
+      value: query,
+      onChange: this.handleFetchData.bind(this)
+    };
+    let _renderSuggestion = (d) => {
+      return <div>{d.name}</div>;
+    };
     return (
       <div className={style.container}>
         <form onSubmit={this.handleSubmit.bind(this)} ref='form'>
           {this.renderDropdown()}
-          <Typeahead
-            className={style.typeahead}
-            customListComponent={OptionsList}
-            customClasses={{ input: INPUT_CLASS }}
-            onBlur={this.handleBlur.bind(this)}
-            onFocus={this.handleFocus.bind(this)}
-            onOptionSelected={this.handleOptionSelected.bind(this)}
-            filterOption={(d) => d}
-            onKeyUp={this.handleKeyUp.bind(this)}
-            options={this.getOptions()}
-            value={query}
+          <Autosuggest
+            getSuggestionValue={_getSuggestionValue}
+            inputProps={_inputProps}
+            onSuggestionsFetchRequested={this.handleFetchData}
+            onSuggestionsClearRequested={this.handleClear}
+            renderSuggestion={_renderSuggestion}
+            suggestions={this.state.autoOptions}
           />
           <a className={`btn btn-primary ${style.searchBtn}`} href='#' onClick={this.handleSubmit.bind(this)}><i className='fa fa-search' /></a>
         </form>
