@@ -11,6 +11,16 @@ const DEFAULT_STATE = fromJS({
   isError: false,
   isPending: false,
   pageSize: DEFAULT_PAGE_SIZE,
+  // for multi table
+  geneResults: [],
+  goResults: [],
+  diseaseResults: [],
+  orthoGroupResults: [],
+  geneTotal: 0,
+  goTotal: 0,
+  diseaseTotal: 0,
+  orthoGroupTotal: 0,
+  // mixed
   results: [],
   total: 0,
 });

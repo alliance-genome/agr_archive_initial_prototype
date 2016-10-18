@@ -38,6 +38,46 @@ const selectQueryParams = createSelector(
   }
 );
 
+const selectGeneResults = createSelector(
+  [selectSearchDomain],
+  (search) => search.get('geneResults').toJS()
+);
+
+const selectGoResults = createSelector(
+  [selectSearchDomain],
+  (search) => search.get('goResults').toJS()
+);
+
+const selectDiseaseResults = createSelector(
+  [selectSearchDomain],
+  (search) => search.get('diseaseResults').toJS()
+);
+
+const selectOrthoGroupResults = createSelector(
+  [selectSearchDomain],
+  (search) => search.get('orthoGroupResults').toJS()
+);
+
+const selectGeneTotal = createSelector(
+  [selectSearchDomain],
+  (search) => search.get('geneTotal')
+);
+
+const selectGoTotal = createSelector(
+  [selectSearchDomain],
+  (search) => search.get('goTotal')
+);
+
+const selectDiseaseTotal = createSelector(
+  [selectSearchDomain],
+  (search) => search.get('diseaseTotal')
+);
+
+const selectOrthoGroupTotal = createSelector(
+  [selectSearchDomain],
+  (search) => search.get('orthoGroupTotal')
+);
+
 const selectResults = createSelector(
   [selectSearchDomain],
   (search) => search.get('results').toJS()
@@ -75,6 +115,14 @@ export {
   selectIsPending,
   selectQueryParams,
   selectResults,
+  selectGeneResults,
+  selectGoResults,
+  selectDiseaseResults,
+  selectOrthoGroupResults,
+  selectGeneTotal,
+  selectGoTotal,
+  selectDiseaseTotal,
+  selectOrthoGroupTotal,
   selectTotal,
   selectPageSize,
   selectTotalPages,

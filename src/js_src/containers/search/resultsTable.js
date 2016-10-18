@@ -93,9 +93,6 @@ class ResultsTable extends Component {
   }
 
   render() {
-    if (this.props.activeCategory === 'none') {
-      return <p>To view the results in a table, first choose a category.</p>;
-    }
     return (
       <div className={style.tableContainer}>
         <table className='table'>

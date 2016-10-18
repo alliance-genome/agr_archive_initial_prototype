@@ -6,7 +6,11 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 import style from './style.css';
 import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
 
-import { selectTotalPages } from '../../selectors/searchSelectors';
+import {
+  selectActiveCategory,
+  selectTotalPages,
+  selectQueryParams
+} from '../../selectors/searchSelectors';
 
 const SEARCH_PATH = '/search';
 
@@ -49,31 +53,38 @@ class SearchControlsComponent extends Component {
     );
   }
 
+  renderNonViewAs() {
+    if (this.props.isMultiTable) return null;
+    return (
+      <div className={style.controlContainer}>
+        {this.renderPaginator()}
+        <div className={style.control}>
+          <label className={style.searchLabel}>Sort By</label>
+          <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='Relevance'>
+            <MenuItem eventKey='1'>Dropdown link</MenuItem>
+            <MenuItem eventKey='2'>Dropdown link</MenuItem>
+          </DropdownButton>
+        </div>
+        <div className={style.control}>
+          <label className={style.searchLabel}>Page Size</label>
+          <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='50'>
+            <MenuItem eventKey='1'>Dropdown link</MenuItem>
+            <MenuItem eventKey='2'>Dropdown link</MenuItem>
+          </DropdownButton>
+        </div>
+        <div>
+          <label className={style.searchLabel}>&nbsp;</label>
+          <a className={`btn btn-secondary ${style.agrDownloadBtn}`} href='#'><i className='fa fa-download' /> Download</a>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div>
         {this.renderViewAs()}
-        <div className={style.controlContainer}>
-          {this.renderPaginator()}
-          <div className={style.control}>
-            <label className={style.searchLabel}>Sort By</label>
-            <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='Relevance'>
-              <MenuItem eventKey='1'>Dropdown link</MenuItem>
-              <MenuItem eventKey='2'>Dropdown link</MenuItem>
-            </DropdownButton>
-          </div>
-          <div className={style.control}>
-            <label className={style.searchLabel}>Page Size</label>
-            <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='50'>
-              <MenuItem eventKey='1'>Dropdown link</MenuItem>
-              <MenuItem eventKey='2'>Dropdown link</MenuItem>
-            </DropdownButton>
-          </div>
-          <div>
-            <label className={style.searchLabel}>&nbsp;</label>
-            <a className={`btn btn-secondary ${style.agrDownloadBtn}`} href='#'><i className='fa fa-download' /> Download</a>
-          </div>
-        </div>
+        {this.renderNonViewAs()}
       </div>
     );
   }
@@ -81,20 +92,23 @@ class SearchControlsComponent extends Component {
 
 SearchControlsComponent.propTypes = {
   currentPage: React.PropTypes.number,
+  isMultiTable: React.PropTypes.bool,
   isTable: React.PropTypes.bool,
   queryParams: React.PropTypes.object,
   totalPages: React.PropTypes.number
 };
 
 function mapStateToProps(state) {
-  let location = state.routing.locationBeforeTransitions;
-  let _queryParams = location ? state.routing.locationBeforeTransitions.query : {};
+  let _queryParams = selectQueryParams(state);
+  let activeCategory = selectActiveCategory(state);
   let _isTable = (_queryParams.mode === 'table');
+  let _isMultiTable = (_isTable && activeCategory === 'none') ;
   return {
     currentPage: parseInt(_queryParams.page) || 1,
     isTable: _isTable,
+    isMultiTable: _isMultiTable,
     queryParams: _queryParams,
-    totalPages: selectTotalPages(state),
+    totalPages: selectTotalPages(state)
   };
 }
 
