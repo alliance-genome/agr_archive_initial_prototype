@@ -8,10 +8,8 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 import style from './style.css';
 import CategoryLabel from '../../search/categoryLabel';
 import fetchData from '../../../lib/fetchData';
-// import OptionsList from './optionsList';
 
 const AUTO_BASE_URL = '/api/search_autocomplete';
-const INPUT_CLASS = 'react-autosuggest__input';
 const CATEGORY_OPTIONS = [
   {
     name: 'all',
@@ -39,26 +37,12 @@ const DEFAULT_CAT = CATEGORY_OPTIONS[0];
 class SearchBarComponent extends Component {
   constructor(props) {
     super(props);
+    let initValue = this.props.queryParams.q || '';
     this.state = {
       autoOptions: [],
       catOption: DEFAULT_CAT,
-      isFocused: false
+      value: initValue
     };
-  }
-
-  dispatchSearchFromQuery(query) {
-    let newCat = this.state.catOption.name;
-    let newQp = { q: query };
-    if (newCat !== 'all') newQp.category = newCat;
-    this.props.dispatch(push({ pathname: '/search', query: newQp }));
-  }
-
-  handleBlur() {
-    this.setState({ isFocused: false }) ;
-  }
-
-  handleFocus() {
-    this.setState({ isFocused: true }) ;
   }
 
   handleClear() {
@@ -76,11 +60,20 @@ class SearchBarComponent extends Component {
 
   handleSubmit(e) {
     if (e) e.preventDefault();
-    this.dispatchSearchFromQuery(this.getQuery());
+    let query = this.state.value;
+    let newCat = this.state.catOption.name;
+    let newQp = { q: query };
+    if (query === '') newQp = {};
+    if (newCat !== 'all') newQp.category = newCat;
+    this.props.dispatch(push({ pathname: '/search', query: newQp }));
   }
 
-  handleFetchData() {
-    let query = this.getQuery();
+  handleTyping(e, { newValue }) {
+    this.setState({ value: newValue });
+  }
+
+  handleFetchData({ value }) {
+    let query = value;
     let cat = this.state.catOption.name;
     let catSegment = cat === DEFAULT_CAT.name ? '' : ('&category=' + cat);
     let url = AUTO_BASE_URL + '?q=' + query + catSegment;
@@ -89,15 +82,6 @@ class SearchBarComponent extends Component {
         let newOptions = data.results || [];
         this.setState({ autoOptions: newOptions });
       });
-  }
-
-  getOptions() {
-    return (this.state.isFocused) ? this.state.autoOptions : [];
-  }
-
-  getQuery() {
-    let el = document.getElementsByClassName(INPUT_CLASS)[0];
-    return el.value;
   }
 
   renderDropdown() {
@@ -113,29 +97,46 @@ class SearchBarComponent extends Component {
     );
   }
 
+  renderSuggestion(d) {
+    return (
+      <div className={style.autoListItem}>
+        <span>{d.name}</span>
+        <span className={style.catContainer}>
+          <CategoryLabel category={d.category} />
+        </span>
+      </div>
+    );
+  }
+
   render() {
-    let query = this.props.queryParams.q || '';
     let _getSuggestionValue = ( d => d.name );
     let _inputProps = {
       placeholder: 'search a gene, GO term, or disease',
-      value: query,
-      onChange: this.handleFetchData.bind(this)
+      value: this.state.value,
+      onChange: this.handleTyping.bind(this)
     };
-    let _renderSuggestion = (d) => {
-      return <div>{d.name}</div>;
+    let _theme = {
+      container: style.autoContainer,
+      containerOpen: style.autoContainerOpen,
+      input: style.autoInput,
+      suggestionsContainer: style.suggestionsContainer,
+      suggestionsList: style.suggestionsList,
+      suggestion: style.suggestion,
+      suggestionFocused: style.suggestionFocused
     };
     return (
       <div className={style.container}>
         <form onSubmit={this.handleSubmit.bind(this)} ref='form'>
           {this.renderDropdown()}
-          <Autosuggest
-            getSuggestionValue={_getSuggestionValue}
-            inputProps={_inputProps}
-            onSuggestionsFetchRequested={this.handleFetchData}
-            onSuggestionsClearRequested={this.handleClear}
-            renderSuggestion={_renderSuggestion}
-            suggestions={this.state.autoOptions}
-          />
+            <Autosuggest
+              getSuggestionValue={_getSuggestionValue}
+              inputProps={_inputProps}
+              onSuggestionsClearRequested={this.handleClear.bind(this)}
+              onSuggestionsFetchRequested={this.handleFetchData.bind(this)}
+              renderSuggestion={this.renderSuggestion}
+              suggestions={this.state.autoOptions}
+              theme={_theme}
+            />
           <a className={`btn btn-primary ${style.searchBtn}`} href='#' onClick={this.handleSubmit.bind(this)}><i className='fa fa-search' /></a>
         </form>
         

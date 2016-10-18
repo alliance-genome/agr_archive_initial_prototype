@@ -44,7 +44,8 @@ class ResultsTable extends Component {
     );
   }
 
-  renderTruncatedContent(original='') {
+  renderTruncatedContent(original) {
+    original = original || '';
     if (Array.isArray(original)) {
       original = original.join(', ');
     }

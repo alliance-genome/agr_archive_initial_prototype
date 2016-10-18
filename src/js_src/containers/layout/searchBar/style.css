@@ -26,28 +26,23 @@
 	text-decoration: none;
 }
 
-.typeahead {
+.autoContainer {
 	display: inline-block;
 	position: relative;
 	top: 2px;
 }
 
-.typeahead input {
+.autoInput {
 	border: none;
 	padding: 7px;
 	width: 25.25rem;
 }
 
-.searchBtn {
-	display: inline-block;
-	border-radius: 0 0.25rem 0.25rem 0;
-}
-
-.typeahead input:focus {
+.autoInput:focus {
 	outline: none;
 }
 
-.autoList {
+.suggestionsContainer {
 	position: absolute;
 	background: white;
 	border: 1px solid #ccc;
@@ -57,10 +52,36 @@
 	z-index: 1;
 }
 
+.suggestionsList {
+	list-style: none;
+	padding: 0;
+	margin-bottom: 0;
+}
+
+.autoContainer .suggestionsContainer {
+	display: none;
+}
+
+.autoContainerOpen .suggestionsContainer {
+	display: block !important;
+}
+
+.catContainer {
+	white-space: nowrap;
+}
+
 .autoListItem {
+	display: flex;
+	justify-content: space-between;
 	padding: 0.1rem 0.5rem;
 }
 
-.autoListItem:hover, .activeAutoListItem {
+.suggestionFocused {
 	background: #E8F2FE;
+}
+
+
+.searchBtn {
+	display: inline-block;
+	border-radius: 0 0.25rem 0.25rem 0;
 }
