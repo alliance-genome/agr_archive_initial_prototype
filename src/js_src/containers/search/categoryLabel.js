@@ -41,12 +41,14 @@ class CategoryLabel extends Component {
   render() {
     let current = this.getCurrentOption();
     let label = current ? current.displayName : '';
-    return <span className={style.catLabel}>{this.renderSprite()} {label}</span>;
+    let labelNode = this.props.hideLabel ? null : <span className={style.catLabel}> {label}</span>;
+    return <span>{this.renderSprite()}{labelNode}</span>;
   }
 }
 
 CategoryLabel.propTypes = {
-  category: React.PropTypes.string
+  category: React.PropTypes.string,
+  hideLabel: React.PropTypes.bool
 };
 
 export default CategoryLabel;

@@ -116,7 +116,7 @@ function parseDiseaseResult(_d) {
     highlight: d.highlights,
     href: d.href,
     name: d.name,
-    omim_id: d.omim_id,
+    omim_id: d.id,
     synonyms: d.synonym
   };
 }

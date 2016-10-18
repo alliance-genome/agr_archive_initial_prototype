@@ -24,10 +24,12 @@ export function makeFieldDisplayName(unformattedName) {
     return 'Molecular Function';
   case 'geneType':
     return 'Gene Type';
+  case 'disease_genes':
   case 'go_genes':
     return 'Associated Genes';
+  case 'disease_species':
   case 'go_species':
-    return 'GO Species';
+    return 'Associated Species';
   default:
     return unformattedName.replace(/_/g, ' ');
   }

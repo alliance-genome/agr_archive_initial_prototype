@@ -17,6 +17,9 @@ class ResultsTable extends Component {
     case 'go':
       fields = ['display_name', 'synonyms', 'go_branch'];
       break;
+    case 'disease':
+      fields = ['display_name', 'omim_id', 'synonyms'];
+      break;
     default:
       fields = ['display_name', 'synonyms'];
     }
