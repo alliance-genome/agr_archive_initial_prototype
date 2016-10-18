@@ -13,10 +13,10 @@ run-prod:
 	PRODUCTION=true ES_URI=$(ES_URI) gunicorn src.server:app -k gevent --pid gunicorn.pid --daemon
 
 restart:
-	kill -HUP $(cat gunicorn.pid)
+	kill -s HUP $(cat gunicorn.pid)
 
 stop:
-	kill -TERM $(cat gunicorn.pid)
+	kill -s TERM $(cat gunicorn.pid)
 
 tests: test-py
 	npm test
