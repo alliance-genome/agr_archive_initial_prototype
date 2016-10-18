@@ -42,14 +42,31 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
     return state.set('aggregations', fromJS(parseAggs(state.get('aggregations').toJS(), action.payload.query)))
                 .set('activeCategory', newActiveCat);
   case 'SEARCH_RESPONSE':
+    let resultsTargetsVals = {
+      'gene': 'geneResults',
+      'go': 'goResults',
+      'disease': 'diseaseResults',
+      'ortholog group':  'orthologResults',
+      'none': 'results'
+    };
+    let totalTargetsVals = {
+      'gene': 'geneTotal',
+      'go': 'goTotal',
+      'disease': 'diseaseTotal',
+      'ortholog group':  'orthologTotal',
+      'none': 'total'
+    };
+    let resultsTarget = resultsTargetsVals[action.category] || 'results';
+    let totalTarget = totalTargetsVals[action.category] || 'total';
+
     // parse meta
     return state
       .set('isPending',false)
-      .set('total', action.payload.total)
+      .set(totalTarget, action.payload.total)
       // parse aggregations
       .set('aggregations', fromJS(parseAggs(action.payload.aggregations, action.queryParams))) 
       // parse results
-      .set('results', fromJS(parseResults(action.payload.results)));
+      .set(resultsTarget, fromJS(parseResults(action.payload.results)));
   default:
     return state;
   }

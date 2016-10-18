@@ -53,7 +53,6 @@ class SearchComponent extends Component {
     let tempHistory = createMemoryHistory('/');
     let searchUrl = tempHistory.createPath({ pathname: BASE_SEARCH_URL, query: qp });
     if (!ignoreLoadingState) this.props.dispatch(setPending(true));
-    // depends on global $
     fetchData(searchUrl)
       .then( (data) => {
         this.props.dispatch(receiveResponse(data, this.props.queryParams));
@@ -71,10 +70,10 @@ class SearchComponent extends Component {
   }
 
   renderResultsNode() {
-    if (this.props.isPending) {
-      return <Loader />;
-    } else if (this.props.isMultiTable) {
+    if (this.props.isMultiTable) {
       return <MultiTable />;
+    } else if (this.props.isPending) {
+      return <Loader />;
     } else if (this.props.isTable) {
       return <ResultsTable activeCategory={this.props.activeCategory} entries={this.props.results} />;
     } else {
