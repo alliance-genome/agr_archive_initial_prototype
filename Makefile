@@ -16,7 +16,7 @@ restart:
 	kill -HUP $(cat gunicorn.pid)
 
 stop:
-	kill -TERM $(cat gunicord.pid)
+	kill -TERM $(cat gunicorn.pid)
 
 tests: test-py
 	npm test
