@@ -156,33 +156,52 @@ def build_search_params(query, fields):
             ]
         else:
             es_query['dis_max']['queries'] = [
-                    {
-                        "term": {
-                            "name.simple": {
-                                "value": query,
-                                "boost": 100
-                            }
-                        }
-                    },
-                    {
-                        "multi_match": {
-                            "query": query,
-                            "type": "most_fields",
-                            "fields": fields + ['description', 'name.fulltext^2'],
-                            "boost": 25
-                        }
-                    },
-                    {
-                        "match_phrase_prefix": {
-                            "name": {
-                                "query": query,
-                                "analyzer": "standard",
-                                "max_expansions": 30,
-                                "boost": 1
-                            }
+                {
+                    "term": {
+                        "name.simple": {
+                            "value": query,
+                            "boost": 100
                         }
                     }
-                ]
+                },
+                {
+                    "term": {
+                        "gene_symbol.simple": {
+                            "value": query,
+                            "boost": 100
+                        }
+                    }
+                },
+                {
+                    "multi_match": {
+                        "query": query,
+                        "type": "most_fields",
+                        "fields": fields + ['name.fulltext^2'],
+                        "boost": 25
+                    }
+                },
+                {
+                    "match_phrase_prefix": {
+                        "name": {
+                            "query": query,
+                            "analyzer": "standard",
+                            "max_expansions": 30,
+                            "boost": 1
+                        }
+                    }
+                },
+                {
+                    "match_phrase_prefix": {
+                        "gene_symbol": {
+                            "query": query,
+                            "analyzer": "standard",
+                            "max_expansions": 30,
+                            "boost": 1
+                        }
+                    }
+                }
+
+            ]
 
     return es_query
 
@@ -198,6 +217,7 @@ def format_search_results(search_results, json_response_fields):
             obj[field] = raw_obj.get(field)
 
         obj['highlights'] = r.get('highlight')
+        obj['id'] = r.get('_id')
 
         formatted_results.append(obj)
 

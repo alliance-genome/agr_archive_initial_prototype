@@ -1,4 +1,4 @@
-ES_URI=http://52.43.223.105:9200/
+ES_URI=http://35.160.110.142:9200/
 
 # if possible have a virtualenv setup first
 build:
@@ -8,6 +8,15 @@ build:
 
 run:
 	ES_URI=$(ES_URI) python src/server.py
+
+run-prod:
+	PRODUCTION=true ES_URI=$(ES_URI) gunicorn src.server:app -k gevent --pid gunicorn.pid --daemon
+
+restart:
+	kill -s HUP $(cat gunicorn.pid)
+
+stop:
+	kill -s TERM $(cat gunicorn.pid)
 
 tests: test-py
 	npm test

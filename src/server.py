@@ -28,21 +28,21 @@ webpack.init_app(app)
 
 @app.route('/api/search')
 def search():
-    query = request.args.get('q', '')
+    query = request.args.get('q', '').lower()
     limit = int(request.args.get('limit', 10))
     offset = int(request.args.get('offset', 0))
     category = request.args.get('category', '')
     sort_by = request.args.get('sort_by', '')
 
     category_filters = {
-        "gene": ['go_ids', 'go_names'],
-        "go": ['gene']
+        "gene": ['gene_type', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species'],
+        "go": ['go_type', 'go_species', 'go_genes'],
+        "disease": ['disease_species', 'disease_genes']
     }
 
-    search_fields = ['name', 'symbol', 'synonym', 'go_ids', 'go_names']
+    search_fields = ['name', 'gene_symbol', 'gene_synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'disease_genes']
 
-    json_response_fields = ['name', 'symbol', 'synonym', 'go_ids',
-                            'go_names', 'href', 'type', 'organism']
+    json_response_fields = ['name', 'gene_symbol', 'gene_synonyms', 'gene_type', 'gene_chromosome_starts', 'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'disease_genes', 'category', 'href']
 
     es_query = build_search_query(query, search_fields, category,
                                   category_filters, request.args)
