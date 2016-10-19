@@ -11,6 +11,16 @@ const DEFAULT_STATE = fromJS({
   isError: false,
   isPending: false,
   pageSize: DEFAULT_PAGE_SIZE,
+  // for multi table
+  geneResults: [],
+  goResults: [],
+  diseaseResults: [],
+  orthoGroupResults: [],
+  geneTotal: 0,
+  goTotal: 0,
+  diseaseTotal: 0,
+  orthoGroupTotal: 0,
+  // mixed
   results: [],
   total: 0,
 });
@@ -32,14 +42,32 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
     return state.set('aggregations', fromJS(parseAggs(state.get('aggregations').toJS(), action.payload.query)))
                 .set('activeCategory', newActiveCat);
   case 'SEARCH_RESPONSE':
+    let actionCat = action.category || 'none';
+    let resultsTargetsVals = {
+      'gene': 'geneResults',
+      'go': 'goResults',
+      'disease': 'diseaseResults',
+      'ortholog group':  'orthologResults',
+      'none': 'results'
+    };
+    let totalTargetsVals = {
+      'gene': 'geneTotal',
+      'go': 'goTotal',
+      'disease': 'diseaseTotal',
+      'ortholog group':  'orthologTotal',
+      'none': 'total'
+    };
+    let resultsTarget = resultsTargetsVals[actionCat] || 'results';
+    let totalTarget = totalTargetsVals[actionCat] || 'total';
+    // maybe parse aggs
+    let newAggs = (actionCat === 'none') ? fromJS(parseAggs(action.payload.aggregations, action.queryParams)) : state.get('aggregations');
     // parse meta
     return state
       .set('isPending',false)
-      .set('total', action.payload.total)
-      // parse aggregations
-      .set('aggregations', fromJS(parseAggs(action.payload.aggregations, action.queryParams))) 
+      .set(totalTarget, action.payload.total)
+      .set('aggregations', newAggs)
       // parse results
-      .set('results', fromJS(parseResults(action.payload.results)));
+      .set(resultsTarget, fromJS(parseResults(action.payload.results)));
   default:
     return state;
   }

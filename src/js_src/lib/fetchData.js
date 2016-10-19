@@ -1,4 +1,7 @@
 /*eslint-disable no-undef */
+
+const TIMEOUT = 5000;
+
 export default function fetchData(_url, options={}) {
   let _type = options.type || 'GET';
   return new Promise(function (resolve, reject) {
@@ -7,6 +10,7 @@ export default function fetchData(_url, options={}) {
       url : _url,
       type : _type,
       dataType:'json',
+      timeout: TIMEOUT,
       success: data => {
         resolve(data);
       },

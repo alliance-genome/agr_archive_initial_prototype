@@ -21,7 +21,7 @@
 }
 
 .resultContainer {
-  margin-top: 1rem;
+	margin-top: 1rem;
 }
 
 .tableContainer {
@@ -30,6 +30,11 @@
 
 .tableHeadCell {
 	text-transform: capitalize;
+}
+
+.tableEmpty {
+	padding: 1rem;
+	text-align: center;
 }
 
 .detailList mark, em {

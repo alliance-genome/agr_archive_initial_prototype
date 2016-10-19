@@ -6,6 +6,7 @@ import _ from 'underscore';
 import style from './style.css';
 import fetchData from '../../lib/fetchData';
 import FilterSelector from './filterSelector/filterSelector';
+import MultiTable from './multiTable';
 import SearchBreadcrumbs from './searchBreadcrumbs';
 import SearchControls from './searchControls';
 import ResultsList from './resultsList';
@@ -52,7 +53,6 @@ class SearchComponent extends Component {
     let tempHistory = createMemoryHistory('/');
     let searchUrl = tempHistory.createPath({ pathname: BASE_SEARCH_URL, query: qp });
     if (!ignoreLoadingState) this.props.dispatch(setPending(true));
-    // depends on global $
     fetchData(searchUrl)
       .then( (data) => {
         this.props.dispatch(receiveResponse(data, this.props.queryParams));
@@ -70,13 +70,15 @@ class SearchComponent extends Component {
   }
 
   renderResultsNode() {
-    if (this.props.isPending) {
+    if (this.props.isMultiTable) {
+      return <MultiTable />;
+    } else if (this.props.isPending) {
       return <Loader />;
-    }
-    if (this.props.isTable) {
+    } else if (this.props.isTable) {
       return <ResultsTable activeCategory={this.props.activeCategory} entries={this.props.results} />;
+    } else {
+      return <ResultsList entries={this.props.results} />;      
     }
-    return <ResultsList entries={this.props.results} />;
   }
 
   renderErrorNode() {
@@ -103,6 +105,7 @@ class SearchComponent extends Component {
             <SearchBreadcrumbs />
             <SearchControls />
             {this.renderResultsNode()}
+            <SearchControls />
           </div>
         </div>
       </div>
@@ -117,6 +120,7 @@ SearchComponent.propTypes = {
   errorMessage: React.PropTypes.string,
   history: React.PropTypes.object,
   isError: React.PropTypes.bool,
+  isMultiTable: React.PropTypes.bool,
   isPending: React.PropTypes.bool,
   isTable: React.PropTypes.bool,
   pageSize: React.PropTypes.number,
@@ -128,11 +132,14 @@ function mapStateToProps(state) {
   let _queryParams = selectQueryParams(state);
   let _isTable = (_queryParams.mode === 'table');
   let _currentPage = parseInt(_queryParams.page) || 1;
+  let _activeCategory = selectActiveCategory(state);
+  let _isMultiTable = (_isTable && _activeCategory === 'none') ;
   return {
-    activeCategory:  selectActiveCategory(state),
+    activeCategory: _activeCategory,
     currentPage: _currentPage,
     errorMessage: selectErrorMessage(state),
     isError: selectIsError(state),
+    isMultiTable: _isMultiTable,
     isPending: selectIsPending(state),
     isTable: _isTable,
     pageSize: selectPageSize(state),

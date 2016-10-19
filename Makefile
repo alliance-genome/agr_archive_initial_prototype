@@ -1,5 +1,5 @@
 ES_URI=http://35.160.110.142:9200/
-	
+
 # if possible have a virtualenv setup first
 build:
 	npm install

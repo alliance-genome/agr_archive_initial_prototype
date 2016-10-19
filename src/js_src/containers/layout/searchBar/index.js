@@ -102,7 +102,7 @@ class SearchBarComponent extends Component {
       <div className={style.autoListItem}>
         <span>{d.name}</span>
         <span className={style.catContainer}>
-          <CategoryLabel category={d.category} hideLabel />
+          <CategoryLabel category={d.category} />
         </span>
       </div>
     );
