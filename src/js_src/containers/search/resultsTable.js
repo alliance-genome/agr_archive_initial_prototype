@@ -60,8 +60,9 @@ class ResultsTable extends Component {
   }
 
   renderRows() {
+    let entries = this.props.entries;
     let fields = this.getFields();
-    return this.props.entries.map( (d, i) => {
+    let rowNodes = entries.map( (d, i) => {
       let nodes = fields.map( (field) => {
         let _key = `srtc.${i}.${field}`;
         switch(field) {
@@ -84,6 +85,11 @@ class ResultsTable extends Component {
         </tr>
       );
     });
+    return (
+      <tbody>
+        {rowNodes}
+      </tbody>
+    );
   }
 
   renderHighlight(highlight) {
@@ -93,16 +99,16 @@ class ResultsTable extends Component {
   }
 
   render() {
+    let emptyNode = (this.props.entries.length === 0) ? <p className={style.tableEmpty}>No results</p> : null;
     return (
       <div className={style.tableContainer}>
         <table className='table'>
           <thead className='thead-default'>
             {this.renderHeader()}
           </thead>
-          <tbody>
-            {this.renderRows()}
-          </tbody>
+          {this.renderRows()}
         </table>
+        {emptyNode}
       </div>
     );
   }

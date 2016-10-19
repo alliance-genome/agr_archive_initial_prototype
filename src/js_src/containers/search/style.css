@@ -32,6 +32,11 @@
 	text-transform: capitalize;
 }
 
+.tableEmpty {
+	padding: 1rem;
+	text-align: center;
+}
+
 .detailList mark, em {
 	background: yellow;
 }
