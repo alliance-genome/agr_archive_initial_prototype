@@ -273,10 +273,10 @@ def build_autocomplete_search_body_request(query, category='gene', field='name_k
     return es_query
 
 
-def format_autocomplete_results(es_response, field='name'):
+def format_autocomplete_results(es_response, field='name_key'):
     formatted_results = []
 
-    if field != 'name':
+    if field != 'name_key':
         results = es_response['aggregations'][field]['buckets']
         for r in results:
             obj = {
