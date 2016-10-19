@@ -291,7 +291,7 @@ def format_autocomplete_results(es_response, field='name'):
                 'category': hit['_source']['category']
             }
 
-            if hit['_source']['category'] == "gene" and hit['_source']['gene_symbol']:
+            if hit['_source'].get('gene_symbol') and hit['_source']['category'] == "gene":
                 obj['name'] = hit['_source']['gene_symbol'].upper()
 
             formatted_results.append(obj)
