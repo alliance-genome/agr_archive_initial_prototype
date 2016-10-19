@@ -224,13 +224,13 @@ def format_search_results(search_results, json_response_fields):
     return formatted_results
 
 
-def build_autocomplete_search_body_request(query, category='gene', field='name'):
+def build_autocomplete_search_body_request(query, category='gene', field='name_key'):
     es_query = {
         "query": {
             "bool": {
                 "must": [{
                     "match": {
-                        "name": {
+                        "name_key.autocomplete": {
                             "query": query,
                             "analyzer": "standard"
                         }
@@ -248,7 +248,7 @@ def build_autocomplete_search_body_request(query, category='gene', field='name')
                 ]
             }
         },
-        '_source': ['name', 'href', 'category']
+        '_source': ['name', 'href', 'category', 'gene_symbol']
     }
 
     if category != '':
@@ -256,7 +256,7 @@ def build_autocomplete_search_body_request(query, category='gene', field='name')
         if category != "gene":
             es_query["query"]["bool"].pop("should")
 
-    if field != 'name':
+    if field != 'name_key':
         es_query['aggs'] = {}
         es_query['aggs'][field] = {
             'terms': {'field': field + '.raw', 'size': 999}
@@ -290,6 +290,10 @@ def format_autocomplete_results(es_response, field='name'):
                 'href': hit['_source']['href'],
                 'category': hit['_source']['category']
             }
+
+            if hit['_source']['category'] == "gene" and hit['_source']['gene_symbol']:
+                obj['name'] = hit['_source']['gene_symbol'].upper()
+
             formatted_results.append(obj)
 
     return formatted_results
