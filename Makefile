@@ -9,6 +9,15 @@ build:
 run:
 	ES_URI=$(ES_URI) python src/server.py
 
+run-prod:
+	PRODUCTION=true ES_URI=$(ES_URI) gunicorn src.server:app -k gevent --pid gunicorn.pid --daemon
+
+restart:
+	kill -s HUP $(cat gunicorn.pid)
+
+stop:
+	kill -s TERM $(cat gunicorn.pid)
+
 tests: test-py
 	npm test
 
