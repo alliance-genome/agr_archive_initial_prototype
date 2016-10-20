@@ -3,9 +3,9 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 import style from './style.css';
-import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
+import { getQueryParamWithValueChanged, makeFieldDisplayName } from '../../lib/searchHelpers';
 
-import { selectTotal } from '../../selectors/searchSelectors.js';
+import { selectIsPending, selectQueryParams, selectTotal } from '../../selectors/searchSelectors.js';
 
 const IGNORED_PARAMS = ['page', 'mode'];
 const SORT_PRIORITY = ['category', 'q'];
@@ -15,9 +15,13 @@ class SearchBreadcrumbsComponent extends Component {
     return values.map( (d, i) => {
       let newQp = getQueryParamWithValueChanged(key, d, this.props.queryParams);
       let newPath = { pathname: '/search', query: newQp };
-      let label = (key === 'q') ? `"${d}"` : d;
+      let label = makeFieldDisplayName(d);
+      let labelNode = (key === 'q') ? `"${label}"` : label;
+      if (key === 'species') {
+        labelNode = <i>{labelNode}</i>;
+      }
       return (
-        <Link className={`btn btn-primary ${style.sortLabel}`} key={`bc${key}.${i}`} to={newPath}><span>{label} <i className='fa fa-times' /></span></Link>
+        <Link className={`btn btn-primary ${style.sortLabel}`} key={`bc${key}.${i}`} to={newPath}><span>{labelNode} <i className='fa fa-times' /></span></Link>
       );
     });
   }
@@ -34,25 +38,30 @@ class SearchBreadcrumbsComponent extends Component {
     });
   }
 
+  renderTotalNode() {
+    if (this.props.isPending) return <span className={style.totalPending} />;
+    return <span>{this.props.total.toLocaleString()}</span>;
+  }
+
   render() {
     return (
       <div>
-        <p>{this.props.total.toLocaleString()} results for {this.renderCrumbs()}</p>
+        <p>{this.renderTotalNode()} results for {this.renderCrumbs()}</p>
       </div>
     );
   }
 }
 
 SearchBreadcrumbsComponent.propTypes = {
+  isPending: React.PropTypes.bool,
   queryParams: React.PropTypes.object,
   total: React.PropTypes.number
 };
 
 function mapStateToProps(state) {
-  let location = state.routing.locationBeforeTransitions;
-  let _queryParams = location ? state.routing.locationBeforeTransitions.query : {};
   return {
-    queryParams: _queryParams,
+    isPending: selectIsPending(state),
+    queryParams: selectQueryParams(state),
     total: selectTotal(state)
   };
 }

@@ -156,33 +156,52 @@ def build_search_params(query, fields):
             ]
         else:
             es_query['dis_max']['queries'] = [
-                    {
-                        "term": {
-                            "name.simple": {
-                                "value": query,
-                                "boost": 100
-                            }
-                        }
-                    },
-                    {
-                        "multi_match": {
-                            "query": query,
-                            "type": "most_fields",
-                            "fields": fields + ['description', 'name.fulltext^2'],
-                            "boost": 25
-                        }
-                    },
-                    {
-                        "match_phrase_prefix": {
-                            "name": {
-                                "query": query,
-                                "analyzer": "standard",
-                                "max_expansions": 30,
-                                "boost": 1
-                            }
+                {
+                    "term": {
+                        "name.simple": {
+                            "value": query,
+                            "boost": 100
                         }
                     }
-                ]
+                },
+                {
+                    "term": {
+                        "gene_symbol.simple": {
+                            "value": query,
+                            "boost": 100
+                        }
+                    }
+                },
+                {
+                    "multi_match": {
+                        "query": query,
+                        "type": "most_fields",
+                        "fields": fields + ['name.fulltext^2'],
+                        "boost": 25
+                    }
+                },
+                {
+                    "match_phrase_prefix": {
+                        "name": {
+                            "query": query,
+                            "analyzer": "standard",
+                            "max_expansions": 30,
+                            "boost": 1
+                        }
+                    }
+                },
+                {
+                    "match_phrase_prefix": {
+                        "gene_symbol": {
+                            "query": query,
+                            "analyzer": "standard",
+                            "max_expansions": 30,
+                            "boost": 1
+                        }
+                    }
+                }
+
+            ]
 
     return es_query
 
@@ -198,19 +217,20 @@ def format_search_results(search_results, json_response_fields):
             obj[field] = raw_obj.get(field)
 
         obj['highlights'] = r.get('highlight')
+        obj['id'] = r.get('_id')
 
         formatted_results.append(obj)
 
     return formatted_results
 
 
-def build_autocomplete_search_body_request(query, category='gene', field='name'):
+def build_autocomplete_search_body_request(query, category='gene', field='name_key'):
     es_query = {
         "query": {
             "bool": {
                 "must": [{
                     "match": {
-                        "name": {
+                        "name_key.autocomplete": {
                             "query": query,
                             "analyzer": "standard"
                         }
@@ -228,7 +248,7 @@ def build_autocomplete_search_body_request(query, category='gene', field='name')
                 ]
             }
         },
-        '_source': ['name', 'href', 'category']
+        '_source': ['name', 'href', 'category', 'gene_symbol']
     }
 
     if category != '':
@@ -236,7 +256,7 @@ def build_autocomplete_search_body_request(query, category='gene', field='name')
         if category != "gene":
             es_query["query"]["bool"].pop("should")
 
-    if field != 'name':
+    if field != 'name_key':
         es_query['aggs'] = {}
         es_query['aggs'][field] = {
             'terms': {'field': field + '.raw', 'size': 999}
@@ -253,10 +273,10 @@ def build_autocomplete_search_body_request(query, category='gene', field='name')
     return es_query
 
 
-def format_autocomplete_results(es_response, field='name'):
+def format_autocomplete_results(es_response, field='name_key'):
     formatted_results = []
 
-    if field != 'name':
+    if field != 'name_key':
         results = es_response['aggregations'][field]['buckets']
         for r in results:
             obj = {
@@ -270,6 +290,10 @@ def format_autocomplete_results(es_response, field='name'):
                 'href': hit['_source']['href'],
                 'category': hit['_source']['category']
             }
+
+            if hit['_source'].get('gene_symbol') and hit['_source']['category'] == "gene":
+                obj['name'] = hit['_source']['gene_symbol'].upper()
+
             formatted_results.append(obj)
 
     return formatted_results

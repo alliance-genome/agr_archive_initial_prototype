@@ -16,6 +16,21 @@ need-help := $(filter help,$(MAKECMDGOALS))
 help: ; @echo $(if $(need-help),,\
 	Type \'$(MAKE)$(dash-f) help\' to get help)
 
+.PHONY: run-prod
+run-prod: $(call print-help,run-prod,"Run the production server.")
+	PRODUCTION=true ES_URI=${ES_URI}  gunicorn src.server:app \
+                        -k gevent \
+                        --pid gunicorn.pid \
+                        --daemon
+.PHONY: restart-prod
+restart-prod: $(call print-help,restart-prod,\
+"Restart the production server")
+	kill -s HUP $(cat gunicorn.pid)
+
+.PHONY: stop-prod
+stop-prod: $(call print-help,stop-prod,"Stop the production server.")
+	kill -s TERM $(cat gunicorn.pid)
+
 .PHONY: py-virtualenv
 py-virtualenv: $(call print-help,py-virtualenv,"Creates a Python virtualenv")
 	@mkdir -p ${VENV_PATH}
