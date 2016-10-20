@@ -8,16 +8,26 @@ Resources.
 
 Ensure you've installed [pip][1] and [virtualenv][2] and [nodejs][3].
 
+Create a virtualenv for isolating the python dependencies:
+
+```bash
+mkdir -p ~/.virtulanevs/agr_prototype
+# The prototype currently requires Python2
+virtualenv -p python2 ~/.virtulanevs/agr_prototype
+```
+
 ## Getting started
 ```bash
-$ make build
-$ make run
+source ~/.virtualenvs/agr_prototype/bin/activate
+make build
+make run
 ```
 
 To run tests
 
 ```bash
-$ make tests
+source ~/.virtualenvs/agr_prototype/bin/activate
+make tests
 ```
 
 ## Development Environment Pro Tips
