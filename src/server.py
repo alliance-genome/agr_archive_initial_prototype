@@ -96,7 +96,7 @@ def search():
 def search_autocomplete():
     query = request.args.get('q', '')
     category = request.args.get('category', '')
-    field = request.args.get('field', 'name')
+    field = request.args.get('field', 'name_key')
 
     if query == '':
         return jsonify({
