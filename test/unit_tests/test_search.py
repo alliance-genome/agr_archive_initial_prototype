@@ -1,25 +1,25 @@
 import unittest
-from src.search import build_search_query, build_search_params, \
-    build_es_search_body_request, format_search_results, \
-    build_es_aggregation_body_request, format_aggregation_results, \
-    build_autocomplete_search_body_request, format_autocomplete_results
+
 from werkzeug.datastructures import ImmutableMultiDict
 
+from src import search
 
-class SearchHelpersTest(unittest.TestCase):
-    def test_build_search_params_should_search_for_all_with_empty_query(self):
+
+class TestBuildSearchParams(unittest.TestCase):
+
+    def test_should_search_for_all_with_empty_query(self):
         query = ""
         fields = ["name", "symbol"]
 
-        self.assertEqual(build_search_params(query, fields), {
+        self.assertEqual(search.build_search_params(query, fields), {
             "match_all": {}
         })
 
-    def test_build_search_params_should_create_general_query(self):
+    def test_should_create_general_query(self):
         query = "gene"
         fields = ["name", "symbol"]
 
-        self.assertEqual(build_search_params(query, fields), {
+        self.assertEqual(search.build_search_params(query, fields), {
             'dis_max': {
                 'queries': [
                     {
@@ -34,7 +34,10 @@ class SearchHelpersTest(unittest.TestCase):
                         "multi_match": {
                             "query": query,
                             "type": "most_fields",
-                            "fields": fields + ['description', 'name.fulltext^2'],
+                            "fields": fields + [
+                                'description',
+                                'name.fulltext^2'
+                            ],
                             "boost": 25
                         }
                     },
@@ -52,11 +55,10 @@ class SearchHelpersTest(unittest.TestCase):
             }
         })
 
-    def test_build_search_params_should_quote_queries_with_special_chars(self):
+    def test_should_quote_queries_with_special_chars(self):
         query = "eu-gene"
         fields = ["name", "symbol"]
-
-        self.assertEqual(build_search_params(query, fields), {
+        expected = {
             'dis_max': {
                 'queries': [{
                     'match_phrase_prefix': {
@@ -75,13 +77,15 @@ class SearchHelpersTest(unittest.TestCase):
                     }
                 }]
             }
-        })
+        }
+        actual = search.build_search_params(query, fields)
+        self.assertEqual(actual, expected)
 
-    def test_build_search_params_should_treated_quoted_query(self):
+    def test_should_treat_quoted_query(self):
         query = '"gene"'
         fields = ["name", "symbol"]
 
-        self.assertEqual(build_search_params(query, fields), {
+        self.assertEqual(search.build_search_params(query, fields), {
             'dis_max': {
                 'queries': [{
                     'match_phrase_prefix': {
@@ -102,7 +106,10 @@ class SearchHelpersTest(unittest.TestCase):
             }
         })
 
-    def test_build_search_query_should_return_search_params_only_for_no_category(self):
+
+class TestBuildSearchQuery(unittest.TestCase):
+
+    def test_should_return_search_params_only_for_no_category(self):
         query = "gene"
         fields = ["name", "symbol"]
         category = ''
@@ -111,12 +118,14 @@ class SearchHelpersTest(unittest.TestCase):
             "go": ['gene'],
         }
         args = ImmutableMultiDict()
+        es_query = search.build_search_params(query, fields)
+        self.assertEqual(search.build_search_query(query,
+                                                   fields,
+                                                   category,
+                                                   category_filters,
+                                                   args), es_query)
 
-        es_query = build_search_params(query, fields)
-
-        self.assertEqual(build_search_query(query, fields, category, category_filters, args), es_query)
-
-    def test_build_search_query_should_filter_by_category(self):
+    def test_should_filter_by_category(self):
         query = "gene"
         fields = ["name", "symbol"]
         category = 'genes'
@@ -125,10 +134,8 @@ class SearchHelpersTest(unittest.TestCase):
             "go": ['gene'],
         }
         args = ImmutableMultiDict()
-
-        es_query = build_search_params(query, fields)
-
-        self.assertEqual(build_search_query(query, fields, category, category_filters, args), {
+        es_query = search.build_search_params(query, fields)
+        expected_query = {
             'filtered': {
                 'query': es_query,
                 'filter': {
@@ -137,9 +144,15 @@ class SearchHelpersTest(unittest.TestCase):
                     }
                 }
             }
-        })
+        }
+        query = search.build_search_query(query,
+                                          fields,
+                                          category,
+                                          category_filters,
+                                          args)
+        self.assertEqual(query, expected_query)
 
-    def test_build_search_query_should_filter_subcategories_if_passed(self):
+    def test_should_filter_subcategories_if_passed(self):
         query = "act1"
         fields = ["name", "symbol"]
         category = "genes"
@@ -153,9 +166,8 @@ class SearchHelpersTest(unittest.TestCase):
             ('go_names', 'C')
         ])
 
-        es_query = build_search_params(query, fields)
-
-        self.assertEqual(build_search_query(query, fields, category, category_filters, args), {
+        es_query = search.build_search_params(query, fields)
+        expected = {
             'filtered': {
                 'query': es_query,
                 'filter': {
@@ -169,9 +181,18 @@ class SearchHelpersTest(unittest.TestCase):
                     }
                 }
             }
-        })
+        }
+        actual = search.build_search_query(query,
+                                           fields,
+                                           category,
+                                           category_filters,
+                                           args)
+        self.assertEqual(actual, expected)
 
-    def test_build_es_search_body_should_randomize_results_if_empty_query_and_empty_category(self):
+
+class TestBuildEsSearchBody(unittest.TestCase):
+
+    def test_should_randomize_results_if_query_and_category_empty(self):
         query = ""
         fields = ["name", "symbol"]
         category = ""
@@ -187,10 +208,12 @@ class SearchHelpersTest(unittest.TestCase):
         ])
         search_fields = []
         json_response_fields = ['name', 'symbol', 'synonym']
-
-        es_query = build_search_query(query, fields, category, category_filters, args)
-
-        self.assertEqual(build_es_search_body_request(query, category, es_query, json_response_fields, search_fields, sort_by), {
+        es_query = search.build_search_query(query,
+                                             fields,
+                                             category,
+                                             category_filters,
+                                             args)
+        expected = {
             '_source': json_response_fields,
             'highlight': {
                 'fields': {}
@@ -201,9 +224,17 @@ class SearchHelpersTest(unittest.TestCase):
                     "random_score": {"seed": 12345}
                 }
             }
-        })
+        }
+        actual = search.build_es_search_body_request(
+            query,
+            category,
+            es_query,
+            json_response_fields,
+            search_fields,
+            sort_by)
+        self.assertEqual(actual, expected)
 
-    def test_build_es_search_body_should_add_highlighting(self):
+    def test_should_add_highlighting(self):
         query = ""
         fields = ["name", "symbol"]
         category = ""
@@ -219,10 +250,13 @@ class SearchHelpersTest(unittest.TestCase):
         ])
         search_fields = ["name", "symbol"]
         json_response_fields = ['name', 'symbol', 'synonym']
+        es_query = search.build_search_query(query,
+                                             fields,
+                                             category,
+                                             category_filters,
+                                             args)
 
-        es_query = build_search_query(query, fields, category, category_filters, args)
-
-        self.assertEqual(build_es_search_body_request(query, category, es_query, json_response_fields, search_fields, sort_by), {
+        expected_response = {
             '_source': json_response_fields,
             'highlight': {
                 'fields': {'name': {}, 'symbol': {}}
@@ -233,9 +267,17 @@ class SearchHelpersTest(unittest.TestCase):
                     "random_score": {"seed": 12345}
                 }
             }
-        })
+        }
+        response = search.build_es_search_body_request(
+            query,
+            category,
+            es_query,
+            json_response_fields,
+            search_fields,
+            sort_by)
+        self.assertEqual(response, expected_response)
 
-    def test_build_es_search_body_should_sort_alphabetically_by_name(self):
+    def test_sorts_alphabetically_by_name(self):
         query = ""
         fields = ["name", "symbol"]
         category = ""
@@ -251,10 +293,12 @@ class SearchHelpersTest(unittest.TestCase):
         ])
         search_fields = ["name", "symbol"]
         json_response_fields = ['name', 'symbol', 'synonym']
-
-        es_query = build_search_query(query, fields, category, category_filters, args)
-
-        self.assertEqual(build_es_search_body_request(query, category, es_query, json_response_fields, search_fields, sort_by), {
+        es_query = search.build_search_query(query,
+                                             fields,
+                                             category,
+                                             category_filters,
+                                             args)
+        expected_response = {
             '_source': json_response_fields,
             'highlight': {
                 'fields': {'name': {}, 'symbol': {}}
@@ -272,9 +316,17 @@ class SearchHelpersTest(unittest.TestCase):
                     }
                 }
             ]
-        })
+        }
+        response = search.build_es_search_body_request(
+            query,
+            category,
+            es_query,
+            json_response_fields,
+            search_fields,
+            sort_by)
+        self.assertEqual(response, expected_response)
 
-    def test_build_es_search_body_should_not_randomize_results_if_category_is_defined(self):
+    def test_should_not_randomize_results_if_category_is_defined(self):
         query = ""
         fields = ["name", "symbol"]
         category = "genes"
@@ -291,9 +343,13 @@ class SearchHelpersTest(unittest.TestCase):
         search_fields = ["name", "symbol"]
         json_response_fields = ['name', 'symbol', 'synonym']
 
-        es_query = build_search_query(query, fields, category, category_filters, args)
+        es_query = search.build_search_query(query,
+                                             fields,
+                                             category,
+                                             category_filters,
+                                             args)
 
-        self.assertEqual(build_es_search_body_request(query, category, es_query, json_response_fields, search_fields, sort_by), {
+        expected_response = {
             '_source': json_response_fields,
             'highlight': {
                 'fields': {'name': {}, 'symbol': {}}
@@ -306,7 +362,15 @@ class SearchHelpersTest(unittest.TestCase):
                     }
                 }
             ]
-        })
+        }
+        response = search.build_es_search_body_request(
+            query,
+            category,
+            es_query,
+            json_response_fields,
+            search_fields,
+            sort_by)
+        self.assertEqual(response, expected_response)
 
     def test_format_search_results(self):
         json_response_fields = ['name', 'symbol']
@@ -337,14 +401,19 @@ class SearchHelpersTest(unittest.TestCase):
                 ]
             }
         }
-
-        self.assertEqual(format_search_results(search_results, json_response_fields), [{
+        expected_results = [{
             'highlights': None,
             'name': 'ACTin 1',
             'symbol': 'ACT1'
-        }])
+        }]
+        results = search.format_search_results(search_results,
+                                               json_response_fields)
+        self.assertEqual(results, expected_results)
 
-    def test_build_es_aggregation_body_request_should_return_empty_for_invalid_category(self):
+
+class TestBuildEsAggregationBodyRequest(unittest.TestCase):
+
+    def test_should_return_empty_for_invalid_category(self):
         query = ""
         fields = ["name", "symbol"]
         category = "invalid_category"
@@ -358,11 +427,18 @@ class SearchHelpersTest(unittest.TestCase):
             ('go_names', 'C')
         ])
 
-        es_query = build_search_query(query, fields, category, category_filters, args)
+        es_query = search.build_search_query(query,
+                                             fields,
+                                             category,
+                                             category_filters,
+                                             args)
 
-        self.assertEqual(build_es_aggregation_body_request(es_query, category, category_filters), {})
+        actual = search.build_es_aggregation_body_request(
+            es_query, category,
+            category_filters)
+        self.assertEqual(actual, {})
 
-    def test_build_es_aggregation_body_request_should_aggregate_just_categories_if_empty(self):
+    def test_should_aggregate_just_categories_if_empty(self):
         query = ""
         fields = ["name", "symbol"]
         category = ""
@@ -375,19 +451,26 @@ class SearchHelpersTest(unittest.TestCase):
             ('go_names', 'B'),
             ('go_names', 'C')
         ])
-
-        es_query = build_search_query(query, fields, category, category_filters, args)
-
-        self.assertEqual(build_es_aggregation_body_request(es_query, category, category_filters), {
+        es_query = search.build_search_query(query,
+                                             fields,
+                                             category,
+                                             category_filters,
+                                             args)
+        expected = {
             'query': es_query,
             'size': 0,
             'aggs': {
                 'categories': {
                     'terms': {'field': 'category', 'size': 50}
                 }}
-        })
+        }
+        actual = search.build_es_aggregation_body_request(
+            es_query,
+            category,
+            category_filters)
+        self.assertEqual(actual, expected)
 
-    def test_build_es_aggregation_body_request_should_aggregate_each_subcategory(self):
+    def test_should_aggregate_each_subcategory(self):
         query = ""
         fields = ["name", "symbol"]
         category = "genes"
@@ -401,9 +484,12 @@ class SearchHelpersTest(unittest.TestCase):
             ('go_names', 'C')
         ])
 
-        es_query = build_search_query(query, fields, category, category_filters, args)
-
-        self.assertEqual(build_es_aggregation_body_request(es_query, category, category_filters), {
+        es_query = search.build_search_query(query,
+                                             fields,
+                                             category,
+                                             category_filters,
+                                             args)
+        expected = {
             'query': es_query,
             'size': 0,
             'aggs': {
@@ -414,9 +500,16 @@ class SearchHelpersTest(unittest.TestCase):
                     'terms': {'field': 'go_names.raw', 'size': 999}
                 }
             }
-        })
+        }
+        actual = search.build_es_aggregation_body_request(
+            es_query,
+            category,
+            category_filters)
+        self.assertEqual(actual, expected)
 
-    def test_format_aggregation_results_should_include_all_categories_for_empty_category_as_param(self):
+
+class TestFormatAggregationResults(unittest.TestCase):
+    def test_should_include_all_categories_for_empty_category(self):
         category = ""
         category_filters = {
             "genes": ['go_ids', 'go_names'],
@@ -452,24 +545,26 @@ class SearchHelpersTest(unittest.TestCase):
                 }
             }
         }
+        expected = [{
+            'key': 'category',
+            'values': [{
+                'total': 6691,
+                'key': 'gene'
+            }, {
+                'total': 387,
+                'key': 'go'
+            }, {
+                'total': 352,
+                'key': 'diseases'
+            }]
+        }]
+        actual = search.format_aggregation_results(
+            aggregation_results,
+            category,
+            category_filters)
+        self.assertEqual(actual, expected)
 
-        self.assertEqual(format_aggregation_results(aggregation_results, category, category_filters), [
-            {
-                'key': 'category',
-                'values': [{
-                    'total': 6691,
-                    'key': 'gene'
-                }, {
-                    'total': 387,
-                    'key': 'go'
-                }, {
-                    'total': 352,
-                    'key': 'diseases'
-                }]
-            }
-        ])
-
-    def test_format_aggregation_results_should_include_all_subcategories(self):
+    def test_should_include_all_subcategories(self):
         category = "genes"
         category_filters = {
             "genes": ['go_ids', 'go_names'],
@@ -505,39 +600,49 @@ class SearchHelpersTest(unittest.TestCase):
                 }
             }
         }
-
-        self.assertEqual(format_aggregation_results(aggregation_results, category, category_filters), [
-            {
-                'key': 'go_ids',
-                'values': []
+        expected = [{
+            'key': 'go_ids',
+            'values': []
+        }, {
+            'key': 'go_names',
+            'values': [{
+                'key': 'mitochondrion',
+                'total': 6691
             }, {
-                'key': 'go_names',
-                'values': [{
-                    'key': 'mitochondrion',
-                    'total': 6691
-                }, {
-                    'key': 'cytoplasm',
-                    'total': 387
-                }, {
-                    'key': 'membrane',
-                    'total': 352
-                }]
+                'key': 'cytoplasm',
+                'total': 387
+            }, {
+                'key': 'membrane',
+                'total': 352
             }]
-        )
+        }]
+        actual = search.format_aggregation_results(
+            aggregation_results,
+            category,
+            category_filters)
 
-    def test_format_aggregation_results_should_return_empty_for_invalid_category(self):
+        self.assertEqual(actual, expected)
+
+    def test_should_return_empty_for_invalid_category(self):
         category = "invalid_category"
         category_filters = {
             "genes": ['go_ids', 'go_names'],
             "go": ['gene'],
         }
         aggregation_results = {}
-        self.assertEqual(format_aggregation_results(aggregation_results, category, category_filters), [])
+        actual = search.format_aggregation_results(
+            aggregation_results,
+            category,
+            category_filters)
+        self.assertEqual(actual, [])
 
-    def test_build_autocomplete_search_body_default_request(self):
+
+class TestBuildAutoCompleteSearchBody(unittest.TestCase):
+
+    def test_default(self):
         query = "act"
-        es_query = build_autocomplete_search_body_request(query, '')
-
+        es_query = search.build_autocomplete_search_body_request(
+            query, '')
         self.assertEqual(es_query, {
             "query": {
                 "bool": {
@@ -563,9 +668,10 @@ class SearchHelpersTest(unittest.TestCase):
             }, '_source': ['name', 'href', 'category']
         })
 
-    def test_build_autocomplete_search_body_request_with_category(self):
+    def test_with_category(self):
         query = "act"
-        es_query = build_autocomplete_search_body_request(query, 'go')
+        es_query = search.build_autocomplete_search_body_request(
+            query, 'go')
         self.assertEqual(es_query, {
             "query": {
                 "bool": {
@@ -583,9 +689,12 @@ class SearchHelpersTest(unittest.TestCase):
             }, '_source': ['name', 'href', 'category']
         })
 
-    def test_build_autocomplete_search_body_request_with_field(self):
+    def test_with_field(self):
         query = "act"
-        es_query = build_autocomplete_search_body_request(query, 'go', 'go_id')
+        es_query = search.build_autocomplete_search_body_request(
+            query,
+            'go',
+            'go_id')
         self.assertEqual(es_query, {
             "query": {
                 "bool": {
@@ -607,7 +716,10 @@ class SearchHelpersTest(unittest.TestCase):
             }, '_source': ['go_id', 'href', 'category']
         })
 
-    def test_format_autocomplete_results_default(self):
+
+class TestFormatAutoCompleteResults(unittest.TestCase):
+
+    def test_default(self):
         es_response = {
             "took": 4,
             "timed_out": False,
@@ -643,20 +755,19 @@ class SearchHelpersTest(unittest.TestCase):
             }
         }
 
-        self.assertEqual(format_autocomplete_results(es_response), [
-            {
-                "name": "ACT1 / YFL039C",
-                "href": "/locus/S000001855/overview",
-                "category": "gene"
-            },
-            {
-                "name": "activation of MAPKKK activity",
-                "href": "/go/GO:0000185/overview",
-                "category": "go"
-            }
-        ])
+        expected = [{
+            "name": "ACT1 / YFL039C",
+            "href": "/locus/S000001855/overview",
+            "category": "gene"
+        }, {
+            "name": "activation of MAPKKK activity",
+            "href": "/go/GO:0000185/overview",
+            "category": "go"
+        }]
+        actual = search.format_autocomplete_results(es_response)
+        self.assertEqual(actual, expected)
 
-    def test_format_autocomplete_results_with_field(self):
+    def test_with_field(self):
         es_response = {
             "took": 12,
             "timed_out": False,
@@ -687,15 +798,14 @@ class SearchHelpersTest(unittest.TestCase):
                 }
             }
         }
-
-        self.assertEqual(format_autocomplete_results(es_response, 'go_name'), [
-            {
-                'name': "cytoplasm"
-            },
-            {
-                'name': 'nucleus'
-            },
-            {
-                'name': 'DNA repair'
-            }
-        ])
+        expected = [{
+            'name': "cytoplasm"
+        }, {
+            'name': 'nucleus'
+        }, {
+            'name': 'DNA repair'
+        }]
+        actual = search.format_autocomplete_results(
+            es_response,
+            'go_name')
+        self.assertEqual(actual, expected)

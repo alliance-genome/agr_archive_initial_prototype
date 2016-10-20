@@ -25,4 +25,5 @@ index:
 	cd scripts/elastic_search && ES_URI=$(ES_URI) python index.py
 
 test-py:
+	flake8 test src
 	nosetests -s

@@ -26,6 +26,7 @@ params = {
 app.config.update(params)
 webpack.init_app(app)
 
+
 @app.route('/api/search')
 def search():
     query = request.args.get('q', '').lower()
@@ -125,7 +126,8 @@ def send_static(path):
 @app.route('/help')
 @app.route('/search')
 def react_render():
-        return render_template('index.jinja2')
+    return render_template('index.jinja2')
+
 
 if __name__ == '__main__':
     if os.environ.get('PRODUCTION', ''):
