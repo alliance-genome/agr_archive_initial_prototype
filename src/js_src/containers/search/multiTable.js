@@ -7,13 +7,11 @@ import _ from 'underscore';
 import style from './style.css';
 import ResultsTable from './resultsTable';
 import CategoryLabel from './categoryLabel';
-import Loader from '../../components/loader';
 import fetchData from '../../lib/fetchData';
 import { SEARCH_API_ERROR_MESSAGE } from '../../constants';
 import { receiveResponse, setError, setPending } from './searchActions';
 
 import {
-  selectIsPending,
   selectQueryParams,
   selectGeneResults,
   selectGoResults,
@@ -126,7 +124,6 @@ class MultiTableComponent extends Component {
   }
 
   render() {
-    if (this.props.isPending) return <Loader />;
     return (
       <div className={style.resultContainer}>
         {this.renderGenes()}
@@ -139,7 +136,6 @@ class MultiTableComponent extends Component {
 }
 
 MultiTableComponent.propTypes = {
-  isPending: React.PropTypes.bool,
   dispatch: React.PropTypes.func,
   queryParams: React.PropTypes.object,
   geneResults: React.PropTypes.array,
@@ -154,7 +150,6 @@ MultiTableComponent.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    isPending: selectIsPending(state),
     queryParams: selectQueryParams(state),
     geneResults: selectGeneResults(state),
     goResults: selectGoResults(state),
