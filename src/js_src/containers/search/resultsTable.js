@@ -1,77 +1,121 @@
 import React, { Component } from 'react';
 
 import style from './style.css';
+import DetailList from './detailList';
 import { makeFieldDisplayName } from '../../lib/searchHelpers';
 
+const MATCH_LABEL = 'match_by';
+const MAX_CHAR = 100;
+
 class ResultsTable extends Component {
+  getFields() {
+    let fields;
+    switch(this.props.activeCategory) {
+    case 'gene':
+      fields = ['display_name', 'name', 'synonyms', 'source', 'species', 'gene_type', 'genomic_coordinates', 'relative_coordinates'];
+      break;
+    case 'go':
+      fields = ['display_name', 'synonyms', 'go_branch'];
+      break;
+    case 'disease':
+      fields = ['display_name', 'omim_id', 'synonyms'];
+      break;
+    default:
+      fields = ['display_name', 'synonyms'];
+    }
+    fields.push(MATCH_LABEL);
+    return fields;
+  }
+
   renderHeader() {
+    let fields = this.getFields();
+    let nodes = fields.map( (d) => {
+      let processedName;
+      if (this.props.activeCategory === 'gene' && d === 'display_name') {
+        processedName = 'symbol';
+      } else if (d === 'display_name') {
+        processedName = 'name';
+      } else {
+        processedName = d;
+      }
+      return <th className={style.tableHeadCell} key={`srH.${d}`}>{makeFieldDisplayName(processedName)}</th>;
+    });
     return (
       <tr>
-        <th>Symbol</th>
-        <th>Name</th>
-        <th>Synonym</th>
-        <th>Source</th>
-        <th>Species</th>
-        <th>Gene Type</th>
-        <th>Genomic Coordinates</th>
-        <th>Relative Coordinates</th>
-        <th>Match By</th>
+        {nodes}
       </tr>
     );
   }
 
+  renderTruncatedContent(original) {
+    original = original || '';
+    if (Array.isArray(original)) {
+      original = original.join(', ');
+    }
+    if (original.length > MAX_CHAR) {
+      return original.slice(0, MAX_CHAR) + '...';
+    } else {
+      return original;
+    }
+  }
+
   renderRows() {
-    return this.props.entries.map( (d, i) => {
+    let entries = this.props.entries;
+    let fields = this.getFields();
+    let rowNodes = entries.map( (d, i) => {
+      let nodes = fields.map( (field) => {
+        let _key = `srtc.${i}.${field}`;
+        switch(field) {
+        case 'display_name':
+        case 'symbol':
+          return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d[field] }} href={d.href} target='_new' /></td>;
+        case 'source':
+          return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d.gene_id }} href={d.href} target='_new' /></td>;
+        case MATCH_LABEL:
+          return <td key={_key}>{this.renderHighlight(d.highlight)}</td>;
+        case 'species':
+          return <td key={_key}><i dangerouslySetInnerHTML={{ __html: d.species }} /></td>;
+        default:
+          return <td dangerouslySetInnerHTML={{ __html: this.renderTruncatedContent(d[field]) }} key={_key} />;
+        }        
+      });
       return (
         <tr key={`tr${i}`}>
-          <td dangerouslySetInnerHTML={{ __html: d.symbol }} />
-          <td dangerouslySetInnerHTML={{ __html: d.name }} />
-          <td dangerouslySetInnerHTML={{ __html: d.synonyms }} />
-          <td><a dangerouslySetInnerHTML={{ __html: d.geneId }} href={d.sourceHref} target='_new' /></td>
-          <td><i dangerouslySetInnerHTML={{ __html: d.species }} /></td>
-          <td dangerouslySetInnerHTML={{ __html: d.geneType }} />
-          <td>{`${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</td>
-          <td>{`chri${d.genomicStartCoordinates}:${d.genomicStopCoordinates}`}</td>
-          <td>{this.renderHighlight(d.highlight)}</td>
+          {nodes}
         </tr>
       );
     });
-  }
-
-  renderHighlight(highlight) {
-    let keys = Object.keys(highlight);
-    let nodes = keys.map( d => {
-      return (
-        <div className={style.resultContainer} key={`srh${d}`}>
-          <dt>{makeFieldDisplayName(d)}:</dt>
-          <dd dangerouslySetInnerHTML={{ __html: highlight[d] }} />
-        </div>
-      );
-    });
     return (
-      <dl className={style.detailList}>
-        {nodes}
-      </dl>
+      <tbody>
+        {rowNodes}
+      </tbody>
     );
   }
 
+  renderHighlight(highlight) {
+    let _data = highlight;
+    let _fields = Object.keys(_data);
+    return <DetailList data={_data} fields={_fields} />;
+  }
+
   render() {
+    let emptyNode = (this.props.entries.length === 0) ? <p className={style.tableEmpty}>No results</p> : null;
     return (
       <div className={style.tableContainer}>
         <table className='table'>
           <thead className='thead-default'>
             {this.renderHeader()}
           </thead>
-          <tbody>
-            {this.renderRows()}
-          </tbody>
+          {this.renderRows()}
         </table>
+        {emptyNode}
       </div>
     );
   }
 }
 
 ResultsTable.propTypes = {
+  activeCategory: React.PropTypes.string,
   entries: React.PropTypes.array
 };
 
