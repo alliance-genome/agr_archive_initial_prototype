@@ -1,4 +1,7 @@
 /*eslint-disable quotes */
+
+const FIXTURE_HREF = 'https://google.com';
+
 export default {
   "aggregations": [
     {
@@ -67,10 +70,27 @@ export default {
       "href": "http://www.yeastgenome.org/locus/S000002634/overview", 
       "name": "ADenylate Kinase", 
       "organism": "yeast", 
-      "symbol": "ADK1", 
+      "gene_symbol": "ADK1", 
       "synonym": "YDR226W", 
       "type": null,
-      "category": "gene"
+      "category": "gene",
+      "orthologs": [
+        {
+          "symbol": 'abc1',
+          "href": FIXTURE_HREF,
+          "evidences": [
+            { "name": 'PANTHER' }
+          ]
+        },
+        {
+          "symbol": 'xyz2',
+          "href": FIXTURE_HREF,
+          "evidences": [
+            { "name": 'PANTHER' },
+            { "name": 'DIOPT' }
+          ]
+        }
+      ]
     }, 
     {
       "highlights": {
@@ -86,7 +106,7 @@ export default {
       "href": "http://www.yeastgenome.org/locus/S000002554/overview", 
       "name": "Ethanolamine KInase", 
       "organism": "yeast", 
-      "symbol": "EKI1", 
+      "gene_symbol": "EKI1", 
       "synonym": "YDR147W", 
       "type": null,
       "category": "gene"
@@ -107,7 +127,7 @@ export default {
       "href": "http://www.yeastgenome.org/locus/S000006061/overview", 
       "name": "Mitogen-activated Kinase Kinase", 
       "organism": "yeast", 
-      "symbol": "MKK2", 
+      "gene_symbol": "MKK2", 
       "synonym": "YPL140C", 
       "type": null,
       "category": "gene"
@@ -125,7 +145,7 @@ export default {
       "href": "http://www.yeastgenome.org/locus/S000001841/overview", 
       "name": "DihydroxyAcetone Kinase", 
       "organism": "yeast", 
-      "symbol": "DAK2", 
+      "gene_symbol": "DAK2", 
       "synonym": "YFL053W", 
       "type": null,
       "category": "gene"
@@ -145,7 +165,7 @@ export default {
       "href": "http://www.yeastgenome.org/locus/S000000972/overview", 
       "name": "ADenylate Kinase", 
       "organism": "yeast", 
-      "symbol": "ADK2", 
+      "gene_symbol": "ADK2", 
       "synonym": "YER170W", 
       "type": null,
       "category": "gene"
@@ -164,7 +184,7 @@ export default {
       "href": "http://www.yeastgenome.org/locus/S000000478/overview", 
       "name": "CHeckpoint Kinase", 
       "organism": "yeast", 
-      "symbol": "CHK1", 
+      "gene_symbol": "CHK1", 
       "synonym": "YBR274W", 
       "type": null,
       "category": "gene"
@@ -182,7 +202,7 @@ export default {
       "href": "http://www.yeastgenome.org/locus/S000002862/overview", 
       "name": "GUanylate Kinase", 
       "organism": "yeast", 
-      "symbol": "GUK1", 
+      "gene_symbol": "GUK1", 
       "synonym": "YDR454C", 
       "type": null,
       "category": "gene"

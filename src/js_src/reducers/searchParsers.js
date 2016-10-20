@@ -89,7 +89,8 @@ function parseGeneResult(_d) {
     genomic_coordinates: d.genomic_coordinates,
     relative_coordinates: d.relative_coordinates,
     species: d.species,
-    highlight: d.highlights
+    highlight: d.highlights,
+    orthologs: d.orthologs || []
   };
 }
 
