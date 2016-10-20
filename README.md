@@ -1,7 +1,12 @@
 [![Build Status](https://travis-ci.org/alliance-genome/agr_prototype.svg?branch=master)](https://travis-ci.org/alliance-genome/agr_prototype)
 
 # Alliance of Genome Resources Prototype
-An initial prototype for the web portal of the Alliance of Genome Resources
+An initial prototype for the web portal of the Alliance of Genome
+Resources.
+
+## Prerequisites
+
+Ensure you've installed [pip][1] and [virtualenv][2] and [nodejs][3].
 
 ## Getting started
 ```bash
@@ -21,3 +26,7 @@ Assets are compiled using [webpack](https://webpack.github.io/).  To enable [hot
 You can run JavaScript unit tests automatically on each file change by running `npm run test:watch`.
 
 JavaScript coding style is enforced with [ESLint](http://eslint.org/).  The rules are configured in the .eslintrc file.
+
+[1]: https://pip.pypa.io/en/stable/installing/
+[2]: https://virtualenv.pypa.io/en/stable/installation/
+[3]: https://docs.npmjs.com/getting-started/installing-node
