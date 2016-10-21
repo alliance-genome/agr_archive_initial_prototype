@@ -70,3 +70,45 @@ class Mouse():
                     "href": Mouse.gene_href(row["primaryIdentifier"]),
                     "category": "gene"
                 }
+
+    @staticmethod
+    def load_go(genes, go):
+        query = service.new_query("GOTerm")
+        query.add_constraint("ontologyAnnotations.subject", "SequenceFeature")
+        query.add_view(
+            "identifier", "name", "namespace", "ontologyAnnotations.qualifier",
+            "ontologyAnnotations.subject.primaryIdentifier",
+            "ontologyAnnotations.subject.symbol", "synonyms.name", "synonyms.type"
+        )
+        query.outerjoin("ontologyAnnotations")
+        query.outerjoin("ontologyAnnotations.subject")
+        query.outerjoin("synonyms")
+
+        print ("Fetching go data from MouseMine...")
+
+        for row in query.rows():
+            if row["goAnnotation.ontologyTerm.identifier"] in ("GO:0008150", "GO:0003674", "GO:0005575"):
+                continue
+
+            gene = None
+            if row["ontologyAnnotations.subject.primaryIdentifier"] in genes and genes[row["ontologyAnnotations.subject.primaryIdentifier"]]["gene_symbol"]:
+                gene = genes[row["primaryIdentifier"]]["gene_symbol"].upper()
+
+            if row["identifier"] in go:
+                if gene:
+                    go[row["identifier"]].append(gene)
+                go[row["identifier"]].append("Mus musculus")
+            else:
+                go[row["identifier"]] = {
+                    "name": row["name"],
+                    "go_type": row["namespace"],
+                    "go_genes": [gene],
+                    "go_species": ["Mus musculus"],
+
+                    "name_key": row["goAnnotation.ontologyTerm.name"],
+                    "href": "http://amigo.geneontology.org/amigo/term/" + row["identifier"],
+                    "category": "go"
+                }
+
+            if row["ontologyAnnotations.subject.primaryIdentifier"] in genes:
+                genes[row["ontologyAnnotations.subject.primaryIdentifier"]]["gene_" + row["namespace"]].append(row["name"])
