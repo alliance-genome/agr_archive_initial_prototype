@@ -18,14 +18,21 @@ class SearchControlsComponent extends Component {
   renderViewAs() {
     let listQp = getQueryParamWithValueChanged('mode', 'list', this.props.queryParams);
     let tableQp = getQueryParamWithValueChanged('mode', 'table', this.props.queryParams);
+    let graphQp = getQueryParamWithValueChanged('mode', 'graph', this.props.queryParams);
     let listHref = { pathname: SEARCH_PATH, query: listQp };
     let tableHref = { pathname: SEARCH_PATH, query: tableQp };
+    let graphHref = { pathname: SEARCH_PATH, query: graphQp };
+    let graphNode = null;
+    if (this.props.canHaveGraph) {
+      graphNode = <Link className={`btn btn-${(this.props.mode === 'graph') ? 'primary': 'secondary'}`} to={graphHref}><i className='fa fa-circle' /> Graph</Link>;
+    }
     return (
       <div className={style.control}>
         <label className={style.searchLabel}>View As</label>
         <div className='btn-group' role='group'>
-          <Link className={`btn btn-${!this.props.isTable ? 'primary': 'secondary'}`} to={listHref}><i className='fa fa-list' /> List</Link>
-          <Link className={`btn btn-${this.props.isTable ? 'primary': 'secondary'}`} to={tableHref}><i className='fa fa-table' /> Table</Link>
+          <Link className={`btn btn-${(this.props.mode === 'list') ? 'primary': 'secondary'}`} to={listHref}><i className='fa fa-list' /> List</Link>
+          <Link className={`btn btn-${(this.props.mode === 'table') ? 'primary': 'secondary'}`} to={tableHref}><i className='fa fa-table' /> Table</Link>
+          {graphNode}
         </div>
       </div>
     );
@@ -91,9 +98,10 @@ class SearchControlsComponent extends Component {
 }
 
 SearchControlsComponent.propTypes = {
+  canHaveGraph: React.PropTypes.bool,
   currentPage: React.PropTypes.number,
   isMultiTable: React.PropTypes.bool,
-  isTable: React.PropTypes.bool,
+  mode: React.PropTypes.string,
   queryParams: React.PropTypes.object,
   totalPages: React.PropTypes.number
 };
@@ -101,12 +109,18 @@ SearchControlsComponent.propTypes = {
 function mapStateToProps(state) {
   let _queryParams = selectQueryParams(state);
   let activeCategory = selectActiveCategory(state);
+  let _canHaveGraph = (activeCategory === 'gene');
+  let _mode = _queryParams.mode;
+  if (!_mode || (_mode === 'graph' && !_canHaveGraph)) {
+    _mode = 'list';
+  }
   let _isTable = (_queryParams.mode === 'table');
   let _isMultiTable = (_isTable && activeCategory === 'none') ;
   return {
+    canHaveGraph: _canHaveGraph,
     currentPage: parseInt(_queryParams.page) || 1,
-    isTable: _isTable,
     isMultiTable: _isMultiTable,
+    mode: _mode,
     queryParams: _queryParams,
     totalPages: selectTotalPages(state)
   };

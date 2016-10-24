@@ -9,6 +9,7 @@ import FilterSelector from './filterSelector/filterSelector';
 import MultiTable from './multiTable';
 import SearchBreadcrumbs from './searchBreadcrumbs';
 import SearchControls from './searchControls';
+import ResultsGraph from './resultsGraph';
 import ResultsList from './resultsList';
 import ResultsTable from './resultsTable';
 import { SMALL_COL_CLASS, LARGE_COL_CLASS, SEARCH_API_ERROR_MESSAGE } from '../../constants';
@@ -66,7 +67,9 @@ class SearchComponent extends Component {
   }
 
   renderResultsNode() {
-    if (this.props.isMultiTable) {
+    if (this.props.isGraph) {
+      return <ResultsGraph />;
+    } else if (this.props.isMultiTable) {
       return <MultiTable />;
     } else if (this.props.isTable) {
       return <ResultsTable activeCategory={this.props.activeCategory} entries={this.props.results} />;
@@ -114,6 +117,7 @@ SearchComponent.propTypes = {
   errorMessage: React.PropTypes.string,
   history: React.PropTypes.object,
   isError: React.PropTypes.bool,
+  isGraph: React.PropTypes.bool,
   isMultiTable: React.PropTypes.bool,
   isTable: React.PropTypes.bool,
   pageSize: React.PropTypes.number,
@@ -123,15 +127,17 @@ SearchComponent.propTypes = {
 
 function mapStateToProps(state) {
   let _queryParams = selectQueryParams(state);
+  let _isGraph = (_queryParams.mode === 'graph');
   let _isTable = (_queryParams.mode === 'table');
   let _currentPage = parseInt(_queryParams.page) || 1;
   let _activeCategory = selectActiveCategory(state);
-  let _isMultiTable = (_isTable && _activeCategory === 'none') ;
+  let _isMultiTable = (_isTable && _activeCategory === 'none');
   return {
     activeCategory: _activeCategory,
     currentPage: _currentPage,
     errorMessage: selectErrorMessage(state),
     isError: selectIsError(state),
+    isGraph: _isGraph,
     isMultiTable: _isMultiTable,
     isTable: _isTable,
     pageSize: selectPageSize(state),

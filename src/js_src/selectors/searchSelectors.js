@@ -6,30 +6,30 @@ import { createSelector } from 'reselect';
 /**
  * Direct selector to the search state.
  */
-const selectSearchDomain = (state) => state.search;
-const selectRoutingDomain = (state) => state.routing;
+export const selectSearchDomain = (state) => state.search;
+export const selectRoutingDomain = (state) => state.routing;
 
-const selectSearch = createSelector(
+export const selectSearch = createSelector(
   [selectSearchDomain],
   (searchDomain) => searchDomain.toJS()
 );
 
-const selectErrorMessage = createSelector(
+export const selectErrorMessage = createSelector(
   [selectSearchDomain],
   (search) => search.get('errorMessage')
 );
 
-const selectIsError = createSelector(
+export const selectIsError = createSelector(
   [selectSearchDomain],
   (search) => search.get('isError')
 );
 
-const selectIsPending = createSelector(
+export const selectIsPending = createSelector(
   [selectSearchDomain],
   (search) => search.get('isPending')
 );
 
-const selectQueryParams = createSelector(
+export const selectQueryParams = createSelector(
   [selectRoutingDomain],
   (routing) => {
     let location = routing.locationBeforeTransitions;
@@ -38,94 +38,76 @@ const selectQueryParams = createSelector(
   }
 );
 
-const selectGeneResults = createSelector(
+export const selectGeneResults = createSelector(
   [selectSearchDomain],
   (search) => search.get('geneResults').toJS()
 );
 
-const selectGoResults = createSelector(
+export const selectGoResults = createSelector(
   [selectSearchDomain],
   (search) => search.get('goResults').toJS()
 );
 
-const selectDiseaseResults = createSelector(
+export const selectGraphData = createSelector(
+  [selectSearchDomain],
+  (search) => search.get('graphData').toJS()
+);
+
+export const selectDiseaseResults = createSelector(
   [selectSearchDomain],
   (search) => search.get('diseaseResults').toJS()
 );
 
-const selectOrthoGroupResults = createSelector(
+export const selectOrthoGroupResults = createSelector(
   [selectSearchDomain],
   (search) => search.get('orthoGroupResults').toJS()
 );
 
-const selectGeneTotal = createSelector(
+export const selectGeneTotal = createSelector(
   [selectSearchDomain],
   (search) => search.get('geneTotal')
 );
 
-const selectGoTotal = createSelector(
+export const selectGoTotal = createSelector(
   [selectSearchDomain],
   (search) => search.get('goTotal')
 );
 
-const selectDiseaseTotal = createSelector(
+export const selectDiseaseTotal = createSelector(
   [selectSearchDomain],
   (search) => search.get('diseaseTotal')
 );
 
-const selectOrthoGroupTotal = createSelector(
+export const selectOrthoGroupTotal = createSelector(
   [selectSearchDomain],
   (search) => search.get('orthoGroupTotal')
 );
 
-const selectResults = createSelector(
+export const selectResults = createSelector(
   [selectSearchDomain],
   (search) => search.get('results').toJS()
 );
 
-const selectTotal = createSelector(
+export const selectTotal = createSelector(
   [selectSearchDomain],
   (search) => search.get('total')
 );
 
-const selectPageSize = createSelector(
+export const selectPageSize = createSelector(
   [selectSearchDomain],
   (search) => search.get('pageSize')
 );
 
-const selectTotalPages = createSelector(
+export const selectTotalPages = createSelector(
   [selectTotal,selectPageSize],
   (total, pageSize) => Math.floor(total / pageSize) + ((total % pageSize === 0) ? 0 : 1)
 );
 
-const selectActiveCategory = createSelector(
+export const selectActiveCategory = createSelector(
   [selectSearchDomain],
   (search) => search.get('activeCategory')
 );
-const selectAggregations = createSelector(
+export const selectAggregations = createSelector(
   [selectSearchDomain],
   (search) => search.get('aggregations').toJS()
 );
-
-export {
-  selectSearchDomain,
-  selectSearch,
-  selectErrorMessage,
-  selectIsError,
-  selectIsPending,
-  selectQueryParams,
-  selectResults,
-  selectGeneResults,
-  selectGoResults,
-  selectDiseaseResults,
-  selectOrthoGroupResults,
-  selectGeneTotal,
-  selectGoTotal,
-  selectDiseaseTotal,
-  selectOrthoGroupTotal,
-  selectTotal,
-  selectPageSize,
-  selectTotalPages,
-  selectActiveCategory,
-  selectAggregations
-};

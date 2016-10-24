@@ -26,6 +26,23 @@ params = {
 app.config.update(params)
 webpack.init_app(app)
 
+# TEMP
+@app.route('/api/graph_search')
+def graph_search():
+    graph_data = {
+        'nodes': [
+            { 'name': 'abc1', 'id': 1 },
+            { 'name': 'xyz2', 'id': 2 },
+            { 'name': 'mmm4', 'id': 3 }
+        ],
+        'edges': [
+            { 'source': 1, 'target': 2 },
+            { 'source': 2, 'target': 3 },
+            { 'source': 3, 'target': 4 }
+        ]
+    }
+    return jsonify(graph_data)
+
 @app.route('/api/search')
 def search():
     query = request.args.get('q', '').lower()

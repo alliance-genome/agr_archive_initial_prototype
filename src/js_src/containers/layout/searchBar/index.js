@@ -8,31 +8,10 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 import style from './style.css';
 import CategoryLabel from '../../search/categoryLabel';
 import fetchData from '../../../lib/fetchData';
+import { CATEGORIES } from '../../../constants';
 
 const AUTO_BASE_URL = '/api/search_autocomplete';
-const CATEGORY_OPTIONS = [
-  {
-    name: 'all',
-    displayName: 'All'
-  },
-  {
-    name: 'gene',
-    displayName: 'Genes'
-  },
-  {
-    name: 'go',
-    displayName: 'Gene Ontology'
-  },
-  {
-    name: 'disease',
-    displayName: 'Diseases'
-  },
-  {
-    name: 'ortholog group',
-    displayName: 'Ortholog Groups'
-  }
-];
-const DEFAULT_CAT = CATEGORY_OPTIONS[0];
+const DEFAULT_CAT = CATEGORIES[0];
 
 class SearchBarComponent extends Component {
   constructor(props) {
@@ -54,7 +33,7 @@ class SearchBarComponent extends Component {
   }
 
   handleSelect(eventKey) {
-    let newCatOption = CATEGORY_OPTIONS.filter( d => d.name === eventKey )[0];
+    let newCatOption = CATEGORIES.filter( d => d.name === eventKey )[0];
     this.setState({ catOption: newCatOption });
   }
 
@@ -86,7 +65,7 @@ class SearchBarComponent extends Component {
 
   renderDropdown() {
     let _title = this.state.catOption.displayName;
-    let nodes = CATEGORY_OPTIONS.map( d => {
+    let nodes = CATEGORIES.map( d => {
       let labelNode = (d.name === DEFAULT_CAT.name) ? 'All' : <CategoryLabel category={d.name} />;
       return <MenuItem className={style.dropdownItem} eventKey={d.name} key={d.name}>{labelNode}</MenuItem>;
     });

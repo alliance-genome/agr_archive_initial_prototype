@@ -14,6 +14,7 @@ const DEFAULT_STATE = fromJS({
   // for multi table
   geneResults: [],
   goResults: [],
+  graphData: { nodes: [], edges: [] },
   diseaseResults: [],
   orthoGroupResults: [],
   geneTotal: 0,
@@ -68,6 +69,9 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
       .set('aggregations', newAggs)
       // parse results
       .set(resultsTarget, fromJS(parseResults(action.payload.results)));
+  case 'SEARCH_GRAPH_RESPONSE':
+    return state
+      .set('graphData', fromJS(action.payload));
   default:
     return state;
   }
