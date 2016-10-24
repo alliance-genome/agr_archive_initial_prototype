@@ -73,7 +73,7 @@ class Mouse():
 
     @staticmethod
     def load_go(genes, go):
-        query = service.new_query("GOTerm")
+        query = Mouse.service.new_query("GOTerm")
         query.add_constraint("ontologyAnnotations.subject", "SequenceFeature")
         query.add_view(
             "identifier", "name", "namespace", "ontologyAnnotations.qualifier",
@@ -87,17 +87,19 @@ class Mouse():
         print ("Fetching go data from MouseMine...")
 
         for row in query.rows():
-            if row["goAnnotation.ontologyTerm.identifier"] in ("GO:0008150", "GO:0003674", "GO:0005575"):
+            if row["identifier"] in ("GO:0008150", "GO:0003674", "GO:0005575"):
                 continue
 
             gene = None
-            if row["ontologyAnnotations.subject.primaryIdentifier"] in genes and genes[row["ontologyAnnotations.subject.primaryIdentifier"]]["gene_symbol"]:
-                gene = genes[row["primaryIdentifier"]]["gene_symbol"].upper()
+            if row["ontologyAnnotations.subject.primaryIdentifier"] and row["ontologyAnnotations.subject.symbol"]:
+                gene = row["ontologyAnnotations.subject.symbol"].upper()
 
             if row["identifier"] in go:
                 if gene:
-                    go[row["identifier"]].append(gene)
-                go[row["identifier"]].append("Mus musculus")
+                    go[row["identifier"]]["go_genes"].append(gene)
+
+                if "Mus musculus" not in go[row["identifier"]]["go_species"]:
+                    go[row["identifier"]]["go_species"].append("Mus musculus")
             else:
                 go[row["identifier"]] = {
                     "name": row["name"],
@@ -105,10 +107,46 @@ class Mouse():
                     "go_genes": [gene],
                     "go_species": ["Mus musculus"],
 
-                    "name_key": row["goAnnotation.ontologyTerm.name"],
+                    "name_key": row["name"],
                     "href": "http://amigo.geneontology.org/amigo/term/" + row["identifier"],
                     "category": "go"
                 }
 
-            if row["ontologyAnnotations.subject.primaryIdentifier"] in genes:
+            if row["namespace"] and row["ontologyAnnotations.subject.primaryIdentifier"] and row["ontologyAnnotations.subject.primaryIdentifier"] in genes:
                 genes[row["ontologyAnnotations.subject.primaryIdentifier"]]["gene_" + row["namespace"]].append(row["name"])
+
+    @staticmethod
+    def load_diseases(gene, diseases):
+        query = Mouse.service.new_query("OMIMTerm")
+        query.add_constraint("ontologyAnnotations.subject", "SequenceFeature")
+        query.add_view(
+            "identifier", "name", "synonyms.name", "synonyms.type",
+            "ontologyAnnotations.qualifier",
+            "ontologyAnnotations.subject.primaryIdentifier",
+            "ontologyAnnotations.subject.symbol"
+        )
+        query.add_constraint("ontologyAnnotations.subject.organism.taxonId", "=", "10090", code = "A")
+        query.outerjoin("synonyms")
+        query.outerjoin("ontologyAnnotations")
+
+        print ("Fetching disease data from MouseMine...")
+
+        for row in query.rows():
+            if row["identifier"] in diseases:
+                if row["ontologyAnnotations.subject.symbol"]:
+                    diseases[row["identifier"]]["disease_genes"].append(row["ontologyAnnotations.subject.symbol"].upper())
+
+                diseases[row["identifier"]]["disease_species"].append("Mus musculus")
+            else:
+                diseases[row["identifier"]] = {
+                    "name": row["name"],
+                    "disease_genes": [],
+                    "disease_species": ["Mus musculus"],
+
+                    "name_key": row["name"],
+                    "href": "http://omim.org/entry/" + str(row["identifier"]),
+                    "category": "disease"
+                }
+
+                if row["ontologyAnnotations.subject.symbol"]:
+                    diseases[row["identifier"]]["disease_genes"].append(row["ontologyAnnotations.subject.symbol"].upper())
