@@ -15,11 +15,11 @@ const DEFAULT_STATE = fromJS({
   geneResults: [],
   goResults: [],
   diseaseResults: [],
-  orthoGroupResults: [],
+  homologyGroupResults: [],
   geneTotal: 0,
   goTotal: 0,
   diseaseTotal: 0,
-  orthoGroupTotal: 0,
+  homologyGroupTotal: 0,
   // mixed
   results: [],
   total: 0,
@@ -47,14 +47,14 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
       'gene': 'geneResults',
       'go': 'goResults',
       'disease': 'diseaseResults',
-      'ortholog group':  'orthologResults',
+      'homology group':  'homologyGroupResults',
       'none': 'results'
     };
     let totalTargetsVals = {
       'gene': 'geneTotal',
       'go': 'goTotal',
       'disease': 'diseaseTotal',
-      'ortholog group':  'orthologTotal',
+      'homology group':  'homologyTotal',
       'none': 'total'
     };
     let resultsTarget = resultsTargetsVals[actionCat] || 'results';

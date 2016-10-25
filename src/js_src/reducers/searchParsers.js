@@ -35,8 +35,8 @@ export function parseResults(results) {
       return parseGoResult(d);
     case 'disease':
       return parseDiseaseResult(d);
-    case 'ortholog group':
-      return parseOrthoGroupResult(d);
+    case 'homology group':
+      return parseHomologyGroupResult(d);
     default:
       return parseDefaultResult(d);
     }
@@ -122,7 +122,7 @@ function parseDiseaseResult(_d) {
   };
 }
 
-function parseOrthoGroupResult(d) {
+function parseHomologyGroupResult(d) {
   return parseDefaultResult(d);
 }
 
