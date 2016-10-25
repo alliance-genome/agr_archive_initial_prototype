@@ -41,7 +41,8 @@ class ResultsList extends Component {
     );
   }
 
-  renderOrthologs(orthologs) {
+  renderOrthologs(orthologs, label) {
+    label = label || 'Orthologs';
     if (orthologs.length === 0) return null;
     let nodes = orthologs.map( (d, i) => {
       let commaNode = (i === orthologs.length - 1) ? null : ', ';
@@ -57,7 +58,19 @@ class ResultsList extends Component {
     });
     return (
       <div className={style.detailContainer}>
-        <span className={style.detailLabel}><strong>Orthologs:</strong> {nodes}</span>
+        <span className={style.detailLabel}><strong>{label}:</strong> {nodes}</span>
+      </div>
+    );
+  }
+
+  renderHomologyGroup(d, i, fields) {
+    return (
+      <div className={style.resultContainer} key={`sr${i}`}>
+        {this.renderHeader(d)}
+        {this.renderDetailFromFields(d, fields)}
+        {this.renderHighlightedValues(d.highlight)}
+        {this.renderOrthologs(d.member_genes, 'Member Genes')}
+        <hr />
       </div>
     );
   }
@@ -89,7 +102,7 @@ class ResultsList extends Component {
         let fieldVals = {
           'disease': ['synonyms', 'omim_id'],
           'go': ['synonyms', 'go_branch'],
-          'ortholog group': ['associated_genes']
+          'homology group': ['associated_genes']
         };
         let fields = fieldVals[d.category] || [];
         return this.renderNonGeneEntry(d, i, fields);

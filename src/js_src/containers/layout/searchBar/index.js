@@ -10,6 +10,7 @@ import CategoryLabel from '../../search/categoryLabel';
 import fetchData from '../../../lib/fetchData';
 import { CATEGORIES } from '../../../constants';
 
+import { CATEGORIES } from '../../../constants';
 const AUTO_BASE_URL = '/api/search_autocomplete';
 const DEFAULT_CAT = CATEGORIES[0];
 

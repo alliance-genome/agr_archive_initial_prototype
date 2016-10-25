@@ -48,19 +48,26 @@ export const selectGoResults = createSelector(
   (search) => search.get('goResults').toJS()
 );
 
+<<<<<<< HEAD
 export const selectGraphData = createSelector(
   [selectSearchDomain],
   (search) => search.get('graphData').toJS()
 );
 
+=======
+>>>>>>> searchUI
 export const selectDiseaseResults = createSelector(
   [selectSearchDomain],
   (search) => search.get('diseaseResults').toJS()
 );
 
+<<<<<<< HEAD
 export const selectOrthoGroupResults = createSelector(
+=======
+export const selectHomologyGroupResults = createSelector(
+>>>>>>> searchUI
   [selectSearchDomain],
-  (search) => search.get('orthoGroupResults').toJS()
+  (search) => search.get('homologyGroupResults').toJS()
 );
 
 export const selectGeneTotal = createSelector(
@@ -78,9 +85,9 @@ export const selectDiseaseTotal = createSelector(
   (search) => search.get('diseaseTotal')
 );
 
-export const selectOrthoGroupTotal = createSelector(
+export const selectHomologyGroupTotal = createSelector(
   [selectSearchDomain],
-  (search) => search.get('orthoGroupTotal')
+  (search) => search.get('homologyGroupTotal')
 );
 
 export const selectResults = createSelector(

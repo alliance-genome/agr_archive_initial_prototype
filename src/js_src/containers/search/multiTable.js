@@ -16,11 +16,11 @@ import {
   selectGeneResults,
   selectGoResults,
   selectDiseaseResults,
-  selectOrthoGroupResults,
+  selectHomologyGroupResults,
   selectGeneTotal,
   selectGoTotal,
   selectDiseaseTotal,
-  selectOrthoGroupTotal,
+  selectHomologyGroupTotal,
 } from '../../selectors/searchSelectors';
 
 const BASE_SEARCH_URL = '/api/search';
@@ -56,7 +56,7 @@ class MultiTableComponent extends Component {
     let geneUrl = this.getUrlByCategory('gene');
     let goUrl = this.getUrlByCategory('go');
     let diseaseUrl = this.getUrlByCategory('disease');
-    let orthoGroupUrl = this.getUrlByCategory('ortholog group');
+    let homologyGroupUrl = this.getUrlByCategory('homology group');
     this.props.dispatch(setPending(true));
     fetchData(geneUrl)
       .then( (geneData) => {
@@ -70,9 +70,9 @@ class MultiTableComponent extends Component {
       .then( (diseaseData) => {
         this.props.dispatch(receiveResponse(diseaseData, this.props.queryParams, 'disease'));
       })).then(
-    fetchData(orthoGroupUrl)
-      .then( (orthoGroupData) => {
-        this.props.dispatch(receiveResponse(orthoGroupData, this.props.queryParams, 'ortholog group'));
+    fetchData(homologyGroupUrl)
+      .then( (homologyGroupData) => {
+        this.props.dispatch(receiveResponse(homologyGroupData, this.props.queryParams, 'homology group'));
       })).then( () => {
         this.props.dispatch(setError(false));
         this.props.dispatch(setPending(false));
@@ -114,11 +114,11 @@ class MultiTableComponent extends Component {
     );
   }
 
-  renderOrthoGroup() {
+  renderHomologyGroup() {
     return (
       <div>
-        <p>{this.props.orthoGroupTotal.toLocaleString()} <CategoryLabel category='ortholog group' /></p>
-        <ResultsTable activeCategory='ortholog group' entries={this.props.orthoGroupResults} />
+        <p>{this.props.homologyGroupTotal.toLocaleString()} <CategoryLabel category='homology group' /></p>
+        <ResultsTable activeCategory='homology group' entries={this.props.homologyGroupResults} />
       </div>
     );
   }
@@ -129,7 +129,7 @@ class MultiTableComponent extends Component {
         {this.renderGenes()}
         {this.renderGo()}
         {this.renderDisease()}
-        {this.renderOrthoGroup()}
+        {this.renderHomologyGroup()}
       </div>
     );
   }
@@ -141,11 +141,11 @@ MultiTableComponent.propTypes = {
   geneResults: React.PropTypes.array,
   goResults: React.PropTypes.array,
   diseaseResults: React.PropTypes.array,
-  orthoGroupResults: React.PropTypes.array,
+  homologyGroupResults: React.PropTypes.array,
   geneTotal: React.PropTypes.number,
   goTotal: React.PropTypes.number,
   diseaseTotal: React.PropTypes.number,
-  orthoGroupTotal: React.PropTypes.number
+  homologyGroupTotal: React.PropTypes.number
 };
 
 function mapStateToProps(state) {
@@ -154,11 +154,11 @@ function mapStateToProps(state) {
     geneResults: selectGeneResults(state),
     goResults: selectGoResults(state),
     diseaseResults: selectDiseaseResults(state),
-    orthoGroupResults: selectOrthoGroupResults(state),
+    homologyGroupResults: selectHomologyGroupResults(state),
     geneTotal: selectGeneTotal(state),
     goTotal: selectGoTotal(state),
     diseaseTotal: selectDiseaseTotal(state),
-    orthoGroupTotal: selectOrthoGroupTotal(state),
+    homologyGroupTotal: selectHomologyGroupTotal(state),
   };
 }
 
