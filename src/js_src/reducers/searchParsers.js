@@ -122,8 +122,18 @@ function parseDiseaseResult(_d) {
   };
 }
 
-function parseHomologyGroupResult(d) {
-  return parseDefaultResult(d);
+function parseHomologyGroupResult(_d) {
+  let d = injectHighlightIntoResponse(_d);
+  return {
+    associated_genes: d.associated_genes,
+    category: d.category || 'gene',
+    display_name: d.name,
+    highlight: d.highlights,
+    href: d.href,
+    name: d.name,
+    synonyms: d.synonym,
+    member_genes: _d.member_genes
+  };
 }
 
 function parseDefaultResult(_d) {
