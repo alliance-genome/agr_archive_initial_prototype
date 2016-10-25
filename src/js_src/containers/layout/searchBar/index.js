@@ -8,7 +8,6 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 import style from './style.css';
 import CategoryLabel from '../../search/categoryLabel';
 import fetchData from '../../../lib/fetchData';
-import { CATEGORIES } from '../../../constants';
 
 import { CATEGORIES } from '../../../constants';
 const AUTO_BASE_URL = '/api/search_autocomplete';
