@@ -51,7 +51,11 @@ export function getQueryParamWithValueChanged(key, val, queryParams, isClear=fal
     newVal = _.without(oldVal, val);
   } else {
     newVal = oldVal;
-    newVal.push(val);
+    if (Array.isArray(val)) {
+      newVal = val;
+    } else {
+      newVal.push(val);
+    }
   }
   qp[key] = newVal;
   if (CLEARING_FIELDS.indexOf(key) > -1) {

@@ -48,14 +48,14 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
       'gene': 'geneResults',
       'go': 'goResults',
       'disease': 'diseaseResults',
-      'homology group':  'homologyGroupResults',
+      'homology_group':  'homologyGroupResults',
       'none': 'results'
     };
     let totalTargetsVals = {
       'gene': 'geneTotal',
       'go': 'goTotal',
       'disease': 'diseaseTotal',
-      'homology group':  'homologyTotal',
+      'homology_group':  'homologyTotal',
       'none': 'total'
     };
     let resultsTarget = resultsTargetsVals[actionCat] || 'results';

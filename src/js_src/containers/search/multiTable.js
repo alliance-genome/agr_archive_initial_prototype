@@ -56,7 +56,7 @@ class MultiTableComponent extends Component {
     let geneUrl = this.getUrlByCategory('gene');
     let goUrl = this.getUrlByCategory('go');
     let diseaseUrl = this.getUrlByCategory('disease');
-    let homologyGroupUrl = this.getUrlByCategory('homology group');
+    let homologyGroupUrl = this.getUrlByCategory('homology_group');
     this.props.dispatch(setPending(true));
     fetchData(geneUrl)
       .then( (geneData) => {
@@ -72,7 +72,7 @@ class MultiTableComponent extends Component {
       })).then(
     fetchData(homologyGroupUrl)
       .then( (homologyGroupData) => {
-        this.props.dispatch(receiveResponse(homologyGroupData, this.props.queryParams, 'homology group'));
+        this.props.dispatch(receiveResponse(homologyGroupData, this.props.queryParams, 'homology_group'));
       })).then( () => {
         this.props.dispatch(setError(false));
         this.props.dispatch(setPending(false));
@@ -117,8 +117,8 @@ class MultiTableComponent extends Component {
   renderHomologyGroup() {
     return (
       <div>
-        <p>{this.props.homologyGroupTotal.toLocaleString()} <CategoryLabel category='homology group' /></p>
-        <ResultsTable activeCategory='homology group' entries={this.props.homologyGroupResults} />
+        <p>{this.props.homologyGroupTotal.toLocaleString()} <CategoryLabel category='homology_group' /></p>
+        <ResultsTable activeCategory='homology_group' entries={this.props.homologyGroupResults} />
       </div>
     );
   }

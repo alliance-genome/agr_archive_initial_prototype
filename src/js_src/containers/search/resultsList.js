@@ -102,7 +102,7 @@ class ResultsList extends Component {
         let fieldVals = {
           'disease': ['synonyms', 'omim_id'],
           'go': ['synonyms', 'go_branch'],
-          'homology group': ['associated_genes']
+          'homology_group': ['associated_genes']
         };
         let fields = fieldVals[d.category] || [];
         return this.renderNonGeneEntry(d, i, fields);

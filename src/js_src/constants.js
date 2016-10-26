@@ -20,7 +20,7 @@ export const CATEGORIES = [
     displayName: 'Diseases'
   },
   {
-    name: 'homology group',
+    name: 'homology_group',
     displayName: 'Homology Groups'
   }
 ];
