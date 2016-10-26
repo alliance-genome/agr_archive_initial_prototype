@@ -35,8 +35,8 @@ export function parseResults(results) {
       return parseGoResult(d);
     case 'disease':
       return parseDiseaseResult(d);
-    case 'ortholog group':
-      return parseOrthoGroupResult(d);
+    case 'homology_group':
+      return parseHomologyGroupResult(d);
     default:
       return parseDefaultResult(d);
     }
@@ -89,7 +89,8 @@ function parseGeneResult(_d) {
     genomic_coordinates: d.genomic_coordinates,
     relative_coordinates: d.relative_coordinates,
     species: d.species,
-    highlight: d.highlights
+    highlight: d.highlights,
+    orthologs: d.orthologs || []
   };
 }
 
@@ -121,8 +122,18 @@ function parseDiseaseResult(_d) {
   };
 }
 
-function parseOrthoGroupResult(d) {
-  return parseDefaultResult(d);
+function parseHomologyGroupResult(_d) {
+  let d = injectHighlightIntoResponse(_d);
+  return {
+    associated_genes: d.associated_genes,
+    category: d.category || 'gene',
+    display_name: d.name,
+    highlight: d.highlights,
+    href: d.href,
+    name: d.name,
+    synonyms: d.synonym,
+    member_genes: _d.member_genes
+  };
 }
 
 function parseDefaultResult(_d) {

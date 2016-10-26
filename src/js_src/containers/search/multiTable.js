@@ -7,22 +7,20 @@ import _ from 'underscore';
 import style from './style.css';
 import ResultsTable from './resultsTable';
 import CategoryLabel from './categoryLabel';
-import Loader from '../../components/loader';
 import fetchData from '../../lib/fetchData';
 import { SEARCH_API_ERROR_MESSAGE } from '../../constants';
 import { receiveResponse, setError, setPending } from './searchActions';
 
 import {
-  selectIsPending,
   selectQueryParams,
   selectGeneResults,
   selectGoResults,
   selectDiseaseResults,
-  selectOrthoGroupResults,
+  selectHomologyGroupResults,
   selectGeneTotal,
   selectGoTotal,
   selectDiseaseTotal,
-  selectOrthoGroupTotal,
+  selectHomologyGroupTotal,
 } from '../../selectors/searchSelectors';
 
 const BASE_SEARCH_URL = '/api/search';
@@ -58,7 +56,7 @@ class MultiTableComponent extends Component {
     let geneUrl = this.getUrlByCategory('gene');
     let goUrl = this.getUrlByCategory('go');
     let diseaseUrl = this.getUrlByCategory('disease');
-    let orthoGroupUrl = this.getUrlByCategory('ortholog group');
+    let homologyGroupUrl = this.getUrlByCategory('homology_group');
     this.props.dispatch(setPending(true));
     fetchData(geneUrl)
       .then( (geneData) => {
@@ -72,9 +70,9 @@ class MultiTableComponent extends Component {
       .then( (diseaseData) => {
         this.props.dispatch(receiveResponse(diseaseData, this.props.queryParams, 'disease'));
       })).then(
-    fetchData(orthoGroupUrl)
-      .then( (orthoGroupData) => {
-        this.props.dispatch(receiveResponse(orthoGroupData, this.props.queryParams, 'ortholog group'));
+    fetchData(homologyGroupUrl)
+      .then( (homologyGroupData) => {
+        this.props.dispatch(receiveResponse(homologyGroupData, this.props.queryParams, 'homology_group'));
       })).then( () => {
         this.props.dispatch(setError(false));
         this.props.dispatch(setPending(false));
@@ -116,54 +114,51 @@ class MultiTableComponent extends Component {
     );
   }
 
-  renderOrthoGroup() {
+  renderHomologyGroup() {
     return (
       <div>
-        <p>{this.props.orthoGroupTotal.toLocaleString()} <CategoryLabel category='ortholog group' /></p>
-        <ResultsTable activeCategory='ortholog group' entries={this.props.orthoGroupResults} />
+        <p>{this.props.homologyGroupTotal.toLocaleString()} <CategoryLabel category='homology_group' /></p>
+        <ResultsTable activeCategory='homology_group' entries={this.props.homologyGroupResults} />
       </div>
     );
   }
 
   render() {
-    if (this.props.isPending) return <Loader />;
     return (
       <div className={style.resultContainer}>
         {this.renderGenes()}
         {this.renderGo()}
         {this.renderDisease()}
-        {this.renderOrthoGroup()}
+        {this.renderHomologyGroup()}
       </div>
     );
   }
 }
 
 MultiTableComponent.propTypes = {
-  isPending: React.PropTypes.bool,
   dispatch: React.PropTypes.func,
   queryParams: React.PropTypes.object,
   geneResults: React.PropTypes.array,
   goResults: React.PropTypes.array,
   diseaseResults: React.PropTypes.array,
-  orthoGroupResults: React.PropTypes.array,
+  homologyGroupResults: React.PropTypes.array,
   geneTotal: React.PropTypes.number,
   goTotal: React.PropTypes.number,
   diseaseTotal: React.PropTypes.number,
-  orthoGroupTotal: React.PropTypes.number
+  homologyGroupTotal: React.PropTypes.number
 };
 
 function mapStateToProps(state) {
   return {
-    isPending: selectIsPending(state),
     queryParams: selectQueryParams(state),
     geneResults: selectGeneResults(state),
     goResults: selectGoResults(state),
     diseaseResults: selectDiseaseResults(state),
-    orthoGroupResults: selectOrthoGroupResults(state),
+    homologyGroupResults: selectHomologyGroupResults(state),
     geneTotal: selectGeneTotal(state),
     goTotal: selectGoTotal(state),
     diseaseTotal: selectDiseaseTotal(state),
-    orthoGroupTotal: selectOrthoGroupTotal(state),
+    homologyGroupTotal: selectHomologyGroupTotal(state),
   };
 }
 
