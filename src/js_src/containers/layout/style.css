@@ -34,6 +34,10 @@
 	color: #e2e2e2 !important;
 }
 
+.loaderContentContainer {
+	position: relative;
+}
+
 .contentContainer {
 	min-height: 400px;
 	padding: 0.75rem 1rem 0.5rem 1rem;

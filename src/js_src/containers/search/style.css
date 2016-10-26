@@ -45,6 +45,10 @@
 	margin-left: 1rem;
 }
 
+.evidenceFootnote {
+	font-size: 0.65rem;
+}
+
 td > .detailContainer {
 	margin-left: 0;
 }
