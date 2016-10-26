@@ -24,3 +24,12 @@
 .aggLinkLabel {
 	margin-right: 1rem;
 }
+
+.singleFacetControl {
+	display: flex;
+	justify-content: space-between;
+}
+
+.selectContainer {
+	position: relative;
+}
