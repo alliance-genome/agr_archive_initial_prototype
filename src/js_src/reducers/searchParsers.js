@@ -35,7 +35,7 @@ export function parseResults(results) {
       return parseGoResult(d);
     case 'disease':
       return parseDiseaseResult(d);
-    case 'homology group':
+    case 'homology_group':
       return parseHomologyGroupResult(d);
     default:
       return parseDefaultResult(d);
