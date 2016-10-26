@@ -1,14 +1,11 @@
+from elasticsearch import Elasticsearch
 import os
 import requests
-import pickle
-import time
-
-from elasticsearch import Elasticsearch
-from intermine.webservice import Service
 
 from mapping import mapping
+from mod import MOD
 
-INDEX_NAME = 'searchable_items_prototype'
+INDEX_NAME = 'searchable_items_blue'
 DOC_TYPE = 'searchable_item'
 es = Elasticsearch(os.environ['ES_URI'], retry_on_timeout=True)
 
@@ -30,88 +27,44 @@ def put_mapping():
     else:
         print "SUCCESS"
 
+genes = {}
+go = {}
+diseases = {}
 
-def index_genes(organism, mod):
-    backup_filename = organism + "mine_genes_" + time.strftime("%m_%d_%Y") + ".bkp"
-    if os.path.isfile(backup_filename):
-        print "Restoring fetched data from today from " + organism + "mine"
+species = ("M. musculus", "S. cerevisiae", "D. renio", "C. elegans", "D. melanogaster")
 
-        backup = open(backup_filename, 'rb')
-        genes = pickle.load(backup)
-    else:
-        print "Fetching data from " + organism + "mine"
-        service = Service(mod["mine_service_url"])
+for specie in species:
+    MOD.factory(specie).load_genes(genes)
 
-        query = service.new_query("Gene")
-        query.add_view(mod["gene_fields"].values())
+for specie in species:
+    MOD.factory(specie).load_diseases(genes, diseases)
 
-        query.add_constraint("organism.name", "=", mod["mine_organism_name"], code="B")
+for specie in species:
+    MOD.factory(specie).load_go(genes, go)
 
-        rows = query.rows()
+delete_mapping()
+put_mapping()
 
-        genes = {}
+datatypes = [diseases, go, genes]
 
-        for row in rows:
-            id = row[mod["gene_fields"]["id"]]
+print "Indexing ElasticSearch..."
 
-            if id in genes:
-                genes[id]["go_ids"].append(row[mod["gene_fields"]["go_id"]])
-                genes[id]["go_names"].append(row[mod["gene_fields"]["go_name"]])
-            else:
-                genes[id] = {
-                    "name": row[mod["gene_fields"]["gene_name"]],
-                    "symbol": row[mod["gene_fields"]["gene_symbol"]],
-                    "synonym": row[mod["gene_fields"]["gene_synonym"]],
-                    "go_ids": [row[mod["gene_fields"]["go_id"]]],
-                    "go_names": [row[mod["gene_fields"]["go_name"]]],
-                    "href": mod["url_prefix"] + row["primaryIdentifier"] + mod["url_suffix"],
-                    "organism": organism,
-                    "category": "gene"
-                }
-
-        with open(backup_filename, 'wb') as backup:
-            pickle.dump(genes, backup)
-
-    print "Indexing " + str(len(genes)) + " " + organism + " genes"
-
+for datatype in datatypes:
     bulk_data = []
-    for gene in genes.keys():
+
+    for id in datatype:
         bulk_data.append({
             'index': {
                 '_index': INDEX_NAME,
                 '_type': DOC_TYPE,
-                '_id': organism + "_" + gene
+                '_id': id
             }
         })
-        bulk_data.append(genes[gene])
+        bulk_data.append(datatype[id])
 
-        if len(bulk_data) % 500 == 0:
+        if len(bulk_data) == 250:
             es.bulk(index=INDEX_NAME, body=bulk_data, refresh=True)
             bulk_data = []
 
     if len(bulk_data) > 0:
         es.bulk(index=INDEX_NAME, body=bulk_data, refresh=True)
-
-
-delete_mapping()
-put_mapping()
-
-mods = {
-    "yeast": {
-        "mine_service_url": "http://yeastmine.yeastgenome.org/yeastmine/service",
-        "mine_organism_name": "Saccharomyces cerevisiae",
-        "gene_fields": {
-            "id": "primaryIdentifier",
-            "go_id": "goAnnotation.ontologyTerm.identifier",
-            "go_name": "goAnnotation.ontologyTerm.name",
-            "gene_name": "name",
-            "gene_symbol": "symbol",
-            "gene_synonym": "secondaryIdentifier"
-        },
-        "url_prefix": "http://www.yeastgenome.org/locus/",
-        "url_suffix": "/overview"
-    }
-}
-
-for organism in mods:
-    index_genes(organism, mods[organism])
