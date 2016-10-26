@@ -100,12 +100,13 @@ class SingleFilterSelector extends Component {
 
   renderControlNode() {
     if (this.props.values.length <= SMALL_NUM_VISIBLE) return null;
-    let label = (this.state.numVisible !== MAX_NUM_VISIBLE) ? 'Show More' : `Show ${SMALL_NUM_VISIBLE}`;
+    let moreLabel = (this.state.numVisible !== MAX_NUM_VISIBLE) ? 'Show More' : `Show ${SMALL_NUM_VISIBLE}`;
     let modeLabelNode = this.state.isSearchMode ? <span>List</span> : <span><i className='fa fa-search' /></span>;
+    let moreLabelNode = this.state.isSearchMode ? <span /> : <a href='#' onClick={this.handleControlClick.bind(this)}>{moreLabel}</a>;
     return (
       <p className={style.singleFacetControl}>
         <a href='#' onClick={this.handleToggleMode.bind(this)} >{modeLabelNode}</a>
-        <a href='#' onClick={this.handleControlClick.bind(this)}>{label}</a>
+        {moreLabelNode}
       </p>
     );
   }
