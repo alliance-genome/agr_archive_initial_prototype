@@ -42,17 +42,19 @@ class ResultsList extends Component {
   }
 
   renderOrthologs(orthologs, label) {
+    orthologs = orthologs || [];
     label = label || 'Orthologs';
     if (orthologs.length === 0) return null;
     let nodes = orthologs.map( (d, i) => {
       let commaNode = (i === orthologs.length - 1) ? null : ', ';
-      let evidenceNodes = d.evidences.map( (_d, _i) => {
-        let commaNode = (_i === d.evidences.length - 1) ? null : ', ';
+      let evidences = d.evidences || [];
+      let evidenceNodes = evidences.map( (_d, _i) => {
+        let commaNode = (_i === evidences.length - 1) ? null : ', ';
         return <span className={style.evidenceFootnote} key={`oe.${i}.${_i}`}>{_d.name}{commaNode}</span>;
       });
       return (
         <span key={'ortho.' + i}>
-          <a href={d.href} target='_new'>{d.symbol}</a> {evidenceNodes}{commaNode}
+          <a href={d.href} target='_new'>{d.symbol}</a>{evidenceNodes}{commaNode}
         </span>
       );
     });
@@ -63,7 +65,8 @@ class ResultsList extends Component {
     );
   }
 
-  renderHomologyGroup(d, i, fields) {
+  renderHomologyGroup(d, i) {
+    let fields = [];
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
         {this.renderHeader(d)}
@@ -98,11 +101,12 @@ class ResultsList extends Component {
     return this.props.entries.map( (d, i) => {
       if (d.category === 'gene') {
         return this.renderGeneEntry(d, i);
+      } else if (d.category === 'homology_group') {
+        return this.renderHomologyGroup(d, i);
       } else {
         let fieldVals = {
           'disease': ['synonyms', 'omim_id'],
           'go': ['synonyms', 'go_branch'],
-          'homology_group': ['associated_genes']
         };
         let fields = fieldVals[d.category] || [];
         return this.renderNonGeneEntry(d, i, fields);
