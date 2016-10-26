@@ -11,6 +11,7 @@
     "url": "https://github.com/alliance-genome/agr_prototype.git"
   },
   "dependencies": {
+    "d3": "^3.5.17",
     "extract-text-webpack-plugin": "^1.0.1",
     "immutable": "^3.8.1",
     "manifest-revision-webpack-plugin": "^0.3.0",
