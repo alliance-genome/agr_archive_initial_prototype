@@ -24,6 +24,12 @@ export const selectIsError = createSelector(
   (search) => search.get('isError')
 );
 
+export const selectIsReady = createSelector(
+  [selectSearchDomain],
+  (search) => search.get('isReady')
+);
+
+
 export const selectIsPending = createSelector(
   [selectSearchDomain],
   (search) => search.get('isPending')
