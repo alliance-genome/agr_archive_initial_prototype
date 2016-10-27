@@ -73,6 +73,27 @@ export function parseAggs(rawAggs, queryObject) {
   });
 }
 
+function parseCoordinates(d) {
+  // make sure there is a chromosome identifiers
+  let chrom = d.gene_chromosomes || [];
+  chrom = chrom.filter( d => d );
+  if (chrom.length !== 1) {
+    return null;
+  }
+  chrom = chrom[0];
+  // make sure there are coordinates
+  let numFields = ['gene_chromosome_starts', 'gene_chromosome_ends'];
+  for (var i = numFields.length - 1; i >= 0; i--) {
+    let field = numFields[i];
+    let type = typeof d[field];
+    if (type !== 'string' && type !== 'number') {
+      return null;
+    }
+  }
+  // only render what you can
+  return `chr${chrom}:${d.gene_chromosome_starts}-${d.gene_chromosome_ends}`;
+}
+
 // search result individual entry parsers
 function parseGeneResult(_d) {
   let d = injectHighlightIntoResponse(_d);
@@ -86,11 +107,10 @@ function parseGeneResult(_d) {
     sourceHref: d.href,
     synonyms: d.gene_synonyms,
     gene_type: makeFieldDisplayName(d.gene_type),
-    genomic_coordinates: d.genomic_coordinates,
-    relative_coordinates: d.relative_coordinates,
     species: d.species,
     highlight: d.highlights,
-    orthologs: d.orthologs || []
+    orthologs: d.orthologs || [],
+    genomic_coordinates: parseCoordinates(_d)
   };
 }
 
