@@ -14,11 +14,13 @@ import ResultsList from './resultsList';
 import ResultsTable from './resultsTable';
 import { SMALL_COL_CLASS, LARGE_COL_CLASS, SEARCH_API_ERROR_MESSAGE } from '../../constants';
 import { receiveResponse, setError, setPending } from './searchActions';
+import LoadingPage from '../../components/loadingPage';
 
 import {
   selectActiveCategory,
   selectErrorMessage,
   selectIsError,
+  selectIsReady,
   selectQueryParams,
   selectResults,
   selectPageSize,
@@ -91,6 +93,7 @@ class SearchComponent extends Component {
   }
 
   render() {
+    if (!this.props.isReady) return <LoadingPage />;
     return (
       <div className={style.root}>
         {this.renderErrorNode()}
@@ -119,6 +122,7 @@ SearchComponent.propTypes = {
   isError: React.PropTypes.bool,
   isGraph: React.PropTypes.bool,
   isMultiTable: React.PropTypes.bool,
+  isReady: React.PropTypes.bool,
   isTable: React.PropTypes.bool,
   pageSize: React.PropTypes.number,
   queryParams: React.PropTypes.object,
@@ -139,6 +143,7 @@ function mapStateToProps(state) {
     isError: selectIsError(state),
     isGraph: _isGraph,
     isMultiTable: _isMultiTable,
+    isReady: selectIsReady(state),
     isTable: _isTable,
     pageSize: selectPageSize(state),
     queryParams: _queryParams,
