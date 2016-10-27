@@ -16,7 +16,6 @@ const DEFAULT_STATE = fromJS({
   geneResults: [],
   goResults: [],
   diseaseResults: [],
-  homologyGroupResults: [],
   geneTotal: 0,
   goTotal: 0,
   diseaseTotal: 0,
@@ -48,7 +47,6 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
       'gene': 'geneResults',
       'go': 'goResults',
       'disease': 'diseaseResults',
-      'homology_group':  'homologyGroupResults',
       'none': 'results'
     };
     let totalTargetsVals = {

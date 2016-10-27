@@ -16,7 +16,6 @@ import {
   selectGeneResults,
   selectGoResults,
   selectDiseaseResults,
-  selectHomologyGroupResults,
   selectGeneTotal,
   selectGoTotal,
   selectDiseaseTotal,
@@ -56,7 +55,6 @@ class MultiTableComponent extends Component {
     let geneUrl = this.getUrlByCategory('gene');
     let goUrl = this.getUrlByCategory('go');
     let diseaseUrl = this.getUrlByCategory('disease');
-    let homologyGroupUrl = this.getUrlByCategory('homology_group');
     this.props.dispatch(setPending(true));
     fetchData(geneUrl)
       .then( (geneData) => {
@@ -69,14 +67,7 @@ class MultiTableComponent extends Component {
     fetchData(diseaseUrl)
       .then( (diseaseData) => {
         this.props.dispatch(receiveResponse(diseaseData, this.props.queryParams, 'disease'));
-      })).then(
-    fetchData(homologyGroupUrl)
-      .then( (homologyGroupData) => {
-        this.props.dispatch(receiveResponse(homologyGroupData, this.props.queryParams, 'homology_group'));
-      })).then( () => {
-        this.props.dispatch(setError(false));
-        this.props.dispatch(setPending(false));
-      })
+      }))
       .catch( (e) => {
         this.props.dispatch(setPending(false));
         if (process.env.NODE_ENV === 'production') {
@@ -114,22 +105,12 @@ class MultiTableComponent extends Component {
     );
   }
 
-  renderHomologyGroup() {
-    return (
-      <div>
-        <p>{this.props.homologyGroupTotal.toLocaleString()} <CategoryLabel category='homology_group' /></p>
-        <ResultsTable activeCategory='homology_group' entries={this.props.homologyGroupResults} />
-      </div>
-    );
-  }
-
   render() {
     return (
       <div className={style.resultContainer}>
         {this.renderGenes()}
         {this.renderGo()}
         {this.renderDisease()}
-        {this.renderHomologyGroup()}
       </div>
     );
   }
@@ -141,7 +122,6 @@ MultiTableComponent.propTypes = {
   geneResults: React.PropTypes.array,
   goResults: React.PropTypes.array,
   diseaseResults: React.PropTypes.array,
-  homologyGroupResults: React.PropTypes.array,
   geneTotal: React.PropTypes.number,
   goTotal: React.PropTypes.number,
   diseaseTotal: React.PropTypes.number,
@@ -154,7 +134,6 @@ function mapStateToProps(state) {
     geneResults: selectGeneResults(state),
     goResults: selectGoResults(state),
     diseaseResults: selectDiseaseResults(state),
-    homologyGroupResults: selectHomologyGroupResults(state),
     geneTotal: selectGeneTotal(state),
     goTotal: selectGoTotal(state),
     diseaseTotal: selectDiseaseTotal(state),
