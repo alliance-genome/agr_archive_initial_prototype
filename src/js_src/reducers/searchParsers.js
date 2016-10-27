@@ -75,7 +75,7 @@ export function parseAggs(rawAggs, queryObject) {
 
 function parseCoordinates(d) {
   // make sure there is a chromosome identifiers
-  let chrom = d.gene_chromosomes;
+  let chrom = d.gene_chromosomes || [];
   chrom = chrom.filter( d => d );
   if (chrom.length !== 1) {
     return null;
