@@ -73,7 +73,9 @@ class Graph extends Component {
     force
       .nodes(nodes)
       .links(links)
-      .linkDistance(50)
+      .linkDistance( d => {
+        return 10;
+      })
       .on('tick', tick)
       .start();
     // setup font
@@ -88,10 +90,10 @@ class Graph extends Component {
         context.lineTo(d.target.x, d.target.y);
       });
       context.stroke();
-      context.fillStyle = 'black';
-      nodes.forEach(function(d) {
-        context.fillText(d.name, d.x + TEXT_OFFSET, d.y - TEXT_OFFSET);
-      });
+      // context.fillStyle = 'black';
+      // nodes.forEach(function(d) {
+      //   context.fillText(d.name, d.x + TEXT_OFFSET, d.y - TEXT_OFFSET);
+      // });
       // draw nodes
       nodes.forEach(function(d) {
         context.beginPath();

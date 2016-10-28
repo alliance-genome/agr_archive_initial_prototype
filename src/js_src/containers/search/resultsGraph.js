@@ -6,7 +6,8 @@ import { selectGraphData, selectQueryParams } from '../../selectors/searchSelect
 import fetchData from '../../lib/fetchData';
 import { receiveGraphResponse, setError, setPending } from './searchActions';
 import { SEARCH_API_ERROR_MESSAGE } from '../../constants';
-import Graph from '../../components/graph';
+// import Graph from '../../components/graph';
+import ChordDiagram from '../../components/chordDiagram';
 
 const BASE_SEARCH_URL = '/api/graph_search';
 
@@ -45,8 +46,8 @@ class ResultsGraphComponent extends Component {
 
   render() {
     return (
-      <div ref='container'>
-        <Graph data={this.props.data} />
+      <div ref='container' style={{ width: '100%', height: 600 }}>
+        <ChordDiagram data={this.props.data} />
       </div>
     );
   }

@@ -40,7 +40,7 @@ def graph_search():
         'Rattus norvegicus'
     ]
     # pick random number rn 100 - 800
-    rn = randint(100, 800)
+    rn = randint(100, 2000)
     # make rn nodes with random species
     nodes = []
     print rn
