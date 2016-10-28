@@ -31,9 +31,9 @@ webpack.init_app(app)
 def graph_search():
     graph_data = {
         'nodes': [
-            { 'name': 'abc1', 'id': 1 },
-            { 'name': 'xyz2', 'id': 2 },
-            { 'name': 'mmm4', 'id': 3 }
+            { 'name': 'abc1', 'id': 1, 'species': 'Mus musculus' },
+            { 'name': 'xyz2', 'id': 2, 'species': 'Danio rerio' },
+            { 'name': 'mmm4', 'id': 3, 'species': 'Saccharomyces cerevisiae' }
         ],
         'edges': [
             { 'source': 1, 'target': 2 },

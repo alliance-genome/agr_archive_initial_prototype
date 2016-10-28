@@ -7,6 +7,7 @@ import { push } from 'react-router-redux';
 
 import style from './style.css';
 import { getQueryParamWithValueChanged } from '../../../lib/searchHelpers';
+import getSpeciesColorScale from '../../../lib/getSpeciesColorScale';
 import CategoryLabel from '../categoryLabel';
 
 const DELIMITER = '@@';
@@ -33,6 +34,7 @@ class SingleFilterSelector extends Component {
 
   renderFilterValues() {
     let values = this.props.values.slice(0, this.state.numVisible);
+    let isGraphMode = (this.props.name === 'species' && this.props.queryParams.mode === 'graph');
     return values.map( d => {
       let classSuffix = d.isActive ? ' active' : '';
       let _key = `fv.${this.props.name}.${d.name}`;
@@ -44,12 +46,17 @@ class SingleFilterSelector extends Component {
       } else {
         nameNode = <span>{d.displayName}</span>;
       }
+      let dotNode = null;
+      if (isGraphMode) {
+        let color = getSpeciesColorScale()(d.name);
+        dotNode = <span className={style.colorDot} style={{ background: color }} />;
+      }
       let newQueryObj = getQueryParamWithValueChanged(this.props.name, d.key, this.props.queryParams);
       return (
         <li className='nav-item' key={_key}>
           <Link className={`nav-link${classSuffix}`} to={{ pathname: SEARCH_PATH, query: newQueryObj }}>
             <span className={style.aggLink}>
-              <span className={style.aggLinkLabel}>{nameNode}</span><span>{d.total.toLocaleString()}</span>
+              <span className={style.aggLinkLabel}>{dotNode}{nameNode}</span><span>{d.total.toLocaleString()}</span>
             </span>
           </Link>
         </li>
