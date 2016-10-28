@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 import style from './style.css';
 import CategoryLabel from './categoryLabel';
@@ -47,11 +48,14 @@ class ResultsList extends Component {
     if (homologs.length === 0) return null;
     let nodes = homologs.map( (d, i) => {
       let commaNode = (i === homologs.length - 1) ? null : ', ';
+      let tooltipNode = <Tooltip className='in' id='tooltip-top' placement='top'><i>{d.species}</i> type: {d.relationship_type}</Tooltip>;
       return (
         <span key={'h.' + i}>
-          <a href={d.href} target='_new'>
-            {d.symbol}
-          </a>
+          <OverlayTrigger overlay={tooltipNode} placement='top'>
+            <a href={d.href} target='_new'>
+              {d.symbol}
+            </a>
+          </OverlayTrigger>
           &nbsp;
           <a className={style.evidenceFootnote} href={d.evidence_href} target='_new'>
             {d.evidence_name}
