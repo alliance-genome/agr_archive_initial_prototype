@@ -109,9 +109,20 @@ function parseGeneResult(_d) {
     gene_type: makeFieldDisplayName(d.gene_type),
     species: d.species,
     highlight: d.highlights,
-    orthologs: d.orthologs || [],
+    homologs: parseLogs(d.homologs),
+    paralogs: parseLogs(d.paralogs),
     genomic_coordinates: parseCoordinates(_d)
   };
+}
+
+function parseLogs(logs) {
+  if (!logs) return null;
+  return logs.map( d => {
+    let famId = d.panther_family;
+    d.evidence_name = famId;
+    d.evidence_href = `http://pantherdb.org/panther/family.do?clsAccession=${famId}`;
+    return d;
+  });
 }
 
 function parseGoResult(_d) {
