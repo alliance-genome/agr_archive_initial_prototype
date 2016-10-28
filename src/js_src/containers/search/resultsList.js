@@ -41,39 +41,28 @@ class ResultsList extends Component {
     );
   }
 
-  renderOrthologs(orthologs, label) {
-    orthologs = orthologs || [];
-    label = label || 'Orthologs';
-    if (orthologs.length === 0) return null;
-    let nodes = orthologs.map( (d, i) => {
-      let commaNode = (i === orthologs.length - 1) ? null : ', ';
-      let evidences = d.evidences || [];
-      let evidenceNodes = evidences.map( (_d, _i) => {
-        let commaNode = (_i === evidences.length - 1) ? null : ', ';
-        return <span className={style.evidenceFootnote} key={`oe.${i}.${_i}`}>{_d.name}{commaNode}</span>;
-      });
+  renderHomologs(homologs, label) {
+    if (!homologs) return null;
+    label = label || 'Homologs';
+    if (homologs.length === 0) return null;
+    let nodes = homologs.map( (d, i) => {
+      let commaNode = (i === homologs.length - 1) ? null : ', ';
       return (
-        <span key={'ortho.' + i}>
-          <a href={d.href} target='_new'>{d.symbol}</a>{evidenceNodes}{commaNode}
+        <span key={'h.' + i}>
+          <a href={d.href} target='_new'>
+            {d.symbol}
+          </a>
+          &nbsp;
+          <a className={style.evidenceFootnote} href={d.evidence_href} target='_new'>
+            {d.evidence_name}
+          </a>
+          {commaNode}
         </span>
       );
     });
     return (
       <div className={style.detailContainer}>
         <span className={style.detailLabel}><strong>{label}:</strong> {nodes}</span>
-      </div>
-    );
-  }
-
-  renderHomologyGroup(d, i) {
-    let fields = [];
-    return (
-      <div className={style.resultContainer} key={`sr${i}`}>
-        {this.renderHeader(d)}
-        {this.renderDetailFromFields(d, fields)}
-        {this.renderHighlightedValues(d.highlight)}
-        {this.renderOrthologs(d.member_genes, 'Member Genes')}
-        <hr />
       </div>
     );
   }
@@ -90,7 +79,8 @@ class ResultsList extends Component {
             <span><a dangerouslySetInnerHTML={{ __html: d.gene_id }} href={d.sourceHref} target='_new' /></span>
           </div>
           {this.renderDetailFromFields(d, bottomFields)}
-          {this.renderOrthologs(d.orthologs)}
+          {this.renderHomologs(d.homologs)}
+          {this.renderHomologs(d.paralogs, 'Paralogs')}
           {this.renderHighlightedValues(d.highlight)}
         <hr />
       </div>
@@ -101,8 +91,6 @@ class ResultsList extends Component {
     return this.props.entries.map( (d, i) => {
       if (d.category === 'gene') {
         return this.renderGeneEntry(d, i);
-      } else if (d.category === 'homology_group') {
-        return this.renderHomologyGroup(d, i);
       } else {
         let fieldVals = {
           'disease': ['synonyms', 'omim_id'],

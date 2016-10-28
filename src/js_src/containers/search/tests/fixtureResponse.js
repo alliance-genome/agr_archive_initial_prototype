@@ -74,21 +74,13 @@ export default {
       "synonym": "YDR226W", 
       "type": null,
       "category": "gene",
-      "orthologs": [
+      "homologs": [
         {
-          "symbol": 'abc1',
-          "href": FIXTURE_HREF,
-          "evidences": [
-            { "name": 'PANTHER' }
-          ]
-        },
-        {
-          "symbol": 'xyz2',
-          "href": FIXTURE_HREF,
-          "evidences": [
-            { "name": 'PANTHER' },
-            { "name": 'DIOPT' }
-          ]
+          "symbol": "HGNC:957",
+          "href": "http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=HGNC:957",
+          "relationship_type": "LDO",
+          "species": "Homo sapiens",
+          "panther_family": "PTHR23212"
         }
       ]
     }, 
