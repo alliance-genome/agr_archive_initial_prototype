@@ -1,6 +1,7 @@
 from flask import Flask, render_template, send_from_directory, request, jsonify
 from flask_webpack import Webpack
 from gevent.wsgi import WSGIServer
+from random import randint
 
 import os
 
@@ -29,18 +30,50 @@ webpack.init_app(app)
 # TEMP
 @app.route('/api/graph_search')
 def graph_search():
-    graph_data = {
-        'nodes': [
-            { 'name': 'abc1', 'id': 1, 'species': 'Mus musculus' },
-            { 'name': 'xyz2', 'id': 2, 'species': 'Danio rerio' },
-            { 'name': 'mmm4', 'id': 3, 'species': 'Saccharomyces cerevisiae' }
-        ],
-        'edges': [
-            { 'source': 1, 'target': 2 },
-            { 'source': 2, 'target': 3 },
-            { 'source': 3, 'target': 1 }
-        ]
-    }
+    SPECIES = [
+        'Homo sapiens',
+        'Mus musculus',
+        'Danio rerio',
+        'Drosophila melanogaster',
+        'Saccharomyces cerevisiae',
+        'Caenorhabditis elegans',
+        'Rattus norvegicus'
+    ]
+    # pick random number rn 100 - 800
+    rn = randint(100, 800)
+    # make rn nodes with random species
+    nodes = []
+    print rn
+    for i in xrange(rn):
+        new_node = {
+            'name': 'abc' + str(i),
+            'id': i,
+            'species': SPECIES[randint(0, len(SPECIES) - 1)]
+        }
+        nodes.append(new_node)
+    # pick random number rl less than that for links
+    rl = randint(100, rn)
+    # make rl links to random places
+    edges = []
+    for _ in xrange(rl):
+        random_source = nodes[randint(0, len(nodes) - 1)]
+        random_target = nodes[randint(0, len(nodes) - 1)]
+        new_edge = { 'source': random_source['id'], 'target': random_target['id'] }
+        edges.append(new_edge)
+    
+    graph_data = { 'nodes': nodes, 'edges': edges }
+    # graph_data = {
+    #     'nodes': [
+    #         { 'name': 'abc1', 'id': 1, 'species': 'Mus musculus' },
+    #         { 'name': 'xyz2', 'id': 2, 'species': 'Danio rerio' },
+    #         { 'name': 'mmm4', 'id': 3, 'species': 'Saccharomyces cerevisiae' }
+    #     ],
+    #     'edges': [
+    #         { 'source': 1, 'target': 2 },
+    #         { 'source': 2, 'target': 3 },
+    #         { 'source': 3, 'target': 1 }
+    #     ]
+    # }
     return jsonify(graph_data)
 
 @app.route('/api/search')
@@ -143,7 +176,7 @@ def send_static(path):
 @app.route('/help')
 @app.route('/search')
 def react_render():
-        return render_template('index.jinja2')
+    return render_template('index.jinja2')
 
 if __name__ == '__main__':
     if os.environ.get('PRODUCTION', ''):

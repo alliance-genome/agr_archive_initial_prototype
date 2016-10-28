@@ -5,7 +5,7 @@ import d3 from 'd3';
 import getSpeciesColorScale from '../lib/getSpeciesColorScale';
 
 const DEFAULT_WIDTH = 600;
-const MAX_HEIGHT = 450;
+const MAX_HEIGHT = 750;
 const TEXT_OFFSET = 3;
 
 class Graph extends Component {
