@@ -4,6 +4,8 @@ import d3 from 'd3';
 
 import getSpeciesColorScale from '../lib/getSpeciesColorScale';
 
+const BAND_SIZE = 14;
+
 class ChordDiagram extends Component {
   constructor(props) {
     super(props);
@@ -34,68 +36,41 @@ class ChordDiagram extends Component {
     return null;
   }
 
-  // d3-fu like https://bl.ocks.org/mbostock/7607999
+  getChromData() {
+    if (!this.props.data) return null;
+    let data = this.props.data.meta;
+    if (!data) return [];
+    return data.map( d => {
+      return { name: d.name, length: d3.sum(d.chromosomes) };
+    });
+  }
+
   _renderSVG () {
     let colorScale = getSpeciesColorScale();
-    let size = this.state.DOMSize;
+    let size = 300;//this.state.DOMSize;
     if (!size) return;
+    let cData = this.getChromData();
     // create layout functions
     let diameter = size,
-      radius = diameter / 2,
-      innerRadius = radius - 75;
-    let cluster = d3.layout.cluster()
-      .size([360, innerRadius])
+      radius = diameter / 2;
+    const arc = d3.svg.arc()
+      .outerRadius(radius)
+      .innerRadius(radius - BAND_SIZE);
+    const pie = d3.layout.pie()
       .sort(null)
-      .value(function(d) { return d.size; });
-    let bundle = d3.layout.bundle();
-    let line = d3.svg.line.radial()
-      .interpolate('bundle')
-      .tension(0.85)
-      .radius(function(d) { return d.y; })
-      .angle(function(d) { return d.x / 180 * Math.PI; });
-    let sortedData = this.props.data.nodes.sort( (a, b) => {
-      return d3.ascending(a.species, b.species);
+      .value( d => d.length );
+    let svg = d3.select(this.refs.svg);
+    let chromArc = svg.selectAll('.chromArc')
+      .data(pie(cData));
+    chromArc.enter().append('path')
+      .attr({
+        class: 'chromArc',
+      });
+    chromArc.exit().remove();
+    chromArc.attr({
+      d: arc,
+      fill: ( d => colorScale(d.data.name) )
     });
-    // prepare data
-    let nodesData = cluster.nodes({ name: '', children: sortedData });
-
-    let links = this._packageEdges();
-    // d3 DOM rendering
-    let filteredNodesData = nodesData.filter(function(n) { return !n.children; });
-    let nodeTarget = d3.select(this.refs.nodeTarget);
-    let node = nodeTarget.selectAll('.c-node')
-      .data(filteredNodesData, ( d => d.name ));
-    node.exit().remove();
-    node
-      .enter().append('rect')
-      .attr('class', 'c-node');
-    node.transition()
-      .attr({
-        width: 4,
-        height: 4,
-        fill: ( d => colorScale(d.species)),
-        transform: function(d) {
-          return 'rotate(' + (d.x - 90) + ')translate(' + (d.y + 8) + ',0)' + (d.x < 180 ? '' : 'rotate(180)');
-        }
-      });
-    let link = nodeTarget.selectAll('.link-node')
-      .data(bundle(links));
-    link.enter().append('path')
-      .attr({
-        'class': 'link-node',
-        fill: 'none',
-        stroke: '#e2e2e2',
-        'stroke-dasharray': `${size} ${size}`,
-        'stroke-dashoffset': size,
-        d: line
-      });
-    link.exit().remove();
-    link.transition().duration(1000)
-      .attr({
-        'stroke-dasharray': `${size} 0`,
-        'stroke-dashoffset': 0,
-        d: line
-      });
   }
 
   _packageEdges() {

@@ -31,16 +31,35 @@ webpack.init_app(app)
 @app.route('/api/graph_search')
 def graph_search():
     SPECIES = [
-        'Homo sapiens',
-        'Mus musculus',
-        'Danio rerio',
-        'Drosophila melanogaster',
-        'Saccharomyces cerevisiae',
-        'Caenorhabditis elegans',
-        'Rattus norvegicus'
+        {
+            'name': 'Homo sapiens',
+            'chromosomes': [
+                500000,
+                100000,
+                1000000
+            ]
+        },
+        {
+            'name': 'Mus musculus',
+            'chromosomes': [
+                100000,
+                200000,
+                1200000,
+                40000
+            ]
+        },
+        {
+            'name': 'Danio rerio',
+            'chromosomes': [
+                50000,
+                1200000,
+                100000
+            ]
+        }
     ]
+
     # pick random number rn 100 - 800
-    rn = randint(100, 2000)
+    rn = randint(25, 100)
     # make rn nodes with random species
     nodes = []
     print rn
@@ -48,11 +67,11 @@ def graph_search():
         new_node = {
             'name': 'abc' + str(i),
             'id': i,
-            'species': SPECIES[randint(0, len(SPECIES) - 1)]
+            'species': SPECIES[randint(0, len(SPECIES) - 1)]['name']
         }
         nodes.append(new_node)
     # pick random number rl less than that for links
-    rl = randint(100, rn)
+    rl = randint(25, rn)
     # make rl links to random places
     edges = []
     for _ in xrange(rl):
@@ -61,19 +80,7 @@ def graph_search():
         new_edge = { 'source': random_source['id'], 'target': random_target['id'] }
         edges.append(new_edge)
     
-    graph_data = { 'nodes': nodes, 'edges': edges }
-    # graph_data = {
-    #     'nodes': [
-    #         { 'name': 'abc1', 'id': 1, 'species': 'Mus musculus' },
-    #         { 'name': 'xyz2', 'id': 2, 'species': 'Danio rerio' },
-    #         { 'name': 'mmm4', 'id': 3, 'species': 'Saccharomyces cerevisiae' }
-    #     ],
-    #     'edges': [
-    #         { 'source': 1, 'target': 2 },
-    #         { 'source': 2, 'target': 3 },
-    #         { 'source': 3, 'target': 1 }
-    #     ]
-    # }
+    graph_data = { 'nodes': nodes, 'edges': edges, 'meta': SPECIES }
     return jsonify(graph_data)
 
 @app.route('/api/search')
