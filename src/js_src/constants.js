@@ -18,9 +18,5 @@ export const CATEGORIES = [
   {
     name: 'disease',
     displayName: 'Diseases'
-  },
-  {
-    name: 'homology_group',
-    displayName: 'Homology Groups'
   }
 ];
