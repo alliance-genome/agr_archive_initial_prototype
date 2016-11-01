@@ -23,7 +23,7 @@ import {
   selectIsReady,
   selectQueryParams,
   selectResults,
-  selectPageSize,
+  selectPageSize
 } from '../../selectors/searchSelectors';
 
 const BASE_SEARCH_URL = '/api/search';
@@ -69,8 +69,8 @@ class SearchComponent extends Component {
   }
 
   renderResultsNode() {
-    if (this.props.isGraph) {
-      return <ResultsGraph />;
+    if (this.props.mode === 'graph' || this.props.mode === 'chord') {
+      return <ResultsGraph mode={this.props.mode} />;
     } else if (this.props.isMultiTable) {
       return <MultiTable />;
     } else if (this.props.isTable) {
@@ -120,10 +120,10 @@ SearchComponent.propTypes = {
   errorMessage: React.PropTypes.string,
   history: React.PropTypes.object,
   isError: React.PropTypes.bool,
-  isGraph: React.PropTypes.bool,
   isMultiTable: React.PropTypes.bool,
   isReady: React.PropTypes.bool,
   isTable: React.PropTypes.bool,
+  mode: React.PropTypes.string,
   pageSize: React.PropTypes.number,
   queryParams: React.PropTypes.object,
   results: React.PropTypes.array,
@@ -131,8 +131,8 @@ SearchComponent.propTypes = {
 
 function mapStateToProps(state) {
   let _queryParams = selectQueryParams(state);
-  let _isGraph = (_queryParams.mode === 'graph');
-  let _isTable = (_queryParams.mode === 'table');
+  let _mode = _queryParams.mode;
+  let _isTable = (_mode === 'table');
   let _currentPage = parseInt(_queryParams.page) || 1;
   let _activeCategory = selectActiveCategory(state);
   let _isMultiTable = (_isTable && _activeCategory === 'none');
@@ -141,10 +141,10 @@ function mapStateToProps(state) {
     currentPage: _currentPage,
     errorMessage: selectErrorMessage(state),
     isError: selectIsError(state),
-    isGraph: _isGraph,
     isMultiTable: _isMultiTable,
     isReady: selectIsReady(state),
     isTable: _isTable,
+    mode: _mode,
     pageSize: selectPageSize(state),
     queryParams: _queryParams,
     results: selectResults(state)

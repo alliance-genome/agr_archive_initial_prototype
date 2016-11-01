@@ -19,12 +19,16 @@ class SearchControlsComponent extends Component {
     let listQp = getQueryParamWithValueChanged('mode', 'list', this.props.queryParams);
     let tableQp = getQueryParamWithValueChanged('mode', 'table', this.props.queryParams);
     let graphQp = getQueryParamWithValueChanged('mode', 'graph', this.props.queryParams);
+    let chordQp = getQueryParamWithValueChanged('mode', 'chord', this.props.queryParams);
     let listHref = { pathname: SEARCH_PATH, query: listQp };
     let tableHref = { pathname: SEARCH_PATH, query: tableQp };
     let graphHref = { pathname: SEARCH_PATH, query: graphQp };
+    let chordHref = { pathname: SEARCH_PATH, query: chordQp };
     let graphNode = null;
+    let chordNode = null;
     if (this.props.canHaveGraph) {
       graphNode = <Link className={`btn btn-${(this.props.mode === 'graph') ? 'primary': 'secondary'}`} to={graphHref}><i className='fa fa-circle' /> Graph</Link>;
+      chordNode = <Link className={`btn btn-${(this.props.mode === 'chord') ? 'primary': 'secondary'}`} to={chordHref}><i className='fa fa-circle' /> Chord</Link>;
     }
     return (
       <div className={style.control}>
@@ -33,6 +37,7 @@ class SearchControlsComponent extends Component {
           <Link className={`btn btn-${(this.props.mode === 'list') ? 'primary': 'secondary'}`} to={listHref}><i className='fa fa-list' /> List</Link>
           <Link className={`btn btn-${(this.props.mode === 'table') ? 'primary': 'secondary'}`} to={tableHref}><i className='fa fa-table' /> Table</Link>
           {graphNode}
+          {chordNode}
         </div>
       </div>
     );

@@ -6,7 +6,6 @@ import getSpeciesColorScale from '../lib/getSpeciesColorScale';
 
 const DEFAULT_WIDTH = 600;
 const MAX_HEIGHT = 750;
-const TEXT_OFFSET = 3;
 
 class Graph extends Component {
   constructor(props) {
@@ -73,9 +72,7 @@ class Graph extends Component {
     force
       .nodes(nodes)
       .links(links)
-      .linkDistance( d => {
-        return 10;
-      })
+      .linkDistance(20)
       .on('tick', tick)
       .start();
     // setup font

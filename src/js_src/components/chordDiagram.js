@@ -52,10 +52,11 @@ class ChordDiagram extends Component {
     let cData = this.getChromData();
     // create layout functions
     let diameter = size,
-      radius = diameter / 2;
+      radius = diameter / 2,
+      innerRadius = radius - BAND_SIZE;
     const arc = d3.svg.arc()
       .outerRadius(radius)
-      .innerRadius(radius - BAND_SIZE);
+      .innerRadius(innerRadius);
     const pie = d3.layout.pie()
       .padAngle(0.05)
       .sort(null)
@@ -72,6 +73,62 @@ class ChordDiagram extends Component {
       d: arc,
       fill: ( d => colorScale(d.data.name) )
     });
+
+    let cluster = d3.layout.cluster()
+      .separation( (a, b) => {
+        return Math.random();
+      })
+      .size([360, innerRadius])
+      .sort(null);
+
+    let bundle = d3.layout.bundle();
+    let line = d3.svg.line.radial()
+      .interpolate('bundle')
+      .tension(0.85)
+      .radius(function(d) { return d.y; })
+      .angle(function(d) { return d.x / 180 * Math.PI; });
+    let sortedData = this.props.data.nodes.sort( (a, b) => {
+      return d3.ascending(a.species, b.species);
+    });
+    // prepare data
+    let nodesData = cluster.nodes({ name: '', children: sortedData });
+
+    let links = this._packageEdges();
+    // d3 DOM rendering
+    let filteredNodesData = nodesData.filter(function(n) { return !n.children; });
+    let node = nodeTarget.selectAll('.c-node')
+      .data(filteredNodesData, ( d => d.name ));
+    node.exit().remove();
+    node
+      .enter().append('rect')
+      .attr('class', 'c-node');
+    node.transition()
+      .attr({
+        width: 4,
+        height: 4,
+        fill: ( d => colorScale(d.species)),
+        transform: function(d) {
+          return 'rotate(' + (d.x - 90) + ')translate(' + (d.y + 8) + ',0)' + (d.x < 180 ? '' : 'rotate(180)');
+        }
+      });
+    let link = nodeTarget.selectAll('.link-node')
+      .data(bundle(links));
+    link.enter().append('path')
+      .attr({
+        'class': 'link-node',
+        fill: 'none',
+        stroke: '#e2e2e2',
+        'stroke-dasharray': `${size} ${size}`,
+        'stroke-dashoffset': size,
+        d: line
+      });
+    link.exit().remove();
+    link.transition().duration(1000)
+      .attr({
+        'stroke-dasharray': `${size} 0`,
+        'stroke-dashoffset': 0,
+        d: line
+      });
   }
 
   _packageEdges() {
