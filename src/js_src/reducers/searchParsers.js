@@ -149,7 +149,7 @@ function parseDiseaseResult(_d) {
     href: d.href,
     name: d.name,
     omim_id: d.id,
-    synonyms: d.synonym
+    synonyms: d.disease_synonyms
   };
 }
 
