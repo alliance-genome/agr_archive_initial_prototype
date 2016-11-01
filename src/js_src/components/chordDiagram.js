@@ -47,7 +47,7 @@ class ChordDiagram extends Component {
 
   _renderSVG () {
     let colorScale = getSpeciesColorScale();
-    let size = 300;//this.state.DOMSize;
+    let size = this.state.DOMSize;
     if (!size) return;
     let cData = this.getChromData();
     // create layout functions
@@ -57,10 +57,11 @@ class ChordDiagram extends Component {
       .outerRadius(radius)
       .innerRadius(radius - BAND_SIZE);
     const pie = d3.layout.pie()
+      .padAngle(0.05)
       .sort(null)
       .value( d => d.length );
-    let svg = d3.select(this.refs.svg);
-    let chromArc = svg.selectAll('.chromArc')
+    let nodeTarget = d3.select(this.refs.nodeTarget);
+    let chromArc = nodeTarget.selectAll('.chromArc')
       .data(pie(cData));
     chromArc.enter().append('path')
       .attr({
@@ -85,7 +86,7 @@ class ChordDiagram extends Component {
     return (
       <div ref='target' style={{ width: '100%', height: '100%' }}>
         <svg height={svgSize} ref='svg' width={svgSize} >
-          <g  className='node-target' ref='nodeTarget' transform={`translate(${halfSize},${halfSize})`} />
+          <g className='node-target' ref='nodeTarget' transform={`translate(${halfSize},${halfSize})`} />
         </svg>
       </div>
     );
