@@ -34,7 +34,8 @@ class SingleFilterSelector extends Component {
 
   renderFilterValues() {
     let values = this.props.values.slice(0, this.state.numVisible);
-    let isGraphMode = (this.props.name === 'species' && this.props.queryParams.mode === 'graph');
+    let mode = this.props.queryParams.mode;
+    let isGraphMode = (this.props.name === 'species' && (mode === 'graph' || mode === 'chord'));
     return values.map( d => {
       let classSuffix = d.isActive ? ' active' : '';
       let _key = `fv.${this.props.name}.${d.name}`;
