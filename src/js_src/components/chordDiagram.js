@@ -58,7 +58,7 @@ class ChordDiagram extends Component {
       .outerRadius(radius)
       .innerRadius(innerRadius);
     const pie = d3.layout.pie()
-      .padAngle(0.05)
+      .padAngle(0.005)
       .sort(null)
       .value( d => d.length );
     let nodeTarget = d3.select(this.refs.nodeTarget);
@@ -76,22 +76,25 @@ class ChordDiagram extends Component {
 
     let cluster = d3.layout.cluster()
       .separation( (a, b) => {
-        return Math.random();
+        return Math.abs(a.angle - b.angle);
       })
-      .size([360, innerRadius])
-      .sort(null);
+      .size([593, innerRadius - 15])
+      .sort(function(a, b){
+        return d3.ascending(a.angle, b.angle);
+      });
 
     let bundle = d3.layout.bundle();
     let line = d3.svg.line.radial()
       .interpolate('bundle')
       .tension(0.85)
       .radius(function(d) { return d.y; })
-      .angle(function(d) { return d.x / 180 * Math.PI; });
-    let sortedData = this.props.data.nodes.sort( (a, b) => {
-      return d3.ascending(a.species, b.species);
-    });
+      .angle(function(d) { return (d.x / 180 - 0.825) * Math.PI; });
+    let nodeData = this.getNodes()
+      .sort(function(a, b){
+        return d3.ascending(a.angle, b.angle);
+      });
     // prepare data
-    let nodesData = cluster.nodes({ name: '', children: sortedData });
+    let nodesData = cluster.nodes({ name: '', children: nodeData });
 
     let links = this._packageEdges();
     // d3 DOM rendering
@@ -108,7 +111,7 @@ class ChordDiagram extends Component {
         height: 4,
         fill: ( d => colorScale(d.species)),
         transform: function(d) {
-          return 'rotate(' + (d.x - 90) + ')translate(' + (d.y + 8) + ',0)' + (d.x < 180 ? '' : 'rotate(180)');
+          return 'rotate(' + (d.x + 122) + ')translate(' + (d.y + 8) + ',0)' + (d.x < 180 ? '' : 'rotate(180)');
         }
       });
     let link = nodeTarget.selectAll('.link-node')
@@ -129,6 +132,34 @@ class ChordDiagram extends Component {
         'stroke-dashoffset': 0,
         d: line
       });
+  }
+
+  // add an angle
+  getNodes() {
+    let chromData = this.getChromData();
+    if (!chromData.length) return [];
+    let genomes = this.getChromData().reduce( (prev, current, i) => {
+      let prevLength = 0;
+      if (prev.length) {
+        let prevItem = prev[i - 1];
+        prevLength = prevItem.previousLength + prevItem.length;
+      }
+      let newItem = current;
+      newItem.previousLength = prevLength;
+      prev.push(current);
+      return prev;
+    }, []);
+    let last = genomes[genomes.length - 1];
+    let maxLength = last.length + last.previousLength;
+    let angleScale = d3.scale.linear()
+      .domain([0, maxLength])
+      .range([0, Math.PI]);
+    return this.props.data.nodes.map( d => {
+      let chrom = genomes.filter( _d => _d.name === d.species )[0];
+      let totalChord = chrom.previousLength + d.start;
+      d.angle = angleScale(totalChord);
+      return d;
+    });
   }
 
   _packageEdges() {

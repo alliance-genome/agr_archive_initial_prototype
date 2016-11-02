@@ -30,7 +30,7 @@ webpack.init_app(app)
 # TEMP
 @app.route('/api/graph_search')
 def graph_search():
-    MAX_COORD = 500000
+    MAX_COORD = 100000
     SPECIES = [
         {
             'name': 'Homo sapiens',
@@ -57,11 +57,19 @@ def graph_search():
                 1200000,
                 100000
             ]
+        },
+                {
+            'name': 'Drosophila melanogaster',
+            'chromosomes': [
+                50000,
+                1200000,
+                100000
+            ]
         }
     ]
 
     # pick random number rn 100 - 800
-    rn = randint(25, 100)
+    rn = randint(25, 1000)
     # make rn nodes with random species
     nodes = []
     print rn
