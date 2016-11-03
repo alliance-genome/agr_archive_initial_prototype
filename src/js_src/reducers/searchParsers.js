@@ -1,8 +1,8 @@
-const NON_HIGHLIGHTED_FIELDS = ['id', 'sourceHref', 'href', 'category'];
 const JOIN_HIGHLIGHT_BY = '...';
 const FILTER_ORDER = ['gene_type', 'species'];
 
 import { makeFieldDisplayName } from '../lib/searchHelpers';
+import { NON_HIGHLIGHTED_FIELDS } from '../constants';
 
 // takes the fields in responseObj.highlights and replaces the shallow values in responseObj
 // also return highlight values as strings like '<em>val</em>...<em>val2</em>' instead of array
@@ -149,7 +149,7 @@ function parseDiseaseResult(_d) {
     href: d.href,
     name: d.name,
     omim_id: d.id,
-    synonyms: d.synonym
+    synonyms: d.disease_synonyms
   };
 }
 

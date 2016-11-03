@@ -1,7 +1,4 @@
 /*eslint-disable quotes */
-
-const FIXTURE_HREF = 'https://google.com';
-
 export default {
   "aggregations": [
     {
@@ -48,16 +45,6 @@ export default {
     }, 
     {
       "highlights": {
-        "name": [
-          "<em>Group</em>123"
-        ]
-      }, 
-      "href": "http://omim.org/entry/143100", 
-      "name": "Group 123", 
-      "synonym": "syn1243", 
-      "category": "ortholog group"
-    },     {
-      "highlights": {
         "go_names": [
           "adenylate <em>kinase</em> activity", 
           "<em>kinase</em> activity", 
@@ -65,6 +52,10 @@ export default {
         ], 
         "name": [
           "ADenylate <em>Kinase</em>"
+        ],
+        "homologs": [
+          "<em>HGNC:957</em>",
+          "<em>HGNC:957</em>"
         ]
       }, 
       "href": "http://www.yeastgenome.org/locus/S000002634/overview", 

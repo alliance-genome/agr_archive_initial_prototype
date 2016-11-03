@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 import style from './style.css';
 import CategoryLabel from './categoryLabel';
 import DetailList from './detailList';
+import LogList from './logList';
+import { NON_HIGHLIGHTED_FIELDS } from '../../constants';
 
 const DEFAULT_FIELDS = ['symbol', 'gene_symbol', 'name', 'gene_synonyms', 'synonyms', 'sourceHref', 'gene_id', 'species', 'type'];
 
@@ -11,7 +12,7 @@ class ResultsList extends Component {
   renderHighlightedValues(highlight) {
     let _data = highlight;
     let _fields = Object.keys(_data).filter( d => {
-      return (DEFAULT_FIELDS.indexOf(d) < 0);
+      return (DEFAULT_FIELDS.indexOf(d) < 0) && (NON_HIGHLIGHTED_FIELDS.indexOf(d) < 0);
     });
     return <DetailList data={_data} fields={_fields} />;
   }
@@ -42,38 +43,10 @@ class ResultsList extends Component {
     );
   }
 
-  renderHomologs(homologs, label) {
-    if (!homologs) return null;
-    label = label || 'Homologs';
-    if (homologs.length === 0) return null;
-    let nodes = homologs.map( (d, i) => {
-      let commaNode = (i === homologs.length - 1) ? null : ', ';
-      let tooltipNode = <Tooltip className='in' id='tooltip-top' placement='top'><i>{d.species}</i> type: {d.relationship_type}</Tooltip>;
-      return (
-        <span key={'h.' + i}>
-          <OverlayTrigger overlay={tooltipNode} placement='top'>
-            <a href={d.href} target='_new'>
-              {d.symbol}
-            </a>
-          </OverlayTrigger>
-          &nbsp;
-          <a className={style.evidenceFootnote} href={d.evidence_href} target='_new'>
-            {d.evidence_name}
-          </a>
-          {commaNode}
-        </span>
-      );
-    });
-    return (
-      <div className={style.detailContainer}>
-        <span className={style.detailLabel}><strong>{label}:</strong> {nodes}</span>
-      </div>
-    );
-  }
-
   renderGeneEntry(d, i) {
     let topFields = ['name', 'synonyms'];
     let bottomFields = ['species', 'gene_type'];
+    let logHighlight = d.highlight['homologs.symbol'] || d.highlight['homologs.panther_family'];
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
         {this.renderHeader(d)}
@@ -83,8 +56,7 @@ class ResultsList extends Component {
             <span><a dangerouslySetInnerHTML={{ __html: d.gene_id }} href={d.sourceHref} target='_new' /></span>
           </div>
           {this.renderDetailFromFields(d, bottomFields)}
-          {this.renderHomologs(d.homologs)}
-          {this.renderHomologs(d.paralogs, 'Paralogs')}
+          <LogList label='Homologs' logs={d.homologs} rawHighlight={logHighlight} />
           {this.renderHighlightedValues(d.highlight)}
         <hr />
       </div>

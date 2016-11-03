@@ -20,3 +20,5 @@ export const CATEGORIES = [
     displayName: 'Diseases'
   }
 ];
+
+export const NON_HIGHLIGHTED_FIELDS = ['id', 'sourceHref', 'href', 'category', 'homologs', 'paralogs', 'orthologs', 'homologs.symbol', 'homologs.panther_family'];
