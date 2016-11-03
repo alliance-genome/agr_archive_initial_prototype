@@ -13,7 +13,7 @@ from search import build_search_query, build_es_search_body_request, \
 
 
 es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
-ES_INDEX = 'searchable_items_blue'
+ES_INDEX = 'searchable_test'
 
 app = Flask(__name__)
 
@@ -40,7 +40,7 @@ def search():
         "disease": ['disease_species', 'disease_genes']
     }
 
-    search_fields = ['id', 'name', 'gene_symbol', 'gene_synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs.symbol']
+    search_fields = ['id', 'name', 'gene_symbol', 'gene_synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs.symbol', 'homologs.panther_family']
 
     json_response_fields = ['name', 'gene_symbol', 'gene_synonyms', 'gene_type', 'gene_chromosomes','gene_chromosome_starts', 'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs', 'category', 'href', 'id']
 
