@@ -95,8 +95,8 @@ def build_es_search_body_request(query, category, es_query, json_response_fields
     return es_search_body
 
 
-def build_search_query(query, fields, category, category_filters, args):
-    es_query = build_search_params(query, fields)
+def build_search_query(query, search_fields, category, category_filters, args):
+    es_query = build_search_params(query, search_fields)
 
     if category == '':
         return es_query
@@ -124,12 +124,7 @@ def build_search_query(query, fields, category, category_filters, args):
     return query
 
 
-def build_search_params(query, fields):
-    for special_char in ['-', '.']:
-        if special_char in query:
-            query = "\"" + query + "\""
-            break
-
+def build_search_params(query, search_fields):
     if query is "":
         es_query = {"match_all": {}}
     else:
@@ -149,59 +144,34 @@ def build_search_params(query, fields):
                     "multi_match": {
                         "query": query,
                         "type": "phrase_prefix",
-                        "fields": fields,
+                        "fields": search_fields,
                         "boost": 3
                     }
                 }
             ]
         else:
-            es_query['dis_max']['queries'] = [
-                {
-                    "term": {
-                        "name.simple": {
-                            "value": query,
-                            "boost": 100
-                        }
-                    }
-                },
-                {
-                    "term": {
-                        "gene_symbol.simple": {
-                            "value": query,
-                            "boost": 100
-                        }
-                    }
-                },
-                {
-                    "multi_match": {
-                        "query": query,
-                        "type": "most_fields",
-                        "fields": fields + ['name.fulltext^2'],
-                        "boost": 25
-                    }
-                },
-                {
-                    "match_phrase_prefix": {
-                        "name": {
-                            "query": query,
-                            "analyzer": "standard",
-                            "max_expansions": 30,
-                            "boost": 1
-                        }
-                    }
-                },
-                {
-                    "match_phrase_prefix": {
-                        "gene_symbol": {
-                            "query": query,
-                            "analyzer": "standard",
-                            "max_expansions": 30,
-                            "boost": 1
-                        }
-                    }
+            es_query['dis_max']['queries'] = []
+
+            custom_boosts = {
+                "id": 120,
+                "gene_symbol": 120,
+                "name": 120
+            }
+
+            for field in search_fields:
+                match = {}
+                match[field] = {
+                    'query': query,
+                    'boost': custom_boosts.get(field, 100)
                 }
 
-            ]
+                partial_match = {}
+                partial_match[field.split(".")[0]] = {
+                    'query': query
+                }
+
+                es_query['dis_max']['queries'].append({'match': match})
+                es_query['dis_max']['queries'].append({'match_phrase_prefix': partial_match})
 
     return es_query
 
@@ -241,7 +211,7 @@ def build_autocomplete_search_body_request(query, category='gene', field='name_k
                         "match": {
                             "category": {
                                 "query": "gene",
-                                "boost": 4
+                                "boost": 2
                             }
                         }
                     }
