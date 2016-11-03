@@ -21,4 +21,4 @@ export const CATEGORIES = [
   }
 ];
 
-export const NON_HIGHLIGHTED_FIELDS = ['id', 'sourceHref', 'href', 'category', 'homologs', 'paralogs', 'orthologs', 'homologs.symbol', 'homologs.panther_family'];
+export const NON_HIGHLIGHTED_FIELDS = ['sourceHref', 'href', 'category', 'homologs', 'paralogs', 'orthologs', 'homologs.symbol', 'homologs.panther_family'];

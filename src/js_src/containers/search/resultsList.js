@@ -6,7 +6,7 @@ import DetailList from './detailList';
 import LogList from './logList';
 import { NON_HIGHLIGHTED_FIELDS } from '../../constants';
 
-const DEFAULT_FIELDS = ['symbol', 'gene_symbol', 'name', 'gene_synonyms', 'synonyms', 'sourceHref', 'gene_id', 'species', 'type'];
+const DEFAULT_FIELDS = ['symbol', 'gene_symbol', 'name', 'gene_synonyms', 'synonyms', 'sourceHref', 'id', 'species', 'type'];
 
 class ResultsList extends Component {
   renderHighlightedValues(highlight) {
@@ -53,7 +53,7 @@ class ResultsList extends Component {
           {this.renderDetailFromFields(d, topFields)}
           <div className={style.detailContainer}>
             <span className={style.detailLabel}><strong>Source:</strong> </span>
-            <span><a dangerouslySetInnerHTML={{ __html: d.gene_id }} href={d.sourceHref} target='_new' /></span>
+            <span><a dangerouslySetInnerHTML={{ __html: d.id }} href={d.sourceHref} target='_new' /></span>
           </div>
           {this.renderDetailFromFields(d, bottomFields)}
           <LogList label='Homologs' logs={d.homologs} rawHighlight={logHighlight} />

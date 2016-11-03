@@ -103,7 +103,7 @@ function parseGeneResult(_d) {
     display_name: d.gene_symbol,
     href: d.href,
     name: d.name,
-    gene_id: d.id || '(no ID)',
+    id: d.id || '(no ID)',
     sourceHref: d.href,
     synonyms: d.gene_synonyms,
     gene_type: makeFieldDisplayName(d.gene_type),
