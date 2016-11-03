@@ -72,7 +72,7 @@ class ResultsTable extends Component {
         case 'symbol':
           return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d[field] }} href={d.href} target='_new' /></td>;
         case 'source':
-          return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d.gene_id }} href={d.href} target='_new' /></td>;
+          return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d.id }} href={d.href} target='_new' /></td>;
         case MATCH_LABEL:
           return <td key={_key}>{this.renderHighlight(d.highlight, d.homologs)}</td>;
         case 'species':
