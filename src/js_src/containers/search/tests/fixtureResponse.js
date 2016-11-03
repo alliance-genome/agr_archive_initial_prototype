@@ -54,6 +54,7 @@ export default {
           "ADenylate <em>Kinase</em>"
         ],
         "homologs": [
+          "<em>HGNC:957</em>",
           "<em>HGNC:957</em>"
         ]
       }, 

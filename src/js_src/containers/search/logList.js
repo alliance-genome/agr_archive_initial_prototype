@@ -1,10 +1,23 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 import style from './style.css';
 const DEFAULT_LABEL = 'Homologs';
+const HIGHLIGHT_EL = 'em';
+import { selectQueryParams } from '../../selectors/searchSelectors';
 
-class LogList extends Component {
+class LogListComponent extends Component {
+  renderLabel(raw) {
+    if (this.props.rawHighlight) {
+      let q = this.props.query;
+      let re = new RegExp(q, 'gi');
+      let htmlStr = raw.replace(re, `<${HIGHLIGHT_EL}>${q}</${HIGHLIGHT_EL}>`);
+      return <span dangerouslySetInnerHTML={{ __html: htmlStr }} />;
+    }
+    return raw;
+  }
+
   render() {
     let logs = this.props.logs;
     let label = this.props.label;
@@ -18,12 +31,12 @@ class LogList extends Component {
         <span key={'h.' + i}>
           <OverlayTrigger overlay={tooltipNode} placement='top'>
             <a href={d.href} target='_new'>
-              {d.symbol}
+              {this.renderLabel(d.symbol)}
             </a>
           </OverlayTrigger>
           &nbsp;
           <a className={style.evidenceFootnote} href={d.evidence_href} target='_new'>
-            {d.evidence_name}
+            {this.renderLabel(d.evidence_name)}
           </a>
           {commaNode}
         </span>
@@ -37,10 +50,18 @@ class LogList extends Component {
   }
 }
 
-LogList.propTypes = {
+LogListComponent.propTypes = {
   label: React.PropTypes.string,
-  logs: React.PropTypes.array
-
+  logs: React.PropTypes.array,
+  query: React.PropTypes.string,
+  rawHighlight: React.PropTypes.string
 };
 
-export default LogList;
+function mapStateToProps(state) {
+  let qp = selectQueryParams(state);
+  return {
+    query: qp.q || ''
+  };
+}
+
+export default connect(mapStateToProps)(LogListComponent);

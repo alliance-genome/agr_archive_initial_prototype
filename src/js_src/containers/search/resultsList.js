@@ -55,8 +55,8 @@ class ResultsList extends Component {
             <span><a dangerouslySetInnerHTML={{ __html: d.gene_id }} href={d.sourceHref} target='_new' /></span>
           </div>
           {this.renderDetailFromFields(d, bottomFields)}
-          <LogList label='Homologs' logs={d.homologs} />
-          <LogList label='Paralogs' logs={d.paralogs} />
+          <LogList label='Homologs' logs={d.homologs} rawHighlight={d.highlight.homologs} />
+          <LogList label='Paralogs' logs={d.paralogs} rawHighlight={d.highlight.paralogs} />
           {this.renderHighlightedValues(d.highlight)}
         <hr />
       </div>

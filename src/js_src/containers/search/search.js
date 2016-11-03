@@ -33,16 +33,16 @@ const BASE_SEARCH_URL = '/api/search';
 class SearchComponent extends Component {
   // fetch data at start
   componentDidMount() {
-    // this.fetchFixtureData(); // uncomment to use fixture mode
-    this.fetchSearchData();
+    this.fetchFixtureData(); // uncomment to use fixture mode
+    // this.fetchSearchData();
   }
 
-  // fetch data whenever URL changes within /search
-  componentDidUpdate (prevProps) {
-    if (prevProps.queryParams !== this.props.queryParams) {
-      this.fetchSearchData();
-    }
-  }
+  // // fetch data whenever URL changes within /search
+  // componentDidUpdate (prevProps) {
+  //   if (prevProps.queryParams !== this.props.queryParams) {
+  //     this.fetchSearchData();
+  //   }
+  // }
 
   fetchFixtureData() {
     this.props.dispatch(receiveResponse(fixtureResponse, this.props.queryParams));
