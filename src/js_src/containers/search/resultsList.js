@@ -46,6 +46,7 @@ class ResultsList extends Component {
   renderGeneEntry(d, i) {
     let topFields = ['name', 'synonyms'];
     let bottomFields = ['species', 'gene_type'];
+    let logHighlight = d.highlight['homologs.symbol'] || d.highlight['homologs.panther_family'];
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
         {this.renderHeader(d)}
@@ -55,8 +56,7 @@ class ResultsList extends Component {
             <span><a dangerouslySetInnerHTML={{ __html: d.gene_id }} href={d.sourceHref} target='_new' /></span>
           </div>
           {this.renderDetailFromFields(d, bottomFields)}
-          <LogList label='Homologs' logs={d.homologs} rawHighlight={d.highlight.homologs} />
-          <LogList label='Paralogs' logs={d.paralogs} rawHighlight={d.highlight.paralogs} />
+          <LogList label='Homologs' logs={d.homologs} rawHighlight={logHighlight} />
           {this.renderHighlightedValues(d.highlight)}
         <hr />
       </div>
