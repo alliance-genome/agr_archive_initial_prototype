@@ -208,8 +208,7 @@ def build_autocomplete_search_body_request(query, category='gene', field='name_k
                 "must": [{
                     "match": {
                         "name_key.autocomplete": {
-                            "query": query,
-                            "analyzer": "standard"
+                            "query": query
                         }
                     }
                 }],
