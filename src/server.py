@@ -9,7 +9,7 @@ from elasticsearch import Elasticsearch
 from search import build_search_query, build_es_search_body_request, \
     build_es_aggregation_body_request, format_search_results, \
     format_aggregation_results, build_autocomplete_search_body_request, \
-    format_autocomplete_results
+    format_autocomplete_results, graph_visualization
 
 
 es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
@@ -60,37 +60,11 @@ def graph_search():
         preference='p_'+query
     )
 
-    search_results_formatted = format_search_results(search_results, json_response_fields)
-
-    nodes = {}
-    edges = []
-    for result in search_results_formatted:
-        if result["href"] not in nodes:
-            nodes[result["href"]] = {
-                "name": result["gene_symbol"],
-                "id": result["href"],
-                "species": result["species"],
-                "direct": True
-            }
-
-            for homolog in result["homologs"]:
-                if homolog["href"] not in nodes:
-                    nodes[homolog["href"]] = {
-                        "name": homolog["symbol"],
-                        "id": homolog["href"],
-                        "species": homolog["species"],
-                        "direct": False
-                    }
-
-                edges.append({
-                    "source": result["href"],
-                    "target": homolog["href"]
-                })
-
-    return jsonify({
-        "nodes": [nodes[k] for k in nodes],
-        "edges": edges
-    })
+    return jsonify(
+        graph_visualization(
+            format_search_results(search_results, json_response_fields)
+        )
+    )
 
 
 @app.route('/api/search')
