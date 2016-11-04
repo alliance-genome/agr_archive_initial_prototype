@@ -72,7 +72,7 @@ class ResultsList extends Component {
       } else {
         let fieldVals = {
           'disease': ['synonyms', 'omim_id'],
-          'go': ['synonyms', 'go_branch']
+          'go': ['id', 'synonyms', 'go_branch']
         };
         let fields = fieldVals[d.category] || [];
         return this.renderNonGeneEntry(d, i, fields);
