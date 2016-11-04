@@ -1,7 +1,9 @@
 from intermine.webservice import Service
+from mod import MOD
 
 
-class ZFin():
+class ZFin(MOD):
+    species = "Danio rerio"
     service = Service("http://www.zebrafishmine.org/service")
 
     @staticmethod
@@ -9,7 +11,13 @@ class ZFin():
         return "http://zfin.org/" + gene_id
 
     @staticmethod
-    def load_genes(genes):
+    def gene_id_from_panther(panther_id):
+        # example: ZFIN=ZDB-GENE-050522-480
+        return panther_id.split("=")[1]
+
+    def load_genes(self):
+        genes = MOD.genes
+
         query = ZFin.service.new_query("Gene")
         query.add_view(
             "name", "symbol", "primaryIdentifier", "organism.species",
@@ -19,13 +27,16 @@ class ZFin():
         )
         query.add_constraint("organism.species", "=", "rerio", code = "A")
         query.add_constraint("sequenceOntologyTerm.name", "=", "gene", code = "B")
+        query.add_constraint("synonyms.value", "!=", "ZDB-*", code = "C")
         query.outerjoin("crossReferences")
         query.outerjoin("chromosomes")
-        query.outerjoin("synonyms")
 
         print("Fetching gene data from ZebraFishMine...")
 
         for row in query.rows():
+            if row["symbol"] is None:
+                continue
+
             if row["crossReferences.linkType"]:
                 cross_reference_link_type = row["crossReferences.linkType"]
             else:
@@ -37,37 +48,47 @@ class ZFin():
                 cross_reference_id = ""
 
             if row["primaryIdentifier"] in genes:
-                if row["synonyms.value"] is not None:
+                if row["synonyms.value"] is not None and row["synonyms.value"] not in genes[row["primaryIdentifier"]]["gene_synonyms"]:
                     genes[row["primaryIdentifier"]]["gene_synonyms"].append(row["synonyms.value"])
                 elif row["crossReferences.identifier"] is not None:
                     genes[row["primaryIdentifier"]]["external_ids"].append(cross_reference_link_type + " " + cross_reference_id)
-                elif row["chromosomes.name"] is not None:
+                elif row["chromosomes.name"] is not None and row["chromosomes.name"] not in genes[row["primaryIdentifier"]]["gene_chromosomes"]:
                     genes[row["primaryIdentifier"]]["gene_chromosomes"].append(row["chromosomes.name"])
             else:
+                synonyms = []
+                if row["synonyms.value"]:
+                    synonyms = [row["synonyms.value"]]
+
+                chromosomes = []
+                if row["chromosomes.name"]:
+                    chromosomes = [row["chromosomes.name"]]
+
                 genes[row["primaryIdentifier"]] = {
                     "gene_symbol": row["symbol"],
                     "name": row["name"],
                     "description": None, # not present in ZFinMine
-                    "gene_synonyms": [row["synonyms.value"]],
+                    "gene_synonyms": synonyms,
                     "gene_type": row["sequenceOntologyTerm.name"],
-                    "gene_chromosomes": [row["chromosomes.name"]],
+                    "gene_chromosomes": chromosomes,
                     "gene_chromosome_starts": None,
                     "gene_chromosome_ends": None,
                     "gene_chromosome_strand": None,
                     "external_ids": [cross_reference_link_type + " " + cross_reference_id],
-                    "species": "Danio renio",
+                    "species": "Danio rerio",
 
                     "gene_biological_process": [],
                     "gene_molecular_function": [],
                     "gene_cellular_component": [],
 
-                    "name_key": row["symbol"],
+                    "homologs": [],
+
+                    "name_key": row["symbol"].lower(),
+                    "id": row["primaryIdentifier"],
                     "href": ZFin.gene_href(row["primaryIdentifier"]),
                     "category": "gene"
                 }
 
-    @staticmethod
-    def load_go(genes, go):
+    def load_go(self):
         query = ZFin.service.new_query("Gene")
         query.add_view(
             "name", "primaryIdentifier", "symbol",
@@ -79,35 +100,9 @@ class ZFin():
         print ("Fetching go data from ZebraFishMine...")
 
         for row in query.rows():
-            if row["goAnnotation.ontologyTerm.identifier"] in ("GO:0008150", "GO:0003674", "GO:0005575"):
-                continue
+            self.add_go_annotation_to_gene(gene_id=row["primaryIdentifier"], go_id=row["goAnnotation.ontologyTerm.identifier"])
 
-            gene = None
-            if row["primaryIdentifier"] in genes and genes[row["primaryIdentifier"]]["gene_symbol"]:
-                gene = genes[row["primaryIdentifier"]]["gene_symbol"].upper()
-
-            if row["goAnnotation.ontologyTerm.identifier"] in go:
-                if gene:
-                    go[row["goAnnotation.ontologyTerm.identifier"]]["go_genes"].append(gene)
-                go[row["goAnnotation.ontologyTerm.identifier"]]["go_species"].append("Danio renio")
-            else:
-                go[row["goAnnotation.ontologyTerm.identifier"]] = {
-                    "name": row["goAnnotation.ontologyTerm.name"],
-                    "go_type": row["goAnnotation.ontologyTerm.namespace"],
-                    "go_genes": [gene],
-                    "go_species": ["Danio renio"],
-
-                    "name_key": row["goAnnotation.ontologyTerm.name"],
-                    "href": "http://amigo.geneontology.org/amigo/term/" + row["goAnnotation.ontologyTerm.identifier"],
-                    "category": "go"
-                }
-
-            if row["primaryIdentifier"] in genes:
-                if row["goAnnotation.ontologyTerm.namespace"]:
-                    genes[row["primaryIdentifier"]]["gene_" + row["goAnnotation.ontologyTerm.namespace"]].append(row["goAnnotation.ontologyTerm.name"])
-
-    @staticmethod
-    def load_diseases(genes, diseases):
+    def load_diseases(self):
         query = ZFin.service.new_query("OmimPhenotype")
         query.add_view(
             "disease", "phenotypeLink.identifier", "phenotypeLink.linkType",
@@ -118,16 +113,5 @@ class ZFin():
         print ("Fetching disease data from ZebraFishMine...")
 
         for row in query.rows():
-            if row["phenotypeLink.identifier"] in diseases:
-                diseases[row["phenotypeLink.identifier"]]["disease_genes"].append(row["genes.symbol"])
-                diseases[row["phenotypeLink.identifier"]]["disease_species"].append("Danio renio")
-            else:
-                diseases[row["phenotypeLink.identifier"]] = {
-                    "name": row["disease"],
-                    "disease_genes": [row["genes.symbol"]],
-                    "disease_species": ["Danio renio"],
-
-                    "name_key": row["disease"],
-                    "href": "http://omim.org/entry/" + str(row["phenotypeLink.identifier"]),
-                    "category": "disease"
-                }
+            if row["phenotypeLink.identifier"] is not None:
+                self.add_disease_annotation_to_gene(gene_id=row["genes.primaryIdentifier"], omim_id="OMIM:"+row["phenotypeLink.identifier"])

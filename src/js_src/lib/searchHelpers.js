@@ -30,6 +30,8 @@ export function makeFieldDisplayName(unformattedName) {
   case 'disease_species':
   case 'go_species':
     return 'Associated Species';
+  case 'id':
+    return 'ID';
   default:
     return unformattedName.replace(/_/g, ' ');
   }

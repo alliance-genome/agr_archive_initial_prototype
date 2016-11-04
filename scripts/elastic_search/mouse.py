@@ -1,8 +1,9 @@
+from mod import MOD
 from intermine.webservice import Service
-import mod
 
 
-class Mouse():
+class MGI(MOD):
+    species = "Mus musculus"
     service = Service("http://www.mousemine.org/mousemine/service")
 
     @staticmethod
@@ -10,8 +11,14 @@ class Mouse():
         return "http://www.informatics.jax.org/marker/" + gene_id
 
     @staticmethod
-    def load_genes(genes):
-        query = Mouse.service.new_query("Gene")
+    def gene_id_from_panther(panther_id):
+        # example: MGI=MGI=1924210
+        return ":".join(panther_id.split("=")[1:]).strip()
+
+    def load_genes(self):
+        genes = MOD.genes
+
+        query = MGI.service.new_query("Gene")
         query.add_view(
             "primaryIdentifier", "symbol", "name", "description",
             "sequenceOntologyTerm.name", "organism.shortName",
@@ -42,20 +49,28 @@ class Mouse():
                 cross_reference_id = ""
 
             if row["primaryIdentifier"] in genes:
-                if row["synonyms.value"] is not None:
+                if row["synonyms.value"]:
                     genes[row["primaryIdentifier"]]["gene_synonyms"].append(row["synonyms.value"])
-                elif row["crossReferences.identifier"] is not None:
+                if row["crossReferences.identifier"]:
                     genes[row["primaryIdentifier"]]["external_ids"].append(cross_reference_link_type + " " + cross_reference_id)
-                elif row["chromosomes.name"] is not None:
-                    genes[row["primaryIdentifier"]]["gene_chromosomes"].append(row["chromosomes.name"])
+                if row["chromosomeLocation.locatedOn.primaryIdentifier"] and row["chromosomeLocation.locatedOn.primaryIdentifier"] not in genes[row["primaryIdentifier"]]["gene_chromosomes"]:
+                    genes[row["primaryIdentifier"]]["gene_chromosomes"].append(row["chromosomeLocation.locatedOn.primaryIdentifier"])
             else:
+                synonyms = []
+                if row["synonyms.value"]:
+                    synonyms.append(row["synonyms.value"])
+
+                chromosomes = []
+                if row["chromosomeLocation.locatedOn.primaryIdentifier"]:
+                    chromosomes = [row["chromosomeLocation.locatedOn.primaryIdentifier"]]
+
                 genes[row["primaryIdentifier"]] = {
                     "gene_symbol": row["symbol"],
                     "name": row["name"],
                     "description": row["description"],
-                    "gene_synonyms": [row["synonyms.value"]],
+                    "gene_synonyms": synonyms,
                     "gene_type": row["sequenceOntologyTerm.name"],
-                    "gene_chromosomes": [row["chromosomeLocation.locatedOn.primaryIdentifier"]],
+                    "gene_chromosomes": chromosomes,
                     "gene_chromosome_starts": row["chromosomeLocation.start"],
                     "gene_chromosome_ends": row["chromosomeLocation.end"],
                     "gene_chromosome_strand": row["chromosomeLocation.strand"],
@@ -66,14 +81,16 @@ class Mouse():
                     "gene_molecular_function": [],
                     "gene_cellular_component": [],
 
-                    "name_key": row["symbol"],
-                    "href": Mouse.gene_href(row["primaryIdentifier"]),
+                    "homologs": [],
+
+                    "name_key": row["symbol"].lower(),
+                    "id": row["primaryIdentifier"],
+                    "href": MGI.gene_href(row["primaryIdentifier"]),
                     "category": "gene"
                 }
 
-    @staticmethod
-    def load_go(genes, go):
-        query = Mouse.service.new_query("GOTerm")
+    def load_go(self):
+        query = MGI.service.new_query("GOTerm")
         query.add_constraint("ontologyAnnotations.subject", "SequenceFeature")
         query.add_view(
             "identifier", "name", "namespace", "ontologyAnnotations.qualifier",
@@ -87,37 +104,10 @@ class Mouse():
         print ("Fetching go data from MouseMine...")
 
         for row in query.rows():
-            if row["identifier"] in ("GO:0008150", "GO:0003674", "GO:0005575"):
-                continue
+            self.add_go_annotation_to_gene(gene_id=row["ontologyAnnotations.subject.primaryIdentifier"], go_id=row["identifier"])
 
-            gene = None
-            if row["ontologyAnnotations.subject.primaryIdentifier"] and row["ontologyAnnotations.subject.symbol"]:
-                gene = row["ontologyAnnotations.subject.symbol"].upper()
-
-            if row["identifier"] in go:
-                if gene:
-                    go[row["identifier"]]["go_genes"].append(gene)
-
-                if "Mus musculus" not in go[row["identifier"]]["go_species"]:
-                    go[row["identifier"]]["go_species"].append("Mus musculus")
-            else:
-                go[row["identifier"]] = {
-                    "name": row["name"],
-                    "go_type": row["namespace"],
-                    "go_genes": [gene],
-                    "go_species": ["Mus musculus"],
-
-                    "name_key": row["name"],
-                    "href": "http://amigo.geneontology.org/amigo/term/" + row["identifier"],
-                    "category": "go"
-                }
-
-            if row["namespace"] and row["ontologyAnnotations.subject.primaryIdentifier"] and row["ontologyAnnotations.subject.primaryIdentifier"] in genes:
-                genes[row["ontologyAnnotations.subject.primaryIdentifier"]]["gene_" + row["namespace"]].append(row["name"])
-
-    @staticmethod
-    def load_diseases(gene, diseases):
-        query = Mouse.service.new_query("OMIMTerm")
+    def load_diseases(self):
+        query = MGI.service.new_query("OMIMTerm")
         query.add_constraint("ontologyAnnotations.subject", "SequenceFeature")
         query.add_view(
             "identifier", "name", "synonyms.name", "synonyms.type",
@@ -132,21 +122,4 @@ class Mouse():
         print ("Fetching disease data from MouseMine...")
 
         for row in query.rows():
-            if row["identifier"] in diseases:
-                if row["ontologyAnnotations.subject.symbol"]:
-                    diseases[row["identifier"]]["disease_genes"].append(row["ontologyAnnotations.subject.symbol"].upper())
-
-                diseases[row["identifier"]]["disease_species"].append("Mus musculus")
-            else:
-                diseases[row["identifier"]] = {
-                    "name": row["name"],
-                    "disease_genes": [],
-                    "disease_species": ["Mus musculus"],
-
-                    "name_key": row["name"],
-                    "href": "http://omim.org/entry/" + str(row["identifier"]),
-                    "category": "disease"
-                }
-
-                if row["ontologyAnnotations.subject.symbol"]:
-                    diseases[row["identifier"]]["disease_genes"].append(row["ontologyAnnotations.subject.symbol"].upper())
+            self.add_disease_annotation_to_gene(gene_id=row["ontologyAnnotations.subject.primaryIdentifier"], omim_id=row["identifier"])

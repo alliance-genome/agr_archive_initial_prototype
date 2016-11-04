@@ -1,26 +1,28 @@
 import React, { Component } from 'react';
-import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 import style from './style.css';
 import CategoryLabel from './categoryLabel';
 import DetailList from './detailList';
+import LogList from './logList';
+import { NON_HIGHLIGHTED_FIELDS } from '../../constants';
 
-const DEFAULT_FIELDS = ['symbol', 'gene_symbol', 'name', 'gene_synonyms', 'synonyms', 'sourceHref', 'gene_id', 'species', 'type'];
+const DEFAULT_FIELDS = ['symbol', 'gene_symbol', 'name', 'gene_synonyms', 'synonyms', 'sourceHref', 'id', 'species', 'type'];
 
 class ResultsList extends Component {
   renderHighlightedValues(highlight) {
     let _data = highlight;
     let _fields = Object.keys(_data).filter( d => {
-      return (DEFAULT_FIELDS.indexOf(d) < 0);
+      return (DEFAULT_FIELDS.indexOf(d) < 0) && (NON_HIGHLIGHTED_FIELDS.indexOf(d) < 0);
     });
     return <DetailList data={_data} fields={_fields} />;
   }
 
-  renderHeader(d) {
+  renderHeader(d, isMakeLowercase) {
+    let _className = isMakeLowercase ? style.lowercase : null;
     return (
       <div>
         <span className={style.resultCatLabel}><CategoryLabel category={d.category} /></span>
-        <h4>
+        <h4 className={_className}>
           <a dangerouslySetInnerHTML={{ __html: d.display_name }} href={d.href} target='_new' />
         </h4>
       </div>
@@ -32,9 +34,10 @@ class ResultsList extends Component {
   }
 
   renderNonGeneEntry(d, i, fields) {
+    let isMakeLowercase = d.category === 'disease';
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
-        {this.renderHeader(d)}
+        {this.renderHeader(d, isMakeLowercase)}
         {this.renderDetailFromFields(d, fields)}
         {this.renderHighlightedValues(d.highlight)}
         <hr />
@@ -42,49 +45,20 @@ class ResultsList extends Component {
     );
   }
 
-  renderHomologs(homologs, label) {
-    if (!homologs) return null;
-    label = label || 'Homologs';
-    if (homologs.length === 0) return null;
-    let nodes = homologs.map( (d, i) => {
-      let commaNode = (i === homologs.length - 1) ? null : ', ';
-      let tooltipNode = <Tooltip className='in' id='tooltip-top' placement='top'><i>{d.species}</i> type: {d.relationship_type}</Tooltip>;
-      return (
-        <span key={'h.' + i}>
-          <OverlayTrigger overlay={tooltipNode} placement='top'>
-            <a href={d.href} target='_new'>
-              {d.symbol}
-            </a>
-          </OverlayTrigger>
-          &nbsp;
-          <a className={style.evidenceFootnote} href={d.evidence_href} target='_new'>
-            {d.evidence_name}
-          </a>
-          {commaNode}
-        </span>
-      );
-    });
-    return (
-      <div className={style.detailContainer}>
-        <span className={style.detailLabel}><strong>{label}:</strong> {nodes}</span>
-      </div>
-    );
-  }
-
   renderGeneEntry(d, i) {
     let topFields = ['name', 'synonyms'];
     let bottomFields = ['species', 'gene_type'];
+    let logHighlight = d.highlight['homologs.symbol'] || d.highlight['homologs.panther_family'];
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
         {this.renderHeader(d)}
           {this.renderDetailFromFields(d, topFields)}
           <div className={style.detailContainer}>
             <span className={style.detailLabel}><strong>Source:</strong> </span>
-            <span><a dangerouslySetInnerHTML={{ __html: d.gene_id }} href={d.sourceHref} target='_new' /></span>
+            <span><a dangerouslySetInnerHTML={{ __html: d.id }} href={d.sourceHref} target='_new' /></span>
           </div>
           {this.renderDetailFromFields(d, bottomFields)}
-          {this.renderHomologs(d.homologs)}
-          {this.renderHomologs(d.paralogs, 'Paralogs')}
+          <LogList label='Homologs' logs={d.homologs} rawHighlight={logHighlight} />
           {this.renderHighlightedValues(d.highlight)}
         <hr />
       </div>
@@ -98,7 +72,7 @@ class ResultsList extends Component {
       } else {
         let fieldVals = {
           'disease': ['synonyms', 'omim_id'],
-          'go': ['synonyms', 'go_branch'],
+          'go': ['id', 'synonyms', 'go_branch']
         };
         let fields = fieldVals[d.category] || [];
         return this.renderNonGeneEntry(d, i, fields);

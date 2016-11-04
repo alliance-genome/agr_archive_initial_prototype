@@ -18,9 +18,7 @@ export const CATEGORIES = [
   {
     name: 'disease',
     displayName: 'Diseases'
-  },
-  {
-    name: 'homology_group',
-    displayName: 'Homology Groups'
   }
 ];
+
+export const NON_HIGHLIGHTED_FIELDS = ['sourceHref', 'href', 'category', 'homologs', 'paralogs', 'orthologs', 'homologs.symbol', 'homologs.panther_family'];

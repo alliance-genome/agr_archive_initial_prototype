@@ -14,7 +14,7 @@ from search import build_search_query, build_es_search_body_request, \
 
 
 es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
-ES_INDEX = 'searchable_items_blue'
+ES_INDEX = 'searchable_test'
 
 app = Flask(__name__)
 
@@ -27,76 +27,73 @@ params = {
 app.config.update(params)
 webpack.init_app(app)
 
-# TEMP
+
 @app.route('/api/graph_search')
 def graph_search():
-    MAX_COORD = 100000
-    SPECIES = [
-        {
-            'name': 'Homo sapiens',
-            'chromosomes': [
-                500000,
-                100000,
-                1000000,
-                1200000
-            ]
-        },
-        {
-            'name': 'Mus musculus',
-            'chromosomes': [
-                100000,
-                200000,
-                1200000,
-                40000
-            ]
-        },
-        {
-            'name': 'Danio rerio',
-            'chromosomes': [
-                50000,
-                1200000,
-                100000
-            ]
-        },
-                {
-            'name': 'Drosophila melanogaster',
-            'chromosomes': [
-                50000,
-                1200000,
-                100000
-            ]
-        }
-    ]
+    query = request.args.get('q', '')
+    limit = 1000
+    offset = 0
+    category = 'gene'
 
-    # pick random number rn 100 - 800
-    rn = randint(25, 1000)
-    # make rn nodes with random species
-    nodes = []
-    print rn
-    for i in xrange(rn):
-        new_node = {
-            'name': 'abc' + str(i),
-            'id': i,
-            'species': SPECIES[randint(0, len(SPECIES) - 1)]['name'],
-            'start': randint(0, MAX_COORD)
-        }
-        nodes.append(new_node)
-    # pick random number rl less than that for links
-    rl = randint(25, rn)
-    # make rl links to random places
+    category_filters = {
+        "gene": ['gene_type', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species']
+    }
+
+    search_fields = ['id', 'name', 'gene_symbol', 'gene_synonyms', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs.symbol', 'homologs.panther_family']
+
+    json_response_fields = ['id', 'gene_symbol', 'species', 'homologs', 'href']
+
+    es_query = build_search_query(query, search_fields, category,
+                                  category_filters, request.args)
+
+    search_body = build_es_search_body_request(query,
+                                               category,
+                                               es_query,
+                                               json_response_fields,
+                                               search_fields,
+                                               '')
+
+    search_results = es.search(
+        index=ES_INDEX,
+        body=search_body,
+        size=limit,
+        from_=offset,
+        preference='p_'+query
+    )
+
+    search_results_formatted = format_search_results(search_results, json_response_fields)
+
+    nodes = {}
     edges = []
-    for _ in xrange(rl):
-        random_source = nodes[randint(0, len(nodes) - 1)]
-        random_target = nodes[randint(0, len(nodes) - 1)]
-        new_edge = { 'source': random_source['id'], 'target': random_target['id'] }
-        edges.append(new_edge)
-    
-    graph_data = { 'nodes': nodes, 'edges': edges, 'meta': SPECIES }
-    return jsonify(graph_data)
+    for result in search_results_formatted:
+        if result["href"] not in nodes:
+            nodes[result["href"]] = {
+                "name": result["gene_symbol"],
+                "id": result["href"],
+                "species": result["species"]
+            }
+
+            for homolog in result["homologs"]:
+                if homolog["href"] not in nodes:
+                    nodes[homolog["href"]] = {
+                        "name": homolog["symbol"],
+                        "id": homolog["href"],
+                        "species": homolog["species"]
+                    }
+
+                edges.append({
+                    "source": result["href"],
+                    "target": homolog["href"]
+                })
+
+    return jsonify({
+        "nodes": [nodes[k] for k in nodes],
+        "edges": edges
+    })
 
 @app.route('/api/search')
 def search():
-    query = request.args.get('q', '').lower()
+    query = request.args.get('q', '')
     limit = int(request.args.get('limit', 10))
     offset = int(request.args.get('offset', 0))
     category = request.args.get('category', '')
@@ -108,9 +105,9 @@ def search():
         "disease": ['disease_species', 'disease_genes']
     }
 
-    search_fields = ['name', 'gene_symbol', 'gene_synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'disease_genes']
+    search_fields = ['id', 'name', 'gene_symbol', 'gene_synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs.symbol', 'homologs.panther_family']
 
-    json_response_fields = ['name', 'gene_symbol', 'gene_synonyms', 'gene_type', 'gene_chromosomes','gene_chromosome_starts', 'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'disease_genes', 'homologs', 'category', 'href']
+    json_response_fields = ['name', 'gene_symbol', 'gene_synonyms', 'gene_type', 'gene_chromosomes','gene_chromosome_starts', 'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs', 'category', 'href']
 
     es_query = build_search_query(query, search_fields, category,
                                   category_filters, request.args)
@@ -182,7 +179,7 @@ def search_autocomplete():
     })
 
 
-# make static assets available anyway
+# make static assets available
 @app.route('/assets/<path:path>')
 def send_static(path):
     return send_from_directory('build', path)

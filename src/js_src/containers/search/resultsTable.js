@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 
 import style from './style.css';
 import DetailList from './detailList';
+import LogList from './logList';
 import { makeFieldDisplayName } from '../../lib/searchHelpers';
+import { NON_HIGHLIGHTED_FIELDS } from '../../constants';
 
 const MATCH_LABEL = 'match_by';
 const MAX_CHAR = 100;
@@ -64,20 +66,22 @@ class ResultsTable extends Component {
     let fields = this.getFields();
     let rowNodes = entries.map( (d, i) => {
       let nodes = fields.map( (field) => {
+        let isMakeLowercase = d.category === 'disease';
+        let _className = isMakeLowercase ? style.lowercase : null;
         let _key = `srtc.${i}.${field}`;
         switch(field) {
         case 'display_name':
         case 'symbol':
-          return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d[field] }} href={d.href} target='_new' /></td>;
+          return <td key={_key}><a className={_className} dangerouslySetInnerHTML={{ __html: d[field] }} href={d.href} target='_new' /></td>;
         case 'source':
-          return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d.gene_id }} href={d.href} target='_new' /></td>;
+          return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d.id }} href={d.href} target='_new' /></td>;
         case MATCH_LABEL:
-          return <td key={_key}>{this.renderHighlight(d.highlight)}</td>;
+          return <td key={_key}>{this.renderHighlight(d.highlight, d.homologs)}</td>;
         case 'species':
           return <td key={_key}><i dangerouslySetInnerHTML={{ __html: d.species }} /></td>;
         default:
           return <td dangerouslySetInnerHTML={{ __html: this.renderTruncatedContent(d[field]) }} key={_key} />;
-        }        
+        }
       });
       return (
         <tr key={`tr${i}`}>
@@ -92,10 +96,23 @@ class ResultsTable extends Component {
     );
   }
 
-  renderHighlight(highlight) {
+  renderHighlight(highlight, homologs) {
+    homologs = homologs || [];
     let _data = highlight;
-    let _fields = Object.keys(_data);
-    return <DetailList data={_data} fields={_fields} />;
+    let _fields = Object.keys(_data).filter( d => {
+      return (NON_HIGHLIGHTED_FIELDS.indexOf(d) < 0);
+    });
+    let logHighlight = highlight['homologs.symbol'] || highlight['homologs.panther_family'];
+    let homologNode = null;
+    if (homologs.length && logHighlight) {
+      homologNode = <LogList label='Homologs' logs={homologs} rawHighlight={logHighlight} />;
+    }
+    return (
+      <div>
+        <DetailList data={_data} fields={_fields} />
+        {homologNode}
+      </div>
+    );
   }
 
   render() {

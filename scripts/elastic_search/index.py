@@ -1,70 +1,47 @@
-from elasticsearch import Elasticsearch
-import os
-import requests
+import time
 
-from mapping import mapping
+from sgd import SGD
+from zfin import ZFin
+from worm import WormBase
+from fly import FlyBase
+from mouse import MGI
+from rat import RGD
+
 from mod import MOD
 
-INDEX_NAME = 'searchable_items_blue'
-DOC_TYPE = 'searchable_item'
-es = Elasticsearch(os.environ['ES_URI'], retry_on_timeout=True)
+sgd = SGD()
+zfin = ZFin()
+worm = WormBase()
+fly = FlyBase()
+mouse = MGI()
+rat = RGD()
 
+mod = MOD()
 
-def delete_mapping():
-    print "Deleting mapping..."
-    response = requests.delete(os.environ['ES_URI'] + INDEX_NAME + "/")
-    if response.status_code != 200:
-        print "ERROR: " + str(response.json())
-    else:
-        print "SUCCESS"
+mods = [mouse, zfin, sgd, worm, fly, rat]
 
+for m in mods:
+    start_time = time.time()
+    m.load_genes()
+    print (" --- %s seconds --- " % (time.time() - start_time))
 
-def put_mapping():
-    print "Putting mapping... "
-    response = requests.put(os.environ['ES_URI'] + INDEX_NAME + "/", json=mapping)
-    if response.status_code != 200:
-        print "ERROR: " + str(response.json())
-    else:
-        print "SUCCESS"
+mod.load_homologs()
 
-genes = {}
-go = {}
-diseases = {}
+for m in mods:
+    start_time = time.time()
+    m.load_go()
+    print (" --- %s seconds --- " % (time.time() - start_time))
 
-species = ("M. musculus", "S. cerevisiae", "D. renio", "C. elegans", "D. melanogaster")
+for m in mods:
+    start_time = time.time()
+    m.load_diseases()
+    print (" --- %s seconds --- " % (time.time() - start_time))
 
-for specie in species:
-    MOD.factory(specie).load_genes(genes)
+mod.save_into_file()
 
-for specie in species:
-    MOD.factory(specie).load_diseases(genes, diseases)
+mod.delete_mapping()
+mod.put_mapping()
 
-for specie in species:
-    MOD.factory(specie).load_go(genes, go)
-
-delete_mapping()
-put_mapping()
-
-datatypes = [diseases, go, genes]
-
-print "Indexing ElasticSearch..."
-
-for datatype in datatypes:
-    bulk_data = []
-
-    for id in datatype:
-        bulk_data.append({
-            'index': {
-                '_index': INDEX_NAME,
-                '_type': DOC_TYPE,
-                '_id': id
-            }
-        })
-        bulk_data.append(datatype[id])
-
-        if len(bulk_data) == 250:
-            es.bulk(index=INDEX_NAME, body=bulk_data, refresh=True)
-            bulk_data = []
-
-    if len(bulk_data) > 0:
-        es.bulk(index=INDEX_NAME, body=bulk_data, refresh=True)
+mod.index_genes_into_es()
+mod.index_go_into_es()
+mod.index_diseases_into_es()

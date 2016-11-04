@@ -16,6 +16,9 @@ import { SMALL_COL_CLASS, LARGE_COL_CLASS, SEARCH_API_ERROR_MESSAGE } from '../.
 import { receiveResponse, setError, setPending } from './searchActions';
 import LoadingPage from '../../components/loadingPage';
 
+// used to test rendering fixture response
+import fixtureResponse from './tests/fixtureResponse';
+
 import {
   selectActiveCategory,
   selectErrorMessage,
@@ -31,6 +34,7 @@ const BASE_SEARCH_URL = '/api/search';
 class SearchComponent extends Component {
   // fetch data at start
   componentDidMount() {
+    // this.fetchFixtureData(); // uncomment to use fixture mode
     this.fetchSearchData();
   }
 
@@ -39,6 +43,12 @@ class SearchComponent extends Component {
     if (prevProps.queryParams !== this.props.queryParams) {
       this.fetchSearchData();
     }
+  }
+
+  fetchFixtureData() {
+    this.props.dispatch(receiveResponse(fixtureResponse, this.props.queryParams));
+    this.props.dispatch(setError(false));
+    this.props.dispatch(setPending(false));
   }
 
   fetchSearchData() {
@@ -126,7 +136,7 @@ SearchComponent.propTypes = {
   mode: React.PropTypes.string,
   pageSize: React.PropTypes.number,
   queryParams: React.PropTypes.object,
-  results: React.PropTypes.array,
+  results: React.PropTypes.array
 };
 
 function mapStateToProps(state) {
