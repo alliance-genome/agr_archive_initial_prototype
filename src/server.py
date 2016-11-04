@@ -39,7 +39,7 @@ def graph_search():
         "gene": ['gene_type', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species']
     }
 
-    search_fields = ['id', 'name', 'gene_symbol', 'gene_synonyms', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs.symbol', 'homologs.panther_family']
+    search_fields = ['id', 'name', 'gene_symbol', 'gene_synonyms', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'homologs.symbol', 'homologs.panther_family']
 
     json_response_fields = ['id', 'gene_symbol', 'species', 'homologs', 'href']
 
@@ -70,7 +70,8 @@ def graph_search():
             nodes[result["href"]] = {
                 "name": result["gene_symbol"],
                 "id": result["href"],
-                "species": result["species"]
+                "species": result["species"],
+                "direct": True
             }
 
             for homolog in result["homologs"]:
@@ -78,7 +79,8 @@ def graph_search():
                     nodes[homolog["href"]] = {
                         "name": homolog["symbol"],
                         "id": homolog["href"],
-                        "species": homolog["species"]
+                        "species": homolog["species"],
+                        "direct": False
                     }
 
                 edges.append({
