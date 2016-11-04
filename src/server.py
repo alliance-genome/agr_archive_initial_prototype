@@ -115,7 +115,7 @@ def search_autocomplete():
     })
 
 
-# make static assets available anyway
+# make static assets available
 @app.route('/assets/<path:path>')
 def send_static(path):
     return send_from_directory('build', path)

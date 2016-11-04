@@ -131,49 +131,56 @@ def build_search_params(query, search_fields):
         es_query = {'dis_max': {'queries': []}}
 
         if (query[0] in ('"', "'") and query[-1] in ('"', "'")):
-            es_query['dis_max']['queries'] = [
-                {
-                    "match_phrase_prefix": {
-                        "name": {
-                            "query": query,
-                            "analyzer": "standard",
-                            "boost": 10
-                        }
-                    }
-                }, {
-                    "multi_match": {
-                        "query": query,
-                        "type": "phrase_prefix",
-                        "fields": search_fields,
-                        "boost": 3
-                    }
-                }
-            ]
-        else:
-            es_query['dis_max']['queries'] = []
+            query = query[1:-1]
 
-            custom_boosts = {
-                "id": 120,
-                "gene_symbol": 120,
-                "name": 120
+        es_query['dis_max']['queries'] = []
+
+        custom_boosts = {
+            "id": 120,
+            "gene_symbol": 120,
+            "gene_synonyms": 120,
+            "name": 200,
+            "name.symbol": 300,
+            "gene_biological_process.symbol": 120,
+            "gene_molecular_function.symbol": 120,
+            "gene_cellular_component.symbol": 120
+        }
+
+        search_fields += ["gene_biological_process.symbol",
+                          "gene_molecular_function.symbol",
+                          "name.symbol",
+                          "gene_cellular_component.symbol"]
+
+        for field in search_fields:
+            match = {}
+            match[field] = {
+                'query': query,
+                'boost': custom_boosts.get(field, 50)
             }
 
-            for field in search_fields:
-                match = {}
-                match[field] = {
-                    'query': query,
-                    'boost': custom_boosts.get(field, 100)
-                }
+            partial_match = {}
+            partial_match[field.split(".")[0]] = {
+                'query': query
+            }
 
-                partial_match = {}
-                partial_match[field.split(".")[0]] = {
-                    'query': query
-                }
-
-                es_query['dis_max']['queries'].append({'match': match})
-                es_query['dis_max']['queries'].append({'match_phrase_prefix': partial_match})
+            es_query['dis_max']['queries'].append({'match': match})
+            es_query['dis_max']['queries'].append({'match_phrase_prefix': partial_match})
 
     return es_query
+
+
+def filter_highlighting(highlight):
+    if highlight is None:
+        return None
+
+    for k in highlight.keys():
+        if k.endswith(".symbol") and k.split(".")[0] in highlight:
+            if highlight[k] == highlight[k.split(".")[0]]:
+                highlight.pop(k, None)
+            else:
+                highlight[k.split(".")[0]] = highlight[k]
+                highlight.pop(k, None)
+    return highlight
 
 
 def format_search_results(search_results, json_response_fields):
@@ -186,7 +193,7 @@ def format_search_results(search_results, json_response_fields):
         for field in json_response_fields:
             obj[field] = raw_obj.get(field)
 
-        obj['highlights'] = r.get('highlight')
+        obj['highlights'] = filter_highlighting(r.get('highlight'))
         obj['id'] = r.get('_id')
 
         formatted_results.append(obj)
