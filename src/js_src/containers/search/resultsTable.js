@@ -95,6 +95,7 @@ class ResultsTable extends Component {
   }
 
   renderHighlight(highlight, homologs) {
+    homologs = homologs || [];
     let _data = highlight;
     let _fields = Object.keys(_data).filter( d => {
       return (NON_HIGHLIGHTED_FIELDS.indexOf(d) < 0);
