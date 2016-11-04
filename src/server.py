@@ -13,7 +13,7 @@ from search import build_search_query, build_es_search_body_request, \
 
 
 es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
-ES_INDEX = 'searchable_items_blue'
+ES_INDEX = 'searchable_test'
 
 app = Flask(__name__)
 
@@ -25,6 +25,70 @@ params = {
 
 app.config.update(params)
 webpack.init_app(app)
+
+
+@app.route('/api/graph_search')
+def graph_search():
+    query = request.args.get('q', '')
+    limit = 1000
+    offset = 0
+    category = 'gene'
+
+    category_filters = {
+        "gene": ['gene_type', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species']
+    }
+
+    search_fields = ['id', 'name', 'gene_symbol', 'gene_synonyms', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs.symbol', 'homologs.panther_family']
+
+    json_response_fields = ['id', 'gene_symbol', 'species', 'homologs', 'href']
+
+    es_query = build_search_query(query, search_fields, category,
+                                  category_filters, request.args)
+
+    search_body = build_es_search_body_request(query,
+                                               category,
+                                               es_query,
+                                               json_response_fields,
+                                               search_fields,
+                                               '')
+
+    search_results = es.search(
+        index=ES_INDEX,
+        body=search_body,
+        size=limit,
+        from_=offset,
+        preference='p_'+query
+    )
+
+    search_results_formatted = format_search_results(search_results, json_response_fields)
+
+    nodes = {}
+    edges = []
+    for result in search_results_formatted:
+        if result["href"] not in nodes:
+            nodes[result["href"]] = {
+                "name": result["gene_symbol"],
+                "id": result["href"],
+                "species": result["species"]
+            }
+
+            for homolog in result["homologs"]:
+                if homolog["href"] not in nodes:
+                    nodes[homolog["href"]] = {
+                        "name": homolog["symbol"],
+                        "id": homolog["href"],
+                        "species": homolog["species"]
+                    }
+
+                edges.append({
+                    "source": result["href"],
+                    "target": homolog["href"]
+                })
+
+    return jsonify({
+        "nodes": [nodes[k] for k in nodes],
+        "edges": edges
+    })
 
 
 @app.route('/api/search')
