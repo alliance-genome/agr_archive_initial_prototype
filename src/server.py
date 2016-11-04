@@ -13,7 +13,7 @@ from search import build_search_query, build_es_search_body_request, \
 
 
 es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
-ES_INDEX = 'searchable_test'
+ES_INDEX = 'searchable_items_blue'
 
 app = Flask(__name__)
 
