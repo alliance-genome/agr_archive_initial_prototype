@@ -66,11 +66,13 @@ class ResultsTable extends Component {
     let fields = this.getFields();
     let rowNodes = entries.map( (d, i) => {
       let nodes = fields.map( (field) => {
+        let isMakeLowercase = d.category === 'disease';
+        let _className = isMakeLowercase ? style.lowercase : null;
         let _key = `srtc.${i}.${field}`;
         switch(field) {
         case 'display_name':
         case 'symbol':
-          return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d[field] }} href={d.href} target='_new' /></td>;
+          return <td key={_key}><a className={_className} dangerouslySetInnerHTML={{ __html: d[field] }} href={d.href} target='_new' /></td>;
         case 'source':
           return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d.id }} href={d.href} target='_new' /></td>;
         case MATCH_LABEL:
@@ -95,6 +97,7 @@ class ResultsTable extends Component {
   }
 
   renderHighlight(highlight, homologs) {
+    homologs = homologs || [];
     let _data = highlight;
     let _fields = Object.keys(_data).filter( d => {
       return (NON_HIGHLIGHTED_FIELDS.indexOf(d) < 0);

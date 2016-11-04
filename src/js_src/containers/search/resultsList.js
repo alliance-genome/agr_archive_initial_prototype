@@ -17,11 +17,12 @@ class ResultsList extends Component {
     return <DetailList data={_data} fields={_fields} />;
   }
 
-  renderHeader(d) {
+  renderHeader(d, isMakeLowercase) {
+    let _className = isMakeLowercase ? style.lowercase : null;
     return (
       <div>
         <span className={style.resultCatLabel}><CategoryLabel category={d.category} /></span>
-        <h4>
+        <h4 className={_className}>
           <a dangerouslySetInnerHTML={{ __html: d.display_name }} href={d.href} target='_new' />
         </h4>
       </div>
@@ -33,9 +34,10 @@ class ResultsList extends Component {
   }
 
   renderNonGeneEntry(d, i, fields) {
+    let isMakeLowercase = d.category === 'disease';
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
-        {this.renderHeader(d)}
+        {this.renderHeader(d, isMakeLowercase)}
         {this.renderDetailFromFields(d, fields)}
         {this.renderHighlightedValues(d.highlight)}
         <hr />
@@ -70,7 +72,7 @@ class ResultsList extends Component {
       } else {
         let fieldVals = {
           'disease': ['synonyms', 'omim_id'],
-          'go': ['synonyms', 'go_branch'],
+          'go': ['id', 'synonyms', 'go_branch']
         };
         let fields = fieldVals[d.category] || [];
         return this.renderNonGeneEntry(d, i, fields);

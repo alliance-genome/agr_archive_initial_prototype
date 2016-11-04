@@ -131,6 +131,7 @@ function parseGoResult(_d) {
     category: d.category,
     display_name: d.name,
     go_branch: makeFieldDisplayName(d.go_type),
+    id: d.id,
     highlight: d.highlights,
     href: d.href,
     name: d.name,
