@@ -66,18 +66,22 @@ class Graph extends Component {
     let links = this.getLinks();
     if (!nodes.length || !links.length) return;
 
-    let force = d3.layout.force()
-      .size([width, height]);
     let context = this.refs.canvas.getContext('2d');
-    force
+    let force = d3.layout.force()
+      .size([width, height])
       .nodes(nodes)
       .links(links)
-      .linkDistance(20)
-      .on('tick', tick)
-      .start();
+      .linkDistance(20);
+    force.start();
+    let nTickets = Math.max(50, Math.round(nodes.length / 15));
+    for (let i = 0; i <= nTickets; i++) {
+      force.tick();
+    }
+    force.stop();
+    draw();
     // setup font
     context.font = '14px Lato';
-    function tick() {
+    function draw() {
       context.clearRect(0, 0, width, height);
       // draw links
       context.strokeStyle = '#ccc';
