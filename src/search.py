@@ -146,12 +146,14 @@ def build_search_params(query, search_fields):
             "gene_cellular_component.symbol": 120
         }
 
-        search_fields += ["gene_biological_process.symbol",
-                          "gene_molecular_function.symbol",
-                          "name.symbol",
-                          "gene_cellular_component.symbol"]
+        fields = search_fields + [
+            "name.symbol",
+            "gene_biological_process.symbol",
+            "gene_molecular_function.symbol",
+            "gene_cellular_component.symbol"
+        ]
 
-        for field in search_fields:
+        for field in fields:
             match = {}
             match[field] = {
                 'query': query,
