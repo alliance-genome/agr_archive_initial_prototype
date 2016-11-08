@@ -13,7 +13,7 @@ from search import build_search_query, build_es_search_body_request, \
 
 
 es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
-ES_INDEX = 'searchable_test'
+ES_INDEX = 'searchable_items_blue'
 
 app = Flask(__name__)
 
@@ -30,9 +30,6 @@ webpack.init_app(app)
 @app.route('/api/graph_search')
 def graph_search():
     query = request.args.get('q', '')
-    limit = 1000
-    offset = 0
-    category = 'gene'
 
     category_filters = {
         "gene": ['gene_type', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species']
@@ -42,11 +39,11 @@ def graph_search():
 
     json_response_fields = ['id', 'gene_symbol', 'species', 'homologs', 'href']
 
-    es_query = build_search_query(query, search_fields, category,
+    es_query = build_search_query(query, search_fields, 'gene',
                                   category_filters, request.args)
 
     search_body = build_es_search_body_request(query,
-                                               category,
+                                               'gene',
                                                es_query,
                                                json_response_fields,
                                                search_fields,
@@ -55,8 +52,8 @@ def graph_search():
     search_results = es.search(
         index=ES_INDEX,
         body=search_body,
-        size=limit,
-        from_=offset,
+        size=1000,
+        from_=0,
         preference='p_'+query
     )
 
