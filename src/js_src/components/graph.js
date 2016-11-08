@@ -1,25 +1,13 @@
 /*eslint-disable react/no-set-state */
 import React, { Component } from 'react';
 import d3 from 'd3';
-
+import sigma from 'sigma';
 import getSpeciesColorScale from '../lib/getSpeciesColorScale';
 
-const DEFAULT_WIDTH = 600;
-const MAX_HEIGHT = 750;
+const MAX_HEIGHT = 450;
+const TARGET_ID = 'j-agr-sigma-target';
 
 class Graph extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      width: DEFAULT_WIDTH
-    };
-  }
-
-  // fetch data at start
-  componentDidMount() {
-    this.calcWidth();
-  }
-
   // fetch data whenever URL changes within /search
   componentDidUpdate (prevProps) {
     if (prevProps.data !== this.props.data) {
@@ -27,16 +15,12 @@ class Graph extends Component {
     }
   }
 
-  calcWidth() {
-    let newWidth = this.refs.container.getBoundingClientRect().width;
-    this.setState({ width: newWidth });
-  }
-
   getHeight() {
-    return Math.min(this.state.width, MAX_HEIGHT);
+    return MAX_HEIGHT;
   }
 
-  getLinks() {
+  // the edges need by d3 to calc format
+  getFormattedLinks() {
     let nodes = this.props.data.nodes;
     let edges = this.props.data.edges;
     function findIndexOfNodeById(id) {
@@ -50,67 +34,71 @@ class Graph extends Component {
     });
   }
 
-  getNodes() {
-    let colorScale = getSpeciesColorScale();
-    return this.props.data.nodes.map( d => {
-      d.color = colorScale(d.species);
+  getEdges() {
+    let data = this.props.data;
+    let rawEdges = data.edges;
+    return rawEdges.map( (d, i) => {
+      d.id = `e${i}`;
+      d.color = '#e2e2e2';
       return d;
     });
   }
 
-  // a la http://bl.ocks.org/mbostock/3180395
-  drawGraph() {
-    let width = this.state.width;
-    let height = this.getHeight();
-    let nodes = this.getNodes();
-    let links = this.getLinks();
-    if (!nodes.length || !links.length) return;
+  getNodes() {
+    let colorScale = getSpeciesColorScale();
+    return this.props.data.nodes.map( (d) => {
+      d.color = colorScale(d.species);
+      d.label = d.name;
+      d.size = d.direct ? 1 : 0.5;
+      return d;
+    });
+  }
 
-    let context = this.refs.canvas.getContext('2d');
+  // calc static d3 force
+  getFormattedNodes() {
+    let nodes = this.getNodes();
+    let links = this.getFormattedLinks();
     let force = d3.layout.force()
-      .size([width, height])
+      .size([1, 1])
       .nodes(nodes)
       .links(links)
       .linkDistance(20);
     force.start();
-    let nTickets = Math.max(50, Math.round(nodes.length / 15));
+    let nTickets = 100;
     for (let i = 0; i <= nTickets; i++) {
       force.tick();
     }
     force.stop();
-    draw();
-    // setup font
-    context.font = '14px Lato';
-    function draw() {
-      context.clearRect(0, 0, width, height);
-      // draw links
-      context.strokeStyle = '#ccc';
-      context.beginPath();
-      links.forEach(function(d) {
-        context.moveTo(d.source.x, d.source.y);
-        context.lineTo(d.target.x, d.target.y);
-      });
-      context.stroke();
-      // context.fillStyle = 'black';
-      // nodes.forEach(function(d) {
-      //   context.fillText(d.name, d.x + TEXT_OFFSET, d.y - TEXT_OFFSET);
-      // });
-      // draw nodes
-      nodes.forEach(function(d) {
-        context.beginPath();
-        context.fillStyle = d.color;
-        context.moveTo(d.x, d.y);
-        context.arc(d.x, d.y, 4.5, 0, 2 * Math.PI);
-        context.fill();
-      });
-      
+    return nodes;
+  }
+
+  drawGraph() {
+    if (this.s) {
+      this.s.graph.clear();
+      this.s.refresh();
     }
+    let _nodes = this.getFormattedNodes();
+    let _edges = this.getEdges();
+    if (!_nodes.length) return;
+    let _graph = {
+      nodes: _nodes,
+      edges: _edges
+    };
+    this.s = new sigma({
+      graph: _graph,
+      container: TARGET_ID,
+      settings: {
+        labelThreshold: 100,
+        minNodeSize: 0,
+        maxNodeSize: 3,
+      }
+    });
   }
 
   render() {
     return (
       <div ref='container'>
-        <canvas height={this.getHeight()} ref='canvas' width={this.state.width} />
+        <div id={TARGET_ID} style={{ height: this.getHeight() }} />
       </div>
     );
   }

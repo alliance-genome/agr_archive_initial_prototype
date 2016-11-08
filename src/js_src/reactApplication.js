@@ -8,9 +8,9 @@ import routes from './routes';
 
 class ReactApp extends Component {
   render() {
-    let isBrowser = typeof window === 'object';
+    let isBrowser = (typeof browserHistory === 'object');
     let historyObj = isBrowser ? browserHistory : createMemoryHistory('/');
-    let store = configureStore(historyObj);
+    let store = configureStore();
     let history = syncHistoryWithStore(historyObj, store);
     return (
       <Provider store={store}>
