@@ -26,8 +26,8 @@ mapping = {
                         "language": "english"
                     },
                     "autocomplete_filter": {
-                        "min_gram": "1",
                         "type": "edge_ngram",
+                        "min_gram": "1",
                         "max_gram": "20"
                     }
                 }

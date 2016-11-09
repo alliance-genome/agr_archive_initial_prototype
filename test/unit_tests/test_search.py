@@ -7,6 +7,43 @@ from werkzeug.datastructures import ImmutableMultiDict
 
 
 class SearchHelpersTest(unittest.TestCase):
+    def _query_builder(self, query, fields):
+        custom_boosts = {
+            "id": 120,
+            "gene_symbol": 120,
+            "gene_synonyms": 120,
+            "name": 200,
+            "name.symbol": 300,
+            "gene_biological_process.symbol": 120,
+            "gene_molecular_function.symbol": 120,
+            "gene_cellular_component.symbol": 120
+        }
+
+        search_fields = fields + [
+            "name.symbol",
+            "gene_biological_process.symbol",
+            "gene_molecular_function.symbol",
+            "gene_cellular_component.symbol"
+        ]
+
+        queries = []
+        for field in search_fields:
+            match = {}
+            match[field] = {
+                'query': query,
+                'boost': custom_boosts.get(field, 50)
+            }
+
+            partial_match = {}
+            partial_match[field.split(".")[0]] = {
+                'query': query
+            }
+
+            queries.append({'match': match})
+            queries.append({'match_phrase_prefix': partial_match})
+
+        return queries
+
     def test_build_search_params_should_search_for_all_with_empty_query(self):
         query = ""
         fields = ["name", "symbol"]
@@ -17,38 +54,12 @@ class SearchHelpersTest(unittest.TestCase):
 
     def test_build_search_params_should_create_general_query(self):
         query = "gene"
-        fields = ["name", "symbol"]
+        fields = ["id"]
 
+        self.maxDiff = None
         self.assertEqual(build_search_params(query, fields), {
             'dis_max': {
-                'queries': [
-                    {
-                        "term": {
-                            "name.simple": {
-                                "value": query,
-                                "boost": 100
-                            }
-                        }
-                    },
-                    {
-                        "multi_match": {
-                            "query": query,
-                            "type": "most_fields",
-                            "fields": fields + ['description', 'name.fulltext^2'],
-                            "boost": 25
-                        }
-                    },
-                    {
-                        "match_phrase_prefix": {
-                            "name": {
-                                "query": query,
-                                "analyzer": "standard",
-                                "max_expansions": 30,
-                                "boost": 1
-                            }
-                        }
-                    }
-                ]
+                'queries': self._query_builder("gene", fields)
             }
         })
 
@@ -57,23 +68,8 @@ class SearchHelpersTest(unittest.TestCase):
         fields = ["name", "symbol"]
 
         self.assertEqual(build_search_params(query, fields), {
-            'dis_max': {
-                'queries': [{
-                    'match_phrase_prefix': {
-                        'name': {
-                            'analyzer': 'standard',
-                            'boost': 10,
-                            'query': '"' + query + '"'
-                        }
-                    }
-                }, {
-                    'multi_match': {
-                        'boost': 3,
-                        'fields': fields,
-                        'query': '"' + query + '"',
-                        'type': 'phrase_prefix'
-                    }
-                }]
+            "dis_max": {
+                "queries": self._query_builder(query, fields)
             }
         })
 
@@ -82,23 +78,8 @@ class SearchHelpersTest(unittest.TestCase):
         fields = ["name", "symbol"]
 
         self.assertEqual(build_search_params(query, fields), {
-            'dis_max': {
-                'queries': [{
-                    'match_phrase_prefix': {
-                        'name': {
-                            'analyzer': 'standard',
-                            'boost': 10,
-                            'query': query
-                        }
-                    }
-                }, {
-                    'multi_match': {
-                        'boost': 3,
-                        'fields': fields,
-                        'query': query,
-                        'type': 'phrase_prefix'
-                    }
-                }]
+            "dis_max": {
+                "queries": self._query_builder(query[1:-1], fields)
             }
         })
 
@@ -122,7 +103,7 @@ class SearchHelpersTest(unittest.TestCase):
         category = 'genes'
         category_filters = {
             "genes": ['go_ids', 'go_names'],
-            "go": ['gene'],
+            "go": ['gene']
         }
         args = ImmutableMultiDict()
 
@@ -340,6 +321,7 @@ class SearchHelpersTest(unittest.TestCase):
 
         self.assertEqual(format_search_results(search_results, json_response_fields), [{
             'highlights': None,
+            'id': 'yeast_S00001',
             'name': 'ACTin 1',
             'symbol': 'ACT1'
         }])
@@ -543,9 +525,8 @@ class SearchHelpersTest(unittest.TestCase):
                 "bool": {
                     "must": [{
                         "match": {
-                            "name": {
-                                "query": query,
-                                "analyzer": "standard"
+                            "name_key.autocomplete": {
+                                "query": query
                             }
                         }
                     }],
@@ -554,13 +535,13 @@ class SearchHelpersTest(unittest.TestCase):
                             "match": {
                                 "category": {
                                     "query": "gene",
-                                    "boost": 4
+                                    "boost": 2
                                 }
                             }
                         }
                     ]
                 }
-            }, '_source': ['name', 'href', 'category']
+            }, '_source': ['name', 'href', 'category', 'gene_symbol']
         })
 
     def test_build_autocomplete_search_body_request_with_category(self):
@@ -571,16 +552,18 @@ class SearchHelpersTest(unittest.TestCase):
                 "bool": {
                     "must": [{
                         "match": {
-                            "name": {
-                                "query": query,
-                                "analyzer": "standard"
+                            "name_key.autocomplete": {
+                                "query": query
                             }
                         }
                     }, {
-                        "match": {"category": "go"}
+                        "match": {
+                            "category": 'go'
+                        }
                     }]
                 }
-            }, '_source': ['name', 'href', 'category']
+            },
+            '_source': ['name', 'href', 'category', 'gene_symbol']
         })
 
     def test_build_autocomplete_search_body_request_with_field(self):

@@ -152,7 +152,7 @@ class MOD():
 
                     for alt_name_symbol in alternative_names:
                         alt_name_symbol = alt_name_symbol.split(";")
-                        alt_name = alt_name_symbol[0].strip()
+                        alt_name = alt_name_symbol[0].strip().lower()
                         if len(alt_name_symbol) > 1:
                             alt_symbol = ", " + alt_name_symbol[1].strip()
                         else:
@@ -162,7 +162,7 @@ class MOD():
 
                 MOD.omim_dataset["OMIM:" + row[1]] = {
                     "prefix": row[0],
-                    "name": name,
+                    "name": name.lower(),
                     "symbol": symbol,
                     "disease_synonyms": synonyms
                 }

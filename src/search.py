@@ -146,12 +146,14 @@ def build_search_params(query, search_fields):
             "gene_cellular_component.symbol": 120
         }
 
-        search_fields += ["gene_biological_process.symbol",
-                          "gene_molecular_function.symbol",
-                          "name.symbol",
-                          "gene_cellular_component.symbol"]
+        fields = search_fields + [
+            "name.symbol",
+            "gene_biological_process.symbol",
+            "gene_molecular_function.symbol",
+            "gene_cellular_component.symbol"
+        ]
 
-        for field in search_fields:
+        for field in fields:
             match = {}
             match[field] = {
                 'query': query,
@@ -273,3 +275,36 @@ def format_autocomplete_results(es_response, field='name_key'):
             formatted_results.append(obj)
 
     return formatted_results
+
+
+def graph_visualization(formatted_search_results):
+    nodes = {}
+    edges = []
+
+    for result in formatted_search_results:
+        if result["href"] not in nodes:
+            nodes[result["href"]] = {
+                "name": result["gene_symbol"],
+                "id": result["href"],
+                "species": result["species"],
+                "direct": True
+            }
+
+            for homolog in result["homologs"]:
+                if homolog["href"] not in nodes:
+                    nodes[homolog["href"]] = {
+                        "name": homolog["symbol"],
+                        "id": homolog["href"],
+                        "species": homolog["species"],
+                        "direct": False
+                    }
+
+                edges.append({
+                    "source": result["href"],
+                    "target": homolog["href"]
+                })
+
+    return {
+        "nodes": [nodes[k] for k in nodes],
+        "edges": edges
+    }
