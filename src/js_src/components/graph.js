@@ -6,13 +6,26 @@ import getSpeciesColorScale from '../lib/getSpeciesColorScale';
 
 const MAX_HEIGHT = 450;
 const TARGET_ID = 'j-agr-sigma-target';
+const N_TICKS = 100;
+const EDGE_COLOR = '#e2e2e2';
+
+import style from './style.css';
 
 class Graph extends Component {
-  // fetch data whenever URL changes within /search
+  componentDidMount() {
+    this.drawGraph();
+  }
+
   componentDidUpdate (prevProps) {
-    if (prevProps.data !== this.props.data) {
+    if (this.didDataChange(prevProps.data, this.props.data)) {
       this.drawGraph();
     }
+  }
+
+  didDataChange(prevData, newData) {
+    let areNodesEqual = (prevData.nodes.length !== newData.nodes.length);
+    let areEdgesEqual = (prevData.edges.length !== newData.edges.length);
+    return (areNodesEqual && areEdgesEqual);
   }
 
   getHeight() {
@@ -39,7 +52,7 @@ class Graph extends Component {
     let rawEdges = data.edges;
     return rawEdges.map( (d, i) => {
       d.id = `e${i}`;
-      d.color = '#e2e2e2';
+      d.color = EDGE_COLOR;
       return d;
     });
   }
@@ -64,8 +77,7 @@ class Graph extends Component {
       .links(links)
       .linkDistance(20);
     force.start();
-    let nTickets = 100;
-    for (let i = 0; i <= nTickets; i++) {
+    for (let i = 0; i <= N_TICKS; i++) {
       force.tick();
     }
     force.stop();
@@ -90,14 +102,14 @@ class Graph extends Component {
       settings: {
         labelThreshold: 100,
         minNodeSize: 0,
-        maxNodeSize: 3,
+        maxNodeSize: 3
       }
     });
   }
 
   render() {
     return (
-      <div ref='container'>
+      <div className={style.graphContainer} ref='container'>
         <div id={TARGET_ID} style={{ height: this.getHeight() }} />
       </div>
     );

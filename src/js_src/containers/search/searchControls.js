@@ -61,7 +61,7 @@ class SearchControlsComponent extends Component {
   }
 
   renderNonViewAs() {
-    if (this.props.isMultiTable) return null;
+    if (this.props.isMultiTable || this.props.mode === 'graph') return null;
     return (
       <div className={style.controlContainer}>
         {this.renderPaginator()}
