@@ -1,17 +1,24 @@
-/*eslint-disable react/no-set-state */
+/*eslint-disable no-undef */
 import React, { Component } from 'react';
 import d3 from 'd3';
-import sigma from 'sigma';
 import getSpeciesColorScale from '../lib/getSpeciesColorScale';
 
 const MAX_HEIGHT = 450;
 const TARGET_ID = 'j-agr-sigma-target';
+const TRANSITION_DURATION = 1000;
+const DEFAULT_X = 0;
+const DEFAULT_Y = 0;
 const N_TICKS = 100;
 const EDGE_COLOR = '#e2e2e2';
 
 import style from './style.css';
 
 class Graph extends Component {
+  constructor(props) {
+    super(props);
+    this.lastNodes = [];
+  }
+
   componentDidMount() {
     this.drawGraph();
   }
@@ -81,6 +88,26 @@ class Graph extends Component {
       force.tick();
     }
     force.stop();
+    // give start and end as x1, x2, y1, y2 for transition
+    nodes = nodes.map( (d) => {
+      // assign 'correct' to x2 y2
+      let correctX = d.x;
+      let correctY = d.y;
+      d.x2 = correctX;
+      d.y2 = correctY;
+      // try to get old and assign to default x and y
+      let oldNodes = this.lastNodes.filter( _d => d.id === _d.id );
+      if (oldNodes.length) {
+        let o = oldNodes[0];
+        d.x = o.x2;
+        d.y = o.y2;
+      } else {
+        d.x = DEFAULT_X;
+        d.y = DEFAULT_Y;
+      }
+      return d;
+    });
+    this.lastNodes = nodes;
     return nodes;
   }
 
@@ -100,11 +127,19 @@ class Graph extends Component {
       graph: _graph,
       container: TARGET_ID,
       settings: {
+        animationsTime: TRANSITION_DURATION,
         labelThreshold: 100,
         minNodeSize: 0,
         maxNodeSize: 3
       }
     });
+    sigma.plugins.animate(
+      this.s,
+      { x: 'x2', y: 'y2', size: 'size' },
+      {
+        duration: TRANSITION_DURATION
+      }
+    );
   }
 
   render() {
