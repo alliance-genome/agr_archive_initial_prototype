@@ -10,7 +10,7 @@ class ReactApp extends Component {
   render() {
     let isBrowser = (typeof browserHistory === 'object');
     let historyObj = isBrowser ? browserHistory : createMemoryHistory('/');
-    let store = configureStore();
+    let store = configureStore(historyObj);
     let history = syncHistoryWithStore(historyObj, store);
     return (
       <Provider store={store}>
