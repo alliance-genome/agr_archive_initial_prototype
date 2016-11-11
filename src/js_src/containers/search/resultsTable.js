@@ -17,7 +17,7 @@ class ResultsTable extends Component {
       fields = ['display_name', 'name', 'synonyms', 'source', 'species', 'gene_type', 'genomic_coordinates'];
       break;
     case 'go':
-      fields = ['display_name', 'synonyms', 'go_branch'];
+      fields = ['display_name', 'id', 'synonyms', 'go_branch'];
       break;
     case 'disease':
       fields = ['display_name', 'omim_id', 'synonyms'];
