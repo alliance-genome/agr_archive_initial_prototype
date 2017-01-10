@@ -21,7 +21,7 @@ class SGD(MOD):
         query = SGD.service.new_query("Gene")
         query.add_view(
             "primaryIdentifier", "secondaryIdentifier", "symbol", "name",
-            "briefDescription", "sequenceOntologyTerm.name",
+            "briefDescription", "sgdAlias", "sequenceOntologyTerm.name",
             "chromosome.primaryIdentifier", "chromosomeLocation.start",
             "chromosomeLocation.end", "chromosomeLocation.strand",
             "crossReferences.identifier", "crossReferences.dbxreftype",
@@ -40,7 +40,9 @@ class SGD(MOD):
             else:
                 synonyms = []
                 if row["secondaryIdentifier"]:
-                    synonyms.append(row["secondaryIdentifier"])
+                    synonyms = [row["secondaryIdentifier"]]
+                if row["sgdAlias"]:
+                    synonyms += [row["sgdAlias"]]
 
                 chromosomes = []
                 if row["chromosome.primaryIdentifier"]:
