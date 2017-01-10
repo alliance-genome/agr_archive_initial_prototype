@@ -15,6 +15,7 @@ const DEFAULT_STATE = fromJS({
   // for multi table
   geneResults: [],
   goResults: [],
+  graphData: { nodes: [], edges: [] },
   diseaseResults: [],
   geneTotal: 0,
   goTotal: 0,
@@ -68,6 +69,9 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
       .set('isReady', true)
       // parse results
       .set(resultsTarget, fromJS(parseResults(action.payload.results)));
+  case 'SEARCH_GRAPH_RESPONSE':
+    return state
+      .set('graphData', fromJS(action.payload));
   default:
     return state;
   }

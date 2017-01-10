@@ -9,6 +9,7 @@ import FilterSelector from './filterSelector/filterSelector';
 import MultiTable from './multiTable';
 import SearchBreadcrumbs from './searchBreadcrumbs';
 import SearchControls from './searchControls';
+import ResultsGraph from './resultsGraph';
 import ResultsList from './resultsList';
 import ResultsTable from './resultsTable';
 import { SMALL_COL_CLASS, LARGE_COL_CLASS, SEARCH_API_ERROR_MESSAGE } from '../../constants';
@@ -78,7 +79,9 @@ class SearchComponent extends Component {
   }
 
   renderResultsNode() {
-    if (this.props.isMultiTable) {
+    if (this.props.mode === 'graph' || this.props.mode === 'chord') {
+      return <ResultsGraph mode={this.props.mode} />;
+    } else if (this.props.isMultiTable) {
       return <MultiTable />;
     } else if (this.props.isTable) {
       return <ResultsTable activeCategory={this.props.activeCategory} entries={this.props.results} />;
@@ -130,6 +133,7 @@ SearchComponent.propTypes = {
   isMultiTable: React.PropTypes.bool,
   isReady: React.PropTypes.bool,
   isTable: React.PropTypes.bool,
+  mode: React.PropTypes.string,
   pageSize: React.PropTypes.number,
   queryParams: React.PropTypes.object,
   results: React.PropTypes.array
@@ -137,10 +141,11 @@ SearchComponent.propTypes = {
 
 function mapStateToProps(state) {
   let _queryParams = selectQueryParams(state);
-  let _isTable = (_queryParams.mode === 'table');
+  let _mode = _queryParams.mode;
+  let _isTable = (_mode === 'table');
   let _currentPage = parseInt(_queryParams.page) || 1;
   let _activeCategory = selectActiveCategory(state);
-  let _isMultiTable = (_isTable && _activeCategory === 'none') ;
+  let _isMultiTable = (_isTable && _activeCategory === 'none');
   return {
     activeCategory: _activeCategory,
     currentPage: _currentPage,
@@ -149,6 +154,7 @@ function mapStateToProps(state) {
     isMultiTable: _isMultiTable,
     isReady: selectIsReady(state),
     isTable: _isTable,
+    mode: _mode,
     pageSize: selectPageSize(state),
     queryParams: _queryParams,
     results: selectResults(state)

@@ -29,7 +29,6 @@ export const selectIsReady = createSelector(
   (search) => search.get('isReady')
 );
 
-
 export const selectIsPending = createSelector(
   [selectSearchDomain],
   (search) => search.get('isPending')
@@ -52,6 +51,11 @@ export const selectGeneResults = createSelector(
 export const selectGoResults = createSelector(
   [selectSearchDomain],
   (search) => search.get('goResults').toJS()
+);
+
+export const selectGraphData = createSelector(
+  [selectSearchDomain],
+  (search) => search.get('graphData').toJS()
 );
 
 export const selectDiseaseResults = createSelector(

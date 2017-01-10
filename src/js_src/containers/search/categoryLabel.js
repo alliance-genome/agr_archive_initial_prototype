@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import style from './style.css';
 import { CATEGORIES } from '../../constants';
 
-
 class CategoryLabel extends Component {
   getCurrentOption() {
     let current = CATEGORIES.filter( d => d.name === this.props.category )[0];

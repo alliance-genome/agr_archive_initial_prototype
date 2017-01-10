@@ -1,6 +1,7 @@
 from flask import Flask, render_template, send_from_directory, request, jsonify
 from flask_webpack import Webpack
 from gevent.wsgi import WSGIServer
+from random import randint
 
 import os
 
@@ -62,7 +63,6 @@ def graph_search():
             format_search_results(search_results, json_response_fields)
         )
     )
-
 
 @app.route('/api/search')
 def search():
@@ -164,7 +164,7 @@ def send_static(path):
 @app.route('/help')
 @app.route('/search')
 def react_render():
-        return render_template('index.jinja2')
+    return render_template('index.jinja2')
 
 if __name__ == '__main__':
     if os.environ.get('PRODUCTION', ''):
