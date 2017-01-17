@@ -170,7 +170,8 @@ def send_static(path):
 @app.route('/about')
 @app.route('/help')
 @app.route('/search')
-def react_render():
+@app.route('/feature/<feature_id>')
+def react_render(feature_id = None):
     return render_template('index.jinja2')
 
 if __name__ == '__main__':
