@@ -64,6 +64,13 @@ def graph_search():
         )
     )
 
+@app.route('/api/feature/<feature_id>')
+def get_gene_data(feature_id):
+    GENES_INDEX_NAME = 'agr_gene'
+    GENES_INDEX_DOC_TYPE = GENES_INDEX_NAME
+    feature_doc = es.get(index=GENES_INDEX_NAME, doc_type=GENES_INDEX_DOC_TYPE, id=feature_id)['_source']
+    return jsonify(feature_doc)
+
 @app.route('/api/search')
 def search():
     query = request.args.get('q', '')
