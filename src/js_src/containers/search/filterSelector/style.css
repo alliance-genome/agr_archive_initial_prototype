@@ -1,0 +1,17 @@
+.aggContainer h5 {
+	margin-bottom: 1rem;
+}
+
+.aggValContainer {
+	margin-bottom: 1rem;
+}
+
+
+.aggValContainer a {
+	padding: 0.25rem 0.5rem !important;
+}
+
+.filterLabel {
+	margin-bottom: 0.5rem;
+	text-transform: capitalize;
+}
