@@ -1,4 +1,5 @@
-ES_URI=http://35.160.110.142:9200/
+# get the Elasticsearch URI from an environment variable, if one is set
+ES_URI := $(or $(ES_URI),$(ES_URI),http://35.160.110.142:9200/)
 
 # if possible have a virtualenv setup first
 build:
@@ -22,6 +23,7 @@ tests: test-py
 	npm test
 
 index:
+	echo $(ES_URI)
 	cd scripts/elastic_search && ES_URI=$(ES_URI) python index.py
 
 test-py:
