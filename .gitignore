@@ -10,3 +10,4 @@ src/server.pyc
 *.pyc
 *.bkp
 deploy_variables.sh
+venv
