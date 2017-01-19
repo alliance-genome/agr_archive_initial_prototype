@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import SearchBar from './searchBar';
 import style from './style.css';
+import Loader from './loader/index';
 import logo from './agrLogo.png';
+import SearchBar from './searchBar';
 
 import { SMALL_COL_CLASS, LARGE_COL_CLASS } from '../../constants';
 
@@ -38,8 +39,11 @@ class Layout extends Component {
             </div>
           </div>
         </nav>
-        <div className={style.contentContainer}>
-          {this.props.children}
+        <div className={style.loaderContentContainer}>
+          <Loader />
+          <div className={style.contentContainer}>
+            {this.props.children}
+          </div>
         </div>
       </div>
     );

@@ -10,7 +10,8 @@ import CategoryLabel from '../categoryLabel';
 import {
   selectActiveCategory,
   selectAggregations,
-  selectIsPending
+  selectIsPending,
+  selectQueryParams,
 } from '../../../selectors/searchSelectors';
 
 class FilterSelectorComponent extends Component {
@@ -63,13 +64,11 @@ FilterSelectorComponent.propTypes = {
 };
 
 function mapStateToProps(state) {
-  let location = state.routing.locationBeforeTransitions;
-  let _queryParams = location ? location.query : {};
   return {
     activeCategory:  selectActiveCategory(state),
     aggregations: selectAggregations(state),
     isPending: selectIsPending(state),
-    queryParams: _queryParams
+    queryParams: selectQueryParams(state)
   };
 }
 

@@ -5,11 +5,19 @@ export function clearError () {
   };
 }
 
-export function receiveResponse (response, _queryParams) {
+export function receiveResponse (response, _queryParams, _category='none') {
   return {
     type: 'SEARCH_RESPONSE',
     payload: response,
+    category: _category,
     queryParams: _queryParams
+  };
+}
+
+export function receiveGraphResponse (response) {
+  return {
+    type: 'SEARCH_GRAPH_RESPONSE',
+    payload: response
   };
 }
 

@@ -3,23 +3,26 @@ import React, { Component } from 'react';
 import style from './style.css';
 import CategoryLabel from './categoryLabel';
 import DetailList from './detailList';
+import LogList from './logList';
+import { NON_HIGHLIGHTED_FIELDS } from '../../constants';
 
-const DEFAULT_FIELDS = ['symbol', 'gene_symbol', 'name', 'gene_synonyms', 'synonyms', 'sourceHref', 'geneId', 'species', 'type'];
+const DEFAULT_FIELDS = ['symbol', 'gene_symbol', 'name', 'gene_synonyms', 'synonyms', 'sourceHref', 'id', 'species', 'type'];
 
 class ResultsList extends Component {
   renderHighlightedValues(highlight) {
     let _data = highlight;
     let _fields = Object.keys(_data).filter( d => {
-      return (DEFAULT_FIELDS.indexOf(d) < 0);
+      return (DEFAULT_FIELDS.indexOf(d) < 0) && (NON_HIGHLIGHTED_FIELDS.indexOf(d) < 0);
     });
     return <DetailList data={_data} fields={_fields} />;
   }
 
-  renderHeader(d) {
+  renderHeader(d, isMakeLowercase) {
+    let _className = isMakeLowercase ? style.lowercase : null;
     return (
       <div>
         <span className={style.resultCatLabel}><CategoryLabel category={d.category} /></span>
-        <h4>
+        <h4 className={_className}>
           <a dangerouslySetInnerHTML={{ __html: d.display_name }} href={d.href} target='_new' />
         </h4>
       </div>
@@ -30,12 +33,13 @@ class ResultsList extends Component {
     return <DetailList data={d} fields={fields} />;
   }
 
-  renderDiseaseEntry(d, i) {
-    let fields = ['synonyms', 'omim_id'];
+  renderNonGeneEntry(d, i, fields) {
+    let isMakeLowercase = d.category === 'disease';
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
-        {this.renderHeader(d)}
+        {this.renderHeader(d, isMakeLowercase)}
         {this.renderDetailFromFields(d, fields)}
+        {this.renderHighlightedValues(d.highlight)}
         <hr />
       </div>
     );
@@ -44,38 +48,18 @@ class ResultsList extends Component {
   renderGeneEntry(d, i) {
     let topFields = ['name', 'synonyms'];
     let bottomFields = ['species', 'gene_type'];
+    let logHighlight = d.highlight['homologs.symbol'] || d.highlight['homologs.panther_family'];
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
         {this.renderHeader(d)}
           {this.renderDetailFromFields(d, topFields)}
           <div className={style.detailContainer}>
             <span className={style.detailLabel}><strong>Source:</strong> </span>
-            <span><a dangerouslySetInnerHTML={{ __html: d.geneId }} href={d.sourceHref} target='_new' /></span>
+            <span><a dangerouslySetInnerHTML={{ __html: d.id }} href={d.sourceHref} target='_new' /></span>
           </div>
           {this.renderDetailFromFields(d, bottomFields)}
+          <LogList label='Homologs' logs={d.homologs} rawHighlight={logHighlight} />
           {this.renderHighlightedValues(d.highlight)}
-        <hr />
-      </div>
-    );
-  }
-
-  renderGoEntry(d, i) {
-    let fields = ['synonyms', 'go_branch'];
-    return (
-      <div className={style.resultContainer} key={`sr${i}`}>
-        {this.renderHeader(d)}
-        {this.renderDetailFromFields(d, fields)}
-        <hr />
-      </div>
-    );
-  }
-
-  renderOrthologGroupEntry(d, i) {
-    let fields = ['associated_genes'];
-    return (
-      <div className={style.resultContainer} key={`sr${i}`}>
-        {this.renderHeader(d)}
-        {this.renderDetailFromFields(d, fields)}
         <hr />
       </div>
     );
@@ -83,17 +67,15 @@ class ResultsList extends Component {
 
   renderRows() {
     return this.props.entries.map( (d, i) => {
-      switch(d.category) {
-      case 'ortholog group':
-        return this.renderOrthologGroupEntry(d, i);
-      case 'disease':
-        return this.renderDiseaseEntry(d, i);
-      case 'gene':
+      if (d.category === 'gene') {
         return this.renderGeneEntry(d, i);
-      case 'go':
-        return this.renderGoEntry(d, i);
-      default:
-        return this.renderGeneEntry(d, i);
+      } else {
+        let fieldVals = {
+          'disease': ['synonyms', 'omim_id'],
+          'go': ['id', 'synonyms', 'go_branch']
+        };
+        let fields = fieldVals[d.category] || [];
+        return this.renderNonGeneEntry(d, i, fields);
       }
     });
   }

@@ -2,19 +2,25 @@ import React, { Component } from 'react';
 
 import style from './style.css';
 import DetailList from './detailList';
+import LogList from './logList';
 import { makeFieldDisplayName } from '../../lib/searchHelpers';
+import { NON_HIGHLIGHTED_FIELDS } from '../../constants';
 
 const MATCH_LABEL = 'match_by';
+const MAX_CHAR = 100;
 
 class ResultsTable extends Component {
   getFields() {
     let fields;
     switch(this.props.activeCategory) {
     case 'gene':
-      fields = ['display_name', 'name', 'synonym', 'source', 'species', 'gene_type', 'genomic_coordinates', 'relative_coordinates'];
+      fields = ['display_name', 'name', 'synonyms', 'source', 'species', 'gene_type', 'genomic_coordinates'];
       break;
     case 'go':
-      fields = ['display_name', 'synonyms', 'go_branch'];
+      fields = ['display_name', 'id', 'synonyms', 'go_branch'];
+      break;
+    case 'disease':
+      fields = ['display_name', 'omim_id', 'synonyms'];
       break;
     default:
       fields = ['display_name', 'synonyms'];
@@ -43,24 +49,39 @@ class ResultsTable extends Component {
     );
   }
 
+  renderTruncatedContent(original) {
+    original = original || '';
+    if (Array.isArray(original)) {
+      original = original.join(', ');
+    }
+    if (original.length > MAX_CHAR) {
+      return original.slice(0, MAX_CHAR) + '...';
+    } else {
+      return original;
+    }
+  }
+
   renderRows() {
+    let entries = this.props.entries;
     let fields = this.getFields();
-    return this.props.entries.map( (d, i) => {
+    let rowNodes = entries.map( (d, i) => {
       let nodes = fields.map( (field) => {
+        let isMakeLowercase = d.category === 'disease';
+        let _className = isMakeLowercase ? style.lowercase : null;
         let _key = `srtc.${i}.${field}`;
         switch(field) {
         case 'display_name':
         case 'symbol':
-          return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d[field] }} href={d.href} target='_new' /></td>;
+          return <td key={_key}><a className={_className} dangerouslySetInnerHTML={{ __html: d[field] }} href={d.href} target='_new' /></td>;
         case 'source':
-          return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d.gene_id }} href={d.href} target='_new' /></td>;
+          return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d.id }} href={d.href} target='_new' /></td>;
         case MATCH_LABEL:
-          return <td key={_key}>{this.renderHighlight(d.highlight)}</td>;
+          return <td key={_key}>{this.renderHighlight(d.highlight, d.homologs)}</td>;
         case 'species':
           return <td key={_key}><i dangerouslySetInnerHTML={{ __html: d.species }} /></td>;
         default:
-          return <td dangerouslySetInnerHTML={{ __html: d[field] }} key={_key} />;
-        }        
+          return <td dangerouslySetInnerHTML={{ __html: this.renderTruncatedContent(d[field]) }} key={_key} />;
+        }
       });
       return (
         <tr key={`tr${i}`}>
@@ -68,28 +89,43 @@ class ResultsTable extends Component {
         </tr>
       );
     });
+    return (
+      <tbody>
+        {rowNodes}
+      </tbody>
+    );
   }
 
-  renderHighlight(highlight) {
+  renderHighlight(highlight, homologs) {
+    homologs = homologs || [];
     let _data = highlight;
-    let _fields = Object.keys(_data);
-    return <DetailList data={_data} fields={_fields} />;
+    let _fields = Object.keys(_data).filter( d => {
+      return (NON_HIGHLIGHTED_FIELDS.indexOf(d) < 0);
+    });
+    let logHighlight = highlight['homologs.symbol'] || highlight['homologs.panther_family'];
+    let homologNode = null;
+    if (homologs.length && logHighlight) {
+      homologNode = <LogList label='Homologs' logs={homologs} rawHighlight={logHighlight} />;
+    }
+    return (
+      <div>
+        <DetailList data={_data} fields={_fields} />
+        {homologNode}
+      </div>
+    );
   }
 
   render() {
-    if (this.props.activeCategory === 'none') {
-      return <p>To view the results in a table, first choose a category.</p>;
-    }
+    let emptyNode = (this.props.entries.length === 0) ? <p className={style.tableEmpty}>No results</p> : null;
     return (
       <div className={style.tableContainer}>
         <table className='table'>
           <thead className='thead-default'>
             {this.renderHeader()}
           </thead>
-          <tbody>
-            {this.renderRows()}
-          </tbody>
+          {this.renderRows()}
         </table>
+        {emptyNode}
       </div>
     );
   }
