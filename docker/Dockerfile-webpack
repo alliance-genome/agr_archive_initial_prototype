@@ -1,0 +1,15 @@
+FROM node:boron
+MAINTAINER Josh Goodman <jogoodma@indiana.edu>
+
+RUN mkdir -p /usr/src/app
+
+COPY . /usr/src/app
+
+WORKDIR /usr/src/app
+
+RUN npm install
+RUN npm run build
+
+EXPOSE 2992
+
+CMD ["npm","run","start:docker"]

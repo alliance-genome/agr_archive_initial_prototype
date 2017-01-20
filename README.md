@@ -30,6 +30,54 @@ source ~/.virtualenvs/agr_prototype/bin/activate
 make tests
 ```
 
+## Docker
+
+You can also use Docker to install and develop with the AGR web portal.  Advantages of
+this include:
+
+* No need to install elasticsearch
+* Simplifies running multiple instances on a single host.
+
+### Getting started with Docker
+
+1. Install [Docker and Docker Compose](https:///www.docker.com/products/overview)
+
+Be sure to install both, some OS packages bundle them together and some do not.
+
+2. Clone the git repo.
+
+3. Build and start docker containers
+
+`docker-compose up` or `docker-compose up -d` 
+
+The `-d` option will put the containers in the background.
+
+Once up, you should be able to access the server at http://localhost:5000/
+
+Any changes to the React application should be rebuilt by the webpack container
+and available via the above URL.  Changes to the python code currently require that
+the container be rebuilt.
+
+### Elasticsearch indexing
+
+This command will call the `index` target in the Makefile.  This should be
+used after your first start or if you want to re-index.
+
+`docker-compose exec agr make index`
+
+### Description
+
+This Docker setup uses 3 containers to manage the AGR portal.
+
+1. Elasticsearch - db
+2. Flask server  - agr
+3. Webpack/node  - webpack
+
+The Flask and Webpack containers expose external ports on 5000 and 2992 respectively.
+The elasticsearch db container is exposed only to the Flask server container by default.
+
+The webpack container uses the [hot module replacement][5] mode by default.
+
 ## Development Environment Pro Tips
 Assets are compiled using [webpack][4]. 
 To enable [hot module replacement][5] in your development environment,

@@ -1,0 +1,6 @@
+FROM python:2-onbuild
+MAINTAINER Josh Goodman <jogoodma@indiana.edu>
+
+EXPOSE 5000
+
+CMD ["python","/usr/src/app/src/server.py"]

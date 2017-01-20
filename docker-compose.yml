@@ -1,0 +1,35 @@
+version: '2'
+services:
+    db:
+        image: elasticsearch
+        volumes:
+            - dbdata:/usr/share/elasticsearch/data
+    webpack:
+        env_file: development.env
+        build:
+            context: .
+            dockerfile: ./docker/Dockerfile-webpack
+        volumes:
+            - .:/usr/src/app
+            - build:/usr/src/app/src/build
+        ports:
+            - "127.0.0.1:2992:2992"
+    agr:
+        env_file: development.env
+        build:
+            context: .
+            dockerfile: ./docker/Dockerfile-python
+        volumes:
+            - build:/usr/src/app/src/build
+        links:
+            - db
+            - webpack
+        depends_on:
+            - db
+            - webpack
+        ports:
+            - "127.0.0.1:5000:5000"
+
+volumes:
+    dbdata:
+    build:
