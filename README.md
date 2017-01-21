@@ -75,12 +75,19 @@ used after your first start or if you want to re-index.
 ### Useful commands
 
 `docker-compose up` - Starts the 3 AGR web portal containers.  ^C shuts it down.
+
 `docker-compose up -d` - Starts the 3 AGR web portal containers in the background.
+
 `docker-compose ps` - Prints status of containers and their port mapping info.
+
 `docker-compose stop [CONTAINER NAME]` - Stops the specified container or all if none given.
+
 `docker-compose start [CONTAINER NAME]` - Starts the specified container or all if none given.
+
 `docker-compose restart [CONTAINER NAME]` - Restarts the specified container or all if none given.
+
 `docker-compose down` - Stops and removes all the container images.
+
 `docker-compose down -v` - Stops and removes all the container images and their associated data volumes.
 
 ### Description
