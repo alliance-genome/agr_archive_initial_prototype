@@ -13,7 +13,8 @@ const SORT_PRIORITY = ['category', 'q'];
 class SearchBreadcrumbsComponent extends Component {
   renderCrumbValues(key, values) {
     return values.map( (d, i) => {
-      let newQp = getQueryParamWithValueChanged(key, d, this.props.queryParams);
+      let pagelessQp = getQueryParamWithValueChanged('page', [], this.props.queryParams, true);
+      let newQp = getQueryParamWithValueChanged(key, d, pagelessQp);
       let newPath = { pathname: '/search', query: newQp };
       let label = makeFieldDisplayName(d);
       let labelNode = (key === 'q') ? `"${label}"` : label;

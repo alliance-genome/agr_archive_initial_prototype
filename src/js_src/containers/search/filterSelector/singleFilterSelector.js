@@ -27,7 +27,8 @@ class SingleFilterSelector extends Component {
 
   handleSelectChange(newValues) {
     let simpleValues = newValues.map( d => d.name );
-    let newQp = getQueryParamWithValueChanged(this.props.name, simpleValues, this.props.queryParams);
+    let pagelessQp = getQueryParamWithValueChanged('page', [], this.props.queryParams, true);
+    let newQp = getQueryParamWithValueChanged(this.props.name, simpleValues, pagelessQp);
     let newPath = { pathname: SEARCH_PATH, query: newQp };
     this.props.dispatch(push(newPath));
   }
@@ -52,7 +53,8 @@ class SingleFilterSelector extends Component {
         let color = getSpeciesColorScale()(d.name);
         dotNode = <span className={style.colorDot} style={{ background: color }} />;
       }
-      let newQueryObj = getQueryParamWithValueChanged(this.props.name, d.key, this.props.queryParams);
+      let pagelessQp = getQueryParamWithValueChanged('page', [], this.props.queryParams, true);
+      let newQueryObj = getQueryParamWithValueChanged(this.props.name, d.key, pagelessQp);
       return (
         <li className='nav-item' key={_key}>
           <Link className={`nav-link${classSuffix}`} to={{ pathname: SEARCH_PATH, query: newQueryObj }}>
