@@ -6,7 +6,7 @@ import Select from 'react-select';
 import { push } from 'react-router-redux';
 
 import style from './style.css';
-import { getQueryParamWithValueChanged } from '../../../lib/searchHelpers';
+import {getFilterQueryParam, getQueryParamWithValueChanged} from '../../../lib/searchHelpers';
 import getSpeciesColorScale from '../../../lib/getSpeciesColorScale';
 import CategoryLabel from '../categoryLabel';
 
@@ -27,8 +27,7 @@ class SingleFilterSelector extends Component {
 
   handleSelectChange(newValues) {
     let simpleValues = newValues.map( d => d.name );
-    let pagelessQp = getQueryParamWithValueChanged('page', [], this.props.queryParams, true);
-    let newQp = getQueryParamWithValueChanged(this.props.name, simpleValues, pagelessQp);
+    let newQp = getFilterQueryParam(this.props.name, simpleValues, this.props.queryParams);
     let newPath = { pathname: SEARCH_PATH, query: newQp };
     this.props.dispatch(push(newPath));
   }
@@ -53,8 +52,7 @@ class SingleFilterSelector extends Component {
         let color = getSpeciesColorScale()(d.name);
         dotNode = <span className={style.colorDot} style={{ background: color }} />;
       }
-      let pagelessQp = getQueryParamWithValueChanged('page', [], this.props.queryParams, true);
-      let newQueryObj = getQueryParamWithValueChanged(this.props.name, d.key, pagelessQp);
+      let newQueryObj = getFilterQueryParam(this.props.name, d.key, this.props.queryParams);
       return (
         <li className='nav-item' key={_key}>
           <Link className={`nav-link${classSuffix}`} to={{ pathname: SEARCH_PATH, query: newQueryObj }}>
