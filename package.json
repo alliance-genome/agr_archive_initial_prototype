@@ -54,11 +54,10 @@
   },
   "scripts": {
     "start": "webpack-dev-server --history-api-fallback --port 2992 --hot --inline",
-    "prestart:docker": "npm install && npm run build",
     "start:docker": "webpack-dev-server --history-api-fallback --host 0.0.0.0 --port 2992 --hot --inline",
     "prebuild": "npm run clean && npm run copy",
     "build": "cross-env NODE_ENV=production webpack -p --optimize-minimize",
-    "clean": "rimraf src/build/*",
+    "clean": "rimraf src/build",
     "copy": "cp -r src/public/. src/build",
     "test": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js \"src/js_src/**/*test.js\"",
     "test:watch": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js --watch \"src/js_src/**/*test.js\""

@@ -41,11 +41,11 @@ this include:
 
 ### Getting started with Docker
 
-1. Install [Docker and Docker Compose](https:///www.docker.com/products/overview)
+#### Install [Docker and Docker Compose](https:///www.docker.com/products/overview)
 
 Be sure to install both, some OS packages bundle them together and some do not.
 
-2. Clone the git repo.
+#### Clone the git repo.
 
 ```bash
 git clone https://github.com/FlyBase/agr_prototype.git
@@ -53,44 +53,43 @@ cd agr_prototype
 git checkout docker
 ```
 
-3. Build and start docker containers
+#### Build and start docker containers
 
-`docker-compose up` or `docker-compose up -d` 
+`./docker-compose-wrapper.sh up` or `./docker-compose-wrapper.sh up -d` 
 
 The `-d` option will put the containers in the background.
 
 Once up, you should be able to access the server at http://localhost:5000/
 
 Any changes to the React application should be rebuilt by the webpack container
-and available via the above URL.  Changes to the python code currently require that
-the container be rebuilt.
+and available via the above URL.
 
 ### Elasticsearch indexing
 
 This command will call the `index` target in the Makefile.  This should be
 used after your first start or if you want to re-index.
 
-`docker-compose exec agr make index`
+`./docker-compose-wrapper.sh exec agr make index`
 
 ### Useful commands
 
-`docker-compose up` - Starts the 3 AGR web portal containers.  ^C shuts it down.
+`./docker-compose-wrapper.sh up` - Starts the 3 AGR web portal containers.  ^C shuts it down.
 
-`docker-compose up -d` - Starts the 3 AGR web portal containers in the background.
+`./docker-compose-wrapper.sh up -d` - Starts the 3 AGR web portal containers in the background.
 
-`docker-compose ps` - Prints status of containers and their port mapping info.
+`./docker-compose-wrapper.sh ps` - Prints status of containers and their port mapping info.
 
-`docker-compose stop [CONTAINER NAME]` - Stops the specified container or all if none given.
+`./docker-compose-wrapper.sh stop [CONTAINER NAME]` - Stops the specified container or all if none given.
 
-`docker-compose start [CONTAINER NAME]` - Starts the specified container or all if none given.
+`./docker-compose-wrapper.sh start [CONTAINER NAME]` - Starts the specified container or all if none given.
 
-`docker-compose restart [CONTAINER NAME]` - Restarts the specified container or all if none given.
+`./docker-compose-wrapper.sh restart [CONTAINER NAME]` - Restarts the specified container or all if none given.
 
-`docker-compose down` - Stops and removes all the container images.
+`./docker-compose-wrapper.sh down` - Stops and removes all the container images.
 
-`docker-compose down -v` - Stops and removes all the container images and their associated data volumes.
+`./docker-compose-wrapper.sh down -v` - Stops and removes all the container images and their associated data volumes.
 
-### Description
+### Container Details
 
 This Docker setup uses 3 containers to manage the AGR portal.
 
@@ -102,6 +101,7 @@ The Flask and Webpack containers expose external ports on 5000 and 2992 respecti
 The elasticsearch db container is exposed only to the Flask server container.
 
 The webpack container uses the [hot module replacement][5].
+
 
 ## Development Environment Pro Tips
 Assets are compiled using [webpack][4]. 
