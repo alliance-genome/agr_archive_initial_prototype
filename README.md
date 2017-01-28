@@ -48,9 +48,9 @@ Be sure to install both, some OS packages bundle them together and some do not.
 #### Clone the git repo.
 
 ```bash
-git clone https://github.com/FlyBase/agr_prototype.git
+git clone https://github.com/alliance-genome/agr_prototype.git
 cd agr_prototype
-git checkout docker
+git checkout development
 ```
 
 #### Build and start docker containers

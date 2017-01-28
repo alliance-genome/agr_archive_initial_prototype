@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# Add local user
-# Either use the LOCAL_USER_ID if passed in at runtime or
-# fallback
-
-#USER_ID=${LOCAL_USER_ID:-9001}
-#GROUP_ID=${LOCAL_GROUP_ID:-9001}
-
 USER=webpack
 GROUP=webpack
 
