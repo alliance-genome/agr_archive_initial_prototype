@@ -66,7 +66,7 @@ and available via the above URL.
 
 ### Elasticsearch indexing
 
-This command will call the `index` target in the Makefile.  This should be
+This command will call the `index` target in the Makefile and should be
 used after your first start or if you want to re-index.
 
 `docker-compose exec agr make index`
@@ -101,7 +101,6 @@ The Flask and Webpack containers expose external ports on 5000 and 2992 respecti
 The elasticsearch db container is exposed only to the Flask server container.
 
 The webpack container uses the [hot module replacement][5].
-
 
 ## Development Environment Pro Tips
 Assets are compiled using [webpack][4]. 
