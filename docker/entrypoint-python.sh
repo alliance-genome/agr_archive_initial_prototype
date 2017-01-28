@@ -1,24 +1,23 @@
 #!/bin/bash
 
-# Add local user
-# Either use the LOCAL_USER_ID if passed in at runtime or
-# fallback
+USER=flask
+GROUP=flask
 
-USER_ID=${LOCAL_USER_ID:-9001}
-GROUP_ID=${LOCAL_GROUP_ID:-9001}
+USER_ID="$(stat -c '%u' /usr/src/app)" 
+GROUP_ID="$(stat -c '%g' /usr/src/app)"
+echo "Starting with UID : $USER_ID GID: $GROUP_ID"
 
-echo "Starting with UID : $USER_ID"
-groupadd -g $GROUP_ID flask
-useradd --shell /bin/bash -u $USER_ID -g flask -o -c "" -m flask
-export HOME=/home/flask
+groupadd -g $GROUP_ID $GROUP
+useradd --shell /bin/bash -u $USER_ID -g $GROUP -o -c "" -m $USER
+export HOME=/home/$USER
 
 # Block until the manifest file appears.
 # TODO Figure out why the docker-compose.yml links and depends_on
 # don't take care of this.
+echo "Pausing until file exists."
 while : ; do
   [[ -f "/usr/src/app/src/build/manifest.json" ]] && break
-  echo "Pausing until file exists."
   sleep 5 
 done
 
-exec /usr/local/bin/gosu flask "$@"
+exec /usr/local/bin/gosu $USER_ID:$GROUP_ID "$@"

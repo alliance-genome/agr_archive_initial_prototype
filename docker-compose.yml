@@ -7,9 +7,6 @@ services:
       - dbdata:/usr/share/elasticsearch/data
   web:
     env_file: development.env
-    environment:
-      - LOCAL_USER_ID=${USER_ID}
-      - LOCAL_GROUP_ID=${GROUP_ID}
     build:
       context: .
       dockerfile: ./docker/Dockerfile-webpack
@@ -19,9 +16,6 @@ services:
       - "127.0.0.1:2992:2992"
   api:
     env_file: development.env
-    environment:
-      - LOCAL_USER_ID=${USER_ID}
-      - LOCAL_GROUP_ID=${GROUP_ID}
     build:
       context: .
       dockerfile: ./docker/Dockerfile-python
