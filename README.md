@@ -69,7 +69,7 @@ and available via the above URL.
 This command will call the `index` target in the Makefile and should be
 used after your first start or if you want to re-index.
 
-`docker-compose exec agr make index`
+`docker-compose exec api make index`
 
 ### Useful commands
 
