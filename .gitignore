@@ -12,3 +12,4 @@ src/server.pyc
 *.bkp
 deploy_variables.sh
 *.pickle
+venv
