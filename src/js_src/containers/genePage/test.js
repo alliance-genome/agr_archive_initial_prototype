@@ -6,7 +6,7 @@ import GenePage from './index';
 
 describe('GenePage', () => {
   it('should be able to render to an HTML string', () => {
-    let htmlString = renderToString(<GenePage />);
+    let htmlString = renderToString(<GenePage params={{geneId: 5}} />);
     assert.equal(typeof htmlString, 'string');
   });
 });
