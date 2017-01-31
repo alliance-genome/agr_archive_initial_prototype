@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 
-const columnNames = ['Species', 'Gene symbol', 'NCBI gene', 'Score',
+const columnNames = ['Species', 'Gene symbol', 'Score',
   'Best score', 'Best reverse score', 'Source', 'Align'];
 
 const ALL_SOURCES = {
@@ -65,7 +65,8 @@ const SourceLogo = ({sourceKey}) => {
   const sourceName = ALL_SOURCES[sourceKey] ?
     ALL_SOURCES[sourceKey].name : sourceKey;
 
-    const tooltip = (<Tooltip
+  const tooltip = (
+    <Tooltip
       className="in"
       id="tooltip-bottom"
       placement="bottom"
@@ -73,13 +74,16 @@ const SourceLogo = ({sourceKey}) => {
     {
       sourceName
     }
-    </Tooltip>);
+    </Tooltip>
+  );
 
   const hasIcon = ALL_SOURCES[sourceKey] && ALL_SOURCES[sourceKey].icon;
   return (
     <OverlayTrigger
-      overlay={tooltip} placement="top"
-      delayShow={300} delayHide={150}
+      delayHide={150}
+      delayShow={300}
+      overlay={tooltip}
+      placement="top"
     >
       <span style={sourceCellStyle}>
       {
@@ -151,17 +155,25 @@ class OrthologTable extends Component {
         </thead>
         <tbody>
         {
-          [1,2,3,4,5,6,7,8].map((orthData) => {
-            return (<tr key={orthData}>
-              <td>NA</td>
-              <td>NA</td>
-              <td>NA</td>
-              <td>NA</td>
-              <td>NA</td>
-              <td>NA</td>
-              <SourceColumnData sources={['compara', 'panther', 'phylome']} />
-              <td>NA</td>
-            </tr>);
+          this.props.data.map((orthData) => {
+            return (
+              <tr key={orthData.species + orthData.geneSymbol}>
+                <td>{orthData.species}</td>
+                <td>
+                  <a href={orthData.geneURL}>{orthData.geneSymbol}</a>
+                  <span style={{
+                    display: 'inline-block',
+                    margin: '0 0.5em'
+                  }}>|</span>
+                  <a href={`https://www.ncbi.nlm.nih.gov/gene/${orthData.ncbiID}`}>[NCBI]</a>
+                </td>
+                <td>{`${orthData.scoreNumerator} of ${orthData.scoreDemominator}`}</td>
+                <td>{orthData.isBestScore}</td>
+                <td>{orthData.isBestScoreReverse}</td>
+                <SourceColumnData sources={orthData.sources} />
+                <td><a href={orthData.alignURL}>View</a></td>
+              </tr>
+            );
           })
         }
         </tbody>
@@ -169,5 +181,21 @@ class OrthologTable extends Component {
     );
   }
 }
+
+OrthologTable.propTypes = {
+  data: React.PropTypes.arrayOf(
+    React.PropTypes.shape({
+      species: React.PropTypes.string,
+      geneSymbol: React.PropTypes.string,
+      geneURL: React.PropTypes.string,
+      ncbiID: React.PropTypes.string,
+      scoreNumerator: React.PropTypes.number,
+      scoreDemominator: React.PropTypes.number,
+      isBestScore: React.PropTypes.bool,
+      isBestScoreReverse: React.PropTypes.bool,
+      alignURL: React.PropTypes.string,
+    })
+  )
+};
 
 export default OrthologTable;
