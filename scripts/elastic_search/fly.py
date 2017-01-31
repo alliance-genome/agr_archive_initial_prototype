@@ -3,7 +3,7 @@ import csv
 
 
 class FlyBase(MOD):
-    species = "Mus musculus"
+    species = "Drosophila melanogaster"
 
     @staticmethod
     def gene_href(gene_id):
