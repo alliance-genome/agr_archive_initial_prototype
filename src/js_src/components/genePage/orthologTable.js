@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Tooltip, OverlayTrigger } from 'react-bootstrap';
+
 
 const columnNames = ['Species', 'Gene symbol', 'NCBI gene', 'Score',
   'Best score', 'Best reverse score', 'Source', 'Align'];
@@ -63,25 +65,36 @@ const SourceLogo = ({sourceKey}) => {
   const sourceName = ALL_SOURCES[sourceKey] ?
     ALL_SOURCES[sourceKey].name : sourceKey;
 
-  if (ALL_SOURCES[sourceKey] && ALL_SOURCES[sourceKey].icon) {
-    return (
-      <span style={sourceCellStyle}>
-        <img
-          alt={sourceName}
-          height={16}
-          src={ALL_SOURCES[sourceKey].icon}
-          width={16}
-        />
-      </span>
-    );
-  } else {
-    return (
+    const tooltip = (<Tooltip
+      className="in"
+      id="tooltip-bottom"
+      placement="bottom"
+    >
+    {
+      sourceName
+    }
+    </Tooltip>);
+
+  const hasIcon = ALL_SOURCES[sourceKey] && ALL_SOURCES[sourceKey].icon;
+  return (
+    <OverlayTrigger
+      overlay={tooltip} placement="top"
+      delayShow={300} delayHide={150}
+    >
       <span style={sourceCellStyle}>
       {
-        sourceName.substring(0, 1)
+        hasIcon ?
+          <img
+            alt={sourceName}
+            height={16}
+            src={ALL_SOURCES[sourceKey].icon}
+            width={16}
+          /> :
+          sourceName.substring(0, 1)
       }
-      </span>);
-  }
+      </span>
+    </OverlayTrigger>
+  );
 };
 
 SourceLogo.propTypes = {
