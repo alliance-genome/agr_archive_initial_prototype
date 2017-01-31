@@ -55,7 +55,7 @@ const ALL_SOURCES = {
 };
 
 const sourceCellStyle = {
-  width: 20,
+  width: 25,
   display: 'inline-block',
   textAlign: 'center',
   lineHeight: '20px',
@@ -135,6 +135,27 @@ SourceColumnData.propTypes = {
   sources: React.PropTypes.arrayOf(React.PropTypes.string),
 };
 
+const BooleanCell = ({value, labelTrue, labelFalse}) => {
+  const backgroundColor = value ? '#dff0d8' : 'transparent';
+  return (
+    <td
+      style={{
+        backgroundColor: backgroundColor,
+      }}
+    >
+    {
+      value ? (labelTrue || 'Yes') : (labelFalse || 'No')
+    }
+    </td>
+  );
+};
+
+BooleanCell.propTypes = {
+  labelFalse: React.PropTypes.string,
+  labelTrue: React.PropTypes.string,
+  value: React.PropTypes.bool,
+};
+
 class OrthologTable extends Component {
 
   render() {
@@ -161,15 +182,17 @@ class OrthologTable extends Component {
                 <td>{orthData.species}</td>
                 <td>
                   <a href={orthData.geneURL}>{orthData.geneSymbol}</a>
-                  <span style={{
-                    display: 'inline-block',
-                    margin: '0 0.5em'
-                  }}>|</span>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      margin: '0 0.5em'
+                    }}
+                  >|</span>
                   <a href={`https://www.ncbi.nlm.nih.gov/gene/${orthData.ncbiID}`}>[NCBI]</a>
                 </td>
                 <td>{`${orthData.scoreNumerator} of ${orthData.scoreDemominator}`}</td>
-                <td>{orthData.isBestScore}</td>
-                <td>{orthData.isBestScoreReverse}</td>
+                <BooleanCell value={orthData.isBestScore} />
+                <BooleanCell value={orthData.isBestScoreReverse} />
                 <SourceColumnData sources={orthData.sources} />
                 <td><a href={orthData.alignURL}>View</a></td>
               </tr>
