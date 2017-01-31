@@ -5,57 +5,94 @@ const columnNames = ['Species', 'Gene symbol', 'NCBI gene', 'Score',
 
 const ALL_SOURCES = {
   compara: {
-    name: 'Compara'
+    name: 'Compara',
+    icon: 'http://static.ensembl.org/i/ensembl-favicon.png'
   },
   homologene: {
-    name: 'Homologene'
+    name: 'Homologene',
+    icon: 'https://www.ncbi.nlm.nih.gov/favicon.ico'
   },
   inparanoid: {
-    name: 'Inparanoid'
+    name: 'Inparanoid',
+    icon: 'http://inparanoid.sbc.su.se/favicon.ico'
   },
   isobase: {
-    name: 'Isobase'
+    name: 'Isobase',
   },
   oma: {
     name: 'OMA',
+    icon: 'https://omictools.com/img/apple-touch-icon.png'
   },
   orthodb: {
-    name: 'OrthoDB'
+    name: 'OrthoDB',
   },
   orthomcl: {
-    name: 'orthoMCL'
+    name: 'orthoMCL',
+    icon: 'http://orthomcl.org/orthomcl/images/OrthoMCL/favicon.ico'
   },
   panther: {
-    name: 'Panther'
+    name: 'Panther',
+    icon: 'http://www.pantherdb.org/favicon.ico'
   },
   phylome: {
-    name: 'Phylome'
+    name: 'Phylome',
+    icon: 'http://phylomedb.org/sites/default/files/images/phylomedb.ico'
   },
   roundup: {
     name: 'RoundUp'
   },
   treefam: {
-    name: 'TreeFam'
+    name: 'TreeFam',
+    icon: 'http://www.treefam.org/static/images/favicon.png'
   },
   zfin: {
-    name: 'ZFIN'
+    name: 'ZFIN',
+    icon: 'https://zfin.org/images/zfinlogo.png'
+//    icon: 'https://zfin.org/favicon.ico'
   }
 };
 
 const sourceCellStyle = {
   width: 20,
-  display: 'inline-block'
+  display: 'inline-block',
+  textAlign: 'center',
+  lineHeight: '20px',
+};
+
+const SourceLogo = ({sourceKey}) => {
+  const sourceName = ALL_SOURCES[sourceKey] ?
+    ALL_SOURCES[sourceKey].name : sourceKey;
+
+  if (ALL_SOURCES[sourceKey] && ALL_SOURCES[sourceKey].icon) {
+    return (
+      <span style={sourceCellStyle}>
+        <img
+          alt={sourceName}
+          height={16}
+          src={ALL_SOURCES[sourceKey].icon}
+          width={16}
+        />
+      </span>
+    );
+  } else {
+    return (
+      <span style={sourceCellStyle}>
+      {
+        sourceName.substring(0, 1)
+      }
+      </span>);
+  }
+};
+
+SourceLogo.propTypes = {
+  sourceKey: React.PropTypes.string
 };
 
 const SourceColumnHeader = () => (<th>
   <div>Source</div>
   <div style={{minWidth: 20 * Object.keys(ALL_SOURCES).length}}>{
     Object.keys(ALL_SOURCES).sort().map((sourceKey) => (
-      <span key={sourceKey} style={sourceCellStyle}>
-      {
-        sourceKey[0]
-      }
-      </span>
+      <SourceLogo key={sourceKey} sourceKey={sourceKey} />
     ))
   }</div>
 </th>);
