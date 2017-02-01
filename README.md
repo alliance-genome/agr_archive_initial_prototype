@@ -20,6 +20,7 @@ virtualenv -p python2 ~/.virtualenvs/agr_prototype
 ```bash
 source ~/.virtualenvs/agr_prototype/bin/activate
 make build
+make index
 make run
 ```
 
