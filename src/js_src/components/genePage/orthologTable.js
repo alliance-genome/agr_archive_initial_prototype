@@ -117,14 +117,35 @@ const SourceColumnHeader = () => (<th>
 </th>);
 
 const SourceColumnData = ({sources}) => {
-  const sourceSet = new Set(sources || []);
+  const calledSet = new Set(
+    (sources || [])
+      .filter((source) => source.isCalled)
+      .map((source) => source.id)
+  );
+  const notCalledSet = new Set(
+    (sources || [])
+      .filter((source) => !source.isCalled)
+      .map((source) => source.id)
+  );
+
   return (
     <td>
     {
       Object.keys(ALL_SOURCES).map((source) => {
-        const tipText = sourceSet.has(source) ?
-          `Found in ${ALL_SOURCES[source].name}` :
-          `Not found in ${ALL_SOURCES[source].name}`;
+
+        const sourceName = ALL_SOURCES[source].name;
+
+        let symbol, tipText;
+        if (calledSet.has(source)) {
+          symbol = '\u2611';
+          tipText = `Call made by ${sourceName}`;
+        } else if (notCalledSet.has(source)) {
+          symbol = '\u2610';
+          tipText = `No call made by ${sourceName}`;
+        } else {
+          symbol = '\u00a0';
+          tipText = `Comparision not available on ${sourceName}`;
+        }
 
         const tooltip = (
           <Tooltip
@@ -146,9 +167,9 @@ const SourceColumnData = ({sources}) => {
             overlay={tooltip}
             placement="top"
           >
-            <span style={sourceCellStyle}>
+            <span style={Object.assign({fontSize: 22}, sourceCellStyle)}>
             {
-              sourceSet.has(source) ? '\u25A0' : '\u00a0'
+              symbol
             }
             </span>
           </OverlayTrigger>
