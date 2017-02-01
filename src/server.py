@@ -163,12 +163,15 @@ def send_static(path):
 @app.route('/about')
 @app.route('/help')
 @app.route('/search')
-def react_render():
+@app.route('/gene/<gene_id>')
+def react_render(gene_id = None):
     return render_template('index.jinja2')
 
 if __name__ == '__main__':
     if os.environ.get('PRODUCTION', ''):
         http_server = WSGIServer(('', 5000), app)
         http_server.serve_forever()
+    elif os.environ.get('DOCKER', ''):
+        app.run(host='0.0.0.0', debug=True)
     else:
         app.run(debug=True)
