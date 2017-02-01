@@ -37,7 +37,7 @@ export function makeFieldDisplayName(unformattedName) {
   }
 }
 
-export function getFilterQueryParam(key, val, queryParams) {
+export function getQueryParamWithoutPage(key, val, queryParams) {
   let pagelessQp = getQueryParamWithValueChanged('page', [], queryParams, true);
   return getQueryParamWithValueChanged(key, val, pagelessQp);
 }

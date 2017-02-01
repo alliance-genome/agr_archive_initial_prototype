@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 import style from './style.css';
-import { getFilterQueryParam, makeFieldDisplayName } from '../../lib/searchHelpers';
+import { getQueryParamWithoutPage, makeFieldDisplayName } from '../../lib/searchHelpers';
 
 import { selectIsPending, selectQueryParams, selectTotal } from '../../selectors/searchSelectors.js';
 
@@ -13,7 +13,7 @@ const SORT_PRIORITY = ['category', 'q'];
 class SearchBreadcrumbsComponent extends Component {
   renderCrumbValues(key, values) {
     return values.map( (d, i) => {
-      let newQp = getFilterQueryParam(key,d,this.props.queryParams);
+      let newQp = getQueryParamWithoutPage(key,d,this.props.queryParams);
       let newPath = { pathname: '/search', query: newQp };
       let label = makeFieldDisplayName(d);
       let labelNode = (key === 'q') ? `"${label}"` : label;
