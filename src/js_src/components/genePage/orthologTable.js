@@ -119,13 +119,39 @@ const SourceColumnData = ({sources}) => {
   return (
     <td>
     {
-      Object.keys(ALL_SOURCES).map((source) => (
-        <span key={source} style={sourceCellStyle}>
-        {
-          sourceSet.has(source) ? '\u25A0' : ''
-        }
-        </span>
-      ))
+      Object.keys(ALL_SOURCES).map((source) => {
+        const tipText = sourceSet.has(source) ?
+          `Found in ${ALL_SOURCES[source].name}` :
+          `Not found in ${ALL_SOURCES[source].name}`;
+
+        const tooltip = (
+          <Tooltip
+            className="in"
+            id="tooltip-bottom"
+            placement="bottom"
+          >
+          {
+            tipText
+          }
+          </Tooltip>
+        );
+
+        return (
+          <OverlayTrigger
+            delayHide={150}
+            delayShow={300}
+            key={source}
+            overlay={tooltip}
+            placement="top"
+          >
+            <span style={sourceCellStyle}>
+            {
+              sourceSet.has(source) ? '\u25A0' : '\u00a0'
+            }
+            </span>
+          </OverlayTrigger>
+        );
+      })
     }
     </td>
   );
@@ -178,7 +204,7 @@ class OrthologTable extends Component {
         {
           this.props.data.map((orthData) => {
             return (
-              <tr key={orthData.species + orthData.geneSymbol}>
+              <tr key={`${orthData.species}-${orthData.geneSymbol}`}>
                 <td>{orthData.species}</td>
                 <td>
                   <a href={orthData.geneURL}>{orthData.geneSymbol}</a>
