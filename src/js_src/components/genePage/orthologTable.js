@@ -54,8 +54,10 @@ const ALL_SOURCES = {
   }
 };
 
+const sourceCellWidth = 25;
+
 const sourceCellStyle = {
-  width: 25,
+  width: sourceCellWidth,
   display: 'inline-block',
   textAlign: 'center',
   lineHeight: '20px',
@@ -107,7 +109,7 @@ SourceLogo.propTypes = {
 
 const SourceColumnHeader = () => (<th>
   <div>Source</div>
-  <div style={{minWidth: 20 * Object.keys(ALL_SOURCES).length}}>{
+  <div style={{minWidth: sourceCellWidth * Object.keys(ALL_SOURCES).length}}>{
     Object.keys(ALL_SOURCES).sort().map((sourceKey) => (
       <SourceLogo key={sourceKey} sourceKey={sourceKey} />
     ))
@@ -192,9 +194,9 @@ class OrthologTable extends Component {
           {
             columnNames.map((columnName) => {
               if (columnName === 'Source') {
-                return (<SourceColumnHeader />);
+                return (<SourceColumnHeader key={columnName} />);
               } else {
-                return (<th>{columnName}</th>);
+                return (<th key={columnName}>{columnName}</th>);
               }
             })
           }
