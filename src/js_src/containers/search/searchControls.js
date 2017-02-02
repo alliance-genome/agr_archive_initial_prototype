@@ -60,29 +60,44 @@ class SearchControlsComponent extends Component {
     );
   }
 
+  renderSortinator() {
+    return (
+      <div className={style.control}>
+        <label className={style.searchLabel}>Sort By</label>
+        <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='Relevance'>
+          <MenuItem eventKey='1'>Dropdown link</MenuItem>
+          <MenuItem eventKey='2'>Dropdown link</MenuItem>
+        </DropdownButton>
+      </div>
+    );
+  }
+
+  renderPageSizeControl() {
+    return (
+      <div className={style.control}>
+        <label className={style.searchLabel}>Page Size</label>
+        <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='50'>
+          <MenuItem eventKey='1'>Dropdown link</MenuItem>
+          <MenuItem eventKey='2'>Dropdown link</MenuItem>
+        </DropdownButton>
+      </div>
+    );
+  }
+
+  renderDownloadButton() {
+    return (
+      <div>
+        <label className={style.searchLabel}>&nbsp;</label>
+        <a className={`btn btn-secondary ${style.agrDownloadBtn}`} href='#'><i className='fa fa-download' /> Download</a>
+      </div>
+    );
+  }
+
   renderNonViewAs() {
     if (this.props.isMultiTable || this.props.mode === 'graph') return null;
     return (
       <div className={style.controlContainer}>
         {this.renderPaginator()}
-        <div className={style.control}>
-          <label className={style.searchLabel}>Sort By</label>
-          <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='Relevance'>
-            <MenuItem eventKey='1'>Dropdown link</MenuItem>
-            <MenuItem eventKey='2'>Dropdown link</MenuItem>
-          </DropdownButton>
-        </div>
-        <div className={style.control}>
-          <label className={style.searchLabel}>Page Size</label>
-          <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='50'>
-            <MenuItem eventKey='1'>Dropdown link</MenuItem>
-            <MenuItem eventKey='2'>Dropdown link</MenuItem>
-          </DropdownButton>
-        </div>
-        <div>
-          <label className={style.searchLabel}>&nbsp;</label>
-          <a className={`btn btn-secondary ${style.agrDownloadBtn}`} href='#'><i className='fa fa-download' /> Download</a>
-        </div>
       </div>
     );
   }
