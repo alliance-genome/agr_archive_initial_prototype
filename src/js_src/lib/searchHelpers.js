@@ -37,6 +37,11 @@ export function makeFieldDisplayName(unformattedName) {
   }
 }
 
+export function getQueryParamWithoutPage(key, val, queryParams) {
+  let pagelessQp = getQueryParamWithValueChanged('page', [], queryParams, true);
+  return getQueryParamWithValueChanged(key, val, pagelessQp);
+}
+
 export function getQueryParamWithValueChanged(key, val, queryParams, isClear=false) {
   let qp = _.clone(queryParams || {});
   let oldVal = _.clone(qp[key]);
