@@ -1,3 +1,5 @@
+import json
+
 def build_es_aggregation_body_request(es_query, category, category_filters):
     agg_query_body = {
         'query': es_query,
@@ -102,20 +104,18 @@ def build_search_query(query, search_fields, category, category_filters, args):
         return es_query
 
     query = {
-        'filtered': {
-            'query': es_query,
-            'filter': {
-                'bool': {
-                    'must': [{'term': {'category': category}}]
-                }
-            }
+        'bool': {
+            'must': [
+                {'term': {'category': category}},
+                es_query
+            ]
         }
     }
 
     if category in category_filters.keys():
         for item in category_filters[category]:
             for param in args.getlist(item, None):
-                query['filtered']['filter']['bool']['must'].append({
+                query['bool']['must'].append({
                     'term': {
                         (item + ".raw"): param
                     }
