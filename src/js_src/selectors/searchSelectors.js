@@ -53,11 +53,6 @@ export const selectGoResults = createSelector(
   (search) => search.get('goResults').toJS()
 );
 
-export const selectGraphData = createSelector(
-  [selectSearchDomain],
-  (search) => search.get('graphData').toJS()
-);
-
 export const selectDiseaseResults = createSelector(
   [selectSearchDomain],
   (search) => search.get('diseaseResults').toJS()

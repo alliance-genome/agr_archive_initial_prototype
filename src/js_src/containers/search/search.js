@@ -9,7 +9,6 @@ import FilterSelector from './filterSelector/filterSelector';
 import MultiTable from './multiTable';
 import SearchBreadcrumbs from './searchBreadcrumbs';
 import SearchControls from './searchControls';
-import ResultsGraph from './resultsGraph';
 import ResultsList from './resultsList';
 import ResultsTable from './resultsTable';
 import { SMALL_COL_CLASS, LARGE_COL_CLASS, SEARCH_API_ERROR_MESSAGE } from '../../constants';
@@ -79,9 +78,7 @@ class SearchComponent extends Component {
   }
 
   renderResultsNode() {
-    if (this.props.mode === 'graph' || this.props.mode === 'chord') {
-      return <ResultsGraph mode={this.props.mode} />;
-    } else if (this.props.isMultiTable) {
+    if (this.props.isMultiTable) {
       return <MultiTable />;
     } else if (this.props.isTable) {
       return <ResultsTable activeCategory={this.props.activeCategory} entries={this.props.results} />;
