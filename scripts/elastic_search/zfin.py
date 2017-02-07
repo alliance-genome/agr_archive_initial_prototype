@@ -2,7 +2,7 @@ from intermine.webservice import Service
 from mod import MOD
 
 
-class ZFin(MOD):
+class ZFIN(MOD):
     species = "Danio rerio"
     service = Service("http://www.zebrafishmine.org/service")
 
@@ -18,7 +18,7 @@ class ZFin(MOD):
     def load_genes(self):
         genes = MOD.genes
 
-        query = ZFin.service.new_query("Gene")
+        query = ZFIN.service.new_query("Gene")
         query.add_view(
             "name", "symbol", "primaryIdentifier", "organism.species",
             "crossReferences.identifier", "crossReferences.linkType",
@@ -84,12 +84,12 @@ class ZFin(MOD):
 
                     "name_key": row["symbol"].lower(),
                     "id": row["primaryIdentifier"],
-                    "href": ZFin.gene_href(row["primaryIdentifier"]),
+                    "href": ZFIN.gene_href(row["primaryIdentifier"]),
                     "category": "gene"
                 }
 
     def load_go(self):
-        query = ZFin.service.new_query("Gene")
+        query = ZFIN.service.new_query("Gene")
         query.add_view(
             "name", "primaryIdentifier", "symbol",
             "goAnnotation.ontologyTerm.identifier", "goAnnotation.ontologyTerm.name",
@@ -103,7 +103,7 @@ class ZFin(MOD):
             self.add_go_annotation_to_gene(gene_id=row["primaryIdentifier"], go_id=row["goAnnotation.ontologyTerm.identifier"])
 
     def load_diseases(self):
-        query = ZFin.service.new_query("OmimPhenotype")
+        query = ZFIN.service.new_query("OmimPhenotype")
         query.add_view(
             "disease", "phenotypeLink.identifier", "phenotypeLink.linkType",
             "genes.primaryIdentifier", "genes.symbol", "genes.name"

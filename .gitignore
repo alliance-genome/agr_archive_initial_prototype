@@ -12,3 +12,4 @@ src/server.pyc
 deploy_variables.sh
 *.pickle
 venv
+.idea
