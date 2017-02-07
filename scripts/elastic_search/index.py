@@ -1,7 +1,7 @@
 import time
 
 from sgd import SGD
-from zfin import ZFin
+from zfin import ZFIN
 from worm import WormBase
 from fly import FlyBase
 from mouse import MGI
@@ -10,7 +10,7 @@ from rat import RGD
 from mod import MOD
 
 sgd = SGD()
-zfin = ZFin()
+zfin = ZFIN()
 worm = WormBase()
 fly = FlyBase()
 mouse = MGI()

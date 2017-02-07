@@ -31,7 +31,7 @@ class MOD():
     @staticmethod
     def factory(organism):
         from sgd import SGD
-        from zfin import ZFin
+        from zfin import ZFIN
         from worm import WormBase
         from fly import FlyBase
         from mouse import MGI
@@ -41,7 +41,7 @@ class MOD():
         if organism in ("Saccharomyces cerevisiae", "S. cerevisiae", "YEAST"):
             return SGD()
         elif organism in ("Danio rerio", "D. rerio", "DANRE"):
-            return ZFin()
+            return ZFIN()
         elif organism in ("Caenorhabditis elegans", "C. elegans", "CAEEL"):
             return WormBase()
         elif organism in ("Drosophila melanogaster", "D. melanogaster", "DROME"):
