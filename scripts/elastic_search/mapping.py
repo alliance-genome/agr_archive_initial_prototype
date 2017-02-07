@@ -39,6 +39,9 @@ mapping = {
     "mappings": {
         "searchable_item": {
             "properties": {
+                "primaryId": {
+                    "type": "keyword"
+                },
                 "name": {
                     "type": "text",
                     "fields": {
@@ -48,14 +51,76 @@ mapping = {
                         }
                     }
                 },
+                "taxonId": {
+                    "type": "keyword"
+                },
+                "symbol": {
+                    "type": "text",
+                    "analyzer": "symbols"
+                },
+                "systematicName": {
+                    "type": "text",
+                    "analyzer": "symbols"
+                },
+                "geneSynopsis": {
+                    "type": "text"
+                },
+                "geneSynopsisUrl": {
+                    "type": "keyword"
+                },
+                "geneLiteratureUrl": {
+                    "type": "keyword"
+                },
+                "soTermId": {
+                    "type": "keyword"
+                },
+                "synonyms": {
+                    "type": "text",
+                    "analyzer": "symbols"
+                },
+                "crossReferences": {
+                    "properties": {
+                        "dataProvider": {
+                            "type": "keyword"
+                        },
+                        "id": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "genomeLocations": {
+                    "properties": {
+                        "assembly": {
+                            "type": "keyword"
+                        },
+                        "startPosition": {
+                            "type": "integer"
+                        },
+                        "endPosition": {
+                            "type": "integer"
+                        },
+                        "chromosome": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "secondaryIds": {
+                    "type": "keyword"
+                },
+
+
+
+                # will eventually be replaced by 'symbol'
                 "gene_symbol": {
                     "type": "text",
                     "analyzer": "symbols"
                 },
+                # will eventually be replaced by 'synonyms'
                 "gene_synonyms": {
                     "type": "text",
                     "analyzer": "symbols"
                 },
+
                 "gene_type": {
                     "type": "text",
                     "fields": {
@@ -96,6 +161,7 @@ mapping = {
                         }
                     }
                 },
+                # will be replaced by 'geneSynopsis'
                 "description": {
                     "type": "text"
                 },
