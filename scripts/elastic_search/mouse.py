@@ -50,7 +50,7 @@ class MGI(MOD):
 
             if row["primaryIdentifier"] in genes:
                 if row["synonyms.value"]:
-                    genes[row["primaryIdentifier"]]["gene_synonyms"].append(row["synonyms.value"])
+                    genes[row["primaryIdentifier"]]["synonyms"].append(row["synonyms.value"])
                 if row["crossReferences.identifier"]:
                     genes[row["primaryIdentifier"]]["external_ids"].append(cross_reference_link_type + " " + cross_reference_id)
                 if row["chromosomeLocation.locatedOn.primaryIdentifier"] and row["chromosomeLocation.locatedOn.primaryIdentifier"] not in genes[row["primaryIdentifier"]]["gene_chromosomes"]:
@@ -65,10 +65,10 @@ class MGI(MOD):
                     chromosomes = [row["chromosomeLocation.locatedOn.primaryIdentifier"]]
 
                 genes[row["primaryIdentifier"]] = {
-                    "gene_symbol": row["symbol"],
+                    "symbol": row["symbol"],
                     "name": row["name"],
                     "description": row["description"],
-                    "gene_synonyms": synonyms,
+                    "synonyms": synonyms,
                     "gene_type": row["sequenceOntologyTerm.name"],
                     "gene_chromosomes": chromosomes,
                     "gene_chromosome_starts": row["chromosomeLocation.start"],

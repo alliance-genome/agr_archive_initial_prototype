@@ -27,7 +27,7 @@ export function injectHighlightIntoResponse(responseObj) {
 }
 
 export function parseResults(results) {
-  return results.map( d => { 
+  return results.map( d => {
     switch (d.category) {
     case 'gene':
       return parseGeneResult(d);
@@ -51,7 +51,7 @@ export function parseAggs(rawAggs, queryObject) {
       let currentValue = queryObject[d.key];
       let _isActive;
       // look at array fields differently
-      if (typeof currentValue === 'object') { 
+      if (typeof currentValue === 'object') {
         _isActive = (currentValue.indexOf(_d.key) >= 0);
       } else {
         _isActive = _d.key === currentValue;
@@ -98,14 +98,14 @@ function parseCoordinates(d) {
 function parseGeneResult(_d) {
   let d = injectHighlightIntoResponse(_d);
   return {
-    symbol: d.gene_symbol || '(no symbol)',
+    symbol: d.symbol || '(no symbol)',
     category: d.category || 'gene',
-    display_name: d.gene_symbol,
+    display_name: d.symbol,
     href: d.href,
     name: d.name,
     id: d.id || '(no ID)',
     sourceHref: d.href,
-    synonyms: d.gene_synonyms,
+    synonyms: d.synonyms,
     gene_type: makeFieldDisplayName(d.gene_type),
     species: d.species,
     highlight: d.highlights,

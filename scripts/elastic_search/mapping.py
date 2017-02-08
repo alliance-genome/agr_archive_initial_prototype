@@ -101,6 +101,9 @@ mapping = {
                         },
                         "chromosome": {
                             "type": "keyword"
+                        },
+                        "strand": {
+                            "type": "keyword"
                         }
                     }
                 },

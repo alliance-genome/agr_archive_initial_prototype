@@ -6,7 +6,7 @@ import DetailList from './detailList';
 import LogList from './logList';
 import { NON_HIGHLIGHTED_FIELDS } from '../../constants';
 
-const DEFAULT_FIELDS = ['symbol', 'gene_symbol', 'name', 'gene_synonyms', 'synonyms', 'sourceHref', 'id', 'species', 'type'];
+const DEFAULT_FIELDS = ['symbol', 'name', 'synonyms', 'sourceHref', 'id', 'species', 'type'];
 
 class ResultsList extends Component {
   renderHighlightedValues(highlight) {

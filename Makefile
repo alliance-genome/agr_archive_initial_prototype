@@ -21,6 +21,12 @@ stop:
 tests: test-py
 	npm test
 
+fetch:
+	cd scripts/elastic_search && ES_URI=$(ES_URI) python fetch_data.py
+
+index-files:
+	cd scripts/elastic_search && ES_URI=$(ES_URI) python index_data.py
+
 index:
 	echo $(ES_URI)
 	cd scripts/elastic_search && ES_URI=$(ES_URI) python index.py

@@ -34,7 +34,7 @@ class RGD(MOD):
         for row in query.rows():
             if row["primaryIdentifier"] in genes:
                 if row["synonyms.value"]:
-                    genes[row["primaryIdentifier"]]["gene_synonyms"].append(row["synonyms.value"])
+                    genes[row["primaryIdentifier"]]["synonyms"].append(row["synonyms.value"])
             else:
                 synonyms = []
                 if row["synonyms.value"]:
@@ -45,10 +45,10 @@ class RGD(MOD):
                     chromosomes = [row["chromosome.primaryIdentifier"]]
 
                 genes[row["primaryIdentifier"]] = {
-                    "gene_symbol": row["symbol"],
+                    "symbol": row["symbol"],
                     "name": row["name"],
                     "description": row["description"],
-                    "gene_synonyms": synonyms,
+                    "synonyms": synonyms,
                     "gene_type": row["sequenceOntologyTerm.name"],
                     "gene_chromosomes": chromosomes,
                     "gene_chromosome_starts": row["locations.start"],

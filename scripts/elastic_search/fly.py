@@ -29,10 +29,10 @@ class FlyBase(MOD):
                     chromosomes = [row[5]]
 
                 genes[row[0]] = {
-                    "gene_symbol": row[1],
+                    "symbol": row[1],
                     "name": row[1],
                     "description": row[4],
-                    "gene_synonyms": map(lambda s: s.strip(), row[9].split(",")),
+                    "synonyms": map(lambda s: s.strip(), row[9].split(",")),
                     "gene_type": row[3],
                     "gene_chromosomes": chromosomes,
                     "gene_chromosome_starts": row[6],
