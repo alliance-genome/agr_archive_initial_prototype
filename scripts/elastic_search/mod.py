@@ -26,7 +26,6 @@ class MOD():
     def __init__(self):
         self._load_omim_dataset()
         self._load_go_dataset()
-        self._load_so_dataset()
         self.es = Elasticsearch(os.environ['ES_URI'], retry_on_timeout=True)
 
     @staticmethod
@@ -264,6 +263,7 @@ class MOD():
                 "href": "http://amigo.geneontology.org/amigo/term/" + go_id,
                 "category": "go"
             }
+        # appends go terms to the go namespace collections on gene dictionary created in load_genes() for each mod
 
         if self.go[go_id]["name"] not in self.genes[gene_id]["gene_" + self.go[go_id]["go_type"]]:
             self.genes[gene_id]["gene_" + self.go[go_id]["go_type"]].append(self.go[go_id]["name"])

@@ -20,6 +20,7 @@ with open(data_file_name) as data_file:
         synonyms = []
         crossReferences = {}
         description = None
+        external_ids = []
 
         if 'synonyms' in geneRecord:
             for synonym in geneRecord['synonyms']:
@@ -28,8 +29,8 @@ with open(data_file_name) as data_file:
             description = geneRecord['description']
         if 'crossReferences' in geneRecord:
             for crossRef in geneRecord['crossReferences']:
-                print crossRef['dataProvider']['name'] + " " + crossRef['id']
-
+                refText = crossRef['dataProvider']['name'] + " " + crossRef['id']
+                external_ids.append(refText)
 
         #TODO: maybe this method can be generic - running thru the dictionary and adding key:value pairs based on the JSON object now that the mapping.py matches the JSON schema.
         genes[geneRecord['primaryId']] = {
@@ -45,7 +46,7 @@ with open(data_file_name) as data_file:
             # "external_ids": [],
             "taxonId": geneRecord['taxonID'],
             # "species": "Drosophila melanogaster",
-
+            "external_ids": external_ids,
             # "gene_biological_process": [],
             # "gene_molecular_function": [],
             # "gene_cellular_component": [],
@@ -64,8 +65,8 @@ with open(data_file_name) as data_file:
 #for gene in genes:
 #    print gene
 
-#for key, value in genes.iteritems() :
-#    print key, value
+for key, value in genes.iteritems() :
+    print key, value
 
 #pp.pprint(data)
 
