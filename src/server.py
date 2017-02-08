@@ -36,9 +36,9 @@ def graph_search():
         "gene": ['gene_type', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species']
     }
 
-    search_fields = ['id', 'name', 'gene_symbol', 'gene_synonyms', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'homologs.symbol', 'homologs.panther_family']
+    search_fields = ['id', 'name', 'symbol', 'synonyms', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'homologs.symbol', 'homologs.panther_family']
 
-    json_response_fields = ['id', 'gene_symbol', 'species', 'homologs', 'href']
+    json_response_fields = ['id', 'symbol', 'species', 'homologs', 'href']
 
     es_query = build_search_query(query, search_fields, 'gene',
                                   category_filters, request.args)
@@ -78,9 +78,9 @@ def search():
         "disease": ['disease_species', 'disease_genes']
     }
 
-    search_fields = ['id', 'name', 'gene_symbol', 'gene_synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs.symbol', 'homologs.panther_family']
+    search_fields = ['id', 'name', 'symbol', 'synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs.symbol', 'homologs.panther_family']
 
-    json_response_fields = ['name', 'gene_symbol', 'gene_synonyms', 'gene_type', 'gene_chromosomes','gene_chromosome_starts', 'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs', 'category', 'href']
+    json_response_fields = ['name', 'symbol', 'synonyms', 'gene_type', 'gene_chromosomes','gene_chromosome_starts', 'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs', 'category', 'href']
 
     es_query = build_search_query(query, search_fields, category,
                                   category_filters, request.args)

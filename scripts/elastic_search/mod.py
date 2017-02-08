@@ -73,7 +73,7 @@ class MOD():
             if gene_id not in genes:
                 return None
             else:
-                gene_symbol = genes[gene_id]["gene_symbol"]
+                gene_symbol = genes[gene_id]["symbol"]
 
         return {
             "id": gene_id,
@@ -242,7 +242,7 @@ class MOD():
         if go_id not in self.go_dataset or go_id in MOD.go_blacklist or gene_id not in self.genes:
             return
 
-        gene_symbol = self.genes[gene_id]["gene_symbol"].upper()
+        gene_symbol = self.genes[gene_id]["symbol"].upper()
 
         if go_id in self.go:
             if gene_symbol not in self.go[go_id]["go_genes"]:
@@ -272,7 +272,7 @@ class MOD():
         if omim_id not in self.omim_dataset or gene_id not in self.genes:
             return
 
-        gene_symbol = self.genes[gene_id]["gene_symbol"].upper()
+        gene_symbol = self.genes[gene_id]["symbol"].upper()
 
         if omim_id in self.diseases:
             if gene_symbol not in self.diseases[omim_id]["disease_genes"]:

@@ -38,10 +38,10 @@ class WormBase(MOD):
                 chromosomes = [row[5].value]
 
             genes[row[0].value] = {
-                "gene_symbol": row[1].value,
+                "symbol": row[1].value,
                 "name": row[1].value,
                 "description": row[4].value,
-                "gene_synonyms": map(lambda s: s.strip(), row[9].value.split(",")),
+                "synonyms": map(lambda s: s.strip(), row[9].value.split(",")),
                 "gene_type": gene_type,
                 "gene_chromosomes": chromosomes,
                 "gene_chromosome_starts": row[6].value,

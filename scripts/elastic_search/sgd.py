@@ -49,10 +49,10 @@ class SGD(MOD):
                     chromosomes = [row["chromosome.primaryIdentifier"]]
 
                 genes[row["primaryIdentifier"]] = {
-                    "gene_symbol": row["symbol"],
+                    "symbol": row["symbol"],
                     "name": row["name"],
                     "description": row["briefDescription"],
-                    "gene_synonyms": synonyms,
+                    "synonyms": synonyms,
                     "gene_type": row["sequenceOntologyTerm.name"],
                     "gene_chromosomes": chromosomes,
                     "gene_chromosome_starts": row["chromosomeLocation.start"],

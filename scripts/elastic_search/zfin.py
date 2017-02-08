@@ -49,8 +49,8 @@ class ZFIN(MOD):
                 cross_reference_id = ""
 
             if row["primaryIdentifier"] in genes:
-                if row["synonyms.value"] is not None and row["synonyms.value"] not in genes[row["primaryIdentifier"]]["gene_synonyms"]:
-                    genes[row["primaryIdentifier"]]["gene_synonyms"].append(row["synonyms.value"])
+                if row["synonyms.value"] is not None and row["synonyms.value"] not in genes[row["primaryIdentifier"]]["synonyms"]:
+                    genes[row["primaryIdentifier"]]["synonyms"].append(row["synonyms.value"])
                 elif row["crossReferences.identifier"] is not None:
                     genes[row["primaryIdentifier"]]["external_ids"].append(cross_reference_link_type + " " + cross_reference_id)
                 elif row["chromosomes.name"] is not None and row["chromosomes.name"] not in genes[row["primaryIdentifier"]]["gene_chromosomes"]:
@@ -65,10 +65,10 @@ class ZFIN(MOD):
                     chromosomes = [row["chromosomes.name"]]
 
                 genes[row["primaryIdentifier"]] = {
-                    "gene_symbol": row["symbol"],
+                    "symbol": row["symbol"],
                     "name": row["name"],
                     "description": None, # not present in ZFinMine
-                    "gene_synonyms": synonyms,
+                    "synonyms": synonyms,
                     "gene_type": row["sequenceOntologyTerm.name"],
                     "gene_chromosomes": chromosomes,
                     "gene_chromosome_starts": None,
