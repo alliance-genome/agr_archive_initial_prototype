@@ -17,16 +17,27 @@ with open(data_file_name) as data_file:
     data_content = json.load(data_file)
     #       print data_content['data'][0]['primaryId']
     for geneRecord in data_content['data']:
-        crossReferences = []
-        for synonym in geneRecord['synonyms']:
-            crossReferences.append(synonym)
+        synonyms = []
+        crossReferences = {}
+        description = None
 
+        if 'synonyms' in geneRecord:
+            for synonym in geneRecord['synonyms']:
+                synonyms.append(synonym)
+        if 'description' in geneRecord:
+            description = geneRecord['description']
+        if 'crossReferences' in geneRecord:
+            for crossRef in geneRecord['crossReferences']:
+                print crossRef['dataProvider']['name'] + " " + crossRef['id']
+
+
+        #TODO: maybe this method can be generic - running thru the dictionary and adding key:value pairs based on the JSON object now that the mapping.py matches the JSON schema.
         genes[geneRecord['primaryId']] = {
-            "gene_symbol": geneRecord['symbol'],
+            "symbol": geneRecord['symbol'],
             "name": geneRecord['name'],
-            # "description": geneRecord['description'],
-            "gene_synonyms": crossReferences,
-            "gene_type": geneRecord['soTermId'],
+            "description": description,
+            "synonyms": synonyms,
+            "soTermId": geneRecord['soTermId'],
             # "gene_chromosomes": chromosomes,
             # "gene_chromosome_starts": row[6],
             # "gene_chromosome_ends": row[7],
@@ -42,18 +53,19 @@ with open(data_file_name) as data_file:
             # "homologs": [],
 
             # "name_key": row[1].lower(),
-            "id": geneRecord['primaryId'],
+            "primaryId": geneRecord['primaryId'],
             # "href": FlyBase.gene_href(row[0]),
             # "category": "gene",
             #"external_ids": []
         }
 
 
-for gene in genes:
-    print gene
 
-for key, value in genes.iteritems() :
-    print key, value
+#for gene in genes:
+#    print gene
+
+#for key, value in genes.iteritems() :
+#    print key, value
 
 #pp.pprint(data)
 

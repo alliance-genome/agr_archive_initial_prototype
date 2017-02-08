@@ -26,6 +26,7 @@ class MOD():
     def __init__(self):
         self._load_omim_dataset()
         self._load_go_dataset()
+        self._load_so_dataset()
         self.es = Elasticsearch(os.environ['ES_URI'], retry_on_timeout=True)
 
     @staticmethod
@@ -201,6 +202,41 @@ class MOD():
                             MOD.go_dataset[creating_term][key].append(value)
                         else:
                             MOD.go_dataset[creating_term][key] = [value]
+
+    def _load_so_dataset(self):
+        if MOD.so_dataset != {}:
+            return
+
+        print "Loading SO dataset from file..."
+        with open("data/so.obo", "r") as f:
+            creating_term = None
+
+            for line in f:
+                line = line.strip()
+
+                if line == "[Term]":
+                    creating_term = True
+                elif creating_term:
+                    key = (line.split(":")[0]).strip()
+                    value = ("".join(":".join(line.split(":")[1:]))).strip()
+
+                    if key == "id":
+                        creating_term = value
+                        MOD.so_dataset[creating_term] = {}
+                    else:
+                        if key == "synonym":
+                            if value.split(" ")[-2] == "EXACT":
+                                value = (" ".join(value.split(" ")[:-2]))[1:-1]
+                            else:
+                                continue
+                        if key == "def":
+                            m = re.search('\"(.+)\"', value)
+                            value = m.group(1)
+
+                        if key in MOD.so_dataset[creating_term]:
+                            MOD.so_dataset[creating_term][key].append(value)
+                        else:
+                            MOD.so_dataset[creating_term][key] = [value]
 
     def add_go_annotation_to_gene(self, gene_id, go_id):
         if go_id not in self.go_dataset or go_id in MOD.go_blacklist or gene_id not in self.genes:
