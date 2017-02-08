@@ -265,8 +265,11 @@ class MOD():
             }
         # appends go terms to the go namespace collections on gene dictionary created in load_genes() for each mod
 
-        if self.go[go_id]["name"] not in self.genes[gene_id]["gene_" + self.go[go_id]["go_type"]]:
-            self.genes[gene_id]["gene_" + self.go[go_id]["go_type"]].append(self.go[go_id]["name"])
+        go_type = self.go[go_id]["go_type"]
+        term_name = self.go[go_id]["name"]
+
+        if term_name not in self.genes[gene_id]["gene_" + go_type]:
+            self.genes[gene_id]["gene_" + go_type].append(term_name)
 
     def add_disease_annotation_to_gene(self, gene_id, omim_id):
         if omim_id not in self.omim_dataset or gene_id not in self.genes:
