@@ -10,7 +10,7 @@ from rat import RGD
 from mod import MOD
 
 sgd = SGD()
-zfin = ZFin()
+zfin = ZFIN()
 worm = WormBase()
 fly = FlyBase()
 mouse = MGI()

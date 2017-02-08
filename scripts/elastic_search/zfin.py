@@ -15,6 +15,7 @@ class ZFIN(MOD):
         # example: ZFIN=ZDB-GENE-050522-480
         return panther_id.split("=")[1]
 
+
     def load_genes(self):
         genes = MOD.genes
 
