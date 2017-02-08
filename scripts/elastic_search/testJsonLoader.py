@@ -2,22 +2,46 @@ import json
 import argparse
 import pprint
 import sys
+from mod import MOD
 
 parser = argparse.ArgumentParser(description='Test loader for JSON basic gene info file.')
 
 parser.add_argument('-d', '--data', help='JSON data file', required=True)
 args = parser.parse_args()
 
-data_file_name = args.data
-with open(data_file_name) as data_file:
-    data_content = json.load(data_file)
-#    print data_content['data'][0]['primaryId']
-    for geneRecord in data_content['data']:
-        print geneRecord['primaryId']
-        print geneRecord['symbol']
-data_file.closed
 
+def load_genes(self):
+    genes = MOD.genes
+    data_file_name = args.data
+    with open(data_file_name) as data_file:
+        data_content = json.load(data_file)
+#       print data_content['data'][0]['primaryId']
+        for geneRecord in data_content['data']:
+            genes[row[0]] = {
+                "gene_symbol": geneRecord['primaryId'],
+                "name": geneRecord['name'],
+                "description": geneRecord['description'],
+               # "gene_synonyms": map(lambda s: s.strip(), row[9].split(",")),
+               # "gene_type": row[3],
+               # "gene_chromosomes": chromosomes,
+               # "gene_chromosome_starts": row[6],
+               # "gene_chromosome_ends": row[7],
+               # "gene_chromosome_strand": row[8],
+               # "external_ids": [],
+                "taxonId": geneRecord['taxonId'],
+               # "species": "Drosophila melanogaster",
 
+               # "gene_biological_process": [],
+               # "gene_molecular_function": [],
+               # "gene_cellular_component": [],
+
+               # "homologs": [],
+
+               # "name_key": row[1].lower(),
+                "id": geneRecord['primaryId'],
+               # "href": FlyBase.gene_href(row[0]),
+                "category": "gene"
+            }
 
 
 #pp.pprint(data)
