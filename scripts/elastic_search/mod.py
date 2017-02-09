@@ -53,7 +53,8 @@ class MOD():
             return None
 
     def _load_genes(self):
-        for full_data_file_path in os.listdir(data):
+        path = "data/"
+        for full_data_file_path in os.listdir(path):
             with open(full_data_file_path) as data_file:
                 data_content = json.load(data_file)
 
