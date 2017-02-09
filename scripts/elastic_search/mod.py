@@ -31,7 +31,6 @@ class MOD():
         self._load_omim_dataset()
         self._load_go_dataset()
         self._load_so_dataset()
-        self._load_genes()
         self.es = Elasticsearch(os.environ['ES_URI'], retry_on_timeout=True)
 
     @staticmethod
@@ -53,7 +52,7 @@ class MOD():
         else:
             return None
 
-    def _load_genes(self):
+    def load_genes(self):
         path = "data/"
         for full_data_file_path in os.listdir(path):
             if fnmatch.fnmatch(file, '*.json'):
@@ -106,7 +105,7 @@ class MOD():
                             if 'strand' in geneRecord['genomeLocations']:
                                 gene_chromosome_strands.append(genomeLocation['strand'])
                                 strand = genomeLocation['strand']
-                         genomicLocations = {"chromosome": chromosome, "start": start, "end": end, "strand": strand,
+                        genomicLocations = {"chromosome": chromosome, "start": start, "end": end, "strand": strand,
                                         "assembly": assembly}
                     if 'geneLiteratureUrl' in geneRecord:
                         geneLiteratureUrl = geneRecord['geneLiteratureUrl']
