@@ -117,7 +117,8 @@ with open(data_file_name) as data_file:
             "name_key": geneRecord['name'].lower(),
             "primaryId": geneRecord['primaryId'],
             "href": None,
-            "category": "gene"
+            "category": "gene",
+            ""
         }
 
     # for gene in genes:

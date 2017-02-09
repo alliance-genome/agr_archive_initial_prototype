@@ -3,6 +3,7 @@ from mod import MOD
 class ZFIN(MOD):
     species = "Danio rerio"
     service = Service("http://www.zebrafishmine.org/service")
+    path_to_basic_gene_information_file = "data/zfin_gene_info.json"
 
     @staticmethod
     def gene_href(gene_id):
@@ -40,3 +41,6 @@ class ZFIN(MOD):
         for row in query.rows():
             if row["phenotypeLink.identifier"] is not None:
                 self.add_disease_annotation_to_gene(gene_id=row["genes.primaryIdentifier"], omim_id="OMIM:"+row["phenotypeLink.identifier"])
+
+    def load_genes(self, path_to_file):
+        return super(ZFIN, self).load_genes(path_to_basic_gene_information_file)

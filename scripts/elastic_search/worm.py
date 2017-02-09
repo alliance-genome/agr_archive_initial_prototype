@@ -5,6 +5,7 @@ import csv
 
 class WormBase(MOD):
     species = "Caenorhabditis elegans"
+    path_to_basic_gene_information_file = "data/worm_gene_info.json"
 
     @staticmethod
     def gene_href(gene_id):
@@ -44,3 +45,6 @@ class WormBase(MOD):
 
                     for omim_id in omim_ids:
                         self.add_disease_annotation_to_gene(gene_id=None, omim_id="OMIM:"+omim_id)
+
+    def load_genes(self, path_to_file):
+        return super(WormBase, self).load_genes(path_to_basic_gene_information_file)

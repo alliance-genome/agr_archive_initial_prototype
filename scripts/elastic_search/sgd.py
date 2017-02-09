@@ -5,6 +5,10 @@ from mod import MOD
 class SGD(MOD):
     species = "Saccharomyces cerevisiae"
     service = Service("http://yeastmine.yeastgenome.org/yeastmine/service")
+    path_to_basic_gene_information_file = "data/sgd_gene_info.json"
+
+    def load_genes(self, path_to_file):
+        return MOD.load_genes(self, path_to_basic_gene_information_file)
 
     @staticmethod
     def gene_href(gene_id):
@@ -50,3 +54,4 @@ class SGD(MOD):
 
         for row in query.rows():
             self.add_disease_annotation_to_gene(gene_id=row["primaryIdentifier"], omim_id='OMIM:' + row["homologues.homologue.diseases.identifier"])
+

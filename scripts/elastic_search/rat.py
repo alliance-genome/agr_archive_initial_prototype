@@ -6,6 +6,7 @@ import csv
 class RGD(MOD):
     species = "Rattus norvegicus"
     service = Service("http://ratmine.mcw.edu/ratmine/service")
+    path_to_basic_gene_information_file = "data/rat_gene_info.json"
 
     @staticmethod
     def gene_href(gene_id):
@@ -38,3 +39,6 @@ class RGD(MOD):
             for row in reader:
                 if (row[5].startswith("OMIM:")):
                     self.add_disease_annotation_to_gene(gene_id=row[0], omim_id=row[5])
+
+    def load_genes(self, path_to_file):
+        return super(RGD, self).load_genes(path_to_basic_gene_information_file)

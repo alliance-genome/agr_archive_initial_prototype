@@ -4,6 +4,7 @@ import csv
 
 class FlyBase(MOD):
     species = "Drosophila melanogaster"
+    path_to_basic_gene_information_file = "data/fly_gene_info.json"
 
     @staticmethod
     def gene_href(gene_id):
@@ -44,3 +45,6 @@ class FlyBase(MOD):
                     for omim_id in omim_ids:
                         for gene_id in disease_gene_ids:
                             self.add_disease_annotation_to_gene(gene_id=gene_id, omim_id="OMIM:"+omim_id)
+
+    def load_genes (self, path_to_file):
+        return super(FlyBase, self).load_genes(path_to_basic_gene_information_file)
