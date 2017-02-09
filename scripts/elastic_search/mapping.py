@@ -111,19 +111,6 @@ mapping = {
                     "type": "keyword"
                 },
 
-
-
-                # will eventually be replaced by 'symbol'
-                "gene_symbol": {
-                    "type": "text",
-                    "analyzer": "symbols"
-                },
-                # will eventually be replaced by 'synonyms'
-                "gene_synonyms": {
-                    "type": "text",
-                    "analyzer": "symbols"
-                },
-
                 "gene_type": {
                     "type": "text",
                     "fields": {
