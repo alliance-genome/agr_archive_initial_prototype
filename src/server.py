@@ -154,6 +154,11 @@ def search_autocomplete():
         "results": format_autocomplete_results(autocomplete_results, field)
     })
 
+@app.route('/api/gene/<gene_id>')
+def gene_api(gene_id):
+    gene = es.get(ES_INDEX, gene_id)
+    return jsonify(gene)
+
 
 # make static assets available
 @app.route('/assets/<path:path>')
