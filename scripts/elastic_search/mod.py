@@ -14,9 +14,11 @@ class MOD():
 
     gene_bkp_filename = "genes_bkp.pickle"
     go_bkp_filename = "go_bkp.pickle"
+    so_bkp_filename = "so_bkp.pickle"
     diseases_bkp_filename = "diseases_bkp.pickle"
 
     go_dataset = {}
+    so_dataset = {}
     omim_dataset = {}
 
     genes = {}
@@ -26,6 +28,7 @@ class MOD():
     def __init__(self):
         self._load_omim_dataset()
         self._load_go_dataset()
+        self._load_so_dataset()
         self.es = Elasticsearch(os.environ['ES_URI'], retry_on_timeout=True)
 
     @staticmethod
