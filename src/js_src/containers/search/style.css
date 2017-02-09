@@ -21,7 +21,7 @@
 }
 
 .resultContainer {
-  margin-top: 1rem;
+	margin-top: 1rem;
 }
 
 .tableContainer {
@@ -32,12 +32,25 @@
 	text-transform: capitalize;
 }
 
+.tableEmpty {
+	padding: 1rem;
+	text-align: center;
+}
+
+.lowercase {
+	text-transform: lowercase;
+}
+
 .detailList mark, em {
 	background: yellow;
 }
 
 .detailContainer {
 	margin-left: 1rem;
+}
+
+.evidenceFootnote {
+	font-size: 0.65rem;
 }
 
 td > .detailContainer {

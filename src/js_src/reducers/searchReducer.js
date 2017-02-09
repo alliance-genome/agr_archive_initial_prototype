@@ -10,13 +10,24 @@ const DEFAULT_STATE = fromJS({
   errorMessage: '',
   isError: false,
   isPending: false,
+  isReady: false,
   pageSize: DEFAULT_PAGE_SIZE,
+  // for multi table
+  geneResults: [],
+  goResults: [],
+  graphData: { nodes: [], edges: [] },
+  diseaseResults: [],
+  geneTotal: 0,
+  goTotal: 0,
+  diseaseTotal: 0,
+  homologyGroupTotal: 0,
+  // mixed
   results: [],
   total: 0,
 });
 
 const searchReducer = function (state = DEFAULT_STATE, action) {
-  //TODO cleanup fromJS/toJS handling here.
+  // TODO cleanup fromJS/toJS handling here.
   switch(action.type) {
   case 'SEARCH_ERROR':
     if (!action.payload) {
@@ -32,14 +43,35 @@ const searchReducer = function (state = DEFAULT_STATE, action) {
     return state.set('aggregations', fromJS(parseAggs(state.get('aggregations').toJS(), action.payload.query)))
                 .set('activeCategory', newActiveCat);
   case 'SEARCH_RESPONSE':
+    let actionCat = action.category || 'none';
+    let resultsTargetsVals = {
+      'gene': 'geneResults',
+      'go': 'goResults',
+      'disease': 'diseaseResults',
+      'none': 'results'
+    };
+    let totalTargetsVals = {
+      'gene': 'geneTotal',
+      'go': 'goTotal',
+      'disease': 'diseaseTotal',
+      'homology_group':  'homologyGroupTotal',
+      'none': 'total'
+    };
+    let resultsTarget = resultsTargetsVals[actionCat] || 'results';
+    let totalTarget = totalTargetsVals[actionCat] || 'total';
+    // maybe parse aggs
+    let newAggs = (actionCat === 'none') ? fromJS(parseAggs(action.payload.aggregations, action.queryParams)) : state.get('aggregations');
     // parse meta
     return state
-      .set('isPending',false)
-      .set('total', action.payload.total)
-      // parse aggregations
-      .set('aggregations', fromJS(parseAggs(action.payload.aggregations, action.queryParams))) 
+      .set('isPending', false)
+      .set(totalTarget, action.payload.total)
+      .set('aggregations', newAggs)
+      .set('isReady', true)
       // parse results
-      .set('results', fromJS(parseResults(action.payload.results)));
+      .set(resultsTarget, fromJS(parseResults(action.payload.results)));
+  case 'SEARCH_GRAPH_RESPONSE':
+    return state
+      .set('graphData', fromJS(action.payload));
   default:
     return state;
   }

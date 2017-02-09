@@ -1,6 +1,6 @@
 {
   "name": "agr",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "license": "MIT",
   "author": {
     "name": "Travis Sheppard",
@@ -11,18 +11,21 @@
     "url": "https://github.com/alliance-genome/agr_prototype.git"
   },
   "dependencies": {
+    "d3": "^3.5.17",
     "extract-text-webpack-plugin": "^1.0.1",
     "immutable": "^3.8.1",
     "manifest-revision-webpack-plugin": "^0.3.0",
     "react": "^15.3.2",
+    "react-autosuggest": "^6.1.0",
     "react-bootstrap": "^0.30.5",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.5",
     "react-router": "^2.8.1",
     "react-router-redux": "^4.0.6",
-    "react-typeahead": "^2.0.0-alpha.5",
+    "react-select": "^1.0.0-rc.2",
     "redux": "^3.6.0",
     "reselect": "^2.5.4",
+    "sigma": "^1.2.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
@@ -50,9 +53,10 @@
   },
   "scripts": {
     "start": "webpack-dev-server --history-api-fallback --port 2992 --hot --inline",
-    "prebuild": "npm run clean",
+    "prebuild": "npm run clean && npm run copy",
     "build": "cross-env NODE_ENV=production webpack -p --optimize-minimize",
     "clean": "rimraf src/build && mkdir src/build",
+    "copy": "cp -r src/public/. src/build",
     "test": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js \"src/js_src/**/*test.js\"",
     "test:watch": "NODE_ENV=test mocha-webpack --webpack-config webpack.config-test.js --watch \"src/js_src/**/*test.js\""
   }

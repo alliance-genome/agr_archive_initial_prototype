@@ -6,7 +6,11 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 import style from './style.css';
 import { getQueryParamWithValueChanged } from '../../lib/searchHelpers';
 
-import { selectTotalPages } from '../../selectors/searchSelectors';
+import {
+  selectActiveCategory,
+  selectTotalPages,
+  selectQueryParams
+} from '../../selectors/searchSelectors';
 
 const SEARCH_PATH = '/search';
 
@@ -14,14 +18,21 @@ class SearchControlsComponent extends Component {
   renderViewAs() {
     let listQp = getQueryParamWithValueChanged('mode', 'list', this.props.queryParams);
     let tableQp = getQueryParamWithValueChanged('mode', 'table', this.props.queryParams);
+    let graphQp = getQueryParamWithValueChanged('mode', 'graph', this.props.queryParams);
     let listHref = { pathname: SEARCH_PATH, query: listQp };
     let tableHref = { pathname: SEARCH_PATH, query: tableQp };
+    let graphHref = { pathname: SEARCH_PATH, query: graphQp };
+    let graphNode = null;
+    if (this.props.canHaveGraph) {
+      graphNode = <Link className={`btn btn-${(this.props.mode === 'graph') ? 'primary': 'secondary'}`} to={graphHref}><i className='fa fa-circle' /> Graph</Link>;
+    }
     return (
       <div className={style.control}>
         <label className={style.searchLabel}>View As</label>
         <div className='btn-group' role='group'>
-          <Link className={`btn btn-${!this.props.isTable ? 'primary': 'secondary'}`} to={listHref}><i className='fa fa-list' /> List</Link>
-          <Link className={`btn btn-${this.props.isTable ? 'primary': 'secondary'}`} to={tableHref}><i className='fa fa-table' /> Table</Link>
+          <Link className={`btn btn-${(this.props.mode === 'list') ? 'primary': 'secondary'}`} to={listHref}><i className='fa fa-list' /> List</Link>
+          <Link className={`btn btn-${(this.props.mode === 'table') ? 'primary': 'secondary'}`} to={tableHref}><i className='fa fa-table' /> Table</Link>
+          {graphNode}
         </div>
       </div>
     );
@@ -49,52 +60,69 @@ class SearchControlsComponent extends Component {
     );
   }
 
+  renderNonViewAs() {
+    if (this.props.isMultiTable || this.props.mode === 'graph') return null;
+    return (
+      <div className={style.controlContainer}>
+        {this.renderPaginator()}
+        <div className={style.control}>
+          <label className={style.searchLabel}>Sort By</label>
+          <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='Relevance'>
+            <MenuItem eventKey='1'>Dropdown link</MenuItem>
+            <MenuItem eventKey='2'>Dropdown link</MenuItem>
+          </DropdownButton>
+        </div>
+        <div className={style.control}>
+          <label className={style.searchLabel}>Page Size</label>
+          <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='50'>
+            <MenuItem eventKey='1'>Dropdown link</MenuItem>
+            <MenuItem eventKey='2'>Dropdown link</MenuItem>
+          </DropdownButton>
+        </div>
+        <div>
+          <label className={style.searchLabel}>&nbsp;</label>
+          <a className={`btn btn-secondary ${style.agrDownloadBtn}`} href='#'><i className='fa fa-download' /> Download</a>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div>
         {this.renderViewAs()}
-        <div className={style.controlContainer}>
-          {this.renderPaginator()}
-          <div className={style.control}>
-            <label className={style.searchLabel}>Sort By</label>
-            <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='Relevance'>
-              <MenuItem eventKey='1'>Dropdown link</MenuItem>
-              <MenuItem eventKey='2'>Dropdown link</MenuItem>
-            </DropdownButton>
-          </div>
-          <div className={style.control}>
-            <label className={style.searchLabel}>Page Size</label>
-            <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='50'>
-              <MenuItem eventKey='1'>Dropdown link</MenuItem>
-              <MenuItem eventKey='2'>Dropdown link</MenuItem>
-            </DropdownButton>
-          </div>
-          <div>
-            <label className={style.searchLabel}>&nbsp;</label>
-            <a className={`btn btn-secondary ${style.agrDownloadBtn}`} href='#'><i className='fa fa-download' /> Download</a>
-          </div>
-        </div>
+        {this.renderNonViewAs()}
       </div>
     );
   }
 }
 
 SearchControlsComponent.propTypes = {
+  canHaveGraph: React.PropTypes.bool,
   currentPage: React.PropTypes.number,
-  isTable: React.PropTypes.bool,
+  isMultiTable: React.PropTypes.bool,
+  mode: React.PropTypes.string,
   queryParams: React.PropTypes.object,
   totalPages: React.PropTypes.number
 };
 
 function mapStateToProps(state) {
-  let location = state.routing.locationBeforeTransitions;
-  let _queryParams = location ? state.routing.locationBeforeTransitions.query : {};
+  let _queryParams = selectQueryParams(state);
+  let activeCategory = selectActiveCategory(state);
+  let _canHaveGraph = (activeCategory === 'gene');
+  let _mode = _queryParams.mode;
+  if (!_mode || (_mode === 'graph' && !_canHaveGraph)) {
+    _mode = 'list';
+  }
   let _isTable = (_queryParams.mode === 'table');
+  let _isMultiTable = (_isTable && activeCategory === 'none') ;
   return {
+    canHaveGraph: _canHaveGraph,
     currentPage: parseInt(_queryParams.page) || 1,
-    isTable: _isTable,
+    isMultiTable: _isMultiTable,
+    mode: _mode,
     queryParams: _queryParams,
-    totalPages: selectTotalPages(state),
+    totalPages: selectTotalPages(state)
   };
 }
 

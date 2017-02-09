@@ -3,8 +3,11 @@ import _ from 'underscore';
 const SINGLE_VAL_FIELDS = ['mode', 'page'];
 const CLEARING_FIELDS = ['category'];
 
-export function makeFieldDisplayName(unformattedName='') {
+export function makeFieldDisplayName(unformattedName) {
+  unformattedName = unformattedName || '';
   switch(unformattedName) {
+  case 'go':
+    return 'Gene Ontology';
   case 'go_type':
   case 'go_branch':
     return 'GO Branch';
@@ -21,8 +24,14 @@ export function makeFieldDisplayName(unformattedName='') {
     return 'Molecular Function';
   case 'geneType':
     return 'Gene Type';
+  case 'disease_genes':
   case 'go_genes':
     return 'Associated Genes';
+  case 'disease_species':
+  case 'go_species':
+    return 'Associated Species';
+  case 'id':
+    return 'ID';
   default:
     return unformattedName.replace(/_/g, ' ');
   }
@@ -44,7 +53,11 @@ export function getQueryParamWithValueChanged(key, val, queryParams, isClear=fal
     newVal = _.without(oldVal, val);
   } else {
     newVal = oldVal;
-    newVal.push(val);
+    if (Array.isArray(val)) {
+      newVal = val;
+    } else {
+      newVal.push(val);
+    }
   }
   qp[key] = newVal;
   if (CLEARING_FIELDS.indexOf(key) > -1) {

@@ -1,5 +1,5 @@
-.aggContainer h5 {
-	margin-bottom: 1rem;
+.aggContainer {
+	margin-top: 0.25rem;
 }
 
 .aggValContainer {
@@ -14,4 +14,32 @@
 .filterLabel {
 	margin-bottom: 0.5rem;
 	text-transform: capitalize;
+}
+
+.aggLink {
+	display: flex;
+	justify-content: space-between;
+}
+
+.aggLinkLabel {
+	margin-right: 1rem;
+}
+
+.singleFacetControl {
+	display: flex;
+	justify-content: space-between;
+}
+
+.selectContainer {
+	position: relative;
+}
+
+.colorDot {
+	display: inline-block;
+	position: relative;
+	top: -0.1rem;
+	height: 0.5rem;
+	width: 0.5em;
+	border-radius: 0.25rem;
+	margin-right: 0.25rem;
 }

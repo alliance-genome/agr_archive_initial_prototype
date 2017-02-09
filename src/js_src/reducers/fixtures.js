@@ -1,3 +1,5 @@
+const FIXTURE_HREF = 'https://google.com';
+
 export const FIXTURE_SEARCH_STATE = {
   query: 'huntington\'s',
   results: [
@@ -5,7 +7,8 @@ export const FIXTURE_SEARCH_STATE = {
       symbol: 'NTPCR',
       name: 'RADiation sensitive',
       geneId: 'MGI:12345678',
-      sourceHref: 'https://www.google.com',
+      href: FIXTURE_HREF,
+      sourceHref: FIXTURE_HREF,
       synonyms: 'geneA, geneB',
       geneType: 'ORF',
       genomicStartCoordinates: 100,
@@ -22,7 +25,8 @@ export const FIXTURE_SEARCH_STATE = {
       symbol: 'Ctag2',
       name: 'RADiation sensitive',
       geneId: 'MGI:12345678',
-      sourceHref: 'https://www.google.com',
+      href: FIXTURE_HREF,
+      sourceHref: FIXTURE_HREF,
       synonyms: 'geneA, geneB',
       geneType: 'ORF',
       genomicStartCoordinates: 100,

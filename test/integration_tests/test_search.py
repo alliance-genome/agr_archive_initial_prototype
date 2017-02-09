@@ -72,12 +72,13 @@ class SearchEndpointsTest(unittest.TestCase):
                 }
             }
         }
-        self.index = 'searchable_items_prototype'
-        self.search_fields = ['name', 'symbol', 'synonym', 'go_ids', 'go_names']
-        self.json_response_fields = ['name', 'symbol', 'synonym', 'go_ids', 'go_names', 'href', 'type', 'organism']
+        self.index = 'searchable_items_blue'
+        self.search_fields = ['id', 'name', 'gene_symbol', 'gene_synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs.symbol', 'homologs.panther_family']
+        self.json_response_fields = ['name', 'gene_symbol', 'gene_synonyms', 'gene_type', 'gene_chromosomes','gene_chromosome_starts', 'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs', 'category', 'href']
         self.category_filters = {
-            "gene": ['go_ids', 'go_names'],
-            "go": ['gene']
+            "gene": ['gene_type', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species'],
+            "go": ['go_type', 'go_species', 'go_genes'],
+            "disease": ['disease_species', 'disease_genes']
         }
 
         self.app = app.test_client()
@@ -114,7 +115,8 @@ class SearchEndpointsTest(unittest.TestCase):
                 ''
             ),
             size=10,
-            from_=0
+            from_=0,
+            preference='p_'
         )])
 
         mock_es.assert_has_calls([mock.call(
@@ -165,7 +167,8 @@ class SearchEndpointsTest(unittest.TestCase):
                 "alphabetical"
             ),
             size=25,
-            from_=10
+            from_=10,
+            preference='p_act1'
         )])
 
         mock_es.assert_has_calls([mock.call(
@@ -214,7 +217,8 @@ class SearchEndpointsTest(unittest.TestCase):
                 ""
             ),
             size=10,
-            from_=0
+            from_=0,
+            preference='p_act1'
         )])
 
         mock_es.assert_has_calls([mock.call(
@@ -287,14 +291,14 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.assert_called_with(
             index=self.index,
-            body=build_autocomplete_search_body_request('act', '', 'name')
+            body=build_autocomplete_search_body_request('act', '', 'name_key')
         )
 
         self.app.get('/api/search_autocomplete?q=act&category=go')
 
         mock_es.assert_called_with(
             index=self.index,
-            body=build_autocomplete_search_body_request('act', 'go', 'name')
+            body=build_autocomplete_search_body_request('act', 'go', 'name_key')
         )
 
         mock_es.return_value = {
