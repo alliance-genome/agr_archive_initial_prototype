@@ -1,0 +1,37 @@
+.speciesIcon {
+  background-image: url(./speciesSprite.png);
+  margin: 1.25rem auto 0 auto;
+  width: 82px;
+  height: 91px;
+}
+
+@media (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3/2), (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
+  .speciesIcon {
+    background-image: url(./speciesSprite-2x.png);
+    background-size: 82px 546px;
+  }
+}
+
+.speciesIcon.FB {
+  background-position: 0 0;
+}
+
+.speciesIcon.MGD {
+  background-position: 0 -91px;
+}
+
+.speciesIcon.RGD {
+  background-position: 0 -182px;
+}
+
+.speciesIcon.SGD {
+  background-position: 0 -273px;
+}
+
+.speciesIcon.WB {
+  background-position: 0 -364px;
+}
+
+.speciesIcon.ZFIN {
+  background-position: 0 -455px;
+}
