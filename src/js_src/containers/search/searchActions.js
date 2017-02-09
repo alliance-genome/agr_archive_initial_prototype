@@ -14,13 +14,6 @@ export function receiveResponse (response, _queryParams, _category='none') {
   };
 }
 
-export function receiveGraphResponse (response) {
-  return {
-    type: 'SEARCH_GRAPH_RESPONSE',
-    payload: response
-  };
-}
-
 export function setError (message) {
   return {
     type: 'SEARCH_ERROR',
