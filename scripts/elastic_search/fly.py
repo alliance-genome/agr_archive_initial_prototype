@@ -14,45 +14,6 @@ class FlyBase(MOD):
         # example: FlyBase=FBgn0053056
         return panther_id.split("=")[1]
 
-    def load_genes(self):
-        genes = MOD.genes
-
-        genes_data_csv_filename = "data/FlyBase_Genes_output_fb_2016_04.tsv"
-
-        print("Fetching gene data from FlyBase tsv file...")
-
-        with open(genes_data_csv_filename, 'rb') as f:
-            reader = csv.reader(f, delimiter='\t')
-            for row in reader:
-                chromosomes = []
-                if row[5]:
-                    chromosomes = [row[5]]
-
-                genes[row[0]] = {
-                    "symbol": row[1],
-                    "name": row[1],
-                    "description": row[4],
-                    "synonyms": map(lambda s: s.strip(), row[9].split(",")),
-                    "gene_type": row[3],
-                    "gene_chromosomes": chromosomes,
-                    "gene_chromosome_starts": row[6],
-                    "gene_chromosome_ends": row[7],
-                    "gene_chromosome_strand": row[8],
-                    "external_ids": [],
-                    "species": "Drosophila melanogaster",
-
-                    "gene_biological_process": [],
-                    "gene_molecular_function": [],
-                    "gene_cellular_component": [],
-
-                    "homologs": [],
-
-                    "name_key": row[1].lower(),
-                    "id": row[0],
-                    "href": FlyBase.gene_href(row[0]),
-                    "category": "gene"
-                }
-
     def load_go(self):
         go_data_csv_filename = "data/FlyBase_GO_output_fb_2016_04.tsv"
 
