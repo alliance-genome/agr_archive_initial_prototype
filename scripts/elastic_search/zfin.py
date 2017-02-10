@@ -3,7 +3,6 @@ from mod import MOD
 class ZFIN(MOD):
     species = "Danio rerio"
     service = Service("http://www.zebrafishmine.org/service")
-    path_to_basic_gene_information_file = "data/zfin_gene_info.json"
 
     @staticmethod
     def gene_href(gene_id):

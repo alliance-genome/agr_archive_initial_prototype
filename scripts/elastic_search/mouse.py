@@ -5,7 +5,6 @@ from intermine.webservice import Service
 class MGI(MOD):
     species = "Mus musculus"
     service = Service("http://www.mousemine.org/mousemine/service")
-    path_to_basic_gene_information_file = "data/mouse_gene_info.json"
 
     @staticmethod
     def gene_href(gene_id):

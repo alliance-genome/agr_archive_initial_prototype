@@ -4,7 +4,6 @@ import csv
 
 class FlyBase(MOD):
     species = "Drosophila melanogaster"
-    path_to_basic_gene_information_file = "data/fly_gene_info.json"
 
     @staticmethod
     def gene_href(gene_id):

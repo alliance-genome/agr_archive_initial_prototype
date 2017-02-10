@@ -5,7 +5,6 @@ from mod import MOD
 class SGD(MOD):
     species = "Saccharomyces cerevisiae"
     service = Service("http://yeastmine.yeastgenome.org/yeastmine/service")
-    path_to_basic_gene_information_file = "data/sgd_gene_info.json"
 
     @staticmethod
     def gene_href(gene_id):

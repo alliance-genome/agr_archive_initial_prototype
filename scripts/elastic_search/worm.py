@@ -5,7 +5,6 @@ import csv
 
 class WormBase(MOD):
     species = "Caenorhabditis elegans"
-    path_to_basic_gene_information_file = "data/worm_gene_info.json"
 
     @staticmethod
     def gene_href(gene_id):

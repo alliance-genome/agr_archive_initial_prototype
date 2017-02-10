@@ -3,7 +3,6 @@ from mod import MOD
 
 class Human(MOD):
     species = "Homo sapiens"
-    path_to_basic_gene_information_file = "data/worm_gene_info.json"
 
     @staticmethod
     def gene_href(gene_id):

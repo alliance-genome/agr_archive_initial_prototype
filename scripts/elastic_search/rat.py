@@ -6,7 +6,6 @@ import csv
 class RGD(MOD):
     species = "Rattus norvegicus"
     service = Service("http://ratmine.mcw.edu/ratmine/service")
-    path_to_basic_gene_information_file = "data/rat_gene_info.json"
 
     @staticmethod
     def gene_href(gene_id):
