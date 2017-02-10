@@ -9,6 +9,11 @@ Resources.
 Ensure you've installed [pip][1] and [virtualenv][2] and [nodejs][3].
 ```bash
   Starting with Python 2.7.9, pip is included by default with the Python binary installers. 
+  
+  make sure the executables npm,node, pip, and virtualenv are accessible from /usr/local/bin  
+  if not create symbolic links as needed
+  
+  Make sure /usr/local/bin is in your PATH
 ```
 Create a virtualenv for isolating the python dependencies:
 
