@@ -46,5 +46,3 @@ class FlyBase(MOD):
                         for gene_id in disease_gene_ids:
                             self.add_disease_annotation_to_gene(gene_id=gene_id, omim_id="OMIM:"+omim_id)
 
-    def load_genes (self, path_to_file):
-        return super(FlyBase, self).load_genes(path_to_basic_gene_information_file)

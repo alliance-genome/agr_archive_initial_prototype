@@ -52,7 +52,7 @@ class MOD():
         else:
             return None
 
-    def load_genes():
+    def load_genes(self):
         path = "data/"
         for file in os.listdir(path):
             if fnmatch.fnmatch(file, "*.json"):

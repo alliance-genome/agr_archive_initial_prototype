@@ -46,5 +46,3 @@ class WormBase(MOD):
                     for omim_id in omim_ids:
                         self.add_disease_annotation_to_gene(gene_id=None, omim_id="OMIM:"+omim_id)
 
-    def load_genes(self, path_to_file):
-        return super(WormBase, self).load_genes(path_to_basic_gene_information_file)

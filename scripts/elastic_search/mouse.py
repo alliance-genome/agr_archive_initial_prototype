@@ -16,9 +16,6 @@ class MGI(MOD):
         # example: MGI=MGI=1924210
         return ":".join(panther_id.split("=")[1:]).strip()
 
-    def load_genes(self, path_to_file):
-        return super(MGI, self).load_genes(path_to_basic_gene_information_file)
-
     def load_go(self):
         query = MGI.service.new_query("GOTerm")
         query.add_constraint("ontologyAnnotations.subject", "SequenceFeature")

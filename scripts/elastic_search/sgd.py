@@ -7,9 +7,6 @@ class SGD(MOD):
     service = Service("http://yeastmine.yeastgenome.org/yeastmine/service")
     path_to_basic_gene_information_file = "data/sgd_gene_info.json"
 
-    def load_genes(self, path_to_file):
-        return MOD.load_genes(self, path_to_basic_gene_information_file)
-
     @staticmethod
     def gene_href(gene_id):
         return "http://www.yeastgenome.org/locus/" + gene_id + "/overview"

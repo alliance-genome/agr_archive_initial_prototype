@@ -39,6 +39,3 @@ class RGD(MOD):
             for row in reader:
                 if (row[5].startswith("OMIM:")):
                     self.add_disease_annotation_to_gene(gene_id=row[0], omim_id=row[5])
-
-    def load_genes(self, path_to_file):
-        return super(RGD, self).load_genes(path_to_basic_gene_information_file)

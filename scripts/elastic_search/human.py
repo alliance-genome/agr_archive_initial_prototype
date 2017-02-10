@@ -14,6 +14,3 @@ class Human(MOD):
         # example: HGNC=974
         return panther_id.replace("=", ":")
 
-    def load_genes(self, path_to_file):
-        return super(Human, self).load_genes(path_to_basic_gene_information_file)
-

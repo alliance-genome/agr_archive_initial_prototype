@@ -42,5 +42,3 @@ class ZFIN(MOD):
             if row["phenotypeLink.identifier"] is not None:
                 self.add_disease_annotation_to_gene(gene_id=row["genes.primaryIdentifier"], omim_id="OMIM:"+row["phenotypeLink.identifier"])
 
-    def load_genes(self, path_to_file):
-        return super(ZFIN, self).load_genes(path_to_basic_gene_information_file)
