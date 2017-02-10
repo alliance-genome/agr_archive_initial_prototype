@@ -21,7 +21,7 @@ virtualenv -p python2 ~/.virtualenvs/agr_prototype
 ```bash
 export ES_AWS=true
 export ES_INDEX=es1
-export ES_URI="es.alliancegenome.org"
+export ES_URI="https://search-es1-oyqxarxm2djn35dfodzniituhe.us-west-2.es.amazonaws.com/"
 ```
 
 ## Getting started
