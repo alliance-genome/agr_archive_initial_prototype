@@ -20,11 +20,7 @@ mod = MOD()
 
 mods = [mouse, zfin, sgd, worm, fly, rat]
 
-for m in mods:
-    start_time = time.time()
-    m.load_genes()
-    print (" --- %s seconds --- " % (time.time() - start_time))
-
+mod.load_genes()
 mod.load_homologs()
 
 for m in mods:
