@@ -111,6 +111,21 @@ mapping = {
                     "type": "keyword"
                 },
 
+                "metaData": {
+                    "properties": {
+                        "dateProduced": {
+                            "type": "date"
+                         },
+                        "dataProvider": {
+                            "type": "keyword"
+                        },
+                        "release": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+
+
                 "gene_type": {
                     "type": "text",
                     "fields": {
