@@ -34,9 +34,12 @@ virtualenv -p python2 ~/.virtualenvs/agr_prototype
 * Go to [alliance-genome/agr][12] repository and click on "Fork" (top right)
 
 ### Clone and start your local instance - on your dev machine
-* git clone https://github.com/yourGitAccount/agr.git
-* cd agr
-*  git checkout developent
+* Clone your agr copy and checkout development 
+```bash
+   * git clone https://github.com/yourGitAccount/agr.git
+   * cd agr
+   *  git checkout developent
+```
 * Build, Index, and start local agr instance
 ```bash
     cd agr
@@ -50,7 +53,7 @@ virtualenv -p python2 ~/.virtualenvs/agr_prototype
  ```bash
    go to http://127.0.0.1:5000 and start your search   
  ```
- ### To run tests
+### To run tests
 ```bash
 source ~/.virtualenvs/agr_prototype/bin/activate
 make tests
