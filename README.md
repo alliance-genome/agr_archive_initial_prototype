@@ -13,9 +13,10 @@ Ensure you've installed [pip][1] and [virtualenv][2] and [nodejs][3].
 Create a virtualenv for isolating the python dependencies:
 
 ```bash
-## Assuming virtualenv and python2 are on your PATH
+
 mkdir -p ~/.virtualenvs/agr_prototype
 # The prototype currently requires Python2
+# Assuming virtualenv and python2 are in your PATH
 virtualenv -p python2 ~/.virtualenvs/agr_prototype
 ```
 
