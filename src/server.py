@@ -120,7 +120,7 @@ def search_autocomplete():
 @app.route('/api/gene/<gene_id>')
 def gene_api(gene_id):
     gene = es.get(ES_INDEX, gene_id)
-    return jsonify(gene["_source"])
+    return jsonify(gene['_source'])
 
 
 # make static assets available
