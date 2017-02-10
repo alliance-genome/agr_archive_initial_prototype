@@ -284,7 +284,7 @@ def graph_visualization(formatted_search_results):
     for result in formatted_search_results:
         if result["href"] not in nodes:
             nodes[result["href"]] = {
-                "name": result["symbol"],
+                "name": result["gene_symbol"],
                 "id": result["href"],
                 "species": result["species"],
                 "direct": True
