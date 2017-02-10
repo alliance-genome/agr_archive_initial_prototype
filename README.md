@@ -36,16 +36,21 @@ virtualenv -p python2 ~/.virtualenvs/agr_prototype
 ### Clone and start your local instance - on your dev machine
 * git clone https://github.com/yourGitAccount/agr.git
 * cd agr
-**  git checkout developent
-** Build, Index, and start local agr instance
+*  git checkout developent
+* Build, Index, and start local agr instance
 ```bash
-source ~/.virtualenvs/agr_prototype/bin/activate
-make build
-make run
+    cd agr
+    source ~/.virtualenvs/agr_prototype/bin/activate
+    make build  (to Setup dev working platform )
+    # Assuming elasticsearch instance is up and running
+    make index  (to build ES indexes )   
+    make run    ( to start your local agr instance)
 ```
-
-To run tests
-
+* Check that agr instance and elasticsearch are comunicating
+ ```bash
+   go to http://127.0.0.1:5000 and start your search   
+ ```
+ ### To run tests
 ```bash
 source ~/.virtualenvs/agr_prototype/bin/activate
 make tests
