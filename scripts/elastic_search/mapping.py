@@ -166,7 +166,6 @@ mapping = {
                         }
                     }
                 },
-                # will be replaced by 'geneSynopsis'
                 "description": {
                     "type": "text"
                 },

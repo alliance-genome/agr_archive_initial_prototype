@@ -122,6 +122,15 @@ def gene_api(gene_id):
     gene = es.get(ES_INDEX, gene_id)
     return jsonify(gene['_source'])
 
+@app.route('/api/disease/<disease_id>')
+def disease_api(disease_id):
+    disease = es.get(ES_INDEX, disease_id)
+    return jsonify(disease['_source'])
+
+@app.route('/api/go/<go_id>')
+def go_api(go_id):
+    go = es.get(ES_INDEX, go_id)
+    return jsonify(go['_source'])
 
 # make static assets available
 @app.route('/assets/<path:path>')

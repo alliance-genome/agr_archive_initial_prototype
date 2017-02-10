@@ -35,11 +35,13 @@ class ResultsList extends Component {
 
   renderNonGeneEntry(d, i, fields) {
     let isMakeLowercase = d.category === 'disease';
+    let apiUrl = "/api/" + d.category + "/" + d.id;
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
         {this.renderHeader(d, isMakeLowercase)}
         {this.renderDetailFromFields(d, fields)}
         {this.renderHighlightedValues(d.highlight)}
+        (<a href={apiUrl}>api link that will go away</a>)
         <hr />
       </div>
     );
@@ -49,6 +51,7 @@ class ResultsList extends Component {
     let topFields = ['name', 'synonyms'];
     let bottomFields = ['species', 'gene_type'];
     let logHighlight = d.highlight['homologs.symbol'] || d.highlight['homologs.panther_family'];
+    let apiUrl = "/api/" + d.category + "/" + d.id;
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
         {this.renderHeader(d)}
@@ -60,6 +63,7 @@ class ResultsList extends Component {
           {this.renderDetailFromFields(d, bottomFields)}
           <LogList label='Homologs' logs={d.homologs} rawHighlight={logHighlight} />
           {this.renderHighlightedValues(d.highlight)}
+          (<a href={apiUrl}>api link that will go away</a>)
         <hr />
       </div>
     );
