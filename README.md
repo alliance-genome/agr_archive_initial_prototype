@@ -32,21 +32,21 @@ virtualenv -p python2 ~/.virtualenvs/agr_prototype
 ```bash
     a) cd to the directory where you downloaded ES (I downloaded elasticsearch-2.4.4.tar.gz)   
     b) tar -xvf elasticsearch-2.4.4.tar.gz   
-    c) Start elasticserach - cd elasticsearch-2.4.4/ and run bin/elasticsearch
-    d) Check that ES is running - on another terminal  curl http:://localhost:9200/
+    c) Start elasticsearch - cd elasticsearch-2.4.4/ and run bin/elasticsearch
+    d) Check that ES is running - open a new terminal and run  curl http:://localhost:9200/
     e) Watch the ES console for errors 
     
 ```
-### Fork you own copy of alliance-genome/agr to your git account
+### Fork your own copy of alliance-genome/agr to your git account
 * login to your git account - or create one and login
 * Go to [alliance-genome/agr][12] repository and click on "Fork" (top right)
 
 ### Clone and start your local agr instance - on your dev machine
-* Clone your agr copy and checkout development 
+* Clone your agr copy and checkout the development branch
 ```bash
    * git clone https://github.com/yourGitAccount/agr.git
    * cd agr
-   * git checkout developent
+   * git checkout development
 ```
 * Build, Index, and start local agr instance
 ```bash
@@ -60,7 +60,7 @@ virtualenv -p python2 ~/.virtualenvs/agr_prototype
 * Check that agr instance and elasticsearch are comunicating
 ```bash
    go to http://127.0.0.1:5000 and start your search
-   Watch both the agr instance console and the web browser 
+   Watch the agr instance console, the ES console, and the web browser results
 ```
 
 ### To run tests
