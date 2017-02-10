@@ -1,7 +1,7 @@
 .controlContainer {
 	float: right;
 	margin-top: 0.25rem;
-	width: 548px;
+	width: 120px;
 	display: flex;
 	justify-content: space-between;
 }
