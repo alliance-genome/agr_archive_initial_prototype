@@ -15,6 +15,14 @@ mkdir -p ~/.virtualenvs/agr_prototype
 # The prototype currently requires Python2
 virtualenv -p python2 ~/.virtualenvs/agr_prototype
 ```
++## ENV variables
+
+###AWS ES Service hosted
+```bash
+export ES_AWS=true
+export ES_INDEX=es1
+export ES_URI="es.alliancegenome.org"
+```
 
 ## Getting started
 ```bash
