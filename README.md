@@ -22,10 +22,11 @@ virtualenv -p python2 ~/.virtualenvs/agr_prototype
 ## Getting started With Virtualenv
 ### Install and start a local instance of [elasticsearch][8]
 ```bash
-   a) cd to the directory where you downloaded ES (I dowanloaded elasticsearch-2.4.4.tar.gz)   
-   b) tar -xvf elasticsearch-2.4.4.tar.gz   
-   c) Start elasticserach - cd elasticsearch-2.4.4/ and run bin/elasticsearch
-   d) Check that ES is running - curl http:://localhost:9200/
+   a) Download ES package (I'm using [ES version 2.4.4][11] in my dev env)
+   b) cd to the directory where you downloaded ES (I downloaded elasticsearch-2.4.4.tar.gz)   
+   c) tar -xvf elasticsearch-2.4.4.tar.gz   
+   d) Start elasticserach - cd elasticsearch-2.4.4/ and run bin/elasticsearch
+   e) Check that ES is running - curl http:://localhost:9200/
 ```
 ```bash
 source ~/.virtualenvs/agr_prototype/bin/activate
@@ -135,3 +136,4 @@ The rules are configured in the .eslintrc file.
 [8]: https://www.elastic.co/downloads/elasticsearch
 [9]: https://nodejs.org
 [10]: https://www.python.org/ftp/python
+[11]: https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.4.4/elasticsearch-2.4.4.tar.gz
