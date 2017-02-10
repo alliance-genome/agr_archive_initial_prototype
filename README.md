@@ -22,13 +22,22 @@ virtualenv -p python2 ~/.virtualenvs/agr_prototype
 ## Getting started With Virtualenv
 ### Install and start a local instance of [elasticsearch][8]
 * Download ES package (I'm using [ES version 2.4.4][11] in my dev env)
-* Install and start your local ES
-  ```bash
+* Install and start your local ES 
+```bash
     a) cd to the directory where you downloaded ES (I downloaded elasticsearch-2.4.4.tar.gz)   
     b) tar -xvf elasticsearch-2.4.4.tar.gz   
     c) Start elasticserach - cd elasticsearch-2.4.4/ and run bin/elasticsearch
     d) Check that ES is running - curl http:://localhost:9200/
-  ```
+```
+### Fork you own copy of alliance-genome/agr to your git account
+* login to your git account - or create one and login
+* Go to [alliance-genome/agr][12] repository and click on "Fork" (top right)
+
+### Clone and start your local instance - on your dev machine
+* git clone https://github.com/yourGitAccount/agr.git
+* cd agr
+**  git checkout developent
+** Build, Index, and start local agr instance
 ```bash
 source ~/.virtualenvs/agr_prototype/bin/activate
 make build
@@ -138,3 +147,4 @@ The rules are configured in the .eslintrc file.
 [9]: https://nodejs.org
 [10]: https://www.python.org/ftp/python
 [11]: https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.4.4/elasticsearch-2.4.4.tar.gz
+[12]: https://github.com/alliance-genome/agr
