@@ -124,3 +124,4 @@ The rules are configured in the .eslintrc file.
 [7]: https://www.docker.com/
 [8]: https://www.elastic.co/downloads/elasticsearch
 [9]: https://nodejs.org
+[10]: https://www.python.org/ftp/python
