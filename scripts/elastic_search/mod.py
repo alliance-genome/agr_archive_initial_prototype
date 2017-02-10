@@ -119,7 +119,7 @@ class MOD():
                             "genomeLocations": genomic_locations,
                             "homologs": [],
                             "geneLiteratureUrl": geneRecord.get('geneLiteratureUrl'),
-                            "name_key": geneRecord['name'].lower(),
+                            "name_key": geneRecord.get('name').lower(),
                             "primaryId": geneRecord['primaryId'],
                             "crossReferences": cross_references,
                             "href": None,
