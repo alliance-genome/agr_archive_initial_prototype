@@ -56,7 +56,7 @@ class MOD():
         path = "data/"
         for file in os.listdir(path):
             if fnmatch.fnmatch(file, "*.json"):
-                with open(file) as data_file:
+                with open(os.path.join(path, file)) as data_file:
                     data_content = json.load(data_file)
 
                 for geneRecord in data_content['data']:
@@ -148,7 +148,7 @@ class MOD():
                 "href": None,
                 "category": "gene"
             }
-        path_to_file.close()
+        data_file.close()
 
 
     @staticmethod
