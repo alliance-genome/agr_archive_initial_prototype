@@ -72,6 +72,10 @@ class MOD():
                         start = None
                         end = None
                         strand = None
+                        name = None
+
+                        if 'name' in geneRecord:
+                            name = geneRecord['name']
 
                         if 'crossReferences' in geneRecord:
                             for crossRef in geneRecord['crossReferences']:
@@ -119,7 +123,7 @@ class MOD():
                             "genomeLocations": genomic_locations,
                             "homologs": [],
                             "geneLiteratureUrl": geneRecord.get('geneLiteratureUrl'),
-                            "name_key": geneRecord.get('name').lower(),
+                            "name_key": name,
                             "primaryId": geneRecord['primaryId'],
                             "crossReferences": cross_references,
                             "href": None,
