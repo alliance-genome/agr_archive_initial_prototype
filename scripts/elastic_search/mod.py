@@ -26,6 +26,7 @@ class MOD():
     genes = {}
     go = {}
     diseases = {}
+    soterm_map = {}
 
     def __init__(self):
         self._load_omim_dataset()
@@ -60,45 +61,23 @@ class MOD():
                     data_content = json.load(data_file)
 
                     for geneRecord in data_content['data']:
-                        synonyms = []
-                        crossReferences = {}
-                        description = None
+                        cross_references = {}
                         external_ids = []
                         gene_chromosomes = []
                         gene_chromosome_starts = []
                         gene_chromosome_ends = []
                         gene_chromosome_strands = []
                         gene_chromosome_assemblies = []
-                        genomicLocations = []
-                        chromosome = None
+                        genomic_locations = []
                         start = None
                         end = None
                         strand = None
-                        assembly = None
-                        secondaryIds = []
-                        geneSynopsis = None
-                        geneSynopsisUrl = None
-                        geneLiteratureUrl = None
 
-                        if 'synonyms' in geneRecord:
-                            for synonym in geneRecord['synonyms']:
-                                synonyms.append(synonym)
-                        if 'description' in geneRecord:
-                            description = geneRecord['description']
-                        if 'geneLiteratureUrl' in geneRecord:
-                                geneLiteratureUrl = geneRecord['geneLiteratureUrl']
-                        if 'secondaryIds' in geneRecord:
-                            for secondaryId in geneRecord['secondaryIds']:
-                                secondaryIds.append(secondaryId)
-                        if 'geneSynopsis' in geneRecord:
-                            geneSynopsis = geneRecord['geneSynopsis']
-                        if 'geneSynopsisUrl' in geneRecord:
-                            geneSynopsisUrl = geneRecord['geneSynopsisUrl']
                         if 'crossReferences' in geneRecord:
                             for crossRef in geneRecord['crossReferences']:
                                 refText = crossRef['dataProvider'] + " " + crossRef['id']
                                 external_ids.append(refText)
-                                crossReferences = {"dataProvider": crossRef['dataProvider'], "id": crossRef['id']}
+                                cross_references = {"dataProvider": crossRef['dataProvider'], "id": crossRef['id']}
                         if 'genomeLocations' in geneRecord:
                             for genomeLocation in geneRecord['genomeLocations']:
                                 gene_chromosomes.append(genomeLocation['chromosome'])
@@ -114,20 +93,19 @@ class MOD():
                                 if 'strand' in geneRecord['genomeLocations']:
                                     gene_chromosome_strands.append(genomeLocation['strand'])
                                     strand = genomeLocation['strand']
-                                genomicLocations.append({"chromosome": chromosome, "start": start, "end": end, "strand": strand, "assembly": assembly})
-
-                        # TODO: maybe this method can be generic - running thru the dictionary and adding key:value pairs based on the JSON object now that the mapping.py matches the JSON schema.
+                                genomic_locations.append({"chromosome": chromosome, "start": start, "end": end,
+                                                         "strand": strand, "assembly": assembly})
 
                         self.genes[geneRecord['primaryId']] = {
                             "symbol": geneRecord['symbol'],
-                            "name": geneRecord['name'],
-                            "description": description,
-                            "synonyms": synonyms,
+                            "name": geneRecord.get('name'),
+                            "description": geneRecord.get('description'),
+                            "synonyms": geneRecord.get('synonyms'),
                             "soTermId": geneRecord['soTermId'],
                             "soTermName": None,
-                            "secondaryIds": secondaryIds,
-                            "geneSynopsis": geneSynopsis,
-                            "geneSynopsisUrl": geneSynopsisUrl,
+                            "secondaryIds": geneRecord.get('secondaryIds'),
+                            "geneSynopsis": geneRecord.get('geneSynopsis'),
+                            "geneSynopsisUrl": geneRecord.get('geneSynopsisUrl'),
                             "gene_chromosomes": gene_chromosomes,
                             "gene_chromosome_starts": gene_chromosome_starts,
                             "gene_chromosome_ends": gene_chromosome_ends,
@@ -138,15 +116,16 @@ class MOD():
                             "gene_biological_process": [],
                             "gene_molecular_function": [],
                             "gene_cellular_component": [],
-                            "genomeLocations": genomicLocations,
+                            "genomeLocations": genomic_locations,
                             "homologs": [],
-                            "geneLiteratureUrl": geneLiteratureUrl,
+                            "geneLiteratureUrl": geneRecord.get('geneLiteratureUrl'),
                             "name_key": geneRecord['name'].lower(),
                             "primaryId": geneRecord['primaryId'],
-                            "crossReferences": crossReferences,
+                            "crossReferences": cross_references,
                             "href": None,
                             "category": "gene"
                         }
+                        #self.soterm_map[geneRecord['soTermId']] = {"geneId": geneRecord['primaryId']}
                 data_file.close()
 
 
