@@ -56,9 +56,9 @@ virtualenv -p python2 ~/.virtualenvs/agr_prototype
     * make run    ( to start your local agr instance)
 ```
 * Check that agr instance and elasticsearch are comunicating
- ```bash
+```bash
    go to http://127.0.0.1:5000 and start your search   
- ```
+```
 
 ### To run tests
 ```bash
