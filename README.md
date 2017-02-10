@@ -20,6 +20,13 @@ virtualenv -p python2 ~/.virtualenvs/agr_prototype
 ```
 
 ## Getting started With Virtualenv
+### Install and start a local instance of [elasticsearch][8]
+```bash
+   a) cd to the directory where you downloaded ES (I dowanloaded elasticsearch-2.4.4.tar.gz)   
+   b) tar -xvf elasticsearch-2.4.4.tar.gz   
+   c) Start elasticserach - cd elasticsearch-2.4.4/ and run bin/elasticsearch
+   d) Check that ES is running - curl http:://localhost:9200/
+```
 ```bash
 source ~/.virtualenvs/agr_prototype/bin/activate
 make build
