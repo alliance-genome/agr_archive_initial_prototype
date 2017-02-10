@@ -122,3 +122,5 @@ The rules are configured in the .eslintrc file.
 [5]: https://webpack.github.io/docs/hot-module-replacement.html
 [6]: http://eslint.org/
 [7]: https://www.docker.com/
+[8]: https://www.elastic.co/downloads/elasticsearch
+[9]: https://nodejs.org
