@@ -63,6 +63,8 @@ class MOD():
                     dateProduced = data_content['metaData']['dateProduced']
                     dataProvider = data_content['metaData']['dataProvider']
 
+                    if 'release' in data_content['metaData']:
+                        release = data_content['metaData']['release']
 
                     for geneRecord in data_content['data']:
                         cross_references = {}
@@ -133,7 +135,8 @@ class MOD():
                             "href": None,
                             "category": "gene",
                             "dateProduced": dateProduced,
-                            "dataProvider": dataProvider
+                            "dataProvider": dataProvider,
+                            "release": release
                         }
                         #self.soterm_map[geneRecord['soTermId']] = {"geneId": geneRecord['primaryId']}
                 data_file.close()
