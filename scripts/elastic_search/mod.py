@@ -81,8 +81,6 @@ class MOD():
                         strand = None
                         name = None
 
-                        if 'name' in geneRecord:
-                            name = geneRecord['name']
 
                         if 'crossReferences' in geneRecord:
                             for crossRef in geneRecord['crossReferences']:
