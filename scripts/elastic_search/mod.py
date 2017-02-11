@@ -62,7 +62,8 @@ class MOD():
 
                     dateProduced = data_content['metaData']['dateProduced']
                     dataProvider = data_content['metaData']['dataProvider']
-
+                    release = None
+                    
                     if 'release' in data_content['metaData']:
                         release = data_content['metaData']['release']
 
