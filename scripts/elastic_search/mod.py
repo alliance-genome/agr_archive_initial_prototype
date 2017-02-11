@@ -81,7 +81,6 @@ class MOD():
                         strand = None
                         name = None
 
-
                         if 'crossReferences' in geneRecord:
                             for crossRef in geneRecord['crossReferences']:
                                 ref_text = crossRef['dataProvider'] + " " + crossRef['id']
