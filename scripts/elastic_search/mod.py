@@ -63,12 +63,12 @@ class MOD():
                     dateProduced = data_content['metaData']['dateProduced']
                     dataProvider = data_content['metaData']['dataProvider']
                     release = None
-                    
+
                     if 'release' in data_content['metaData']:
                         release = data_content['metaData']['release']
 
                     for geneRecord in data_content['data']:
-                        cross_references = {}
+                        cross_references = []
                         external_ids = []
                         gene_chromosomes = []
                         gene_chromosome_starts = []
@@ -88,7 +88,7 @@ class MOD():
                             for crossRef in geneRecord['crossReferences']:
                                 ref_text = crossRef['dataProvider'] + " " + crossRef['id']
                                 external_ids.append(ref_text)
-                                cross_references = {"dataProvider": crossRef['dataProvider'], "id": crossRef['id']}
+                                cross_references.append({"dataProvider": crossRef['dataProvider'], "id": crossRef['id']})
                         if 'genomeLocations' in geneRecord:
                             for genomeLocation in geneRecord['genomeLocations']:
                                 gene_chromosomes.append(genomeLocation['chromosome'])
