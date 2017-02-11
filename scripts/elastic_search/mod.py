@@ -60,6 +60,10 @@ class MOD():
                 with open(os.path.join(path, file)) as data_file:
                     data_content = json.load(data_file)
 
+                    dateProduced = data_content['metaData']['dateProduced']
+                    dataProvider = data_content['metaData']['dataProvider']
+
+
                     for geneRecord in data_content['data']:
                         cross_references = {}
                         external_ids = []
@@ -79,8 +83,8 @@ class MOD():
 
                         if 'crossReferences' in geneRecord:
                             for crossRef in geneRecord['crossReferences']:
-                                refText = crossRef['dataProvider'] + " " + crossRef['id']
-                                external_ids.append(refText)
+                                ref_text = crossRef['dataProvider'] + " " + crossRef['id']
+                                external_ids.append(ref_text)
                                 cross_references = {"dataProvider": crossRef['dataProvider'], "id": crossRef['id']}
                         if 'genomeLocations' in geneRecord:
                             for genomeLocation in geneRecord['genomeLocations']:
@@ -127,7 +131,9 @@ class MOD():
                             "primaryId": geneRecord['primaryId'],
                             "crossReferences": cross_references,
                             "href": None,
-                            "category": "gene"
+                            "category": "gene",
+                            "dataProduced": dateProduced,
+                            "dataProvider": dataProvider
                         }
                         #self.soterm_map[geneRecord['soTermId']] = {"geneId": geneRecord['primaryId']}
                 data_file.close()
