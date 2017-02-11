@@ -132,7 +132,7 @@ class MOD():
                             "crossReferences": cross_references,
                             "href": None,
                             "category": "gene",
-                            "dataProduced": dateProduced,
+                            "dateProduced": dateProduced,
                             "dataProvider": dataProvider
                         }
                         #self.soterm_map[geneRecord['soTermId']] = {"geneId": geneRecord['primaryId']}
