@@ -9,7 +9,8 @@ from elasticsearch import Elasticsearch
 
 class MOD():
 
-    INDEX_NAME = 'searchable_items_blue'
+    INDEX_NAME = os.environ['ES_INDEX']
+
     DOC_TYPE = 'searchable_item'
 
     go_blacklist = ("GO:0008150", "GO:0003674", "GO:0005575")
