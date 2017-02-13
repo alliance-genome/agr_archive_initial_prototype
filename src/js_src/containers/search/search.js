@@ -12,7 +12,7 @@ import SearchControls from './searchControls';
 import ResultsList from './resultsList';
 import ResultsTable from './resultsTable';
 import { SMALL_COL_CLASS, LARGE_COL_CLASS, SEARCH_API_ERROR_MESSAGE } from '../../constants';
-import { receiveResponse, setError, setPending } from './searchActions';
+import { receiveResponse, setError, setPending } from '../../actions/search';
 import LoadingPage from '../../components/loadingPage';
 
 // used to test rendering fixture response
@@ -83,7 +83,7 @@ class SearchComponent extends Component {
     } else if (this.props.isTable) {
       return <ResultsTable activeCategory={this.props.activeCategory} entries={this.props.results} />;
     } else {
-      return <ResultsList entries={this.props.results} />;      
+      return <ResultsList entries={this.props.results} />;
     }
   }
 
