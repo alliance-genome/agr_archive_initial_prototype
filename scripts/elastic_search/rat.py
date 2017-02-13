@@ -16,59 +16,6 @@ class RGD(MOD):
         # example: RGD=628644
         return panther_id.replace("=", ":")
 
-    def load_genes(self):
-        genes = MOD.genes
-
-        query = RGD.service.new_query("Gene")
-        query.add_view(
-            "symbol", "name", "primaryIdentifier", "chromosome.organism.commonName",
-            "chromosome.primaryIdentifier", "synonyms.value", "description",
-            "sequenceOntologyTerm.name", "locations.end", "locations.start",
-            "locations.strand"
-        )
-
-        query.add_constraint("organism.commonName", "=", "Norway rat", code = "A")
-
-        print("Fetching gene data from RatMine...")
-
-        for row in query.rows():
-            if row["primaryIdentifier"] in genes:
-                if row["synonyms.value"]:
-                    genes[row["primaryIdentifier"]]["gene_synonyms"].append(row["synonyms.value"])
-            else:
-                synonyms = []
-                if row["synonyms.value"]:
-                    synonyms.append(row["synonyms.value"])
-
-                chromosomes = []
-                if row["chromosome.primaryIdentifier"]:
-                    chromosomes = [row["chromosome.primaryIdentifier"]]
-
-                genes[row["primaryIdentifier"]] = {
-                    "gene_symbol": row["symbol"],
-                    "name": row["name"],
-                    "description": row["description"],
-                    "gene_synonyms": synonyms,
-                    "gene_type": row["sequenceOntologyTerm.name"],
-                    "gene_chromosomes": chromosomes,
-                    "gene_chromosome_starts": row["locations.start"],
-                    "gene_chromosome_ends": row["locations.end"],
-                    "gene_chromosome_strand": row["locations.strand"],
-                    "external_ids": [],
-                    "species": "Rattus norvegicus",
-
-                    "gene_biological_process": [],
-                    "gene_molecular_function": [],
-                    "gene_cellular_component": [],
-
-                    "homologs": [],
-
-                    "name_key": row["symbol"],
-                    "id": row["primaryIdentifier"],
-                    "href": RGD.gene_href(row["primaryIdentifier"]),
-                    "category": "gene"
-                }
-
     def load_go(self):
         go_data_csv_filename = "data/rat_go.tsv"
 

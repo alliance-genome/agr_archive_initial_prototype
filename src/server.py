@@ -44,9 +44,12 @@ def search():
         "disease": ['disease_species', 'disease_genes']
     }
 
-    search_fields = ['id', 'name', 'gene_symbol', 'gene_synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs.symbol', 'homologs.panther_family']
+    search_fields = ['id', 'name', 'symbol', 'synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs.symbol', 'homologs.panther_family']
 
-    json_response_fields = ['name', 'gene_symbol', 'gene_synonyms', 'gene_type', 'gene_chromosomes','gene_chromosome_starts', 'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs', 'category', 'href']
+    json_response_fields = ['name', 'symbol', 'synonyms', 'gene_type', 'gene_chromosomes','gene_chromosome_starts',
+                            'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process',
+                            'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms',
+                            'disease_genes', 'disease_synonyms', 'homologs', 'crossReferences', 'category', 'href']
 
     es_query = build_search_query(query, search_fields, category,
                                   category_filters, request.args)
@@ -117,6 +120,20 @@ def search_autocomplete():
         "results": format_autocomplete_results(autocomplete_results, field)
     })
 
+@app.route('/api/gene/<gene_id>')
+def gene_api(gene_id):
+    gene = es.get(ES_INDEX, gene_id)
+    return jsonify(gene['_source'])
+
+@app.route('/api/disease/<disease_id>')
+def disease_api(disease_id):
+    disease = es.get(ES_INDEX, disease_id)
+    return jsonify(disease['_source'])
+
+@app.route('/api/go/<go_id>')
+def go_api(go_id):
+    go = es.get(ES_INDEX, go_id)
+    return jsonify(go['_source'])
 
 # make static assets available
 @app.route('/assets/<path:path>')

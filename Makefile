@@ -27,6 +27,12 @@ stop:
 tests: test-py
 	ES_INDEX=$(ES_INDEX) npm test
 
+fetch:
+	cd scripts/elastic_search && ES_URI=$(ES_URI) python fetch_data.py
+
+index-files:
+	cd scripts/elastic_search && ES_URI=$(ES_URI) python index_data.py
+
 index:
 	echo $(ES_URI)
 	echo $(ES_AWS)

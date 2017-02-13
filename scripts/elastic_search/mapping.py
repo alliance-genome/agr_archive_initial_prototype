@@ -39,6 +39,9 @@ mapping = {
     "mappings": {
         "searchable_item": {
             "properties": {
+                "primaryId": {
+                    "type": "keyword"
+                },
                 "name": {
                     "type": "text",
                     "fields": {
@@ -48,14 +51,81 @@ mapping = {
                         }
                     }
                 },
-                "gene_symbol": {
+                "taxonId": {
+                    "type": "keyword"
+                },
+                "symbol": {
                     "type": "text",
                     "analyzer": "symbols"
                 },
-                "gene_synonyms": {
+                "systematicName": {
                     "type": "text",
                     "analyzer": "symbols"
                 },
+                "geneSynopsis": {
+                    "type": "text"
+                },
+                "geneSynopsisUrl": {
+                    "type": "keyword"
+                },
+                "geneLiteratureUrl": {
+                    "type": "keyword"
+                },
+                "soTermId": {
+                    "type": "keyword"
+                },
+                "synonyms": {
+                    "type": "text",
+                    "analyzer": "symbols"
+                },
+                "crossReferences": {
+                    "properties": {
+                        "dataProvider": {
+                            "type": "keyword"
+                        },
+                        "id": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "genomeLocations": {
+                    "properties": {
+                        "assembly": {
+                            "type": "keyword"
+                        },
+                        "startPosition": {
+                            "type": "integer"
+                        },
+                        "endPosition": {
+                            "type": "integer"
+                        },
+                        "chromosome": {
+                            "type": "keyword"
+                        },
+                        "strand": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "secondaryIds": {
+                    "type": "keyword"
+                },
+
+                "metaData": {
+                    "properties": {
+                        "dateProduced": {
+                            "type": "date"
+                         },
+                        "dataProvider": {
+                            "type": "keyword"
+                        },
+                        "release": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+
+
                 "gene_type": {
                     "type": "text",
                     "fields": {

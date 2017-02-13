@@ -3,35 +3,148 @@ import pickle
 import requests
 import os
 import re
+import json
+import fnmatch
 from elasticsearch import Elasticsearch
 
-
 class MOD():
+
     INDEX_NAME = os.environ['ES_INDEX']
+
     DOC_TYPE = 'searchable_item'
 
     go_blacklist = ("GO:0008150", "GO:0003674", "GO:0005575")
-
+    path_to_basic_gene_information_file = None
     gene_bkp_filename = "genes_bkp.pickle"
     go_bkp_filename = "go_bkp.pickle"
+    so_bkp_filename = "so_bkp.pickle"
     diseases_bkp_filename = "diseases_bkp.pickle"
 
     go_dataset = {}
+    so_dataset = {}
     omim_dataset = {}
 
     genes = {}
     go = {}
     diseases = {}
+    soterm_map = {}
 
     def __init__(self):
         self._load_omim_dataset()
         self._load_go_dataset()
+        self._load_so_dataset()
         self.es = Elasticsearch(os.environ['ES_URI'], retry_on_timeout=True)
+
+    @staticmethod
+    def get_species(taxon_id):
+        if taxon_id in ("7955"):
+            return "Danio rerio"
+        elif taxon_id in ("6239"):
+            return "Caenorhabditis elegans"
+        elif taxon_id in ("10090"):
+            return "Mus musculus"
+        elif taxon_id in ("10116"):
+            return "Rattus norvegicus"
+        elif taxon_id in ("559292"):
+            return "Saccharomyces cerevisiae"
+        elif taxon_id in ("7227"):
+            return "Drosophila melanogaster"
+        elif taxon_id in ("9606"):
+            return "Homo sapiens"
+        else:
+            return None
+
+    def load_genes(self):
+        path = "data/"
+        for file in os.listdir(path):
+            if fnmatch.fnmatch(file, "*.json"):
+                with open(os.path.join(path, file)) as data_file:
+                    data_content = json.load(data_file)
+
+                    dateProduced = data_content['metaData']['dateProduced']
+                    dataProvider = data_content['metaData']['dataProvider']
+                    release = None
+
+                    if 'release' in data_content['metaData']:
+                        release = data_content['metaData']['release']
+
+                    for geneRecord in data_content['data']:
+                        cross_references = []
+                        external_ids = []
+                        gene_chromosomes = []
+                        gene_chromosome_starts = []
+                        gene_chromosome_ends = []
+                        gene_chromosome_strands = []
+                        gene_chromosome_assemblies = []
+                        genomic_locations = []
+                        start = None
+                        end = None
+                        strand = None
+                        name = None
+
+                        if 'crossReferences' in geneRecord:
+                            for crossRef in geneRecord['crossReferences']:
+                                ref_text = crossRef['dataProvider'] + " " + crossRef['id']
+                                external_ids.append(ref_text)
+                                cross_references.append({"dataProvider": crossRef['dataProvider'], "id": crossRef['id']})
+                        if 'genomeLocations' in geneRecord:
+                            for genomeLocation in geneRecord['genomeLocations']:
+                                gene_chromosomes.append(genomeLocation['chromosome'])
+                                chromosome = genomeLocation['chromosome']
+                                gene_chromosome_assemblies.append(genomeLocation['assembly'])
+                                assembly = genomeLocation['assembly']
+                                if 'start' in genomeLocation:
+                                    gene_chromosome_starts.append(genomeLocation['start'])
+                                    start = genomeLocation['start']
+                                if 'end' in geneRecord['genomeLocations']:
+                                    gene_chromosome_ends.append(genomeLocation['end'])
+                                    end = genomeLocation['end']
+                                if 'strand' in geneRecord['genomeLocations']:
+                                    gene_chromosome_strands.append(genomeLocation['strand'])
+                                    strand = genomeLocation['strand']
+                                genomic_locations.append({"chromosome": chromosome, "start": start, "end": end,
+                                                         "strand": strand, "assembly": assembly})
+
+                        self.genes[geneRecord['primaryId']] = {
+                            "symbol": geneRecord['symbol'],
+                            "name": geneRecord.get('name'),
+                            "description": geneRecord.get('description'),
+                            "synonyms": geneRecord.get('synonyms'),
+                            "soTermId": geneRecord['soTermId'],
+                            "soTermName": None,
+                            "secondaryIds": geneRecord.get('secondaryIds'),
+                            "geneSynopsis": geneRecord.get('geneSynopsis'),
+                            "geneSynopsisUrl": geneRecord.get('geneSynopsisUrl'),
+                            "gene_chromosomes": gene_chromosomes,
+                            "gene_chromosome_starts": gene_chromosome_starts,
+                            "gene_chromosome_ends": gene_chromosome_ends,
+                            "gene_chromosome_strand": gene_chromosome_strands,
+                            "taxonId": geneRecord['taxonId'],
+                            "species": self.get_species(geneRecord['taxonId']),
+                            "external_ids": external_ids,
+                            "gene_biological_process": [],
+                            "gene_molecular_function": [],
+                            "gene_cellular_component": [],
+                            "genomeLocations": genomic_locations,
+                            "homologs": [],
+                            "geneLiteratureUrl": geneRecord.get('geneLiteratureUrl'),
+                            "name_key": name,
+                            "primaryId": geneRecord['primaryId'],
+                            "crossReferences": cross_references,
+                            "href": None,
+                            "category": "gene",
+                            "dateProduced": dateProduced,
+                            "dataProvider": dataProvider,
+                            "release": release
+                        }
+                        #self.soterm_map[geneRecord['soTermId']] = {"geneId": geneRecord['primaryId']}
+                data_file.close()
+
 
     @staticmethod
     def factory(organism):
         from sgd import SGD
-        from zfin import ZFin
+        from zfin import ZFIN
         from worm import WormBase
         from fly import FlyBase
         from mouse import MGI
@@ -41,7 +154,7 @@ class MOD():
         if organism in ("Saccharomyces cerevisiae", "S. cerevisiae", "YEAST"):
             return SGD()
         elif organism in ("Danio rerio", "D. rerio", "DANRE"):
-            return ZFin()
+            return ZFIN()
         elif organism in ("Caenorhabditis elegans", "C. elegans", "CAEEL"):
             return WormBase()
         elif organism in ("Drosophila melanogaster", "D. melanogaster", "DROME"):
@@ -72,7 +185,7 @@ class MOD():
             if gene_id not in genes:
                 return None
             else:
-                gene_symbol = genes[gene_id]["gene_symbol"]
+                gene_symbol = genes[gene_id]["symbol"]
 
         return {
             "id": gene_id,
@@ -202,11 +315,46 @@ class MOD():
                         else:
                             MOD.go_dataset[creating_term][key] = [value]
 
+    def _load_so_dataset(self):
+        if MOD.so_dataset != {}:
+            return
+
+        print "Loading SO dataset from file..."
+        with open("data/so.obo", "r") as f:
+            creating_term = None
+
+            for line in f:
+                line = line.strip()
+
+                if line == "[Term]":
+                    creating_term = True
+                elif creating_term:
+                    key = (line.split(":")[0]).strip()
+                    value = ("".join(":".join(line.split(":")[1:]))).strip()
+
+                    if key == "id":
+                        creating_term = value
+                        MOD.so_dataset[creating_term] = {}
+                    else:
+                        if key == "synonym":
+                            if value.split(" ")[-2] == "EXACT":
+                                value = (" ".join(value.split(" ")[:-2]))[1:-1]
+                            else:
+                                continue
+                        if key == "def":
+                            m = re.search('\"(.+)\"', value)
+                            value = m.group(1)
+
+                        if key in MOD.so_dataset[creating_term]:
+                            MOD.so_dataset[creating_term][key].append(value)
+                        else:
+                            MOD.so_dataset[creating_term][key] = [value]
+
     def add_go_annotation_to_gene(self, gene_id, go_id):
         if go_id not in self.go_dataset or go_id in MOD.go_blacklist or gene_id not in self.genes:
             return
 
-        gene_symbol = self.genes[gene_id]["gene_symbol"].upper()
+        gene_symbol = self.genes[gene_id]["symbol"].upper()
 
         if go_id in self.go:
             if gene_symbol not in self.go[go_id]["go_genes"]:
@@ -228,15 +376,19 @@ class MOD():
                 "href": "http://amigo.geneontology.org/amigo/term/" + go_id,
                 "category": "go"
             }
+        # appends go terms to the go namespace collections on gene dictionary created in load_genes() for each mod
 
-        if self.go[go_id]["name"] not in self.genes[gene_id]["gene_" + self.go[go_id]["go_type"]]:
-            self.genes[gene_id]["gene_" + self.go[go_id]["go_type"]].append(self.go[go_id]["name"])
+        go_type = self.go[go_id]["go_type"]
+        term_name = self.go[go_id]["name"]
+
+        if term_name not in self.genes[gene_id]["gene_" + go_type]:
+            self.genes[gene_id]["gene_" + go_type].append(term_name)
 
     def add_disease_annotation_to_gene(self, gene_id, omim_id):
         if omim_id not in self.omim_dataset or gene_id not in self.genes:
             return
 
-        gene_symbol = self.genes[gene_id]["gene_symbol"].upper()
+        gene_symbol = self.genes[gene_id]["symbol"].upper()
 
         if omim_id in self.diseases:
             if gene_symbol not in self.diseases[omim_id]["disease_genes"]:
