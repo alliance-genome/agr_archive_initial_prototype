@@ -15,10 +15,10 @@ class MOD():
 
     go_blacklist = ("GO:0008150", "GO:0003674", "GO:0005575")
     path_to_basic_gene_information_file = None
-    gene_bkp_filename = "genes_bkp.pickle"
-    go_bkp_filename = "go_bkp.pickle"
-    so_bkp_filename = "so_bkp.pickle"
-    diseases_bkp_filename = "diseases_bkp.pickle"
+    gene_bkp_filename = "data/genes_bkp.pickle"
+    go_bkp_filename = "data/go_bkp.pickle"
+    so_bkp_filename = "data/so_bkp.pickle"
+    diseases_bkp_filename = "data/diseases_bkp.pickle"
 
     go_dataset = {}
     so_dataset = {}
@@ -197,7 +197,7 @@ class MOD():
     def load_homologs(self):
         from human import Human
 
-        print "Loading orthologs from Panther file..."
+        print "Loading orthologs from Panther file (data/RefGenomeOrthologs) ..."
         with open("data/RefGenomeOrthologs", "r") as f:
             reader = csv.reader(f, delimiter='\t')
             for row in reader:
@@ -237,7 +237,7 @@ class MOD():
         if MOD.omim_dataset != {}:
             return
 
-        print "loading OMIM dataset from file..."
+        print "loading OMIM dataset from file (data/OMIM_diseases.txt) ..."
         with open("data/OMIM_diseases.txt", "r") as f:
             reader = csv.reader(f, delimiter='\t')
             next(reader, None)
@@ -284,7 +284,7 @@ class MOD():
         if MOD.go_dataset != {}:
             return
 
-        print "Loading GO dataset from file..."
+        print "Loading GO dataset from file (data/go.obo) ..."
         with open("data/go.obo", "r") as f:
             creating_term = None
 
@@ -319,7 +319,7 @@ class MOD():
         if MOD.so_dataset != {}:
             return
 
-        print "Loading SO dataset from file..."
+        print "Loading SO dataset from file (data/so.obo) ..."
         with open("data/so.obo", "r") as f:
             creating_term = None
 
@@ -418,13 +418,13 @@ class MOD():
         return None
 
     def load_data_from_file(self):
-        print "Loading genes from file..."
+        print "Loading genes from file (" + self.gene_bkp_filename + ") ..."
         self.genes = self.load_from_file(self.gene_bkp_filename)
 
-        print "Loading go from file..."
+        print "Loading go from file (" + self.go_bkp_filename + ") ..."
         self.go = self.load_from_file(self.go_bkp_filename)
 
-        print "Loading diseases from file..."
+        print "Loading diseases from file (" + self.diseases_bkp_filename + ") ..."
         self.diseases = self.load_from_file(self.diseases_bkp_filename)
 
         if self.genes is None or self.go is None or self.diseases is None:
@@ -435,13 +435,13 @@ class MOD():
             pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
 
     def save_into_file(self):
-        print "Saving genes into file..."
+        print "Saving genes into file (" + self.gene_bkp_filename + ") ..."
         self.save_dict_into_file(self.genes, self.gene_bkp_filename)
 
-        print "Saving go into file..."
+        print "Saving go into file (" + self.go_bkp_filename + ") ..."
         self.save_dict_into_file(self.go, self.go_bkp_filename)
 
-        print "Saving diseases into file..."
+        print "Saving diseases into file (" + self.diseases_bkp_filename + ") ..."
         self.save_dict_into_file(self.diseases, self.diseases_bkp_filename)
 
     def delete_mapping(self):

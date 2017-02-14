@@ -18,7 +18,7 @@ class WormBase(MOD):
     def load_go(self):
         go_data_csv_filename = "data/wormbase_gene_association.tsv"
 
-        print("Fetching go data from WormBase txt file...")
+        print("Fetching go data from WormBase txt file (" + go_data_csv_filename + ") ...")
 
         with open(go_data_csv_filename, 'rb') as f:
             reader = csv.reader(f, delimiter='\t')
@@ -32,7 +32,7 @@ class WormBase(MOD):
     def load_diseases(self):
         disease_data_csv_filename = "data/Diseases_OMIM_IDs_and_synonyms_(WormBase).txt"
 
-        print("Fetching disease data from WormBase txt file...")
+        print("Fetching disease data from WormBase txt file (" + disease_data_csv_filename + ") ...")
 
         with open(disease_data_csv_filename, 'rb') as f:
             reader = csv.reader(f, delimiter='\t')

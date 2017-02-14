@@ -17,7 +17,7 @@ class FlyBase(MOD):
     def load_go(self):
         go_data_csv_filename = "data/FlyBase_GO_output_fb_2016_04.tsv"
 
-        print("Fetching go data from FlyBase tsv file...")
+        print("Fetching go data from FlyBase tsv file (" + go_data_csv_filename + ") ...")
 
         with open(go_data_csv_filename, 'rb') as f:
             reader = csv.reader(f, delimiter='\t')
@@ -30,7 +30,7 @@ class FlyBase(MOD):
     def load_diseases(self):
         diseases_data_csv_filename = "data/FlyBase_DOID_output_fb_2016_04.tsv"
 
-        print("Fetching disease data from FlyBase tsv file...")
+        print("Fetching disease data from FlyBase tsv file (" + diseases_data_csv_filename + ") ...")
 
         with open(diseases_data_csv_filename, 'rb') as f:
             reader = csv.reader(f, delimiter='\t')
