@@ -28,6 +28,7 @@ export ES_URI="https://search-es1-oyqxarxm2djn35dfodzniituhe.us-west-2.es.amazon
 ```bash
 source ~/.virtualenvs/agr_prototype/bin/activate
 make build
+make index
 make run
 ```
 
