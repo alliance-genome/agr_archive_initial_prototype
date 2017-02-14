@@ -19,7 +19,7 @@ class RGD(MOD):
     def load_go(self):
         go_data_csv_filename = "data/rat_go.tsv"
 
-        print("Fetching go data from RGD tsv file...")
+        print("Fetching go data from RGD tsv file (" + go_data_csv_filename + ") ...")
 
         with open(go_data_csv_filename, 'rb') as f:
             reader = csv.reader(f, delimiter='\t')
@@ -30,7 +30,7 @@ class RGD(MOD):
     def load_diseases(self):
         disease_data_csv_filename = "data/rat_disease.tsv"
 
-        print("Fetching disease data from RGD tsv file...")
+        print("Fetching disease data from RGD tsv file (" + disease_data_csv_filename + ") ...")
 
         with open(disease_data_csv_filename, 'rb') as f:
             reader = csv.reader(f, delimiter='\t')

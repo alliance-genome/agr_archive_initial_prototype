@@ -28,15 +28,12 @@ tests: test-py
 	ES_INDEX=$(ES_INDEX) npm test
 
 fetch:
-	cd scripts/elastic_search && ES_URI=$(ES_URI) python fetch_data.py
+	cd scripts/elastic_search && ES_INDEX=$(ES_INDEX) ES_URI=$(ES_URI) python fetch_data.py
 
 index-files:
-	cd scripts/elastic_search && ES_URI=$(ES_URI) python index_data.py
+	cd scripts/elastic_search && ES_INDEX=$(ES_INDEX) ES_URI=$(ES_URI) python index_data.py
 
 index:
-	echo $(ES_URI)
-	echo $(ES_AWS)
-	echo $(ES_INDEX)
 	cd scripts/elastic_search && ES_URI=$(ES_URI) ES_AWS=$(ES_AWS) ES_INDEX=$(ES_INDEX) python index.py
 
 test-py:
