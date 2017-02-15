@@ -1,5 +1,0 @@
-
-from gene_controller import GeneController
-from search_controller import SearchController
-from go_controller import GoController
-from disease_controller import DiseaseController

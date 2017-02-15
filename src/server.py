@@ -2,29 +2,15 @@ from flask import Flask, render_template, send_from_directory, request, jsonify
 from flask_webpack import Webpack
 from gevent.wsgi import WSGIServer
 from random import randint
+from controllers import *
 
 import os
-
-from awses.connection import AWSConnection
-from elasticsearch import Elasticsearch
-
-from controllers.helpers import build_search_query, build_es_search_body_request, \
-    build_es_aggregation_body_request, format_search_results, \
-    format_aggregation_results, build_autocomplete_search_body_request, \
-    format_autocomplete_results
-
-es = Elasticsearch(connection_class=AWSConnection,
-                   region='us-west-2',
-                   host=os.environ['ES_URI'], timeout=5, retry_on_timeout=False) if os.environ['ES_AWS'] == "true" else Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
-
-ES_INDEX = os.environ['ES_INDEX']
 
 app = Flask(__name__)
 webpack = Webpack()
 app.config.update({ 'DEBUG': True, 'WEBPACK_MANIFEST_PATH': './build/manifest.json' })
 webpack.init_app(app)
 
-from controllers import *
 
 controllers = {
 	"disease": DiseaseController(),
