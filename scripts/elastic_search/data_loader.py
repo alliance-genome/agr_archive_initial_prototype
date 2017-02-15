@@ -18,7 +18,7 @@ class DataLoader:
 		for m in mods:
 			genes.append(m.load_genes())
 
-		load_homologs(genes)
+		HomoLogLoader().attach_homolog_data(genes)
 
 		for m in mods:
 			m.load_go()
@@ -28,42 +28,6 @@ class DataLoader:
 		PickleFile(self.go_bkp_filename).save(go)
 		PickleFile(self.diseases_bkp_filename).save(diseases)
 		#PickleFile(self.so_bkp_filename).save(so)
-
-	def load_homologs(self, genes):
-		homolog_data = CVSFile("data/RefGenomeOrthologs").get_data()
-		for row in reader:
-
-			gene_1 = MOD._process_gene_id_from_panther(row[0], self.genes)
-			gene_2 = MOD._process_gene_id_from_panther(row[1], self.genes)
-
-				if gene_1 is None or gene_2 is None:
-					continue
-
-				if gene_1["species"] != Human.species:
-					if "homologs" not in self.genes[gene_1["id"]]:
-						self.genes[gene_1["id"]]["homologs"] = []
-
-					self.genes[gene_1["id"]]["homologs"].append({
-						"symbol": gene_2["symbol"],
-						"href": gene_2["href"],
-						"species": gene_2["species"],
-						"relationship_type": row[2],
-						"ancestral": row[3],
-						"panther_family": row[4]
-					})
-
-				if gene_2["species"] != Human.species:
-					if "homologs" not in self.genes[gene_2["id"]]:
-						self.genes[gene_2["id"]]["homologs"] = []
-
-					self.genes[gene_2["id"]]["homologs"].append({
-						"symbol": gene_1["symbol"],
-						"href": gene_1["href"],
-						"species": gene_1["species"],
-						"relationship_type": row[2],
-						"ancestral": row[3],
-						"panther_family": row[4]
-					})
 
 
 
@@ -85,10 +49,6 @@ class DataLoader:
 		else:
 			print "SUCCESS"
 
-	def index_all_into_es(self):
-		self.index_genes_into_es()
-		self.index_go_into_es()
-		self.index_diseases_into_es()
 	def index_into_es(self, data):
 		bulk_data = []
 
@@ -109,23 +69,9 @@ class DataLoader:
 		if len(bulk_data) > 0:
 			self.es.bulk(index=self.INDEX_NAME, body=bulk_data, refresh=True)
 
-	def index_genes_into_es(self):
-		print "Indexing genes into ES..."
-		self.index_into_es(self.genes)
-
-	def index_go_into_es(self):
-		print "Indexing go into ES..."
-		self.index_into_es(self.go)
-
-	def index_diseases_into_es(self):
-		print "Indexing diseases into ES..."
-		self.index_into_es(self.diseases)
-
-
-mod.index_genes_into_es()
-mod.index_go_into_es()
-mod.index_diseases_into_es()
-		pass
+		#mod.index_genes_into_es()
+		#mod.index_go_into_es()
+		#mod.index_diseases_into_es()
 
 if __name__ == '__main__':
 	dataloader = DataLoader()

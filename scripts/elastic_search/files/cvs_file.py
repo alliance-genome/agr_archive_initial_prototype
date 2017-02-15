@@ -11,5 +11,5 @@ class CVSFile:
 			rows = []
 			for row in reader:
 				rows.append(row)
-	
+		f.close()	
 		return rows
