@@ -7,6 +7,7 @@ import json
 import fnmatch
 from elasticsearch import Elasticsearch
 
+
 class MOD():
 
     INDEX_NAME = os.environ['ES_INDEX']

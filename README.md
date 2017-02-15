@@ -6,7 +6,10 @@ Resources.
 
 ## Prerequisites
 
-Ensure you've installed [pip][1] and [virtualenv][2] and [nodejs][3].
+Ensure you've installed [pip][1] and [virtualenv][2] and [nodejs][3] and aws client [4].
+
+http://docs.aws.amazon.com/cli/latest/userguide/installing.html
+
 ```bash
   Starting with Python 2.7.9, pip is included by default with the Python binary installers. 
   
