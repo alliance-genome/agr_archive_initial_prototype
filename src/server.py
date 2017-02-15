@@ -2,7 +2,7 @@ from flask import Flask, render_template, send_from_directory, request, jsonify
 from flask_webpack import Webpack
 from gevent.wsgi import WSGIServer
 from random import randint
-from controllers import *
+from services import *
 
 import os
 
@@ -12,17 +12,17 @@ app.config.update({ 'DEBUG': True, 'WEBPACK_MANIFEST_PATH': './build/manifest.js
 webpack.init_app(app)
 
 
-controllers = {
-	"disease": DiseaseController(),
-	"gene": GeneController(),
-	"go": GoController(),
-	"search": SearchController(),
+services = {
+	"disease": DiseaseService(),
+	"gene": GeneService(),
+	"go": GoService(),
+	"search": SearchService(),
 }
 
 # Search
 @app.route('/api/search')
 def search():
-    controller_c = controllers["search"]
+    service_c = services["search"]
 
     query = request.args.get('q', '')
     limit = int(request.args.get('limit', 10))
@@ -30,44 +30,44 @@ def search():
     category = request.args.get('category', '')
     sort_by = request.args.get('sort_by', '')
 
-    return jsonify(controller_c.search(query, limit, offset, category, sort_by, request.args))
+    return jsonify(service_c.search(query, limit, offset, category, sort_by, request.args))
 
 # Search Auto Complete
 @app.route('/api/search_autocomplete')
 def search_autocomplete():
-    controller_c = controllers["search"]
+    service_c = services["search"]
 
     query = request.args.get('q', '')
     category = request.args.get('category', '')
     field = request.args.get('field', 'name_key')
 
-    return jsonify(controller_c.autocomplete(query, category, field))
+    return jsonify(service_c.autocomplete(query, category, field))
 
 # Create
-@app.route('/api/<controller>', methods=['POST'])
-def gene_create_api(controller):
-    controller_c = controllers[controller]
+@app.route('/api/<service>', methods=['POST'])
+def gene_create_api(service):
+    service_c = services[service]
     object = request.get_json()
-    return jsonify(controller_c.create(object))
+    return jsonify(service_c.create(object))
 
 # Read
-@app.route('/api/<controller>/<id>', methods=['GET'])
-def read_api(controller, id):
-    controller_c = controllers[controller]
-    return jsonify(controller_c.get(id)['_source'])
+@app.route('/api/<service>/<id>', methods=['GET'])
+def read_api(service, id):
+    service_c = services[service]
+    return jsonify(service_c.get(id)['_source'])
 
 # Update
-@app.route('/api/<controller>/<id>', methods=['PUT'])
-def gene_update_api(controller, id):
-    controller_c = controllers[controller]
+@app.route('/api/<service>/<id>', methods=['PUT'])
+def gene_update_api(service, id):
+    service_c = services[service]
     object = request.get_json()
-    return jsonify(controller_c.save(id, object))
+    return jsonify(service_c.save(id, object))
 
 # Delete
-@app.route('/api/<controller>/<id>', methods=['DELETE'])
-def gene_delete_api(controller, id):
-    controller_c = controllers[controller]
-    return jsonify(controller_c.delete(id))
+@app.route('/api/<service>/<id>', methods=['DELETE'])
+def gene_delete_api(service, id):
+    service_c = services[service]
+    return jsonify(service_c.delete(id))
 
 
 # make static assets available
