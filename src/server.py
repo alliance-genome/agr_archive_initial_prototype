@@ -137,11 +137,29 @@ def go_api(go_id):
     go = es.get(ES_INDEX, go_id)
     return jsonify(go['_source'])
 
+# Gene CRUD
+@app.route('/api/gene2/<gene_id>')
+class GeneApi:
+    gene_c = GeneController()
+    # Create
+    def post(self, gene_id):
+        gene = request.get_json()
+        return jsonify(gene_c.create(gene_id, gene))
+    # Read
+    def get(self, gene_id):
+        return jsonify(gene_c.get(gene_id))
+    # Update
+    def put(self, gene_id):
+        gene = request.get_json()
+        return jsonify(gene_c.save(gene_id, gene))
+    # Delete
+    def delete(self, gene_id):
+        return jsonify(gene_c.delete(gene_id))
+
 # make static assets available
 @app.route('/assets/<path:path>')
 def send_static(path):
     return send_from_directory('build', path)
-
 
 # render user interfaces in client JS
 @app.route('/')
