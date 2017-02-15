@@ -13,6 +13,8 @@ from search import build_search_query, build_es_search_body_request, \
     format_aggregation_results, build_autocomplete_search_body_request, \
     format_autocomplete_results
 
+from controllers import GeneController
+
 es = Elasticsearch(connection_class=AWSConnection,
                    region='us-west-2',
                    host=os.environ['ES_URI'], timeout=5, retry_on_timeout=False) if os.environ['ES_AWS'] == "true" else Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
