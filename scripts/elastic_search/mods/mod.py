@@ -1,5 +1,4 @@
 import csv
-import pickle
 import requests
 import os
 import re
@@ -15,10 +14,6 @@ class MOD():
 
     go_blacklist = ("GO:0008150", "GO:0003674", "GO:0005575")
     path_to_basic_gene_information_file = None
-    gene_bkp_filename = "data/genes_bkp.pickle"
-    go_bkp_filename = "data/go_bkp.pickle"
-    so_bkp_filename = "data/so_bkp.pickle"
-    diseases_bkp_filename = "data/diseases_bkp.pickle"
 
     go_dataset = {}
     so_dataset = {}
@@ -411,90 +406,3 @@ class MOD():
                 "category": "disease"
             }
 
-    def load_from_file(self, filename):
-        if os.path.isfile(filename):
-            with open(filename, "rb") as f:
-                return pickle.load(f)
-        return None
-
-    def load_data_from_file(self):
-        print "Loading genes from file (" + self.gene_bkp_filename + ") ..."
-        self.genes = self.load_from_file(self.gene_bkp_filename)
-
-        print "Loading go from file (" + self.go_bkp_filename + ") ..."
-        self.go = self.load_from_file(self.go_bkp_filename)
-
-        print "Loading diseases from file (" + self.diseases_bkp_filename + ") ..."
-        self.diseases = self.load_from_file(self.diseases_bkp_filename)
-
-        if self.genes is None or self.go is None or self.diseases is None:
-            print ("Fail loading data from backup")
-
-    def save_dict_into_file(self, data, filename):
-        with open(filename, "wb") as f:
-            pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
-
-    def save_into_file(self):
-        print "Saving genes into file (" + self.gene_bkp_filename + ") ..."
-        self.save_dict_into_file(self.genes, self.gene_bkp_filename)
-
-        print "Saving go into file (" + self.go_bkp_filename + ") ..."
-        self.save_dict_into_file(self.go, self.go_bkp_filename)
-
-        print "Saving diseases into file (" + self.diseases_bkp_filename + ") ..."
-        self.save_dict_into_file(self.diseases, self.diseases_bkp_filename)
-
-    def delete_mapping(self):
-        print "Deleting mapping..."
-        response = requests.delete(os.environ['ES_URI'] + self.INDEX_NAME + "/")
-        if response.status_code != 200:
-            print "ERROR: " + str(response.json())
-        else:
-            print "SUCCESS"
-
-    def put_mapping(self):
-        from mapping import mapping
-
-        print "Putting mapping... "
-        response = requests.put(os.environ['ES_URI'] + self.INDEX_NAME + "/", json=mapping)
-        if response.status_code != 200:
-            print "ERROR: " + str(response.json())
-        else:
-            print "SUCCESS"
-
-    def index_into_es(self, data):
-        bulk_data = []
-
-        for id in data:
-            bulk_data.append({
-                'index': {
-                    '_index': self.INDEX_NAME,
-                    '_type': self.DOC_TYPE,
-                    '_id': id
-                }
-            })
-            bulk_data.append(data[id])
-
-            if len(bulk_data) == 300:
-                self.es.bulk(index=self.INDEX_NAME, body=bulk_data, refresh=True)
-                bulk_data = []
-
-        if len(bulk_data) > 0:
-            self.es.bulk(index=self.INDEX_NAME, body=bulk_data, refresh=True)
-
-    def index_genes_into_es(self):
-        print "Indexing genes into ES..."
-        self.index_into_es(self.genes)
-
-    def index_go_into_es(self):
-        print "Indexing go into ES..."
-        self.index_into_es(self.go)
-
-    def index_diseases_into_es(self):
-        print "Indexing diseases into ES..."
-        self.index_into_es(self.diseases)
-
-    def index_all_into_es(self):
-        self.index_genes_into_es()
-        self.index_go_into_es()
-        self.index_diseases_into_es()
