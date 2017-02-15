@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import DataSourceLink from '../../components/dataSourceLink';
+
 import style from './style.css';
 
 class DataSourceCard extends Component {
@@ -13,7 +15,9 @@ class DataSourceCard extends Component {
             <dt className='col-sm-5'>Species</dt>
             <dd className='col-sm-7'><i>{d.species}</i></dd>
             <dt className='col-sm-5'>Primary Source</dt>
-            <dd className='col-sm-7'><a href='#'>{d.dataProvider}:{d.primaryId}</a></dd>
+            <dd className='col-sm-7'>
+              <DataSourceLink dataProvider={d.dataProvider} id={d.primaryId} />
+            </dd>
           </dl>
         </div>
       </div>

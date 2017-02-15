@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 
 import style from './style.css';
 import CategoryLabel from './categoryLabel';
@@ -17,13 +18,13 @@ class ResultsList extends Component {
     return <DetailList data={_data} fields={_fields} />;
   }
 
-  renderHeader(d, isMakeLowercase) {
+  renderHeader(category, link, isMakeLowercase) {
     let _className = isMakeLowercase ? style.lowercase : null;
     return (
       <div>
-        <span className={style.resultCatLabel}><CategoryLabel category={d.category} /></span>
+        <span className={style.resultCatLabel}><CategoryLabel category={category} /></span>
         <h4 className={_className}>
-          <a dangerouslySetInnerHTML={{ __html: d.display_name }} href={d.href} target='_new' />
+          {link}
         </h4>
       </div>
     );
@@ -35,10 +36,11 @@ class ResultsList extends Component {
 
   renderNonGeneEntry(d, i, fields) {
     let isMakeLowercase = d.category === 'disease';
-    let apiUrl = "/api/" + d.category + "/" + d.id;
+    let apiUrl = '/api/' + d.category + '/' + d.id;
+    let link = <a dangerouslySetInnerHTML={{ __html: d.display_name }} href={d.href} />;
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
-        {this.renderHeader(d, isMakeLowercase)}
+        {this.renderHeader(d.category, link, isMakeLowercase)}
         {this.renderDetailFromFields(d, fields)}
         {this.renderHighlightedValues(d.highlight)}
         (<a href={apiUrl}>api link that will go away</a>)
@@ -51,10 +53,11 @@ class ResultsList extends Component {
     let topFields = ['name', 'synonyms'];
     let bottomFields = ['species', 'gene_type'];
     let logHighlight = d.highlight['homologs.symbol'] || d.highlight['homologs.panther_family'];
-    let apiUrl = "/api/" + d.category + "/" + d.id;
+    let apiUrl = '/api/' + d.category + '/' + d.id;
+    let link = <Link to={`/gene/${d.id}`}><span dangerouslySetInnerHTML={{ __html: d.display_name }} /></Link>;
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
-        {this.renderHeader(d)}
+        {this.renderHeader(d.category, link)}
           {this.renderDetailFromFields(d, topFields)}
           <div className={style.detailContainer}>
             <span className={style.detailLabel}><strong>Source:</strong> </span>
