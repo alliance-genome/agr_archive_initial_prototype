@@ -1,9 +1,9 @@
-from base_controller import BaseController
+from base_service import BaseService
 from dao import ElasticSearchDAO
 
 from helpers import *
 
-class SearchController:
+class SearchService:
 
 	def __init__(self):
 		self.dao = ElasticSearchDAO()

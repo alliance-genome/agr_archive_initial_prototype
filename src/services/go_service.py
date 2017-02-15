@@ -1,7 +1,7 @@
-from base_controller import BaseController
+from base_service import BaseService
 from dao import GoDAO
 
-class GoController(BaseController):
+class GoService(BaseService):
 
 	def __init__(self):
 		self.dao = GoDAO()
