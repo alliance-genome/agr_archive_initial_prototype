@@ -5,8 +5,8 @@ import re
 
 class GeneLoader:
 
-	def __init__(self, filename):
-		self.gene_data = JSONFile(filename).get_data()
+	def __init__(self, gene_data):
+		self.gene_data = gene_data
 
 	def get_data(self):
 		gene_dataset = {}

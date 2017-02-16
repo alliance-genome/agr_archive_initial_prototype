@@ -1,7 +1,9 @@
 from mod import MOD
+from files import *
 from loaders.gene_loader import GeneLoader
 from intermine.webservice import Service
 
+import json
 
 class MGI(MOD):
 	species = "Mus musculus"
@@ -21,7 +23,11 @@ class MGI(MOD):
 		return ":".join(panther_id.split("=")[1:]).strip()
 
 	def load_genes(self):
-		return GeneLoader("data/mgiTestData.json").get_data()
+		local_s3_file = S3File("mod-datadumps", "MGI_0.3.0_1.tar.gz").download()
+		tar_file = TARFile(local_s3_file)
+		print tar_file.get_data()
+		gene_data = json.load(tar_file.get_data())
+		return GeneLoader(gene_data).get_data()
 
 	def load_go(self):
 		query = MGI.service.new_query("GOTerm")

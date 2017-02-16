@@ -16,34 +16,34 @@ class DataLoader:
 		self.es = Elasticsearch(os.environ['ES_URI'], retry_on_timeout=True)
 
 	def load_data_from_sources(self):
-		mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase()]
-		#mods = [MGI()]
+		#mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase()]
+		mods = [MGI()]
 
-		go_data = GoLoader().get_data() 
-		omim_data = OMIMLoader().get_data()
-		so_data = SoLoader().get_data()
+		#go_data = GoLoader().get_data() 
+		#omim_data = OMIMLoader().get_data()
+		#so_data = SoLoader().get_data()
 
 		genes = {}
 		for mod in mods:
 			genes.update(mod.load_genes())
 
-		HomoLogLoader(mods).attach_homolog_data(genes)
+		#HomoLogLoader(mods).attach_homolog_data(genes)
 
-		gene_go_annots = []
-		gene_disease_annots = []
-		for mod in mods:
-			gene_go_annots.extend(mod.load_go())
-			gene_disease_annots.extend(mod.load_diseases())
+		#gene_go_annots = []
+		#gene_disease_annots = []
+		#for mod in mods:
+		#	gene_go_annots.extend(mod.load_go())
+		#	gene_disease_annots.extend(mod.load_diseases())
 
-		go_annot_loader = GoGeneAnnotLoader(genes, go_data)
-		go_entries = go_annot_loader.attach_annotations(gene_go_annots)
+		#go_annot_loader = GoGeneAnnotLoader(genes, go_data)
+		#go_entries = go_annot_loader.attach_annotations(gene_go_annots)
 
-		disease_annot_loader = DiseaseGeneAnnotLoader(genes, omim_data)
-		disease_entries = disease_annot_loader.attach_annotations(gene_disease_annots)
+		#disease_annot_loader = DiseaseGeneAnnotLoader(genes, omim_data)
+		#disease_entries = disease_annot_loader.attach_annotations(gene_disease_annots)
 		
 		PickleFile(self.gene_bkp_filename).save(genes)
-		PickleFile(self.go_bkp_filename).save(go_entries)
-		PickleFile(self.diseases_bkp_filename).save(disease_entries)
+		#PickleFile(self.go_bkp_filename).save(go_entries)
+		#PickleFile(self.diseases_bkp_filename).save(disease_entries)
 #		#PickleFile(self.so_bkp_filename).save(so)
 
 	def load_data_from_files_into_index(self):
