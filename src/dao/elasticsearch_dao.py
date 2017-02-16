@@ -5,9 +5,9 @@ from elasticsearch import Elasticsearch
 class ElasticSearchDAO:
 	ES_INDEX = os.environ['ES_INDEX']
 	if os.environ['ES_AWS'] == "true":
-		es = elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=false, use_ssl=true, verify_certs=true)
+		es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False, use_ssl=True, verify_certs=True)
 	else:
-		es = elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=false)
+		es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
 
 	def __init__(self):
 		pass
