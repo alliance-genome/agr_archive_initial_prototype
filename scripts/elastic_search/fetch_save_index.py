@@ -13,7 +13,10 @@ class FetchSaveIndex:
 	diseases_bkp_filename = "data/diseases_bkp.pickle"
 
 	def __init__(self):
-		self.es = Elasticsearch(os.environ['ES_URI'], retry_on_timeout=True)
+		if os.environ['ES_AWS'] == "true":
+			self.es = elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=false, use_ssl=true, verify_certs=true)
+		else:
+			self.es = elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=false)
 
 	def load_data_from_sources_and_index(self):
 		mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase()]

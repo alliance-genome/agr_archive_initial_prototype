@@ -7,10 +7,6 @@ build:
 	npm install
 	npm run build
 	pip install -r requirements.txt
-	cd ~/.virtualenvs/agr_prototype/bin; \
-	git clone https://github.com/elelsee/aws-es-connection.git; \
-	cd aws-es-connection; \
-	python setup.py install
 
 run:
 	ES_URI=$(ES_URI) ES_AWS=$(ES_AWS) ES_INDEX=$(ES_INDEX) python src/server.py
