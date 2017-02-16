@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import OrthologTable from '../../components/genePage/orthologTable';
+import { OrthologyTable } from '../../components/orthology';
 import { connect } from 'react-redux';
 
 import fetchData from '../../lib/fetchData';
@@ -17,7 +17,7 @@ const mockOrthologData = [
     ncbiID: '2580',
     scoreNumerator: 11,
     scoreDemominator: 11,
-    sources: [
+    methods: [
       {id: 'compara', isCalled: true},
       {id: 'homologene', isCalled: true},
       {id: 'inparanoid', isCalled: true},
@@ -41,7 +41,7 @@ const mockOrthologData = [
     ncbiID: '9829',
     scoreNumerator: 7,
     scoreDemominator: 11,
-    sources: [
+    methods: [
       {id: 'compara', isCalled: true},
       {id: 'homologene', isCalled: false},
       {id: 'inparanoid', isCalled: true},
@@ -65,7 +65,7 @@ const mockOrthologData = [
     ncbiID: '231580',
     scoreNumerator: 11,
     scoreDemominator: 11,
-    sources: [
+    methods: [
       {id: 'compara', isCalled: true},
       {id: 'homologene', isCalled: true},
       {id: 'inparanoid', isCalled: true},
@@ -90,7 +90,7 @@ const mockOrthologData = [
     ncbiID: '72685',
     scoreNumerator: 7,
     scoreDemominator: 11,
-    sources: [
+    methods: [
       {id: 'compara', isCalled: true},
       {id: 'homologene', isCalled: false},
       {id: 'inparanoid', isCalled: true},
@@ -115,7 +115,7 @@ const mockOrthologData = [
     ncbiID: '100151158',
     scoreNumerator: 7,
     scoreDemominator: 11,
-    sources: [
+    methods: [
       {id: 'compara', isCalled: true},
       {id: 'homologene', isCalled: true},
       {id: 'inparanoid', isCalled: false},
@@ -139,7 +139,7 @@ const mockOrthologData = [
     ncbiID: '796354',
     scoreNumerator: 5,
     scoreDemominator: 11,
-    sources: [
+    methods: [
       {id: 'compara', isCalled: true},
       {id: 'homologene', isCalled: false},
       {id: 'inparanoid', isCalled: true},
@@ -163,7 +163,7 @@ const mockOrthologData = [
     ncbiID: '180844',
     scoreNumerator: 5,
     scoreDemominator: 11,
-    sources: [
+    methods: [
       {id: 'compara', isCalled: false},
       {id: 'homologene', isCalled: false},
       {id: 'inparanoid', isCalled: false},
@@ -187,7 +187,7 @@ const mockOrthologData = [
     ncbiID: '180844',
     scoreNumerator: 5,
     scoreDemominator: 11,
-    sources: [
+    methods: [
       {id: 'compara', isCalled: false},
       {id: 'homologene', isCalled: false},
       {id: 'inparanoid', isCalled: false},
@@ -211,7 +211,7 @@ const mockOrthologData = [
     ncbiID: '851918',
     scoreNumerator: 2,
     scoreDemominator: 11,
-    sources: [
+    methods: [
       {id: 'compara', isCalled: false},
       {id: 'homologene', isCalled: false},
       {id: 'inparanoid', isCalled: false},
@@ -255,7 +255,7 @@ class GenePage extends Component {
       <div className='container'>
         <GenePageHeader symbol={this.props.data.symbol} />
         <BasicGeneInfo geneData={this.props.data} />
-        <OrthologTable data={mockOrthologData} />
+        <OrthologyTable data={mockOrthologData} />
       </div>
     );
   }
