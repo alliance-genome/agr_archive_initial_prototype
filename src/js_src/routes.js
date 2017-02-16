@@ -14,6 +14,6 @@ export default (
     <Route component={About} path='about' />
     <Route component={Help} path='help' />
     <Route component={Search} path='search' />
-    <Route component={GenePage} path='feature/:featureId' />
+    <Route component={GenePage} path='gene/:geneId' />
   </Route>
 );

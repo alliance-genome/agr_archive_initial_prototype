@@ -1,7 +1,7 @@
 import time
 
 from sgd import SGD
-from zfin import ZFin
+from zfin import ZFIN
 from worm import WormBase
 from fly import FlyBase
 from mouse import MGI
@@ -10,7 +10,7 @@ from rat import RGD
 from mod import MOD
 
 sgd = SGD()
-zfin = ZFin()
+zfin = ZFIN()
 worm = WormBase()
 fly = FlyBase()
 mouse = MGI()
@@ -20,11 +20,9 @@ mod = MOD()
 
 mods = [mouse, zfin, sgd, worm, fly, rat]
 
-for m in mods:
-    start_time = time.time()
-    m.load_genes()
-    print (" --- %s seconds --- " % (time.time() - start_time))
+start_time = time.time()
 
+mod.load_genes()
 mod.load_homologs()
 
 for m in mods:

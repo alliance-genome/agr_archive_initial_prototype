@@ -18,21 +18,14 @@ class SearchControlsComponent extends Component {
   renderViewAs() {
     let listQp = getQueryParamWithValueChanged('mode', 'list', this.props.queryParams);
     let tableQp = getQueryParamWithValueChanged('mode', 'table', this.props.queryParams);
-    let graphQp = getQueryParamWithValueChanged('mode', 'graph', this.props.queryParams);
     let listHref = { pathname: SEARCH_PATH, query: listQp };
     let tableHref = { pathname: SEARCH_PATH, query: tableQp };
-    let graphHref = { pathname: SEARCH_PATH, query: graphQp };
-    let graphNode = null;
-    if (this.props.canHaveGraph) {
-      graphNode = <Link className={`btn btn-${(this.props.mode === 'graph') ? 'primary': 'secondary'}`} to={graphHref}><i className='fa fa-circle' /> Graph</Link>;
-    }
     return (
       <div className={style.control}>
         <label className={style.searchLabel}>View As</label>
         <div className='btn-group' role='group'>
           <Link className={`btn btn-${(this.props.mode === 'list') ? 'primary': 'secondary'}`} to={listHref}><i className='fa fa-list' /> List</Link>
           <Link className={`btn btn-${(this.props.mode === 'table') ? 'primary': 'secondary'}`} to={tableHref}><i className='fa fa-table' /> Table</Link>
-          {graphNode}
         </div>
       </div>
     );
@@ -60,29 +53,44 @@ class SearchControlsComponent extends Component {
     );
   }
 
+  renderSortinator() {
+    return (
+      <div className={style.control}>
+        <label className={style.searchLabel}>Sort By</label>
+        <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='Relevance'>
+          <MenuItem eventKey='1'>Dropdown link</MenuItem>
+          <MenuItem eventKey='2'>Dropdown link</MenuItem>
+        </DropdownButton>
+      </div>
+    );
+  }
+
+  renderPageSizeControl() {
+    return (
+      <div className={style.control}>
+        <label className={style.searchLabel}>Page Size</label>
+        <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='50'>
+          <MenuItem eventKey='1'>Dropdown link</MenuItem>
+          <MenuItem eventKey='2'>Dropdown link</MenuItem>
+        </DropdownButton>
+      </div>
+    );
+  }
+
+  renderDownloadButton() {
+    return (
+      <div>
+        <label className={style.searchLabel}>&nbsp;</label>
+        <a className={`btn btn-secondary ${style.agrDownloadBtn}`} href='#'><i className='fa fa-download' /> Download</a>
+      </div>
+    );
+  }
+
   renderNonViewAs() {
-    if (this.props.isMultiTable || this.props.mode === 'graph') return null;
+    if (this.props.isMultiTable) return null;
     return (
       <div className={style.controlContainer}>
         {this.renderPaginator()}
-        <div className={style.control}>
-          <label className={style.searchLabel}>Sort By</label>
-          <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='Relevance'>
-            <MenuItem eventKey='1'>Dropdown link</MenuItem>
-            <MenuItem eventKey='2'>Dropdown link</MenuItem>
-          </DropdownButton>
-        </div>
-        <div className={style.control}>
-          <label className={style.searchLabel}>Page Size</label>
-          <DropdownButton className='btn-secondary' id='bg-nested-dropdown' title='50'>
-            <MenuItem eventKey='1'>Dropdown link</MenuItem>
-            <MenuItem eventKey='2'>Dropdown link</MenuItem>
-          </DropdownButton>
-        </div>
-        <div>
-          <label className={style.searchLabel}>&nbsp;</label>
-          <a className={`btn btn-secondary ${style.agrDownloadBtn}`} href='#'><i className='fa fa-download' /> Download</a>
-        </div>
       </div>
     );
   }
@@ -98,7 +106,6 @@ class SearchControlsComponent extends Component {
 }
 
 SearchControlsComponent.propTypes = {
-  canHaveGraph: React.PropTypes.bool,
   currentPage: React.PropTypes.number,
   isMultiTable: React.PropTypes.bool,
   mode: React.PropTypes.string,
@@ -109,15 +116,13 @@ SearchControlsComponent.propTypes = {
 function mapStateToProps(state) {
   let _queryParams = selectQueryParams(state);
   let activeCategory = selectActiveCategory(state);
-  let _canHaveGraph = (activeCategory === 'gene');
   let _mode = _queryParams.mode;
-  if (!_mode || (_mode === 'graph' && !_canHaveGraph)) {
+  if (!_mode || _mode === 'graph') {
     _mode = 'list';
   }
   let _isTable = (_queryParams.mode === 'table');
   let _isMultiTable = (_isTable && activeCategory === 'none') ;
   return {
-    canHaveGraph: _canHaveGraph,
     currentPage: parseInt(_queryParams.page) || 1,
     isMultiTable: _isMultiTable,
     mode: _mode,

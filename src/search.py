@@ -1,3 +1,5 @@
+import json
+
 def build_es_aggregation_body_request(es_query, category, category_filters):
     agg_query_body = {
         'query': es_query,
@@ -102,20 +104,18 @@ def build_search_query(query, search_fields, category, category_filters, args):
         return es_query
 
     query = {
-        'filtered': {
-            'query': es_query,
-            'filter': {
-                'bool': {
-                    'must': [{'term': {'category': category}}]
-                }
-            }
+        'bool': {
+            'must': [
+                {'term': {'category': category}},
+                es_query
+            ]
         }
     }
 
     if category in category_filters.keys():
         for item in category_filters[category]:
             for param in args.getlist(item, None):
-                query['filtered']['filter']['bool']['must'].append({
+                query['bool']['must'].append({
                     'term': {
                         (item + ".raw"): param
                     }
@@ -137,8 +137,8 @@ def build_search_params(query, search_fields):
 
         custom_boosts = {
             "id": 120,
-            "gene_symbol": 120,
-            "gene_synonyms": 120,
+            "symbol": 120,
+            "synonyms": 120,
             "name": 200,
             "name.symbol": 300,
             "gene_biological_process.symbol": 120,
@@ -226,7 +226,7 @@ def build_autocomplete_search_body_request(query, category='gene', field='name_k
                 ]
             }
         },
-        '_source': ['name', 'href', 'category', 'gene_symbol']
+        '_source': ['name', 'href', 'category', 'symbol']
     }
 
     if category != '':
@@ -269,8 +269,8 @@ def format_autocomplete_results(es_response, field='name_key'):
                 'category': hit['_source']['category']
             }
 
-            if hit['_source'].get('gene_symbol') and hit['_source']['category'] == "gene":
-                obj['name'] = hit['_source']['gene_symbol'].upper()
+            if hit['_source'].get('symbol') and hit['_source']['category'] == "gene":
+                obj['name'] = hit['_source']['symbol'].upper()
 
             formatted_results.append(obj)
 

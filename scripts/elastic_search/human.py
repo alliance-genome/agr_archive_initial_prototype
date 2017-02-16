@@ -12,3 +12,4 @@ class Human(MOD):
     def gene_id_from_panther(panther_id):
         # example: HGNC=974
         return panther_id.replace("=", ":")
+

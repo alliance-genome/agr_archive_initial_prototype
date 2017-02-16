@@ -11,7 +11,7 @@ import ResultsTable from '../resultsTable';
 import { SearchBreadcrumbsComponent } from '../searchBreadcrumbs';
 import { SearchControlsComponent } from '../searchControls';
 import fixtureResponse from './fixtureResponse';
-import { receiveResponse } from '../searchActions';
+import { receiveResponse } from '../../../actions/search';
 
 let historyObj = createMemoryHistory('/search');
 
@@ -65,4 +65,3 @@ describe('FilterSelector', () => {
     assert.equal(typeof htmlString, 'string');
   });
 });
-

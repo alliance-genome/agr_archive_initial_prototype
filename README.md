@@ -7,24 +7,71 @@ Resources.
 ## Prerequisites
 
 Ensure you've installed [pip][1] and [virtualenv][2] and [nodejs][3].
-
+```bash
+  Starting with Python 2.7.9, pip is included by default with the Python binary installers. 
+  
+  make sure the executables npm,node, pip, and virtualenv are accessible from /usr/local/bin  (MAC, Linux)
+  if not create symbolic links as needed
+  
+  Make sure /usr/local/bin is in your PATH (MAC, Linux)
+```
 Create a virtualenv for isolating the python dependencies:
 
 ```bash
+
 mkdir -p ~/.virtualenvs/agr_prototype
 # The prototype currently requires Python2
+# Assuming virtualenv and python2 are in your PATH
 virtualenv -p python2 ~/.virtualenvs/agr_prototype
 ```
++## ENV variables
 
-## Getting started
+###AWS ES Service hosted
 ```bash
-source ~/.virtualenvs/agr_prototype/bin/activate
-make build
-make run
+export ES_AWS=true
+export ES_INDEX=es1
+export ES_URI="https://search-es1-oyqxarxm2djn35dfodzniituhe.us-west-2.es.amazonaws.com/"
 ```
 
-To run tests
+## Getting started With Virtualenv
+### Install and start a local instance of [elasticsearch][8]
+* Download ES package (I'm using [ES version 2.4.4][11] in my dev env)
+* Install and start your local ES 
+```bash
+    a) cd to the directory where you downloaded ES (I downloaded elasticsearch-2.4.4.tar.gz)   
+    b) tar -xvf elasticsearch-2.4.4.tar.gz   
+    c) Start elasticsearch - cd elasticsearch-2.4.4/ and run bin/elasticsearch
+    d) Check that ES is running - open a new terminal and run  curl http:://localhost:9200/
+    e) Watch the ES console for errors 
+    
+```
+### Fork your own copy of alliance-genome/agr to your git account
+* login to your git account - or create one and login
+* Go to [alliance-genome/agr][12] repository and click on "Fork" (top right)
 
+### Clone and start your local agr instance - on your dev machine
+* Clone your agr copy and checkout the development branch
+```bash
+   * git clone https://github.com/yourGitAccount/agr.git
+   * cd agr
+   * git checkout development
+```
+* Build, Index, and start local agr instance
+```bash
+    * cd agr
+    * source ~/.virtualenvs/agr_prototype/bin/activate
+    * make build  (to Setup dev working platform )
+    # Assuming elasticsearch instance is up and running
+    * make index  (to build ES indexes )   
+    * make run    ( to start your local agr instance)
+```
+* Check that agr instance and elasticsearch are communicating
+```bash
+   go to http://127.0.0.1:5000 and start your search
+   Watch the agr instance console, the ES console, and the web browser results
+```
+
+### To run tests
 ```bash
 source ~/.virtualenvs/agr_prototype/bin/activate
 make tests
@@ -69,7 +116,7 @@ and available via the above URL.
 This command will call the `index` target in the Makefile and should be
 used after your first start or if you want to re-index.
 
-`docker-compose exec agr make index`
+`docker-compose exec api make index`
 
 ### Useful commands
 
@@ -122,3 +169,8 @@ The rules are configured in the .eslintrc file.
 [5]: https://webpack.github.io/docs/hot-module-replacement.html
 [6]: http://eslint.org/
 [7]: https://www.docker.com/
+[8]: https://www.elastic.co/downloads/elasticsearch
+[9]: https://nodejs.org
+[10]: https://www.python.org/ftp/python
+[11]: https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.4.4/elasticsearch-2.4.4.tar.gz
+[12]: https://github.com/alliance-genome/agr
