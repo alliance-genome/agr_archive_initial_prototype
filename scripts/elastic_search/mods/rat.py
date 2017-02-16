@@ -1,7 +1,6 @@
 from intermine.webservice import Service
 from mod import MOD
-import csv
-
+from files import *
 
 class RGD(MOD):
 	species = "Rattus norvegicus"
@@ -24,28 +23,18 @@ class RGD(MOD):
 		return []
 
 	def load_go(self):
-		go_data_csv_filename = "data/rat_go.tsv"
-
-		print("Fetching go data from RGD tsv file (" + go_data_csv_filename + ") ...")
+		go_data = CSVFile("data/rat_go.tsv").get_data()
 
 		list = []
-		with open(go_data_csv_filename, 'rb') as f:
-			reader = csv.reader(f, delimiter='\t')
-
-			for row in reader:
-				list.append({"gene_id": row[5], "go_id": row[1], "species": RGD.species})
+		for row in go_data:
+			list.append({"gene_id": row[5], "go_id": row[1], "species": RGD.species})
 		return list
 
 	def load_diseases(self):
-		disease_data_csv_filename = "data/rat_disease.tsv"
-
-		print("Fetching disease data from RGD tsv file (" + disease_data_csv_filename + ") ...")
+		disease_data = CSVFile("data/rat_disease.tsv").get_data()
 
 		list = []
-		with open(disease_data_csv_filename, 'rb') as f:
-			reader = csv.reader(f, delimiter='\t')
-
-			for row in reader:
-				if (row[5].startswith("OMIM:")):
-					list.append({"gene_id": row[0], "omim_id": row[5], "species": RGD.species})
+		for row in disease_data:
+			if (row[5].startswith("OMIM:")):
+				list.append({"gene_id": row[0], "omim_id": row[5], "species": RGD.species})
 		return list

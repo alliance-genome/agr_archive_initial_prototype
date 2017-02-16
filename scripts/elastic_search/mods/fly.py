@@ -22,18 +22,13 @@ class FlyBase(MOD):
 		return panther_id.split("=")[1]
 
 	def load_go(self):
-		go_data_csv_filename = "data/FlyBase_GO_output_fb_2016_04.tsv"
-
-		print("Fetching go data from FlyBase tsv file (" + go_data_csv_filename + ") ...")
+		go_data = CSVFile("data/FlyBase_GO_output_fb_2016_04.tsv").get_data()
 
 		list = []
-		with open(go_data_csv_filename, 'rb') as f:
-			reader = csv.reader(f, delimiter='\t')
-
-			for row in reader:
-				go_genes = map(lambda s: s.strip(), row[4].split(","))
-				for gene in go_genes:
-					list.append({"gene_id": gene, "go_id": 'GO:' + row[2], "species": FlyBase.species})
+		for row in go_data:
+			go_genes = map(lambda s: s.strip(), row[4].split(","))
+			for gene in go_genes:
+				list.append({"gene_id": gene, "go_id": 'GO:' + row[2], "species": FlyBase.species})
 		return list
 
 	def load_diseases(self):
