@@ -30,6 +30,9 @@ tests: test-py
 fetch:
 	cd scripts/elastic_search && ES_INDEX=$(ES_INDEX) ES_URI=$(ES_URI) python fetch_data.py
 
+data_load:
+	cd scripts/elastic_search && ES_INDEX=$(ES_INDEX) ES_URI=$(ES_URI) python data_loader.py
+
 index-files:
 	cd scripts/elastic_search && ES_INDEX=$(ES_INDEX) ES_URI=$(ES_URI) python index_data.py
 

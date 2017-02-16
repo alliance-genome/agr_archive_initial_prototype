@@ -12,7 +12,6 @@ class PickleFile:
 
 	def load(self):
 		print "Loading objects from file (" + self.filename + ") ..."
-		if os.path.isfile(self.filename):
-			with open(self.filename, "rb") as f:
-				return pickle.load(f)
+		with open(self.filename, "rb") as f:
+			return pickle.load(f)
 		return None

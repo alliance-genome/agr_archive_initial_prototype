@@ -4,37 +4,48 @@ import csv
 
 
 class RGD(MOD):
-    species = "Rattus norvegicus"
-    service = Service("http://ratmine.mcw.edu/ratmine/service")
+	species = "Rattus norvegicus"
+	service = Service("http://ratmine.mcw.edu/ratmine/service")
 
-    @staticmethod
-    def gene_href(gene_id):
-        return "http://www.rgd.mcw.edu/rgdweb/report/gene/main.html?id=" + gene_id
+	@staticmethod
+	def gene_href(gene_id):
+		return "http://www.rgd.mcw.edu/rgdweb/report/gene/main.html?id=" + gene_id
 
-    @staticmethod
-    def gene_id_from_panther(panther_id):
-        # example: RGD=628644
-        return panther_id.replace("=", ":")
+	@staticmethod
+	def get_organism_names():
+		return ["Rattus norvegicus", "R. norvegicus", "RAT"]
 
-    def load_go(self):
-        go_data_csv_filename = "data/rat_go.tsv"
+	@staticmethod
+	def gene_id_from_panther(panther_id):
+		# example: RGD=628644
+		return panther_id.replace("=", ":")
 
-        print("Fetching go data from RGD tsv file (" + go_data_csv_filename + ") ...")
+	def load_genes(self):
+		return []
 
-        with open(go_data_csv_filename, 'rb') as f:
-            reader = csv.reader(f, delimiter='\t')
+	def load_go(self):
+		go_data_csv_filename = "data/rat_go.tsv"
 
-            for row in reader:
-                self.add_go_annotation_to_gene(gene_id=row[5], go_id=row[1])
+		print("Fetching go data from RGD tsv file (" + go_data_csv_filename + ") ...")
 
-    def load_diseases(self):
-        disease_data_csv_filename = "data/rat_disease.tsv"
+		list = []
+		with open(go_data_csv_filename, 'rb') as f:
+			reader = csv.reader(f, delimiter='\t')
 
-        print("Fetching disease data from RGD tsv file (" + disease_data_csv_filename + ") ...")
+			for row in reader:
+				list.append({"gene_id": row[5], "go_id": row[1], "species": RGD.species})
+		return list
 
-        with open(disease_data_csv_filename, 'rb') as f:
-            reader = csv.reader(f, delimiter='\t')
+	def load_diseases(self):
+		disease_data_csv_filename = "data/rat_disease.tsv"
 
-            for row in reader:
-                if (row[5].startswith("OMIM:")):
-                    self.add_disease_annotation_to_gene(gene_id=row[0], omim_id=row[5])
+		print("Fetching disease data from RGD tsv file (" + disease_data_csv_filename + ") ...")
+
+		list = []
+		with open(disease_data_csv_filename, 'rb') as f:
+			reader = csv.reader(f, delimiter='\t')
+
+			for row in reader:
+				if (row[5].startswith("OMIM:")):
+					list.append({"gene_id": row[0], "omim_id": row[5], "species": RGD.species})
+		return list

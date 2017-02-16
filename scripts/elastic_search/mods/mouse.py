@@ -1,4 +1,5 @@
 from mod import MOD
+from loaders.gene_loader import GeneLoader
 from intermine.webservice import Service
 
 
@@ -11,12 +12,16 @@ class MGI(MOD):
 		return "http://www.informatics.jax.org/marker/" + gene_id
 
 	@staticmethod
+	def get_organism_names():
+		return ["Mus musculus", "M. musculus", "MOUSE"]
+
+	@staticmethod
 	def gene_id_from_panther(panther_id):
 		# example: MGI=MGI=1924210
 		return ":".join(panther_id.split("=")[1:]).strip()
 
 	def load_genes(self):
-		pass
+		return GeneLoader("data/mgiTestData.json").get_data()
 
 	def load_go(self):
 		query = MGI.service.new_query("GOTerm")
@@ -32,8 +37,10 @@ class MGI(MOD):
 
 		print ("Fetching go data from MouseMine...")
 
+		list = []
 		for row in query.rows():
-			self.add_go_annotation_to_gene(gene_id=row["ontologyAnnotations.subject.primaryIdentifier"], go_id=row["identifier"])
+			list.append({"gene_id": row["ontologyAnnotations.subject.primaryIdentifier"], "go_id": row["identifier"], "species": MGI.species})
+		return list
 
 	def load_diseases(self):
 		query = MGI.service.new_query("OMIMTerm")
@@ -49,6 +56,8 @@ class MGI(MOD):
 		query.outerjoin("ontologyAnnotations")
 
 		print ("Fetching disease data from MouseMine...")
-
+		
+		list = []
 		for row in query.rows():
-			self.add_disease_annotation_to_gene(gene_id=row["ontologyAnnotations.subject.primaryIdentifier"], omim_id=row["identifier"])
+			list.append({"gene_id": row["ontologyAnnotations.subject.primaryIdentifier"], "omim_id": row["identifier"], "species": MGI.species})
+		return list

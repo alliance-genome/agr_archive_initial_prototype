@@ -1,47 +1,57 @@
 from mod import MOD
+from loaders.gene_loader import GeneLoader
 import xlrd
 import csv
 
 
 class WormBase(MOD):
-    species = "Caenorhabditis elegans"
+	species = "Caenorhabditis elegans"
 
-    @staticmethod
-    def gene_href(gene_id):
-        return "http://www.wormbase.org/species/c_elegans/gene/" + gene_id
+	@staticmethod
+	def gene_href(gene_id):
+		return "http://www.wormbase.org/species/c_elegans/gene/" + gene_id
 
-    @staticmethod
-    def gene_id_from_panther(panther_id):
-        # example: WormBase=WBGene00004831
-        return panther_id.split("=")[1]
+	@staticmethod
+	def get_organism_names():
+		return ["Caenorhabditis elegans", "C. elegans", "CAEEL"]
 
-    def load_go(self):
-        go_data_csv_filename = "data/wormbase_gene_association.tsv"
+	@staticmethod
+	def gene_id_from_panther(panther_id):
+		# example: WormBase=WBGene00004831
+		return panther_id.split("=")[1]
 
-        print("Fetching go data from WormBase txt file (" + go_data_csv_filename + ") ...")
+	def load_genes(self):
+		return GeneLoader("data/WB_0.3_basicgeneinformation.json").get_data()
 
-        with open(go_data_csv_filename, 'rb') as f:
-            reader = csv.reader(f, delimiter='\t')
+	def load_go(self):
+		go_data_csv_filename = "data/wormbase_gene_association.tsv"
 
-            for i in xrange(24):
-                next(reader, None)
+		print("Fetching go data from WormBase txt file (" + go_data_csv_filename + ") ...")
 
-            for row in reader:
-                self.add_go_annotation_to_gene(gene_id=row[1], go_id=row[4])
+		list = []
+		with open(go_data_csv_filename, 'rb') as f:
+			reader = csv.reader(f, delimiter='\t')
 
-    def load_diseases(self):
-        disease_data_csv_filename = "data/Diseases_OMIM_IDs_and_synonyms_(WormBase).txt"
+			for i in xrange(24):
+				next(reader, None)
 
-        print("Fetching disease data from WormBase txt file (" + disease_data_csv_filename + ") ...")
+			for row in reader:
+				list.append({"gene_id": row[1], "go_id": row[4], "species": WormBase.species})
+		return list
 
-        with open(disease_data_csv_filename, 'rb') as f:
-            reader = csv.reader(f, delimiter='\t')
-            next(reader, None)
+	def load_diseases(self):
+		disease_data_csv_filename = "data/Diseases_OMIM_IDs_and_synonyms_(WormBase).txt"
 
-            for row in reader:
-                if row[2] and row[2] != "":
-                    omim_ids = map(lambda s: s.strip(), row[2].split(","))
+		print("Fetching disease data from WormBase txt file (" + disease_data_csv_filename + ") ...")
+		list = []
+		with open(disease_data_csv_filename, 'rb') as f:
+			reader = csv.reader(f, delimiter='\t')
+			next(reader, None)
 
-                    for omim_id in omim_ids:
-                        self.add_disease_annotation_to_gene(gene_id=None, omim_id="OMIM:"+omim_id)
+			for row in reader:
+				if row[2] and row[2] != "":
+					omim_ids = map(lambda s: s.strip(), row[2].split(","))
 
+					for omim_id in omim_ids:
+						list.append({"gene_id": None, "omim_id": "OMIM:"+omim_id, "species": WormBase.species})
+		return list
