@@ -1,4 +1,5 @@
 from intermine.webservice import Service
+from loaders.gene_loader import GeneLoader
 from mod import MOD
 from files import *
 
@@ -20,7 +21,10 @@ class RGD(MOD):
 		return panther_id.replace("=", ":")
 
 	def load_genes(self):
-		return []
+		path = "tmp"
+		S3File("mod-datadumps", "RGD_0.3_1.tar.gz", path).download()
+		TARFile(path, "RGD_0.3_1.tar.gz").extract_all()
+		return GeneLoader(path + "/agr/RGD_0.3_basicGeneInformation.10116.json").get_data()
 
 	def load_go(self):
 		go_data = CSVFile("data/rat_go.tsv").get_data()

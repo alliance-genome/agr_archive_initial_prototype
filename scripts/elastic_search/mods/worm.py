@@ -1,4 +1,5 @@
 from mod import MOD
+from files import *
 from loaders.gene_loader import GeneLoader
 import xlrd
 import csv
@@ -21,7 +22,10 @@ class WormBase(MOD):
 		return panther_id.split("=")[1]
 
 	def load_genes(self):
-		return GeneLoader("data/WB_0.3_basicgeneinformation.json").get_data()
+		path = "tmp"
+		S3File("mod-datadumps", "WB_0.3.0_1.tar.gz", path).download()
+		TARFile(path, "WB_0.3.0_1.tar.gz").extract_all()
+		return GeneLoader(path + "/WB_0.3_basicgeneinformation.json").get_data()
 
 	def load_go(self):
 		go_data_csv_filename = "data/wormbase_gene_association.tsv"

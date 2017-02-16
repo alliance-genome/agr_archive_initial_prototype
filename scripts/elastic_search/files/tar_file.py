@@ -2,14 +2,14 @@ import tarfile
 
 class TARFile:
 
-	def __init__(self, filename):
-		self.filename = filename
+	def __init__(self, path, tarfilename):
+		self.path = path
+		self.tarfilename = tarfilename
 
-	def get_data(self):
-		print "Loading data from (" + self.filename + ") ..."
-		lines = []
-		with open(self.filename, mode='r') as f:
-			for line in f:
-				lines.append(line)
-			f.close()	
-		return lines
+	def extract_all(self):
+		print "Extracting files from (" + self.path + "/" + self.tarfilename + ") ..."
+
+		tfile = tarfile.open(self.path + "/" + self.tarfilename, 'r')
+		for member in tfile.getmembers():
+			print "Extracting (" + member.name + " -> " + self.path + "/" + member.name + ")"
+		tfile.extractall(self.path)

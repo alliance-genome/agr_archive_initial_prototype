@@ -23,11 +23,10 @@ class MGI(MOD):
 		return ":".join(panther_id.split("=")[1:]).strip()
 
 	def load_genes(self):
-		local_s3_file = S3File("mod-datadumps", "MGI_0.3.0_1.tar.gz").download()
-		tar_file = TARFile(local_s3_file)
-		print tar_file.get_data()
-		gene_data = json.load(tar_file.get_data())
-		return GeneLoader(gene_data).get_data()
+		path = "tmp"
+		S3File("mod-datadumps", "MGI_0.3.0_1.tar.gz", path).download()
+		TARFile(path, "MGI_0.3.0_1.tar.gz").extract_all()
+		return GeneLoader(path + "/MGI_0.3_basicGeneInformation.json").get_data()
 
 	def load_go(self):
 		query = MGI.service.new_query("GOTerm")

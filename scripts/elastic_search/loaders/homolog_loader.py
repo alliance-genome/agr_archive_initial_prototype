@@ -4,7 +4,11 @@ from mods.human import Human
 class HomoLogLoader:
 
 	def __init__(self, mods):
-		self.homolog_data = CSVFile("data/RefGenomeOrthologs").get_data()
+		path = "tmp"
+		FTPFile("ftp://ftp.pantherdb.org/ortholog/current_release/RefGenomeOrthologs.tar.gz", path, "RefGenomeOrthologs.tar.gz").download()
+		TARFile(path, "RefGenomeOrthologs.tar.gz").extract_all()
+		self.homolog_data = CSVFile(path + "/" + "RefGenomeOrthologs").get_data()
+
 		self.organism_to_mods = {}
 		for mod in mods:
 			for organism in mod.get_organism_names():

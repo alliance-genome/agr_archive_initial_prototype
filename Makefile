@@ -27,17 +27,14 @@ stop:
 tests: test-py
 	ES_INDEX=$(ES_INDEX) npm test
 
-fetch:
-	cd scripts/elastic_search && ES_INDEX=$(ES_INDEX) ES_URI=$(ES_URI) python fetch_data.py
+fetch_and_save:
+	cd scripts/elastic_search && ES_INDEX=$(ES_INDEX) ES_URI=$(ES_URI) python fetch_and_save.py
 
-data_load:
-	cd scripts/elastic_search && ES_INDEX=$(ES_INDEX) ES_URI=$(ES_URI) python data_loader.py
-
-index-files:
-	cd scripts/elastic_search && ES_INDEX=$(ES_INDEX) ES_URI=$(ES_URI) python index_data.py
+load_and_index:
+	cd scripts/elastic_search && ES_INDEX=$(ES_INDEX) ES_URI=$(ES_URI) python load_and_index.py
 
 index:
-	cd scripts/elastic_search && ES_URI=$(ES_URI) ES_AWS=$(ES_AWS) ES_INDEX=$(ES_INDEX) python index.py
+	cd scripts/elastic_search && ES_INDEX=$(ES_INDEX) ES_URI=$(ES_URI) python fetch_save_index.py
 
 test-py:
 	nosetests -s

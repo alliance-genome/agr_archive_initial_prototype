@@ -1,4 +1,5 @@
 from intermine.webservice import Service
+from files import *
 from loaders.gene_loader import GeneLoader
 from mod import MOD
 
@@ -20,7 +21,10 @@ class ZFIN(MOD):
 		return panther_id.split("=")[1]
 
 	def load_genes(self):
-		return GeneLoader("data/basic-gene-info-zfin.json").get_data()
+		path = "tmp"
+		S3File("mod-datadumps", "ZFIN_0.3.0_3.tar.gz", path).download()
+		TARFile(path, "ZFIN_0.3.0_3.tar.gz").extract_all()
+		return GeneLoader(path + "/basic-gene-info-zfin.json").get_data()
 
 	def load_go(self):
 		query = ZFIN.service.new_query("Gene")

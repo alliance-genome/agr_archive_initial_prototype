@@ -6,7 +6,7 @@ import requests
 import os
 from elasticsearch import Elasticsearch
 
-class DataLoader:
+class FetchSaveIndex:
 	gene_bkp_filename = "data/genes_bkp.pickle"
 	go_bkp_filename = "data/go_bkp.pickle"
 	so_bkp_filename = "data/so_bkp.pickle"
@@ -15,48 +15,53 @@ class DataLoader:
 	def __init__(self):
 		self.es = Elasticsearch(os.environ['ES_URI'], retry_on_timeout=True)
 
-	def load_data_from_sources(self):
-		#mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase()]
-		mods = [MGI()]
+	def load_data_from_sources_and_index(self):
+		mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase()]
 
-		#go_data = GoLoader().get_data() 
-		#omim_data = OMIMLoader().get_data()
-		#so_data = SoLoader().get_data()
+		print "Loading Go Data"
+		go_data = GoLoader().get_data() 
+		print "Loading OMIM Data"
+		omim_data = OMIMLoader().get_data()
+		print "Loading SO Data"
+		so_data = SoLoader().get_data()
 
 		genes = {}
+		print "Gathering genes from Each Mod"
 		for mod in mods:
 			genes.update(mod.load_genes())
 
-		#HomoLogLoader(mods).attach_homolog_data(genes)
+		print "Loading Homologs for all genes"
+		HomoLogLoader(mods).attach_homolog_data(genes)
 
-		#gene_go_annots = []
-		#gene_disease_annots = []
-		#for mod in mods:
-		#	gene_go_annots.extend(mod.load_go())
-		#	gene_disease_annots.extend(mod.load_diseases())
+		print "Loading Go and Disease annotations for genes from mines"
+		gene_go_annots = []
+		gene_disease_annots = []
+		for mod in mods:
+			gene_go_annots.extend(mod.load_go())
+			gene_disease_annots.extend(mod.load_diseases())
 
-		#go_annot_loader = GoGeneAnnotLoader(genes, go_data)
-		#go_entries = go_annot_loader.attach_annotations(gene_go_annots)
+		print "Attaching GO annotations to genes"
+		go_annot_loader = GoGeneAnnotLoader(genes, go_data)
+		go_entries = go_annot_loader.attach_annotations(gene_go_annots)
 
-		#disease_annot_loader = DiseaseGeneAnnotLoader(genes, omim_data)
-		#disease_entries = disease_annot_loader.attach_annotations(gene_disease_annots)
-		
-		PickleFile(self.gene_bkp_filename).save(genes)
-		#PickleFile(self.go_bkp_filename).save(go_entries)
-		#PickleFile(self.diseases_bkp_filename).save(disease_entries)
-#		#PickleFile(self.so_bkp_filename).save(so)
+		print "Attaching Disease annotations to genes"
+		disease_annot_loader = DiseaseGeneAnnotLoader(genes, omim_data)
+		disease_entries = disease_annot_loader.attach_annotations(gene_disease_annots)
 
-	def load_data_from_files_into_index(self):
+		print "Delete and Recreate Index"
 		self.delete_mapping()
 		self.put_mapping()
 
-		genes = PickleFile(self.gene_bkp_filename).load()
-		go_entries = PickleFile(self.go_bkp_filename).load()
-		disease_entries = PickleFile(self.diseases_bkp_filename).load()
-
+		print "Send data into Index"
 		self.index_into_es(genes)
 		self.index_into_es(go_entries)
 		self.index_into_es(disease_entries)
+
+		print "Saving processed data to files"
+		PickleFile(self.gene_bkp_filename).save(genes)
+		PickleFile(self.go_bkp_filename).save(go_entries)
+		PickleFile(self.diseases_bkp_filename).save(disease_entries)
+		PickleFile(self.so_bkp_filename).save(so_data)
 
 	def delete_mapping(self):
 		print "Deleting mapping..."
@@ -97,6 +102,5 @@ class DataLoader:
 			self.es.bulk(index=os.environ['ES_INDEX'], body=bulk_data, refresh=True)
 
 if __name__ == '__main__':
-	dataloader = DataLoader()
-	#dataloader.load_data_from_files_into_index()
-	dataloader.load_data_from_sources()
+	fetch_save_index = FetchSaveIndex()
+	fetch_save_index.load_data_from_sources_and_index()

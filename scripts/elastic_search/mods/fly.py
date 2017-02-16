@@ -1,6 +1,6 @@
 from mod import MOD
+from files import *
 import csv
-
 
 class FlyBase(MOD):
 	species = "Drosophila melanogaster"
