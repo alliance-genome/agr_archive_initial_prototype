@@ -13,3 +13,5 @@ deploy_variables.sh
 *.pickle
 venv
 .idea
+*.swp
+tmp

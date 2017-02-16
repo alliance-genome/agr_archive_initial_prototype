@@ -2,7 +2,7 @@ import json
 import argparse
 import os
 import fnmatch
-from mod import MOD
+from mods import MOD
 
 
 parser = argparse.ArgumentParser(description='Test loader for JSON basic gene info file.')

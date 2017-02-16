@@ -2,144 +2,78 @@ from flask import Flask, render_template, send_from_directory, request, jsonify
 from flask_webpack import Webpack
 from gevent.wsgi import WSGIServer
 from random import randint
+from services import *
 
 import os
 
-from awses.connection import AWSConnection
-from elasticsearch import Elasticsearch
-
-from search import build_search_query, build_es_search_body_request, \
-    build_es_aggregation_body_request, format_search_results, \
-    format_aggregation_results, build_autocomplete_search_body_request, \
-    format_autocomplete_results
-
-es = Elasticsearch(connection_class=AWSConnection,
-                   region='us-west-2',
-                   host=os.environ['ES_URI'], timeout=5, retry_on_timeout=False) if os.environ['ES_AWS'] == "true" else Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
-
-ES_INDEX = os.environ['ES_INDEX']
-
 app = Flask(__name__)
-
 webpack = Webpack()
-params = {
-    'DEBUG': True,
-    'WEBPACK_MANIFEST_PATH': './build/manifest.json'
-}
-
-app.config.update(params)
+app.config.update({ 'DEBUG': True, 'WEBPACK_MANIFEST_PATH': './build/manifest.json' })
 webpack.init_app(app)
 
+
+services = {
+	"disease": DiseaseService(),
+	"gene": GeneService(),
+	"go": GoService(),
+	"search": SearchService(),
+}
+
+# Search
 @app.route('/api/search')
 def search():
+    service_c = services["search"]
+
     query = request.args.get('q', '')
     limit = int(request.args.get('limit', 10))
     offset = int(request.args.get('offset', 0))
     category = request.args.get('category', '')
     sort_by = request.args.get('sort_by', '')
 
-    category_filters = {
-        "gene": ['gene_type', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species'],
-        "go": ['go_type', 'go_species', 'go_genes'],
-        "disease": ['disease_species', 'disease_genes']
-    }
+    return jsonify(service_c.search(query, limit, offset, category, sort_by, request.args))
 
-    search_fields = ['id', 'name', 'symbol', 'synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs.symbol', 'homologs.panther_family']
-
-    json_response_fields = ['name', 'symbol', 'synonyms', 'gene_type', 'gene_chromosomes','gene_chromosome_starts',
-                            'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process',
-                            'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms',
-                            'disease_genes', 'disease_synonyms', 'homologs', 'crossReferences', 'category', 'href']
-
-    es_query = build_search_query(query, search_fields, category,
-                                  category_filters, request.args)
-
-    search_body = build_es_search_body_request(query,
-                                               category,
-                                               es_query,
-                                               json_response_fields,
-                                               search_fields,
-                                               sort_by)
-
-    search_results = es.search(
-        index=ES_INDEX,
-        body=search_body,
-        size=limit,
-        from_=offset,
-        preference='p_'+query
-    )
-
-    if search_results['hits']['total'] == 0:
-        return jsonify({
-            'total': 0,
-            'results': [],
-            'aggregations': []
-        })
-
-    aggregation_body = build_es_aggregation_body_request(
-        es_query,
-        category,
-        category_filters
-    )
-
-    aggregation_results = es.search(
-        index=ES_INDEX,
-        body=aggregation_body
-    )
-
-    response = {
-        'total': search_results['hits']['total'],
-        'results': format_search_results(search_results, json_response_fields),
-        'aggregations': format_aggregation_results(
-            aggregation_results,
-            category,
-            category_filters
-        )
-    }
-
-    return jsonify(response)
-
-
+# Search Auto Complete
 @app.route('/api/search_autocomplete')
 def search_autocomplete():
+    service_c = services["search"]
+
     query = request.args.get('q', '')
     category = request.args.get('category', '')
     field = request.args.get('field', 'name_key')
 
-    if query == '':
-        return jsonify({
-            "results": None
-        })
+    return jsonify(service_c.autocomplete(query, category, field))
 
-    autocomplete_results = es.search(
-        index=ES_INDEX,
-        body=build_autocomplete_search_body_request(query, category, field)
-    )
+# Create
+@app.route('/api/<service>', methods=['POST'])
+def gene_create_api(service):
+    service_c = services[service]
+    object = request.get_json()
+    return jsonify(service_c.create(object))
 
-    return jsonify({
-        "results": format_autocomplete_results(autocomplete_results, field)
-    })
+# Read
+@app.route('/api/<service>/<id>', methods=['GET'])
+def read_api(service, id):
+    service_c = services[service]
+    return jsonify(service_c.get(id)['_source'])
 
-@app.route('/api/gene/<gene_id>')
-def gene_api(gene_id):
-    gene = es.get(ES_INDEX, gene_id)
-    return jsonify(gene['_source'])
+# Update
+@app.route('/api/<service>/<id>', methods=['PUT'])
+def gene_update_api(service, id):
+    service_c = services[service]
+    object = request.get_json()
+    return jsonify(service_c.save(id, object))
 
-@app.route('/api/disease/<disease_id>')
-def disease_api(disease_id):
-    disease = es.get(ES_INDEX, disease_id)
-    return jsonify(disease['_source'])
+# Delete
+@app.route('/api/<service>/<id>', methods=['DELETE'])
+def gene_delete_api(service, id):
+    service_c = services[service]
+    return jsonify(service_c.delete(id))
 
-@app.route('/api/go/<go_id>')
-def go_api(go_id):
-    go = es.get(ES_INDEX, go_id)
-    return jsonify(go['_source'])
 
 # make static assets available
 @app.route('/assets/<path:path>')
 def send_static(path):
     return send_from_directory('build', path)
-
 
 # render user interfaces in client JS
 @app.route('/')
