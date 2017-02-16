@@ -1,4 +1,4 @@
-import boto3
+import urllib 
 import os
 
 class S3File:
@@ -7,13 +7,13 @@ class S3File:
 		self.bucket = bucket
 		self.filename = filename
 		self.savepath = savepath
-		self.s3 = boto3.client('s3')
 
 	def download(self):
-		print "Downloading data from s3 (" + self.bucket + "/" + self.filename + " -> " + self.savepath + "/" + self.filename + ") ..."
+		print "Downloading data from s3 (https://s3.amazonaws.com/" + self.bucket + "/" + self.filename + " -> " + self.savepath + "/" + self.filename + ") ..."
 		if not os.path.exists(self.savepath):
 			os.makedirs(self.savepath)
-		self.s3.download_file(self.bucket, self.filename, self.savepath + "/" + self.filename)
+		url = "https://s3.amazonaws.com/" + self.bucket + "/" + self.filename
+		urllib.urlretrieve(url, self.savepath + "/" + self.filename)
 		return self.savepath + "/" + self.filename
 
 	def list_files(self):
