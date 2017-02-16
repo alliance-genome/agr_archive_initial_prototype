@@ -14,9 +14,9 @@ class LoadAndIndex:
 
 	def __init__(self):
 		if os.environ['ES_AWS'] == "true":
-			self.es = elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=false, use_ssl=true, verify_certs=true)
+			self.es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False, use_ssl=True, verify_certs=True)
 		else:
-			self.es = elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=false)
+			self.es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
 
 	def load_data_from_files_into_index(self):
 		print "Load data from saved files"
