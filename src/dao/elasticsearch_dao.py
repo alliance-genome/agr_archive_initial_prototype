@@ -1,14 +1,13 @@
 import os
 
-from awses.connection import AWSConnection
 from elasticsearch import Elasticsearch
 
 class ElasticSearchDAO:
 	ES_INDEX = os.environ['ES_INDEX']
 	if os.environ['ES_AWS'] == "true":
-		es = Elasticsearch(connection_class=AWSConnection, region='us-west-2', host=os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
+		es = elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=false, use_ssl=true, verify_certs=true)
 	else:
-		es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
+		es = elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=false)
 
 	def __init__(self):
 		pass
