@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/alliance-genome/agr.svg?branch=master)](https://travis-ci.org/alliance-genome/agr_prototype)
+[![Build Status](https://travis-ci.org/alliance-genome/agr_prototype.svg?branch=master)](https://travis-ci.org/alliance-genome/agr_prototype)
 
 # Alliance of Genome Resources Prototype
 An initial prototype for the web portal of the Alliance of Genome
@@ -27,6 +27,8 @@ virtualenv -p python2 ~/.virtualenvs/agr_prototype
 +## ENV variables
 
 ###AWS ES Service hosted
+Add below to .bash_profile
+
 ```bash
 export PRODUCTION=true
 export ES_AWS=true
