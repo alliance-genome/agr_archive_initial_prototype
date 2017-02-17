@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { OrthologyWrapper, OrthologyTable, mockOrthologData } from '../../components/orthology';
 import { connect } from 'react-redux';
 
 import fetchData from '../../lib/fetchData';
@@ -7,6 +8,7 @@ import { selectGene } from '../../selectors/geneSelectors';
 
 import BasicGeneInfo from './basicGeneInfo';
 import GenePageHeader from './genePageHeader';
+
 
 class GenePage extends Component {
   componentDidMount() {
@@ -33,6 +35,9 @@ class GenePage extends Component {
       <div className='container'>
         <GenePageHeader symbol={this.props.data.symbol} />
         <BasicGeneInfo geneData={this.props.data} />
+        <OrthologyWrapper>
+          <OrthologyTable data={mockOrthologData} />
+        </OrthologyWrapper>
       </div>
     );
   }

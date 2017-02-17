@@ -1,4 +1,5 @@
 *.DS_Store
+venv
 node_modules
 .tmp
 src/build

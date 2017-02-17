@@ -1,6 +1,7 @@
 # get the Elasticsearch URI from an environment variable, if one is set
 ES_URI := $(or $(ES_URI),$(ES_URI),http://127.0.0.1:9200/)
 ES_INDEX := $(or $(ES_INDEX),$(ES_INDEX),'searchable_items_blue')
+
 # if possible have a virtualenv setup first
 
 build:
