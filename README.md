@@ -27,6 +27,8 @@ virtualenv -p python2 ~/.virtualenvs/agr_prototype
 +## ENV variables
 
 ###AWS ES Service hosted
+Add below to .bash_profile
+
 ```bash
 export PRODUCTION=true
 export ES_AWS=true
