@@ -16,7 +16,7 @@ run:
 	$(OPTIONS) python src/server.py
 
 run-prod:
-	cd src && $(OPTIONS) gunicorn src.server:app -k gevent --pid gunicorn.pid --daemon
+	cd src && $(OPTIONS) gunicorn server:app -k gevent --pid gunicorn.pid --daemon
 
 restart:
 	kill -s HUP $(cat gunicorn.pid)
