@@ -1,6 +1,5 @@
 from files import *
 
-import json
 import re
 
 class SoLoader:
