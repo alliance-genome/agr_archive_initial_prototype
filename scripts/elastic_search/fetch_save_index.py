@@ -26,7 +26,7 @@ class FetchSaveIndex:
 		print "Loading OMIM Data"
 		omim_data = OMIMLoader().get_data()
 		print "Loading SO Data"
-		so_data = SoLoader().get_data()
+		so_loader = SoLoader()
 
 		genes = {}
 		print "Gathering genes from Each Mod"
@@ -35,6 +35,8 @@ class FetchSaveIndex:
 
 		print "Loading Homologs for all genes"
 		HomoLogLoader(mods).attach_homolog_data(genes)
+		print "Loading SO terms for all genes"
+		so_loader.attach_so_data(genes)
 
 		print "Loading Go and Disease annotations for genes from mines"
 		gene_go_annots = []
@@ -64,7 +66,7 @@ class FetchSaveIndex:
 		PickleFile(self.gene_bkp_filename).save(genes)
 		PickleFile(self.go_bkp_filename).save(go_entries)
 		PickleFile(self.diseases_bkp_filename).save(disease_entries)
-		PickleFile(self.so_bkp_filename).save(so_data)
+		PickleFile(self.so_bkp_filename).save(so_loader.get_data())
 
 	def delete_mapping(self):
 		print "Deleting mapping..."
