@@ -20,7 +20,7 @@ class FetchAndSave:
 		print "Loading OMIM Data"
 		omim_data = OMIMLoader().get_data()
 		print "Loading SO Data"
-		so_data = SoLoader().get_data()
+		so_loader = SoLoader()
 
 		genes = {}
 		print "Gathering genes from Each Mod"
@@ -29,6 +29,8 @@ class FetchAndSave:
 
 		print "Loading Homologs for all genes"
 		HomoLogLoader(mods).attach_homolog_data(genes)
+		print "Loading SO terms for all genes"
+		so_loader.attach_so_data(genes)
 
 		print "Loading Go and Disease annotations for genes from mines"
 		gene_go_annots = []
