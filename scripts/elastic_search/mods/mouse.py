@@ -8,7 +8,7 @@ import json
 class MGI(MOD):
 	species = "Mus musculus"
 
-	def __init__():
+	def __init__(self):
 		self.service = Service("http://www.mousemine.org/mousemine/service")
 
 	@staticmethod

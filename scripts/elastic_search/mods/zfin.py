@@ -6,7 +6,7 @@ from mod import MOD
 class ZFIN(MOD):
 	species = "Danio rerio"
 
-	def __init__():
+	def __init__(self):
 		self.service = Service("http://www.zebrafishmine.org/service")
 
 	@staticmethod
