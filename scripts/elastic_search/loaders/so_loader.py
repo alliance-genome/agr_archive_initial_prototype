@@ -1,5 +1,6 @@
 from files import *
 
+import json
 import re
 
 class SoLoader:
@@ -40,3 +41,9 @@ class SoLoader:
 						so_dataset[creating_term][key] = [value]
 
 		return so_dataset
+
+	def attach_so_data(self, genes):
+		so_dataset = self.get_data()
+
+		for key in genes:
+			genes[key]["soTermName"] = so_dataset[genes[key]["soTermId"]]["name"]
