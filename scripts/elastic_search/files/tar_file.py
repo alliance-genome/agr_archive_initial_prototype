@@ -1,4 +1,5 @@
 import tarfile
+import os
 
 class TARFile:
 
@@ -10,6 +11,10 @@ class TARFile:
 		print "Extracting files from (" + self.path + "/" + self.tarfilename + ") ..."
 
 		tfile = tarfile.open(self.path + "/" + self.tarfilename, 'r')
+		extract = False
 		for member in tfile.getmembers():
-			print "Extracting (" + member.name + " -> " + self.path + "/" + member.name + ")"
-		tfile.extractall(self.path)
+			if not os.path.exists(self.path + "/" + member.name):
+				print "Extracting (" + member.name + " -> " + self.path + "/" + member.name + ")"
+				extract = True
+		if extract == True:
+			tfile.extractall(self.path)
