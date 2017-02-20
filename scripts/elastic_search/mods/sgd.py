@@ -4,7 +4,9 @@ from mod import MOD
 
 class SGD(MOD):
 	species = "Saccharomyces cerevisiae"
-	service = Service("http://yeastmine.yeastgenome.org/yeastmine/service")
+
+	def __init__(self):
+		self.service = Service("http://yeastmine.yeastgenome.org/yeastmine/service")
 
 	@staticmethod
 	def gene_href(gene_id):
@@ -23,7 +25,7 @@ class SGD(MOD):
 		return []
 
 	def load_go(self):
-		query = SGD.service.new_query("Gene")
+		query = self.service.new_query("Gene")
 		query.add_view(
 			"primaryIdentifier", "symbol", "secondaryIdentifier",
 			"goAnnotation.ontologyTerm.identifier", "goAnnotation.ontologyTerm.name",
@@ -38,7 +40,7 @@ class SGD(MOD):
 		return list
 
 	def load_diseases(self):
-		query = SGD.service.new_query("Gene")
+		query = self.service.new_query("Gene")
 
 		query.add_view(
 			"primaryIdentifier", "secondaryIdentifier", "symbol",

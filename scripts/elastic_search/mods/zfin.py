@@ -5,7 +5,9 @@ from mod import MOD
 
 class ZFIN(MOD):
 	species = "Danio rerio"
-	service = Service("http://www.zebrafishmine.org/service")
+
+	def __init__():
+		self.service = Service("http://www.zebrafishmine.org/service")
 
 	@staticmethod
 	def gene_href(gene_id):
@@ -27,7 +29,7 @@ class ZFIN(MOD):
 		return GeneLoader(path + "/basic-gene-info-zfin.json").get_data()
 
 	def load_go(self):
-		query = ZFIN.service.new_query("Gene")
+		query = self.service.new_query("Gene")
 		query.add_view(
 			"name", "primaryIdentifier", "symbol",
 			"goAnnotation.ontologyTerm.identifier", "goAnnotation.ontologyTerm.name",
@@ -43,7 +45,7 @@ class ZFIN(MOD):
 		return list
 
 	def load_diseases(self):
-		query = ZFIN.service.new_query("OmimPhenotype")
+		query = self.service.new_query("OmimPhenotype")
 		query.add_view(
 			"disease", "phenotypeLink.identifier", "phenotypeLink.linkType",
 			"genes.primaryIdentifier", "genes.symbol", "genes.name"

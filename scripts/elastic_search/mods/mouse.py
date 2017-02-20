@@ -7,7 +7,9 @@ import json
 
 class MGI(MOD):
 	species = "Mus musculus"
-	service = Service("http://www.mousemine.org/mousemine/service")
+
+	def __init__():
+		self.service = Service("http://www.mousemine.org/mousemine/service")
 
 	@staticmethod
 	def gene_href(gene_id):
@@ -29,7 +31,7 @@ class MGI(MOD):
 		return GeneLoader(path + "/MGI_0.3_basicGeneInformation.json").get_data()
 
 	def load_go(self):
-		query = MGI.service.new_query("GOTerm")
+		query = self.service.new_query("GOTerm")
 		query.add_constraint("ontologyAnnotations.subject", "SequenceFeature")
 		query.add_view(
 			"identifier", "name", "namespace", "ontologyAnnotations.qualifier",
@@ -48,7 +50,7 @@ class MGI(MOD):
 		return list
 
 	def load_diseases(self):
-		query = MGI.service.new_query("OMIMTerm")
+		query = self.service.new_query("OMIMTerm")
 		query.add_constraint("ontologyAnnotations.subject", "SequenceFeature")
 		query.add_view(
 			"identifier", "name", "synonyms.name", "synonyms.type",
