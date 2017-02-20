@@ -1,4 +1,5 @@
 from flask import Flask, render_template, send_from_directory, request, jsonify
+from flask_httpauth import HTTPBasicAuth
 from flask_webpack import Webpack
 from gevent.wsgi import WSGIServer
 from random import randint
@@ -10,7 +11,7 @@ app = Flask(__name__)
 webpack = Webpack()
 app.config.update({ 'DEBUG': True, 'WEBPACK_MANIFEST_PATH': './build/manifest.json' })
 webpack.init_app(app)
-
+auth = HTTPBasicAuth()
 
 services = {
 	"disease": DiseaseService(),
@@ -45,6 +46,7 @@ def search_autocomplete():
 
 # Create
 @app.route('/api/<service>', methods=['POST'])
+@auth.login_required
 def gene_create_api(service):
     service_c = services[service]
     object = request.get_json()
@@ -58,6 +60,7 @@ def read_api(service, id):
 
 # Update
 @app.route('/api/<service>/<id>', methods=['PUT'])
+@auth.login_required
 def gene_update_api(service, id):
     service_c = services[service]
     object = request.get_json()
@@ -65,6 +68,7 @@ def gene_update_api(service, id):
 
 # Delete
 @app.route('/api/<service>/<id>', methods=['DELETE'])
+@auth.login_required
 def gene_delete_api(service, id):
     service_c = services[service]
     return jsonify(service_c.delete(id))
@@ -83,6 +87,11 @@ def send_static(path):
 @app.route('/gene/<gene_id>')
 def react_render(gene_id = None):
     return render_template('index.jinja2')
+
+@auth.get_password
+def get_pw(username):
+	print "Username: " + username
+	return os.environ['API_PASSWORD']
 
 if __name__ == '__main__':
     if os.environ.get('PRODUCTION', ''):
