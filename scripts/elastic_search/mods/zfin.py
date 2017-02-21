@@ -26,7 +26,7 @@ class ZFIN(MOD):
 		path = "tmp"
 		S3File("mod-datadumps", "ZFIN_0.3.0_4.tar.gz", path).download()
 		TARFile(path, "ZFIN_0.3.0_4.tar.gz").extract_all()
-		return GeneLoader(path + "/basic-gene-info-zfin.json").get_data()
+		return GeneLoader(path + "/ZFIN_0.3.0_BGI.json").get_data()
 
 	def load_go(self):
 		query = self.service.new_query("Gene")
