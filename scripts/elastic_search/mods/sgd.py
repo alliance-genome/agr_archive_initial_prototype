@@ -26,7 +26,7 @@ class SGD(MOD):
 	def load_genes(self):
 		path = "tmp"
 		S3File("mod-datadumps", "SGD_0.3.0_1.tar.gz", path).download()
-		TARFile(path, "FB_0.3.0_1.tar.gz").extract_all()
+		TARFile(path, "SGD_0.3.0_1.tar.gz").extract_all()
 		return GeneLoader(path + "/SGD_0.3_basicGeneInformation.json").get_data()
 
 	def load_go(self):
