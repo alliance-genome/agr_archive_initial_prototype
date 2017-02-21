@@ -1,9 +1,10 @@
 # get the Elasticsearch URI from an environment variable, if one is set
 ES_URI := $(or $(ES_URI),$(ES_URI),http://127.0.0.1:9200/)
 ES_INDEX := $(or $(ES_INDEX),$(ES_INDEX),'searchable_items_blue')
+API_PASSWORD := $(or $(API_PASSWORD),$(API_PASSWORD),'api_password')
 PRODUCTION:= $(or $(PRODUCTION),$(PRODUCTION),)
 
-OPTIONS = PRODUCTION=$(PRODUCTION) ES_URI=$(ES_URI) ES_AWS=$(ES_AWS) ES_INDEX=$(ES_INDEX)
+OPTIONS = PRODUCTION=$(PRODUCTION) API_PASSWORD=$(API_PASSWORD) ES_URI=$(ES_URI) ES_AWS=$(ES_AWS) ES_INDEX=$(ES_INDEX)
 
 # if possible have a virtualenv setup first
 
@@ -37,4 +38,4 @@ index:
 	cd scripts/elastic_search && $(OPTIONS) python fetch_save_index.py
 
 test-py:
-	nosetests -s
+	$(OPTIONS) nosetests -s

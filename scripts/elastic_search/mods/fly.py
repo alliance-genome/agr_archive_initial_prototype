@@ -1,3 +1,4 @@
+from loaders.gene_loader import GeneLoader
 from mod import MOD
 from files import *
 import csv
@@ -14,7 +15,10 @@ class FlyBase(MOD):
 		return ["Drosophila melanogaster", "D. melanogaster", "DROME"]
 
 	def load_genes(self):
-		return []
+		path = "tmp"
+		S3File("mod-datadumps", "FB_0.3.0_1.tar.gz", path).download()
+		TARFile(path, "FB_0.3.0_1.tar.gz").extract_all()
+		return GeneLoader(path + "/FB_0.3_basicGeneInformation.json").get_data()
 
 	@staticmethod
 	def gene_id_from_panther(panther_id):

@@ -45,4 +45,4 @@ class SoLoader:
 		so_dataset = self.get_data()
 
 		for key in genes:
-			genes[key]["soTermName"] = so_dataset[genes[key]["soTermId"]]["name"]
+			genes[key]["soTermName"] = so_dataset[genes[key]["soTermId"]]["name"][0]

@@ -5,7 +5,7 @@ class HomoLogLoader:
 
 	def __init__(self, mods):
 		path = "tmp"
-		FTPFile("ftp://ftp.pantherdb.org/ortholog/current_release/RefGenomeOrthologs.tar.gz", path, "RefGenomeOrthologs.tar.gz").download()
+		S3File("mod-datadumps", "RefGenomeOrthologs.tar.gz", path).download()
 		TARFile(path, "RefGenomeOrthologs.tar.gz").extract_all()
 		self.homolog_data = CSVFile(path + "/" + "RefGenomeOrthologs").get_data()
 

@@ -1,8 +1,5 @@
 import unittest
-from src.search import build_search_query, build_search_params, \
-    build_es_search_body_request, format_search_results, \
-    build_es_aggregation_body_request, format_aggregation_results, \
-    build_autocomplete_search_body_request, format_autocomplete_results
+from src.services.helpers import *
 from werkzeug.datastructures import ImmutableMultiDict
 
 

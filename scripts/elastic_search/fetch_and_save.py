@@ -51,7 +51,7 @@ class FetchAndSave:
 		PickleFile(self.gene_bkp_filename).save(genes)
 		PickleFile(self.go_bkp_filename).save(go_entries)
 		PickleFile(self.diseases_bkp_filename).save(disease_entries)
-		PickleFile(self.so_bkp_filename).save(so_data)
+		PickleFile(self.so_bkp_filename).save(so_loader.get_data())
 
 if __name__ == '__main__':
 	fetch_and_save = FetchAndSave()
