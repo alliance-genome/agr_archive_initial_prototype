@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { OrthologyWrapper, OrthologyTable, mockOrthologData } from '../../components/orthology';
 import { connect } from 'react-redux';
 
 import fetchData from '../../lib/fetchData';
 import { fetchGene, fetchGeneSuccess, fetchGeneFailure } from '../../actions/genes';
 import { selectGene } from '../../selectors/geneSelectors';
 
-import BasicGeneInfo from './basicGeneInfo';
-import GenePageHeader from './genePageHeader';
+import Disease from './disease';
 
 
 class GenePage extends Component {
@@ -33,23 +31,14 @@ class GenePage extends Component {
 
     return (
       <div className='container'>
-        <GenePageHeader symbol={this.props.data.symbol} />
-        <BasicGeneInfo geneData={this.props.data} />
-        <OrthologyWrapper>
-          <OrthologyTable data={mockOrthologData} />
-        </OrthologyWrapper>
+ 
+        <Disease />
+        
       </div>
     );
   }
 }
 
-GenePage.propTypes = {
-  data: React.PropTypes.object,
-  dispatch: React.PropTypes.func,
-  error: React.PropTypes.object,
-  loading: React.PropTypes.bool,
-  params: React.PropTypes.object,
-};
 
 function mapStateToProps(state) {
   return selectGene(state);
