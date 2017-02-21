@@ -1,4 +1,6 @@
+from loaders.gene_loader import GeneLoader
 from intermine.webservice import Service
+from files import *
 from mod import MOD
 
 
@@ -22,7 +24,10 @@ class SGD(MOD):
 		return panther_id.split("=")[1]
 
 	def load_genes(self):
-		return []
+		path = "tmp"
+		S3File("mod-datadumps", "SGD_0.3.0_1.tar.gz", path).download()
+		TARFile(path, "FB_0.3.0_1.tar.gz").extract_all()
+		return GeneLoader(path + "/SGD_0.3_basicGeneInformation.json").get_data()
 
 	def load_go(self):
 		query = self.service.new_query("Gene")
