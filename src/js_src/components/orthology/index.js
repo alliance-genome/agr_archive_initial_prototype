@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import OrthologyTable from './orthologyTable';
 
 const mockOrthologData = [
@@ -221,23 +220,7 @@ const mockOrthologData = [
   }
 ];
 
-class OrthologyWrapper extends Component {
-  render() {
-    return (<div>
-      <h3 style={{marginTop: 15}}>
-        Orthology (with Fake data)
-      </h3>
-      {
-        this.props.children
-      }
-    </div>);
-  }
-}
-
-export default OrthologyTable;
-
 export {
-  OrthologyWrapper,
   OrthologyTable,
   mockOrthologData
 };
