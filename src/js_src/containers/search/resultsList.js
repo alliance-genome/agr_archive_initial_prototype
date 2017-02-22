@@ -4,7 +4,6 @@ import { Link } from 'react-router';
 import style from './style.css';
 import CategoryLabel from './categoryLabel';
 import DetailList from './detailList';
-import LogList from './logList';
 import { NON_HIGHLIGHTED_FIELDS } from '../../constants';
 
 const DEFAULT_FIELDS = ['symbol', 'name', 'synonyms', 'sourceHref', 'id', 'species', 'type'];
@@ -36,14 +35,12 @@ class ResultsList extends Component {
 
   renderNonGeneEntry(d, i, fields) {
     let isMakeLowercase = d.category === 'disease';
-    let apiUrl = '/api/' + d.category + '/' + d.id;
     let link = <a dangerouslySetInnerHTML={{ __html: d.display_name }} href={d.href} />;
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
         {this.renderHeader(d.category, link, isMakeLowercase)}
         {this.renderDetailFromFields(d, fields)}
         {this.renderHighlightedValues(d.highlight)}
-        (<a href={apiUrl}>api link that will go away</a>)
         <hr />
       </div>
     );
@@ -52,8 +49,6 @@ class ResultsList extends Component {
   renderGeneEntry(d, i) {
     let topFields = ['name', 'synonyms'];
     let bottomFields = ['species', 'gene_type'];
-    let logHighlight = d.highlight['homologs.symbol'] || d.highlight['homologs.panther_family'];
-    let apiUrl = '/api/' + d.category + '/' + d.id;
     let link = <Link to={`/gene/${d.id}`}><span dangerouslySetInnerHTML={{ __html: d.display_name }} /></Link>;
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
@@ -64,9 +59,7 @@ class ResultsList extends Component {
             <span><a dangerouslySetInnerHTML={{ __html: d.id }} href={d.sourceHref} target='_new' /></span>
           </div>
           {this.renderDetailFromFields(d, bottomFields)}
-          <LogList label='Homologs' logs={d.homologs} rawHighlight={logHighlight} />
           {this.renderHighlightedValues(d.highlight)}
-          (<a href={apiUrl}>api link that will go away</a>)
         <hr />
       </div>
     );
