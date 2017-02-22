@@ -1,6 +1,6 @@
-import OrthologyTable from './orthologyTable';
+import DiseaseTable from './diseaseTable';
 
-const mockOrthologData = [
+const mockDiseaseData = [
   {
     species: 'Homo sapiens',
     geneSymbol: 'GAK',
@@ -221,6 +221,6 @@ const mockOrthologData = [
 ];
 
 export {
-  OrthologyTable,
-  mockOrthologData
+  DiseaseTable,
+  mockDiseaseData
 };

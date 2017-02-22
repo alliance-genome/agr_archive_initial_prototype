@@ -6,3 +6,4 @@ from worm import WormBase
 from zfin import ZFIN
 from sgd import SGD
 from rat import RGD
+from human import Human

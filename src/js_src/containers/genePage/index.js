@@ -5,7 +5,16 @@ import fetchData from '../../lib/fetchData';
 import { fetchGene, fetchGeneSuccess, fetchGeneFailure } from '../../actions/genes';
 import { selectGene } from '../../selectors/geneSelectors';
 
+<<<<<<< HEAD
 import Disease from './disease';
+=======
+import BasicGeneInfo from './basicGeneInfo';
+import GenePageHeader from './genePageHeader';
+import JBrowse from './jbrowse';
+import { OrthologyTable, mockOrthologData } from '../../components/orthology';
+import { Disease, mockDiseaseData } from '../../components/disease';
+import Subsection from '../../components/subsection';
+>>>>>>> development
 
 
 class GenePage extends Component {
@@ -31,9 +40,25 @@ class GenePage extends Component {
 
     return (
       <div className='container'>
- 
-        <Disease />
-        
+
+        <GenePageHeader symbol={this.props.data.symbol} />
+
+        <Subsection>
+          <BasicGeneInfo geneData={this.props.data} />
+        </Subsection>
+
+        <Subsection title='JBrowse'>
+          <JBrowse geneSymbol={this.props.data.symbol} species={this.props.data.species} />
+        </Subsection>
+
+        <Subsection hardcoded title='Orthology'>
+          <OrthologyTable data={mockOrthologData} />
+        </Subsection>
+      
+        <Subsection hardcoded title='Disease'>
+          <Disease data={mockDiseaseData} />
+        </Subsection>
+
       </div>
     );
   }

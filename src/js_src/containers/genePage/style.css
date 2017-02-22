@@ -1,3 +1,8 @@
+.jbrowse {
+  height: 350px;
+  width: 100%;
+}
+
 .speciesIcon {
   background-image: url(./speciesSprite.png);
   margin: 1.25rem auto 0 auto;
@@ -16,11 +21,11 @@
   background-position: 0 0;
 }
 
-.speciesIcon.MGI {
+.speciesIcon.RGD {
   background-position: 0 -91px;
 }
 
-.speciesIcon.RGD {
+.speciesIcon.MGI {
   background-position: 0 -182px;
 }
 
