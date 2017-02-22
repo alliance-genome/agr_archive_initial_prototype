@@ -26,7 +26,7 @@ class FlyBase(MOD):
 		return panther_id.split("=")[1]
 
 	def load_go(self):
-		go_data = CSVFile("data/FlyBase_GO_output_fb_2016_04.tsv").get_data()
+		go_data = CSVFile("data/FlyBase_GO_output_fb_2016_05.tsv").get_data()
 
 		list = []
 		for row in go_data:
@@ -36,7 +36,7 @@ class FlyBase(MOD):
 		return list
 
 	def load_diseases(self):
-		diseases_data_csv_filename = "data/FlyBase_DOID_output_fb_2016_04.tsv"
+		diseases_data_csv_filename = "data/FlyBase_DOID_output_fb_2016_05.tsv"
 
 		print("Fetching disease data from FlyBase tsv file (" + diseases_data_csv_filename + ") ...")
 
