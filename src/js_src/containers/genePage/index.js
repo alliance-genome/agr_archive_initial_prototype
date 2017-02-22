@@ -9,6 +9,7 @@ import BasicGeneInfo from './basicGeneInfo';
 import GenePageHeader from './genePageHeader';
 import JBrowse from './jbrowse';
 import { OrthologyTable, mockOrthologData } from '../../components/orthology';
+import { Disease, mockDiseaseData } from '../../components/disease';
 import Subsection from '../../components/subsection';
 
 
@@ -48,9 +49,9 @@ class GenePage extends Component {
         <Subsection hardcoded title='Orthology'>
           <OrthologyTable data={mockOrthologData} />
         </Subsection>
-
+      
         <Subsection hardcoded title='Disease'>
-          ¯\_(ツ)_/¯
+          <Disease data={mockDiseaseData} />
         </Subsection>
       </div>
     );
