@@ -19,7 +19,7 @@ class FetchSaveIndex:
 			self.es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
 
 	def load_data_from_sources_and_index(self):
-		mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase()]
+		mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
 
 		print "Loading Go Data"
 		go_data = GoLoader().get_data() 
