@@ -13,7 +13,7 @@ class FetchAndSave:
 	diseases_bkp_filename = "data/diseases_bkp.pickle"
 
 	def load_data_from_sources(self):
-		mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase()]
+		mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
 
 		print "Loading Go Data"
 		go_data = GoLoader().get_data() 
