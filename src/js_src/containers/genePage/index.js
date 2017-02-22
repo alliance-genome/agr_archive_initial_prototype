@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { OrthologyWrapper, OrthologyTable, mockOrthologData } from '../../components/orthology';
 import { connect } from 'react-redux';
 
 import fetchData from '../../lib/fetchData';
@@ -8,6 +7,9 @@ import { selectGene } from '../../selectors/geneSelectors';
 
 import BasicGeneInfo from './basicGeneInfo';
 import GenePageHeader from './genePageHeader';
+import JBrowse from './jbrowse';
+import { OrthologyTable, mockOrthologData } from '../../components/orthology';
+import Subsection from '../../components/subsection';
 
 
 class GenePage extends Component {
@@ -34,10 +36,22 @@ class GenePage extends Component {
     return (
       <div className='container'>
         <GenePageHeader symbol={this.props.data.symbol} />
-        <BasicGeneInfo geneData={this.props.data} />
-        <OrthologyWrapper>
+
+        <Subsection>
+          <BasicGeneInfo geneData={this.props.data} />
+        </Subsection>
+
+        <Subsection title='JBrowse'>
+          <JBrowse geneSymbol={this.props.data.symbol} species={this.props.data.species} />
+        </Subsection>
+
+        <Subsection hardcoded title='Orthology'>
           <OrthologyTable data={mockOrthologData} />
-        </OrthologyWrapper>
+        </Subsection>
+
+        <Subsection hardcoded title='Disease'>
+          ¯\_(ツ)_/¯
+        </Subsection>
       </div>
     );
   }
