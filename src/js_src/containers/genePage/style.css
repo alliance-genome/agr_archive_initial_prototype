@@ -1,3 +1,8 @@
+.jbrowse {
+  height: 350px;
+  width: 100%;
+}
+
 .speciesIcon {
   background-image: url(./speciesSprite.png);
   margin: 1.25rem auto 0 auto;
