@@ -1,48 +1,33 @@
-import React from 'react';
-import {render} from 'react-dom';
-import Component from 'react-flybase-datagrid';
-import faker from 'faker';
-import './dist/fixed-data-table.css';
-
-// Table data as a list of array.
-
-function getHeaders(){
-
- var columns =  [
-   {id:'id', name:'ID'},
-   {id:'name', name:'Name'},
-   {id:'address', name:'Street Address'},
-   {id:'state', name:'State'},
-   {id:'zip', name:'Zip Code'}
- ];
-
- return columns;
-
-}
-
-function generateList(){
-  var items = [];
-
-  for (var i=1; i<=5000; i++){
-   items.push({ id: i, name: faker.name.findName(), address: faker.address.streetAddress(), state: faker.address.stateAbbr(), zip: faker.address.zipCode()});
- }
-
- return items;
-};
-
-const data = generateList();
+import React, { Component } from 'react';
+// import ReactDOM from 'react-dom';
+import {Table, Column, Cell} from 'fixed-data-table-2';
 
 class Disease extends Component {
   render() {
     return (
 
-    <div>
-      <h1>datagrid1</h1>
-      <Component data={data} columns={getHeaders()} showFilter={true} />
-    </div>
+ <Table
+    className='table'
+    rowHeight={5}
+    rowsCount={1}
+    width={500}
+    height={500}
+    headerHeight={5}>
 
+    <Column
+      header={<Cell>Col 1</Cell>}
+      cell={<Cell>Column 1 static content</Cell>}
+      width={200}
+    />
+
+  </Table>
+   
     );
   }
 }
 
 export default Disease;
+
+ 
+
+
