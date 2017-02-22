@@ -11,7 +11,7 @@ class DiseaseTable extends Component {
 
   render() {
     return(
-     <div>foo</div>
+     <div><h1>foo</h1></div>
     );
   }
 }
