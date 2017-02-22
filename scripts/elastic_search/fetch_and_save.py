@@ -27,8 +27,8 @@ class FetchAndSave:
 		for mod in mods:
 			genes.update(mod.load_genes())
 
-		print "Loading Homologs for all genes"
-		HomoLogLoader(mods).attach_homolog_data(genes)
+		# print "Loading Homologs for all genes"
+		# HomoLogLoader(mods).attach_homolog_data(genes)
 		print "Loading SO terms for all genes"
 		so_loader.attach_so_data(genes)
 
