@@ -13,7 +13,7 @@ class FetchAndSave:
 	diseases_bkp_filename = "data/diseases_bkp.pickle"
 
 	def load_data_from_sources(self):
-		mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase()]
+		mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
 
 		print "Loading Go Data"
 		go_data = GoLoader().get_data() 
@@ -27,8 +27,8 @@ class FetchAndSave:
 		for mod in mods:
 			genes.update(mod.load_genes())
 
-		print "Loading Homologs for all genes"
-		HomoLogLoader(mods).attach_homolog_data(genes)
+		# print "Loading Homologs for all genes"
+		# HomoLogLoader(mods).attach_homolog_data(genes)
 		print "Loading SO terms for all genes"
 		so_loader.attach_so_data(genes)
 
