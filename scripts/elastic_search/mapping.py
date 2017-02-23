@@ -48,6 +48,9 @@ mapping = {
                         "symbol": {
                             "type": "text",
                             "analyzer": "symbols"
+                        },
+                        "raw": {
+                            "type": "keyword"
                         }
                     }
                 },

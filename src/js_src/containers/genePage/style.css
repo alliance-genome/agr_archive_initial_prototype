@@ -21,11 +21,11 @@
   background-position: 0 0;
 }
 
-.speciesIcon.MGI {
+.speciesIcon.RGD {
   background-position: 0 -91px;
 }
 
-.speciesIcon.RGD {
+.speciesIcon.MGI {
   background-position: 0 -182px;
 }
 

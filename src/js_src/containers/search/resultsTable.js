@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 
 import style from './style.css';
 import DetailList from './detailList';
@@ -69,10 +70,14 @@ class ResultsTable extends Component {
         let isMakeLowercase = d.category === 'disease';
         let _className = isMakeLowercase ? style.lowercase : null;
         let _key = `srtc.${i}.${field}`;
+        let nameLink;
         switch(field) {
         case 'display_name':
         case 'symbol':
-          return <td key={_key}><a className={_className} dangerouslySetInnerHTML={{ __html: d[field] }} href={d.href} target='_new' /></td>;
+          nameLink = d.category === 'gene' ?
+            <Link to={`/gene/${d.id}`}><span dangerouslySetInnerHTML={{ __html: d.display_name }} /></Link> :
+            <a className={_className} dangerouslySetInnerHTML={{ __html: d[field] }} href={d.href} target='_new' />;
+          return <td key={_key}>{nameLink}</td>;
         case 'source':
           return <td key={_key}><a dangerouslySetInnerHTML={{ __html: d.id }} href={d.href} target='_new' /></td>;
         case MATCH_LABEL:
