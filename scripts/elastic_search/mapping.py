@@ -14,6 +14,11 @@ mapping = {
                         "tokenizer": "whitespace",
                         "filter": ["lowercase", "autocomplete_filter"]
                     },
+                    "autocomplete_search": {
+                        "type": "custom",
+                        "tokenizer": "whitespace",
+                        "filter": "lowercase"
+                    },
                     "symbols": {
                         "type": "custom",
                         "tokenizer": "whitespace",
@@ -49,6 +54,11 @@ mapping = {
                             "type": "text",
                             "analyzer": "symbols"
                         },
+                        "autocomplete": {
+                            "type": "text",
+                            "analyzer": "autocomplete",
+                            "search_analyzer": "autocomplete_search"
+                        },
                         "raw": {
                             "type": "keyword"
                         }
@@ -59,7 +69,17 @@ mapping = {
                 },
                 "symbol": {
                     "type": "text",
-                    "analyzer": "symbols"
+                    "analyzer": "symbols",
+                    "fields": {
+                        "autocomplete": {
+                            "type": "text",
+                            "analyzer": "autocomplete",
+                            "search_analyzer": "autocomplete_search"
+                        },
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
                 },
                 "systematicName": {
                     "type": "text",
@@ -79,7 +99,17 @@ mapping = {
                 },
                 "synonyms": {
                     "type": "text",
-                    "analyzer": "symbols"
+                    "analyzer": "symbols",
+                    "fields": {
+                        "autocomplete": {
+                            "type": "text",
+                            "analyzer": "autocomplete",
+                            "search_analyzer": "autocomplete_search"
+                        },
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
                 },
                 "crossReferences": {
                     "properties": {
