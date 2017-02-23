@@ -58,6 +58,9 @@ mapping = {
                             "type": "text",
                             "analyzer": "autocomplete",
                             "search_analyzer": "autocomplete_search"
+                        },
+                        "raw": {
+                            "type": "keyword"
                         }
                     }
                 },
