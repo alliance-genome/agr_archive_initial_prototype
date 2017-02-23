@@ -157,16 +157,6 @@ mapping = {
                         }
                     }
                 },
-
-
-                "gene_type": {
-                    "type": "text",
-                    "fields": {
-                        "raw": {
-                            "type": "keyword"
-                        }
-                    }
-                },
                 "gene_chromosomes": {
                     "type": "text",
                     "fields": {

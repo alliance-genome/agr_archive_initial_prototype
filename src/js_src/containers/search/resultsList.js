@@ -48,7 +48,7 @@ class ResultsList extends Component {
 
   renderGeneEntry(d, i) {
     let topFields = ['name', 'synonyms'];
-    let bottomFields = ['species', 'gene_type'];
+    let bottomFields = ['species', 'biotype'];
     let link = <Link to={`/gene/${d.id}`}><span dangerouslySetInnerHTML={{ __html: d.display_name }} /></Link>;
     return (
       <div className={style.resultContainer} key={`sr${i}`}>
