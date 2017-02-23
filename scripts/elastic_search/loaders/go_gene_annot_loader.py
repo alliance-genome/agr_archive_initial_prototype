@@ -16,10 +16,10 @@ class GoGeneAnnotLoader:
 		if go_id not in self.go_dataset or go_id in self.go_blacklist or gene_id not in self.genes:
 			return
 
-        if species == "Danio rerio":
-            gene_symbol = self.genes[gene_id]["symbol"]
-        else:
-            gene_symbol = self.genes[gene_id]["symbol"].upper()     
+		if species == "Danio rerio":
+			gene_symbol = self.genes[gene_id]["symbol"]
+		else:
+			gene_symbol = self.genes[gene_id]["symbol"].upper()     
 
 		if go_id in self.go:
 			if gene_symbol not in self.go[go_id]["go_genes"]:
