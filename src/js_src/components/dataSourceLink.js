@@ -11,7 +11,8 @@ const URL_GENERATORS = {
   UniProtKB: id => `http://www.uniprot.org/uniprot/${id}`,
   Ensembl: id => `http://www.ensembl.org/id/${id}`,
   RNAcentral: id => `http://rnacentral.org/rna/${id}`,
-  HGNC: id => `http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=${id}`
+  HGNC: id => `http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=${id}`,
+  PMID: id => `https://www.ncbi.nlm.nih.gov/pubmed/${id}`,
 };
 
 class DataSourceLink extends Component {

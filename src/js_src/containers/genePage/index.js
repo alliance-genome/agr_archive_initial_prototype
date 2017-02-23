@@ -9,7 +9,7 @@ import BasicGeneInfo from './basicGeneInfo';
 import GenePageHeader from './genePageHeader';
 import JBrowse from './jbrowse';
 import { OrthologyTable, mockOrthologData } from '../../components/orthology';
-import { Disease, mockDiseaseData } from '../../components/disease';
+import { DiseaseTable, mockDiseaseData } from '../../components/disease';
 import Subsection from '../../components/subsection';
 
 
@@ -50,9 +50,9 @@ class GenePage extends Component {
         <Subsection hardcoded title='Orthology'>
           <OrthologyTable data={mockOrthologData} />
         </Subsection>
-      
-        <Subsection hardcoded title='Disease'>
-          <Disease data={mockDiseaseData} />
+
+        <Subsection hardcoded title='Disease Associations'>
+          <DiseaseTable data={mockDiseaseData} />
         </Subsection>
 
       </div>
@@ -60,6 +60,13 @@ class GenePage extends Component {
   }
 }
 
+GenePage.propTypes = {
+  data: React.PropTypes.object,
+  dispatch: React.PropTypes.func,
+  error: React.PropTypes.object,
+  loading: React.PropTypes.bool,
+  params: React.PropTypes.object,
+};
 
 function mapStateToProps(state) {
   return selectGene(state);

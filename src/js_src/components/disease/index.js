@@ -1,224 +1,222 @@
-import DiseaseTable from './diseaseTable';
+import React, { Component } from 'react';
+import DataSourceLink from '../dataSourceLink';
 
 const mockDiseaseData = [
   {
-    species: 'Homo sapiens',
-    geneSymbol: 'GAK',
-    geneURL: 'http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=HGNC:4113',
-    ncbiID: '2580',
-    scoreNumerator: 11,
-    scoreDemominator: 11,
-    methods: [
-      {id: 'compara', isCalled: true},
-      {id: 'homologene', isCalled: true},
-      {id: 'inparanoid', isCalled: true},
-      {id: 'isobase', isCalled: true},
-      {id: 'oma', isCalled: true},
-      {id: 'orthodb', isCalled: true},
-      {id: 'orthomcl', isCalled: true},
-      {id: 'panther', isCalled: true},
-      {id: 'phylome', isCalled: true},
-      {id: 'roundup', isCalled: true},
-      {id: 'treefam', isCalled: true},
+    diseaseName: 'Bannayan-Riley-Ruvalcaba syndrome',
+    diseaseId: '153480',
+    associationType: 'is model of',
+    evidenceCode: 'TAS',
+    annotationSource: 'MGI',
+    references: [
+      {
+        dataProvider: 'PMID',
+        id: '12345',
+      },
+      {
+        dataProvider: 'PMID',
+        id: '12345',
+      },
     ],
-    isBestScore: true,
-    isBestScoreReverse: true,
-    alignURL: null,
   },
   {
-    species: 'Homo sapiens',
-    geneSymbol: 'DNAJC6',
-    geneURL: 'http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=HGNC:4113',
-    ncbiID: '9829',
-    scoreNumerator: 7,
-    scoreDemominator: 11,
-    methods: [
-      {id: 'compara', isCalled: true},
-      {id: 'homologene', isCalled: false},
-      {id: 'inparanoid', isCalled: true},
-      {id: 'isobase', isCalled: false},
-      {id: 'oma', isCalled: false},
-      {id: 'orthodb', isCalled: true},
-      {id: 'orthomcl', isCalled: true},
-      {id: 'panther', isCalled: true},
-      {id: 'phylome', isCalled: true},
-      {id: 'roundup', isCalled: false},
-      {id: 'treefam', isCalled: true},
+    diseaseName: 'brain glioma',
+    associationType: 'causes or contributes to condition',
+    evidenceCode: 'TAS',
+    annotationSource: 'FB',
+    references: [
+      {
+        dataProvider: 'PMID',
+        id: '12345',
+      },
     ],
-    isBestScore: false,
-    isBestScoreReverse: true,
-    alignURL: null,
   },
   {
-    species: 'Mus musculus',
-    geneSymbol: 'Gak',
-    geneURL: 'http://www.informatics.jax.org/marker/MGI:2442153',
-    ncbiID: '231580',
-    scoreNumerator: 11,
-    scoreDemominator: 11,
-    methods: [
-      {id: 'compara', isCalled: true},
-      {id: 'homologene', isCalled: true},
-      {id: 'inparanoid', isCalled: true},
-      {id: 'isobase', isCalled: true},
-      {id: 'oma', isCalled: true},
-      {id: 'orthodb', isCalled: true},
-      {id: 'orthomcl', isCalled: true},
-      {id: 'panther', isCalled: true},
-      {id: 'phylome', isCalled: true},
-      {id: 'roundup', isCalled: true},
-      {id: 'treefam', isCalled: true},
-      {id: 'zfin', isCalled: true},
+    diseaseName: 'Cowden disease',
+    associationType: 'is model of',
+    evidenceCode: 'TAS',
+    annotationSource: 'MGI',
+    references: [
+      {
+        dataProvider: 'PMID',
+        id: '12345',
+      },
     ],
-    isBestScore: true,
-    isBestScoreReverse: true,
-    alignURL: null,
   },
   {
-    species: 'Mus musculus',
-    geneSymbol: 'Dnajc6',
-    geneURL: 'http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=HGNC:4113',
-    ncbiID: '72685',
-    scoreNumerator: 7,
-    scoreDemominator: 11,
-    methods: [
-      {id: 'compara', isCalled: true},
-      {id: 'homologene', isCalled: false},
-      {id: 'inparanoid', isCalled: true},
-      {id: 'isobase', isCalled: false},
-      {id: 'oma', isCalled: false},
-      {id: 'orthodb', isCalled: true},
-      {id: 'orthomcl', isCalled: true},
-      {id: 'panther', isCalled: true},
-      {id: 'phylome', isCalled: true},
-      {id: 'roundup', isCalled: false},
-      {id: 'treefam', isCalled: true},
-      {id: 'zfin', isCalled: true},
+    diseaseName: 'endometrial cancer',
+    associationType: 'causes or contributes to condition',
+    evidenceCode: 'ISS',
+    annotationSource: 'RGD',
+    references: [
+      {
+        dataProvider: 'PMID',
+        id: '12345',
+      },
     ],
-    isBestScore: false,
-    isBestScoreReverse: true,
-    alignURL: null,
   },
   {
-    species: 'Danio rerio',
-    geneSymbol: 'Gak',
-    geneURL: 'https://zfin.org/ZDB-GENE-041210-358',
-    ncbiID: '100151158',
-    scoreNumerator: 7,
-    scoreDemominator: 11,
-    methods: [
-      {id: 'compara', isCalled: true},
-      {id: 'homologene', isCalled: true},
-      {id: 'inparanoid', isCalled: false},
-      {id: 'oma', isCalled: true},
-      {id: 'orthodb', isCalled: true},
-      {id: 'orthomcl', isCalled: true},
-      {id: 'panther', isCalled: true},
-      {id: 'phylome', isCalled: false},
-      {id: 'roundup', isCalled: false},
-      {id: 'treefam', isCalled: true},
-      {id: 'zfin', isCalled: true},
+    diseaseName: 'prostate cancer',
+    associationType: 'is model of',
+    evidenceCode: 'IC',
+    annotationSource: 'ZFIN',
+    references: [
+      {
+        dataProvider: 'PMID',
+        id: '12345',
+      },
     ],
-    isBestScore: true,
-    isBestScoreReverse: true,
-    alignURL: null,
   },
   {
-    species: 'Danio rerio',
-    geneSymbol: 'Dnajc6',
-    geneURL: 'http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=HGNC:4113',
-    ncbiID: '796354',
-    scoreNumerator: 5,
-    scoreDemominator: 11,
-    methods: [
-      {id: 'compara', isCalled: true},
-      {id: 'homologene', isCalled: false},
-      {id: 'inparanoid', isCalled: true},
-      {id: 'oma', isCalled: false},
-      {id: 'orthodb', isCalled: true},
-      {id: 'orthomcl', isCalled: true},
-      {id: 'panther', isCalled: true},
-      {id: 'phylome', isCalled: false},
-      {id: 'roundup', isCalled: false},
-      {id: 'treefam', isCalled: false},
-      {id: 'zfin', isCalled: false},
+    diseaseName: 'prostate cancer',
+    associationType: 'causes or contributes to condition',
+    evidenceCode: 'ISS',
+    annotationSource: 'SGD',
+    references: [
+      {
+        dataProvider: 'PMID',
+        id: '12345',
+      },
     ],
-    isBestScore: false,
-    isBestScoreReverse: true,
-    alignURL: null,
   },
   {
-    species: 'Caenorhabditis elegans',
-    geneSymbol: 'tag-257',
-    geneURL: 'http://www.wormbase.org/species/c_elegans/gene/WBGene00018516',
-    ncbiID: '180844',
-    scoreNumerator: 5,
-    scoreDemominator: 11,
-    methods: [
-      {id: 'compara', isCalled: false},
-      {id: 'homologene', isCalled: false},
-      {id: 'inparanoid', isCalled: false},
-      {id: 'isobase', isCalled: true},
-      {id: 'oma', isCalled: false},
-      {id: 'orthodb', isCalled: true},
-      {id: 'orthomcl', isCalled: true},
-      {id: 'panther', isCalled: false},
-      {id: 'phylome', isCalled: true},
-      {id: 'roundup', isCalled: false},
-      {id: 'treefam', isCalled: true},
+    diseaseName: 'acute lymphocytic leukemia',
+    associationType: 'is model of',
+    evidenceCode: 'TAS',
+    annotationSource: 'MGI',
+    references: [
+      {
+        dataProvider: 'PMID',
+        id: '12345',
+      },
     ],
-    isBestScore: true,
-    isBestScoreReverse: true,
-    alignURL: null,
   },
   {
-    species: 'Caenorhabditis elegans',
-    geneSymbol: 'dnj-25',
-    geneURL: 'http://www.wormbase.org/species/c_elegans/gene/WBGene00001043',
-    ncbiID: '180844',
-    scoreNumerator: 5,
-    scoreDemominator: 11,
-    methods: [
-      {id: 'compara', isCalled: false},
-      {id: 'homologene', isCalled: false},
-      {id: 'inparanoid', isCalled: false},
-      {id: 'isobase', isCalled: false},
-      {id: 'oma', isCalled: false},
-      {id: 'orthodb', isCalled: false},
-      {id: 'orthomcl', isCalled: false},
-      {id: 'panther', isCalled: true},
-      {id: 'phylome', isCalled: true},
-      {id: 'roundup', isCalled: false},
-      {id: 'treefam', isCalled: false},
+    diseaseName: 'fatty liver disease',
+    associationType: 'causes or contributes to condition',
+    evidenceCode: 'IEP',
+    annotationSource: 'RGD',
+    references: [
+      {
+        dataProvider: 'PMID',
+        id: '12345',
+      },
     ],
-    isBestScore: false,
-    isBestScoreReverse: true,
-    alignURL: null,
   },
   {
-    species: 'Saccharomyces cerevisiae',
-    geneSymbol: 'SWA2',
-    geneURL: 'http://www.yeastgenome.org/locus/S000002728',
-    ncbiID: '851918',
-    scoreNumerator: 2,
-    scoreDemominator: 11,
-    methods: [
-      {id: 'compara', isCalled: false},
-      {id: 'homologene', isCalled: false},
-      {id: 'inparanoid', isCalled: false},
-      {id: 'isobase', isCalled: false},
-      {id: 'oma', isCalled: false},
-      {id: 'orthomcl', isCalled: false},
-      {id: 'panther', isCalled: true},
-      {id: 'phylome', isCalled: true},
-      {id: 'roundup', isCalled: false},
-      {id: 'treefam', isCalled: false},
+    diseaseName: 'fatty liver disease',
+    associationType: 'is model of',
+    evidenceCode: 'TAS',
+    annotationSource: 'MGI',
+    references: [
+      {
+        dataProvider: 'PMID',
+        id: '12345',
+      },
     ],
-    isBestScore: true,
-    isBestScoreReverse: true,
-    alignURL: null,
-  }
+  },
+  {
+    diseaseName: 'hepatocellular carcinoma',
+    associationType: 'causes or contributes to condition',
+    evidenceCode: 'ISS',
+    annotationSource: 'WB',
+    references: [
+      {
+        dataProvider: 'PMID',
+        id: '12345',
+      },
+    ],
+  },
+  {
+    diseaseName: 'persistent fetal circulation syndrome',
+    associationType: 'is model of',
+    evidenceCode: 'TAS',
+    annotationSource: 'MGI',
+    references: [
+      {
+        dataProvider: 'PMID',
+        id: '12345',
+      },
+    ],
+  },
+  {
+    diseaseName: 'urinary bladder cancer',
+    associationType: 'is marker for',
+    evidenceCode: 'ISS',
+    annotationSource: 'RGD',
+    references: [
+      {
+        dataProvider: 'PMID',
+        id: '12345',
+      },
+    ],
+  },
 ];
+
+class DiseaseTable extends Component {
+  render() {
+    return (
+      <table className='table'>
+        <thead>
+          <tr>
+            <th>Disease Name</th>
+            <th>Association</th>
+            <th>Evidence Code</th>
+            <th>Association Source</th>
+            <th>References</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.props.data.map((d, idx) => {
+            return (
+              <tr key={`disease-${idx}`}>
+                <td><a href='' onClick={e => e.preventDefault()}>{d.diseaseName}</a></td>
+                <td>{d.associationType}</td>
+                <td>{d.evidenceCode}</td>
+                <td>{d.annotationSource}</td>
+                <td>
+                  {d.references
+                    .map((r, idx) => {
+                      return (
+                        <DataSourceLink
+                          dataProvider={r.dataProvider}
+                          id={r.id}
+                          key={`ref-${idx}`}
+                        />
+                      );
+                    })
+                    .reduce((accu, elem) => {
+                      return accu === null ? [elem] : [...accu, ', ', elem];
+                    }, null)
+                  }
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    );
+  }
+}
+
+DiseaseTable.propTypes = {
+  data: React.PropTypes.arrayOf(
+    React.PropTypes.shape({
+      diseaseName: React.PropTypes.string,
+      associationType: React.PropTypes.string,
+      evidenceCode: React.PropTypes.string,
+      annotationSource: React.PropTypes.string,
+      references: React.PropTypes.arrayOf(
+        React.PropTypes.shape({
+          dataProvider: React.PropTypes.string,
+          id: React.PropTypes.string,
+        })
+      ),
+    })
+  ),
+};
+
+export default DiseaseTable;
 
 export {
   DiseaseTable,
