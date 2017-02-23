@@ -10,7 +10,7 @@ class FetchSaveIndex:
 	gene_bkp_filename = "data/genes_bkp.pickle"
 	go_bkp_filename = "data/go_bkp.pickle"
 	so_bkp_filename = "data/so_bkp.pickle"
-	diseases_bkp_filename = "data/diseases_bkp.pickle"
+	# diseases_bkp_filename = "data/diseases_bkp.pickle"
 
 	def __init__(self):
 		if os.environ['ES_AWS'] == "true":
@@ -21,7 +21,7 @@ class FetchSaveIndex:
 	def load_data_from_sources_and_index(self):
 		mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
 
-		print "Loading Go Data"
+		print "Loading GO Data"
 		go_data = GoLoader().get_data() 
 		print "Loading OMIM Data"
 		omim_data = OMIMLoader().get_data()
@@ -38,20 +38,20 @@ class FetchSaveIndex:
 		print "Loading SO terms for all genes"
 		so_loader.attach_so_data(genes)
 
-		print "Loading Go and Disease annotations for genes from mines"
+		print "Loading GO annotations for genes from mines"
 		gene_go_annots = []
-		gene_disease_annots = []
+		# gene_disease_annots = []
 		for mod in mods:
 			gene_go_annots.extend(mod.load_go())
-			gene_disease_annots.extend(mod.load_diseases())
+			# gene_disease_annots.extend(mod.load_diseases())
 
 		print "Attaching GO annotations to genes"
 		go_annot_loader = GoGeneAnnotLoader(genes, go_data)
 		go_entries = go_annot_loader.attach_annotations(gene_go_annots)
 
-		print "Attaching Disease annotations to genes"
-		disease_annot_loader = DiseaseGeneAnnotLoader(genes, omim_data)
-		disease_entries = disease_annot_loader.attach_annotations(gene_disease_annots)
+		# print "Attaching Disease annotations to genes"
+		# disease_annot_loader = DiseaseGeneAnnotLoader(genes, omim_data)
+		# disease_entries = disease_annot_loader.attach_annotations(gene_disease_annots)
 
 		print "Delete and Recreate Index"
 		self.delete_mapping()
@@ -60,12 +60,12 @@ class FetchSaveIndex:
 		print "Send data into Index"
 		self.index_into_es(genes)
 		self.index_into_es(go_entries)
-		self.index_into_es(disease_entries)
+		# self.index_into_es(disease_entries)
 
 		print "Saving processed data to files"
 		PickleFile(self.gene_bkp_filename).save(genes)
 		PickleFile(self.go_bkp_filename).save(go_entries)
-		PickleFile(self.diseases_bkp_filename).save(disease_entries)
+		# PickleFile(self.diseases_bkp_filename).save(disease_entries)
 		PickleFile(self.so_bkp_filename).save(so_loader.get_data())
 
 	def delete_mapping(self):
