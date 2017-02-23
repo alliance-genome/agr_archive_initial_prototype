@@ -17,20 +17,22 @@ const URL_GENERATORS = {
 class DataSourceLink extends Component {
   render() {
     let linker = URL_GENERATORS[this.props.dataProvider];
+    let prefix = this.props.omitPrefix ? '' : `${this.props.dataProvider}:`;
     if (!linker) {
-      return <span>{this.props.dataProvider}:{this.props.id}</span>;
+      return <span>{prefix}{this.props.id}</span>;
     }
     return (
       <span>
-        {this.props.dataProvider}:<a href={linker(this.props.id)}>{this.props.id}</a>
+        {prefix}<a href={linker(this.props.id)}>{this.props.id}</a>
       </span>
     );
   }
 }
 
 DataSourceLink.propTypes = {
-  dataProvider: React.PropTypes.string,
-  id: React.PropTypes.string,
+  dataProvider: React.PropTypes.string.isRequired,
+  id: React.PropTypes.string.isRequired,
+  omitPrefix: React.PropTypes.bool,
 };
 
 export default DataSourceLink;
