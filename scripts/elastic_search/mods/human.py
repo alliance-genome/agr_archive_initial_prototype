@@ -25,7 +25,16 @@ class Human(MOD):
 		return GeneLoader(path + "/agr/RGD_0.3_basicGeneInformation.9606.json").get_data()
 
 	def load_go(self):
+		path = "tmp"
+		S3File("mod-datadumps", "Human_GO_2_23_2017.tsv", path).download()
+		go_data = CSVFile(path + "/Human_GO_2_23_2017.tsv").get_data()
+
 		list = []
+
+		for row in go_data:
+				go_terms = map(lambda s: s.strip(), row[1].split(","))
+				for term in go_terms:
+					list.append({"gene_id": row[0], "go_id": term, "species": Human.species})
 		return list
 
 	def load_diseases(self):
