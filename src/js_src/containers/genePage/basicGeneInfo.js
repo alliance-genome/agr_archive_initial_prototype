@@ -23,6 +23,22 @@ class BasicGeneInfo extends Component {
     return <i className='text-muted'>Not Available</i>;
   }
 
+  renderCrossReferenceList() {
+    let refs = this.state.geneData.crossReferences;
+    if (!refs || refs.length < 1) {
+      return <i className='text-muted'>Not Available</i>;
+    }
+    return refs
+      .sort((a, b) => `${a.dataProvider}:${a.id}`.localeCompare(`${b.dataProvider}:${b.id}`))
+      .map((ref, idx) => {
+        return (
+          <div key={`ref-${idx}`}>
+            <DataSourceLink dataProvider={ref.dataProvider} id={ref.id} />
+          </div>
+        );
+      });
+  }
+
   render() {
     return (
       <div className='row'>
@@ -49,19 +65,7 @@ class BasicGeneInfo extends Component {
             <dd className='col-sm-10'>{this.placeholderIfBlank(this.state.geneData.geneSynopsis)}</dd>
 
             <dt className='col-sm-2'>Genomic Resources</dt>
-            <dd className='col-sm-10'>
-              {
-                this.state.geneData.crossReferences
-                  .sort((a, b) => `${a.dataProvider}:${a.id}`.localeCompare(`${b.dataProvider}:${b.id}`))
-                  .map((ref, idx) => {
-                    return (
-                      <div key={`ref-${idx}`}>
-                        <DataSourceLink dataProvider={ref.dataProvider} id={ref.id} />
-                      </div>
-                    );
-                  })
-              }
-            </dd>
+            <dd className='col-sm-10'>{this.renderCrossReferenceList()}</dd>
 
             <dt className='col-sm-2'>Additional Information</dt>
             <dd className='col-sm-10'><a href={this.state.geneData.geneLiteratureUrl}>Literature</a></dd>
