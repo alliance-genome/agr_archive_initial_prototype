@@ -208,22 +208,24 @@ def build_autocomplete_search_body_request(query, category='gene', field='name_k
         "query": {
             "bool": {
                 "must": [{
-                    "match": {
-                        "name_key.autocomplete": {
-                            "query": query
-                        }
+                    "dis_max": {
+                        "queries": [
+                            {"match": {"symbol.raw": {"query": query, "operator": "and", "boost": 100}}},
+                            {"match": {"symbol.autocomplete": {"query": query, "operator": "and", "boost": 10}}},
+                            {"match": {"name.autocomplete": {"query": query, "operator": "and", "boost": 1}}},
+                            {"match": {"synonyms.raw": {"query": query, "operator": "and", "boost": 50}}},
+                            {"match": {"synonyms.autocomplete": {"query": query, "operator": "and", "boost": 5}}}
+                        ]
                     }
                 }],
-                "should": [
-                    {
-                        "match": {
-                            "category": {
-                                "query": "gene",
-                                "boost": 2
-                            }
+                "should": [{
+                    "match": {
+                        "category": {
+                            "query": "gene",
+                            "boost": 2
                         }
                     }
-                ]
+                }]
             }
         },
         '_source': ['name', 'href', 'category', 'symbol']
@@ -248,6 +250,8 @@ def build_autocomplete_search_body_request(query, category='gene', field='name_k
 
         es_query['_source'] = [field, 'href', 'category']
 
+
+
     return es_query
 
 
@@ -270,7 +274,7 @@ def format_autocomplete_results(es_response, field='name_key'):
             }
 
             if hit['_source'].get('symbol') and hit['_source']['category'] == "gene":
-                obj['name'] = hit['_source']['symbol'].upper()
+                obj['name'] = hit['_source']['symbol']
 
             formatted_results.append(obj)
 
