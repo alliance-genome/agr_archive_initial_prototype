@@ -7,16 +7,17 @@ import style from './style.css';
 class DataSourceCard extends Component {
   render() {
     let d = this.props.sourceData;
+    let speciesClass = style[d.species.replace(' ', '-')];
     return (
       <div className='card'>
-        <div className={`${style.speciesIcon} ${style[d.dataProvider]}`} />
+        {speciesClass && <div className={`${style.speciesIcon} ${speciesClass}`} />}
         <div className='card-block'>
           <dl className='row'>
             <dt className='col-sm-5'>Species</dt>
             <dd className='col-sm-7'><i>{d.species}</i></dd>
             <dt className='col-sm-5'>Primary Source</dt>
             <dd className='col-sm-7'>
-              <DataSourceLink dataProvider={d.dataProvider} id={d.primaryId} />
+              <DataSourceLink dataProvider={d.dataProvider} id={d.primaryId} omitPrefix />
             </dd>
           </dl>
         </div>
@@ -26,7 +27,11 @@ class DataSourceCard extends Component {
 }
 
 DataSourceCard.propTypes = {
-  sourceData: React.PropTypes.object
+  sourceData: React.PropTypes.shape({
+    species: React.PropTypes.string.isRequired,
+    dataProvider: React.PropTypes.string.isRequired,
+    primaryId: React.PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default DataSourceCard;
