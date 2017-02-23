@@ -19,10 +19,10 @@ Create a virtualenv for isolating the python dependencies:
 
 ```bash
 
-mkdir -p ~/.virtualenvs/agr_prototype
+mkdir -p ~/.virtualenvs/agr
 # The prototype currently requires Python2
 # Assuming virtualenv and python2 are in your PATH
-virtualenv -p python2 ~/.virtualenvs/agr_prototype
+virtualenv -p python2 ~/.virtualenvs/agr
 ```
 +## ENV variables
 
