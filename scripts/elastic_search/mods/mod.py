@@ -1,3 +1,3 @@
 
 class MOD():
-	pass
+    pass
