@@ -22,7 +22,7 @@ class LoadAndIndex:
 		print "Load data from saved files"
 		genes = PickleFile(self.gene_bkp_filename).load()
 		go_entries = PickleFile(self.go_bkp_filename).load()
-		disease_entries = PickleFile(self.diseases_bkp_filename).load()
+		# disease_entries = PickleFile(self.diseases_bkp_filename).load()
 
 		print "Delete and Recreate Index"
 		self.delete_mapping()
@@ -31,7 +31,7 @@ class LoadAndIndex:
 		print "Send data into Index"
 		self.index_into_es(genes)
 		self.index_into_es(go_entries)
-		self.index_into_es(disease_entries)
+		# self.index_into_es(disease_entries)
 
 	def delete_mapping(self):
 		print "Deleting mapping..."
