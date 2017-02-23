@@ -516,10 +516,14 @@ class SearchHelpersTest(unittest.TestCase):
             "query": {
                 "bool": {
                     "must": [{
-                        "match": {
-                            "name_key.autocomplete": {
-                                "query": query
-                            }
+                        "dis_max": {
+                            "queries": [
+                                {"match": {"symbol.raw": {"query": query, "operator": "and", "boost": 100}}},
+                                {"match": {"symbol.autocomplete": {"query": query, "operator": "and", "boost": 10}}},
+                                {"match": {"name.autocomplete": {"query": query, "operator": "and", "boost": 1}}},
+                                {"match": {"synonyms.raw": {"query": query, "operator": "and", "boost": 50}}},
+                                {"match": {"synonyms.autocomplete": {"query": query, "operator": "and", "boost": 5}}}
+                            ]
                         }
                     }],
                     "should": [
