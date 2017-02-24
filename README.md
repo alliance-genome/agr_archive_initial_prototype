@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/alliance-genome/agr.svg?branch=master)](https://travis-ci.org/alliance-genome/agr_prototype)
+[![Build Status](https://travis-ci.org/alliance-genome/agr.svg?branch=master)](https://travis-ci.org/alliance-genome/agr)
 
 # Alliance of Genome Resources Prototype
 An initial prototype for the web portal of the Alliance of Genome
@@ -62,7 +62,7 @@ export ES_URI="https://search-es1-oyqxarxm2djn35dfodzniituhe.us-west-2.es.amazon
 * Build, Index, and start local agr instance
 ```bash
     * cd agr
-    * source ~/.virtualenvs/agr_prototype/bin/activate
+    * source ~/.virtualenvs/agr/bin/activate
     * make build  (to Setup dev working platform )
     # Assuming elasticsearch instance is up and running
     * make index  (to build ES indexes )   
@@ -76,7 +76,7 @@ export ES_URI="https://search-es1-oyqxarxm2djn35dfodzniituhe.us-west-2.es.amazon
 
 ### To run tests
 ```bash
-source ~/.virtualenvs/agr_prototype/bin/activate
+source ~/.virtualenvs/agr/bin/activate
 make tests
 ```
 
@@ -98,8 +98,8 @@ Be sure to install both, some OS packages bundle them together and some do not.
 #### Clone the git repo.
 
 ```bash
-git clone https://github.com/alliance-genome/agr_prototype.git
-cd agr_prototype
+git clone https://github.com/alliance-genome/agr.git
+cd agr
 git checkout development
 ```
 
