@@ -8,9 +8,13 @@ OPTIONS = PRODUCTION=$(PRODUCTION) API_PASSWORD=$(API_PASSWORD) ES_URI=$(ES_URI)
 
 # if possible have a virtualenv setup first
 
-build:
+build: build-frontend build-backend
+
+build-frontend:
 	npm install
 	npm run build
+
+build-backend:
 	pip install -r requirements.txt
 
 run:
