@@ -3,5 +3,5 @@ from dao import GeneDAO
 
 class GeneService(BaseService):
 
-	def __init__(self):
-		self.dao = GeneDAO()
+    def __init__(self):
+        self.dao = GeneDAO()
