@@ -16,6 +16,18 @@ build:
 run:
 	$(OPTIONS) python src/server.py
 
+db:
+	cd src && $(OPTIONS) python manager.py db
+
+db-init:
+	cd src && $(OPTIONS) python manager.py db init
+
+db-migrate:
+	cd src && $(OPTIONS) python manager.py db migrate
+
+db-upgrade:
+	cd src && $(OPTIONS) python manager.py db upgrade
+
 run-prod:
 	cd src && $(OPTIONS) gunicorn server:app -k gevent --pid gunicorn.pid --daemon
 

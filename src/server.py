@@ -10,8 +10,10 @@ import os
 
 app = Flask(__name__)
 app.config.update({ 'DEBUG': True, 'WEBPACK_MANIFEST_PATH': './build/manifest.json' })
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_ECHO'] = True
 
 webpack = Webpack()
 webpack.init_app(app)
@@ -28,7 +30,7 @@ services = {
 # Search
 @app.route('/api/search')
 def search():
-    service_c = services["search"]
+    service = services["search"]
 
     query = request.args.get('q', '')
     limit = int(request.args.get('limit', 10))
@@ -36,47 +38,47 @@ def search():
     category = request.args.get('category', '')
     sort_by = request.args.get('sort_by', '')
 
-    return jsonify(service_c.search(query, limit, offset, category, sort_by, request.args))
+    return jsonify(service.search(query, limit, offset, category, sort_by, request.args))
 
 # Search Auto Complete
 @app.route('/api/search_autocomplete')
 def search_autocomplete():
-    service_c = services["search"]
+    service = services["search"]
 
     query = request.args.get('q', '')
     category = request.args.get('category', '')
     field = request.args.get('field', 'name_key')
 
-    return jsonify(service_c.autocomplete(query, category, field))
+    return jsonify(service.autocomplete(query, category, field))
 
 # Create
 @app.route('/api/<service>', methods=['POST'])
 @auth.login_required
-def gene_create_api(service):
-    service_c = services[service]
+def create_api(service):
+    service = services[service]
     object = request.get_json()
-    return jsonify(service_c.create(object))
+    return jsonify(service.create(object))
 
 # Read
 @app.route('/api/<service>/<id>', methods=['GET'])
 def read_api(service, id):
-    service_c = services[service]
-    return jsonify(service_c.get(id)['_source'])
+    service = services[service]
+    return jsonify(service.get(id)['_source'])
 
 # Update
 @app.route('/api/<service>/<id>', methods=['PUT'])
 @auth.login_required
-def gene_update_api(service, id):
-    service_c = services[service]
+def update_api(service, id):
+    service = services[service]
     object = request.get_json()
-    return jsonify(service_c.save(id, object))
+    return jsonify(service.save(id, object))
 
 # Delete
 @app.route('/api/<service>/<id>', methods=['DELETE'])
 @auth.login_required
-def gene_delete_api(service, id):
-    service_c = services[service]
-    return jsonify(service_c.delete(id))
+def delete_api(service, id):
+    service = services[service]
+    return jsonify(service.delete(id))
 
 
 # make static assets available

@@ -1,6 +1,6 @@
-from elasticsearch_dao import ElasticSearchDAO
+from sql_dao import SQLDAO
 
-class GeneDAO(ElasticSearchDAO):
+class GeneDAO(SQLDAO):
 
 	def get(self, gene_id):
-		return self.get_by_id(gene_id)
+		return self.read(GeneModel, gene_id)
