@@ -16,3 +16,4 @@ venv
 .idea
 *.swp
 tmp
+*.sqlite
