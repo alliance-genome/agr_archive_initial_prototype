@@ -59,7 +59,7 @@ class BasicGeneInfo extends Component {
             )}</dd>
 
             <dt className='col-sm-2'>Biotype</dt>
-            <dd className='col-sm-10'>{this.state.geneData.soTermId}</dd>
+            <dd className='col-sm-10'>{this.placeholderIfBlank(this.state.geneData.soTermName.replace(/_/g, ' '))}</dd>
 
             <dt className='col-sm-2'>Description</dt>
             <dd className='col-sm-10'>{this.placeholderIfBlank(this.state.geneData.geneSynopsis)}</dd>
