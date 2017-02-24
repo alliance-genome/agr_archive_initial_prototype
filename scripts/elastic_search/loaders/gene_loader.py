@@ -55,6 +55,10 @@ class GeneLoader:
                     genomic_locations.append(
                         {"chromosome": chromosome, "start": start, "end": end, "strand": strand, "assembly": assembly})
 
+            primary_id = geneRecord['primaryId']
+            if geneRecord['taxonId'] == "10116" and not primary_id.startswith("RGD"):
+                primary_id = dataProvider + ":" + geneRecord['primaryId']
+
             gene_dataset[geneRecord['primaryId']] = {
                 "symbol": geneRecord['symbol'],
                 "name": geneRecord.get('name'),
@@ -79,7 +83,7 @@ class GeneLoader:
                 "homologs": [],
                 "geneLiteratureUrl": geneRecord.get('geneLiteratureUrl'),
                 "name_key": geneRecord['symbol'],
-                "primaryId": geneRecord['primaryId'],
+                "primaryId": primary_id,
                 "crossReferences": cross_references,
                 "href": None,
                 "category": "gene",
