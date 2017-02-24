@@ -14,10 +14,6 @@ export const CATEGORIES = [
   {
     name: 'go',
     displayName: 'Gene Ontology'
-  },
-  {
-    name: 'disease',
-    displayName: 'Diseases'
   }
 ];
 

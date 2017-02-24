@@ -110,7 +110,6 @@ class MultiTableComponent extends Component {
       <div className={style.resultContainer}>
         {this.renderGenes()}
         {this.renderGo()}
-        {this.renderDisease()}
       </div>
     );
   }
