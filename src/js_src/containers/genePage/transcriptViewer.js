@@ -5,12 +5,7 @@ import style from './style.css';
 
 class TranscriptViewer extends Component {
   render() {
-    let jbrowseUrl = 'http://bw.scottcain.net/jbrowse/';
-    let tracks = 'All Genes';
-    jbrowseUrl += '?data=' + encodeURIComponent('data/' + this.props.species);
-    jbrowseUrl += '&loc=' + encodeURIComponent(this.props.geneSymbol);
-    jbrowseUrl += '&tracks=' + encodeURIComponent(tracks);
-    jbrowseUrl += '&nav=1&overview=1&tracklist=1&highlight=';
+    let jbrowseUrl = 'http://bw.scottcain.net/jbrowse/?data=data%2FDanio%20rerio&loc=25%3A14926862..14955898&tracks=DNA%2CAll%20Genes&highlight=';
 
     return (
       <div className={style.jbrowse}>
