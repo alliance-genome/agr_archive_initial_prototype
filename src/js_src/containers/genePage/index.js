@@ -7,10 +7,10 @@ import { selectGene } from '../../selectors/geneSelectors';
 
 import BasicGeneInfo from './basicGeneInfo';
 import GenePageHeader from './genePageHeader';
-import JBrowse from './jbrowse';
 import { OrthologyTable, mockOrthologData } from '../../components/orthology';
 import { DiseaseTable, mockDiseaseData } from '../../components/disease';
 import Subsection from '../../components/subsection';
+import TranscriptViewer from './transcriptViewer';
 
 
 class GenePage extends Component {
@@ -43,8 +43,8 @@ class GenePage extends Component {
           <BasicGeneInfo geneData={this.props.data} />
         </Subsection>
 
-        <Subsection title='JBrowse'>
-          <JBrowse geneSymbol={this.props.data.symbol} species={this.props.data.species} />
+        <Subsection hardcoded title='Transcript Viewer'>
+          <TranscriptViewer geneSymbol={this.props.data.symbol} species={this.props.data.species} />
         </Subsection>
 
         <Subsection hardcoded title='Orthology'>
