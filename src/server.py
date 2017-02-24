@@ -8,9 +8,13 @@ from services import *
 import os
 
 app = Flask(__name__)
-webpack = Webpack()
 app.config.update({ 'DEBUG': True, 'WEBPACK_MANIFEST_PATH': './build/manifest.json' })
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+
+webpack = Webpack()
 webpack.init_app(app)
+db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
 
 services = {
