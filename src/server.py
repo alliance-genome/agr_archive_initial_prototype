@@ -1,6 +1,7 @@
 from flask import Flask, render_template, send_from_directory, request, jsonify
 from flask_httpauth import HTTPBasicAuth
 from flask_webpack import Webpack
+from flask_sqlalchemy import SQLAlchemy
 from gevent.wsgi import WSGIServer
 from random import randint
 from services import *
