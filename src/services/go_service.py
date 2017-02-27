@@ -3,5 +3,5 @@ from dao import GoDAO
 
 class GoService(BaseService):
 
-    def __init__(self):
-        self.dao = GoDAO()
+    def __init__(self, db):
+        self.dao = GoDAO(db)

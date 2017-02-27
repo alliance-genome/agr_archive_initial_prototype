@@ -3,5 +3,5 @@ from dao import DiseaseDAO
 
 class DiseaseService(BaseService):
 
-    def __init__(self):
+    def __init__(self, db):
         self.dao = DiseaseDAO()

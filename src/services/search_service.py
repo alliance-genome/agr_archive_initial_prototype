@@ -5,8 +5,8 @@ from helpers import *
 
 
 class SearchService:
-    def __init__(self):
-        self.dao = ElasticSearchDAO()
+    def __init__(self, app):
+        self.dao = ElasticSearchDAO(app)
 
     def autocomplete(self, query, category, field):
         if query == '':
