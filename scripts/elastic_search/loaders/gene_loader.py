@@ -56,10 +56,11 @@ class GeneLoader:
                         {"chromosome": chromosome, "start": start, "end": end, "strand": strand, "assembly": assembly})
 
             primary_id = geneRecord['primaryId']
+
             if geneRecord['taxonId'] == "10116" and not primary_id.startswith("RGD"):
                 primary_id = dataProvider + ":" + geneRecord['primaryId']
 
-            gene_dataset[geneRecord['primaryId']] = {
+            gene_dataset[primary_id] = {
                 "symbol": geneRecord['symbol'],
                 "name": geneRecord.get('name'),
                 "description": geneRecord.get('description'),
