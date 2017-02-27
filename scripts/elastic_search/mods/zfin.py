@@ -24,8 +24,8 @@ class ZFIN(MOD):
 
     def load_genes(self):
         path = "tmp"
-        S3File("mod-datadumps", "ZFIN_0.3.0_5.tar.gz", path).download()
-        TARFile(path, "ZFIN_0.3.0_5.tar.gz").extract_all()
+        S3File("mod-datadumps", "ZFIN_0.3.0_6.tar.gz", path).download()
+        TARFile(path, "ZFIN_0.3.0_6.tar.gz").extract_all()
         return GeneLoader(path + "/ZFIN_0.3.0_BGI.json").get_data()
 
     def load_go(self):
