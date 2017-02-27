@@ -82,8 +82,12 @@ def build_es_search_body_request(query, category, es_query, json_response_fields
     else:
         es_search_body["query"] = es_query
 
+    # we may want to move this to somewhere more global
+    highlight_blacklist_fields = ['go_genes']
+
     for field in search_fields:
-        es_search_body['highlight']['fields'][field] = {}
+        if field not in highlight_blacklist_fields:
+            es_search_body['highlight']['fields'][field] = {}
 
     if sort_by == 'alphabetical':
         es_search_body['sort'] = [
