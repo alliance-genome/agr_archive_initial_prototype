@@ -8,6 +8,13 @@ class DataSourceCard extends Component {
   render() {
     let d = this.props.sourceData;
     let speciesClass = style[d.species.replace(' ', '-')];
+    let dataProvider=d.dataProvider;
+    if(d.primaryId.search(/dataProvider/)<0){
+      var idParts=d.primaryId.split(/:/);
+      if(idParts.length>1){
+        dataProvider=idParts[0];
+      }
+    }
     return (
       <div className='card'>
         {speciesClass && <div className={`${style.speciesIcon} ${speciesClass}`} />}
@@ -17,7 +24,7 @@ class DataSourceCard extends Component {
             <dd className='col-sm-7'><i>{d.species}</i></dd>
             <dt className='col-sm-5'>Primary Source</dt>
             <dd className='col-sm-7'>
-              <DataSourceLink dataProvider={d.dataProvider} id={d.primaryId} omitPrefix />
+              <DataSourceLink dataProvider={dataProvider} id={d.primaryId} omitPrefix />
             </dd>
           </dl>
         </div>
