@@ -49,7 +49,7 @@ class WormBase(MOD):
     def load_diseases(self):
         path = "tmp"
         disease_data_csv_filename = path = "/Diseases_OMIM_IDs_and_synonyms_(WormBase).txt"
-        S3File("mod-datadumps/data", "wormbase_gene_association.tsv", path).download()
+        S3File("mod-datadumps/data", "Diseases_OMIM_IDs_and_synonyms_(WormBase).txt", path).download()
 
         print("Fetching disease data from WormBase txt file (" + disease_data_csv_filename + ") ...")
         list = []
