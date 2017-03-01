@@ -27,7 +27,9 @@ class RGD(MOD):
         return GeneLoader(path + "/agr/RGD_0.3_basicGeneInformation.10116.json").get_data()
 
     def load_go(self):
-        go_data = CSVFile("data/rat_go.tsv").get_data()
+        path = "tmp"
+        S3File("mod-datadumps/data", "rat_go.tsv", path).download()
+        go_data = CSVFile(path + "/rat_go.tsv").get_data()
 
         list = []
         for row in go_data:
@@ -35,7 +37,9 @@ class RGD(MOD):
         return list
 
     def load_diseases(self):
-        disease_data = CSVFile("data/rat_disease.tsv").get_data()
+        path = "tmp"
+        S3File("mod-datadumps/data", "rat_disease.tsv", path).download()
+        disease_data = CSVFile(path + "/rat_disease.tsv").get_data()
 
         list = []
         for row in disease_data:
