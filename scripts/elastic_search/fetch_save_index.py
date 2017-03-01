@@ -7,9 +7,9 @@ import os
 from elasticsearch import Elasticsearch
 
 class FetchSaveIndex:
-	gene_bkp_filename = "data/genes_bkp.pickle"
-	go_bkp_filename = "data/go_bkp.pickle"
-	so_bkp_filename = "data/so_bkp.pickle"
+	gene_bkp_filename = "tmp/genes_bkp.pickle"
+	go_bkp_filename = "tmp/go_bkp.pickle"
+	so_bkp_filename = "tmp/so_bkp.pickle"
 	# diseases_bkp_filename = "data/diseases_bkp.pickle"
 
 	def __init__(self):
