@@ -8,13 +8,13 @@ class DataSourceCard extends Component {
   render() {
     let d = this.props.sourceData;
     let speciesClass = style[d.species.replace(' ', '-')];
-    let dataProvider=d.dataProvider;
-    if(d.primaryId.search(/dataProvider/)<0){
-      var idParts=d.primaryId.split(/:/);
-      if(idParts.length>1){
-        dataProvider=idParts[0];
-      }
+
+    // This is a workaround for issue 207 while waiting
+    // for a permanant fix from the backend grounps
+    if(d.primaryId.search(/HGNC:/)>=0){
+      d.dataProvider='HGNC';
     }
+    // workaround ends 
     return (
       <div className='card'>
         {speciesClass && <div className={`${style.speciesIcon} ${speciesClass}`} />}
@@ -24,7 +24,7 @@ class DataSourceCard extends Component {
             <dd className='col-sm-7'><i>{d.species}</i></dd>
             <dt className='col-sm-5'>Primary Source</dt>
             <dd className='col-sm-7'>
-              <DataSourceLink dataProvider={dataProvider} id={d.primaryId} omitPrefix />
+              <DataSourceLink dataProvider={d.dataProvider} id={d.primaryId} omitPrefix />
             </dd>
           </dl>
         </div>
