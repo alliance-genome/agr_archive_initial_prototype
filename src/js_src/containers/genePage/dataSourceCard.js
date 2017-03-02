@@ -9,8 +9,8 @@ class DataSourceCard extends Component {
     let d = this.props.sourceData;
     let speciesClass = style[d.species.replace(' ', '-')];
 
-    // This is a workaround for issue 207 while waiting
-    // for a permanant fix from the backend grounps
+    // This is a workaround fix for issue 207 while waiting
+    // for a permanent solution from the backend groups
     if(d.primaryId.search(/HGNC:/)>=0){
       d.dataProvider='HGNC';
     }
