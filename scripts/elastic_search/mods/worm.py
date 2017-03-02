@@ -28,7 +28,10 @@ class WormBase(MOD):
         return GeneLoader(path + "/WB_0.3_basicgeneinformation.json").get_data()
 
     def load_go(self):
-        go_data_csv_filename = "data/wormbase_gene_association.tsv"
+        path = "tmp"
+        S3File("mod-datadumps/data", "wormbase_gene_association.tsv", path).download()
+
+        go_data_csv_filename = path + "/wormbase_gene_association.tsv"
 
         print("Fetching go data from WormBase txt file (" + go_data_csv_filename + ") ...")
 
@@ -44,7 +47,9 @@ class WormBase(MOD):
         return list
 
     def load_diseases(self):
-        disease_data_csv_filename = "data/Diseases_OMIM_IDs_and_synonyms_(WormBase).txt"
+        path = "tmp"
+        disease_data_csv_filename = path = "/Diseases_OMIM_IDs_and_synonyms_(WormBase).txt"
+        S3File("mod-datadumps/data", "Diseases_OMIM_IDs_and_synonyms_(WormBase).txt", path).download()
 
         print("Fetching disease data from WormBase txt file (" + disease_data_csv_filename + ") ...")
         list = []

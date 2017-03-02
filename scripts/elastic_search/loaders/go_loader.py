@@ -5,7 +5,9 @@ import re
 class GoLoader:
 
     def __init__(self):
-        self.go_data = TXTFile("data/go.obo").get_data()
+        path = "tmp";
+        S3File("mod-datadumps/data", "go.obo", path).download()
+        self.go_data = TXTFile(path + "/go.obo").get_data()
 
     def get_data(self):
         go_dataset = {}

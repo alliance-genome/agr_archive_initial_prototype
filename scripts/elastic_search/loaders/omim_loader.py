@@ -5,7 +5,9 @@ import re
 class OMIMLoader:
 
     def __init__(self):
-        self.omim_data = CSVFile("data/OMIM_diseases.txt").get_data()
+        path = "tmp";
+        S3File("mod-datadumps/data", "OMIM_diseases.txt", path).download()
+        self.omim_data = CSVFile(path + "/OMIM_diseases.txt").get_data()
 
     def get_data(self):
         omim_dataset = {}
