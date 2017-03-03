@@ -11,26 +11,29 @@ const URL_GENERATORS = {
   UniProtKB: id => `http://www.uniprot.org/uniprot/${id}`,
   Ensembl: id => `http://www.ensembl.org/id/${id}`,
   RNAcentral: id => `http://rnacentral.org/rna/${id}`,
-  HGNC: id => `http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=${id}`
+  HGNC: id => `http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=${id}`,
+  PMID: id => `https://www.ncbi.nlm.nih.gov/pubmed/${id}`,
 };
 
 class DataSourceLink extends Component {
   render() {
     let linker = URL_GENERATORS[this.props.dataProvider];
+    let prefix = this.props.omitPrefix ? '' : `${this.props.dataProvider}:`;
     if (!linker) {
-      return <span>{this.props.dataProvider}:{this.props.id}</span>;
+      return <span>{prefix}{this.props.id}</span>;
     }
     return (
       <span>
-        {this.props.dataProvider}:<a href={linker(this.props.id)}>{this.props.id}</a>
+        {prefix}<a href={linker(this.props.id)}>{this.props.id}</a>
       </span>
     );
   }
 }
 
 DataSourceLink.propTypes = {
-  dataProvider: React.PropTypes.string,
-  id: React.PropTypes.string,
+  dataProvider: React.PropTypes.string.isRequired,
+  id: React.PropTypes.string.isRequired,
+  omitPrefix: React.PropTypes.bool,
 };
 
 export default DataSourceLink;

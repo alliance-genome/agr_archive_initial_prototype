@@ -1,6 +1,13 @@
 .jbrowse {
-  height: 350px;
+  height: 400px;
   width: 100%;
+}
+
+.jbrowse img {
+  max-height: 100%;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
 }
 
 .speciesIcon {
@@ -17,26 +24,26 @@
   }
 }
 
-.speciesIcon.FB {
+.speciesIcon.Drosophila-melanogaster { /* fly */
   background-position: 0 0;
 }
 
-.speciesIcon.RGD {
+.speciesIcon.Rattus-norvegicus { /* rat */
   background-position: 0 -91px;
 }
 
-.speciesIcon.MGI {
+.speciesIcon.Mus-musculus { /* mouse */
   background-position: 0 -182px;
 }
 
-.speciesIcon.SGD {
+.speciesIcon.Saccharomyces-cerevisiae { /* yeast */
   background-position: 0 -273px;
 }
 
-.speciesIcon.WB {
+.speciesIcon.Caenorhabditis-elegans { /* worm */
   background-position: 0 -364px;
 }
 
-.speciesIcon.ZFIN {
+.speciesIcon.Danio-rerio { /* zebrafish */
   background-position: 0 -455px;
 }

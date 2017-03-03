@@ -4,7 +4,7 @@ const mockOrthologData = [
   {
     species: 'Homo sapiens',
     geneSymbol: 'GAK',
-    geneURL: 'http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=HGNC:4113',
+    geneURL: '/gene/HGNC:4113',
     ncbiID: '2580',
     scoreNumerator: 11,
     scoreDemominator: 11,
@@ -28,7 +28,7 @@ const mockOrthologData = [
   {
     species: 'Homo sapiens',
     geneSymbol: 'DNAJC6',
-    geneURL: 'http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=HGNC:4113',
+    geneURL: '/gene/HGNC:4113',
     ncbiID: '9829',
     scoreNumerator: 7,
     scoreDemominator: 11,
@@ -52,7 +52,7 @@ const mockOrthologData = [
   {
     species: 'Mus musculus',
     geneSymbol: 'Gak',
-    geneURL: 'http://www.informatics.jax.org/marker/MGI:2442153',
+    geneURL: '/gene/MGI:2442153',
     ncbiID: '231580',
     scoreNumerator: 11,
     scoreDemominator: 11,
@@ -75,9 +75,30 @@ const mockOrthologData = [
     alignURL: null,
   },
   {
+    species: 'Rattus norvegicus',
+    geneSymbol: 'Gak',
+    geneURL: '/gene/621589',
+    ncbiID: '231580',
+    scoreNumerator: 8,
+    scoreDemominator: 8,
+    methods: [
+      {id: 'compara', isCalled: true},
+      {id: 'homologene', isCalled: true},
+      {id: 'inparanoid', isCalled: true},
+      {id: 'oma', isCalled: true},
+      {id: 'orthodb', isCalled: true},
+      {id: 'orthomcl', isCalled: true},
+      {id: 'panther', isCalled: true},
+      {id: 'treefam', isCalled: true},
+    ],
+    isBestScore: true,
+    isBestScoreReverse: true,
+    alignURL: null,
+  },
+  {
     species: 'Mus musculus',
     geneSymbol: 'Dnajc6',
-    geneURL: 'http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=HGNC:4113',
+    geneURL: '/gene/MGI:1919935',
     ncbiID: '72685',
     scoreNumerator: 7,
     scoreDemominator: 11,
@@ -102,7 +123,7 @@ const mockOrthologData = [
   {
     species: 'Danio rerio',
     geneSymbol: 'Gak',
-    geneURL: 'https://zfin.org/ZDB-GENE-041210-358',
+    geneURL: '/gene/ZDB-GENE-041210-358',
     ncbiID: '100151158',
     scoreNumerator: 7,
     scoreDemominator: 11,
@@ -126,7 +147,7 @@ const mockOrthologData = [
   {
     species: 'Danio rerio',
     geneSymbol: 'Dnajc6',
-    geneURL: 'http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=HGNC:4113',
+    geneURL: '/gene/ZDB-GENE-080104-2',
     ncbiID: '796354',
     scoreNumerator: 5,
     scoreDemominator: 11,
@@ -150,7 +171,7 @@ const mockOrthologData = [
   {
     species: 'Caenorhabditis elegans',
     geneSymbol: 'tag-257',
-    geneURL: 'http://www.wormbase.org/species/c_elegans/gene/WBGene00018516',
+    geneURL: '/gene/WBGene00018516',
     ncbiID: '180844',
     scoreNumerator: 5,
     scoreDemominator: 11,
@@ -174,7 +195,7 @@ const mockOrthologData = [
   {
     species: 'Caenorhabditis elegans',
     geneSymbol: 'dnj-25',
-    geneURL: 'http://www.wormbase.org/species/c_elegans/gene/WBGene00001043',
+    geneURL: '/gene/WBGene00001043',
     ncbiID: '180844',
     scoreNumerator: 5,
     scoreDemominator: 11,
@@ -198,7 +219,7 @@ const mockOrthologData = [
   {
     species: 'Saccharomyces cerevisiae',
     geneSymbol: 'SWA2',
-    geneURL: 'http://www.yeastgenome.org/locus/S000002728',
+    geneURL: '/gene/S000002728',
     ncbiID: '851918',
     scoreNumerator: 2,
     scoreDemominator: 11,

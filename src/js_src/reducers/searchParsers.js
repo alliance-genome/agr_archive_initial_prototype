@@ -1,5 +1,5 @@
 const JOIN_HIGHLIGHT_BY = '...';
-const FILTER_ORDER = ['gene_type', 'species'];
+const FILTER_ORDER = ['biotype', 'species'];
 
 import { makeFieldDisplayName } from '../lib/searchHelpers';
 import { NON_HIGHLIGHTED_FIELDS } from '../constants';
@@ -106,7 +106,7 @@ function parseGeneResult(_d) {
     id: d.id || '(no ID)',
     sourceHref: d.href,
     synonyms: d.synonyms,
-    gene_type: makeFieldDisplayName(d.gene_type),
+    biotype: makeFieldDisplayName(d.soTermName),
     species: d.species,
     highlight: d.highlights,
     homologs: parseLogs(d.homologs),
