@@ -8,7 +8,7 @@ from werkzeug.datastructures import ImmutableMultiDict
 
 class SearchEndpointsTest(unittest.TestCase):
     def setUp(self):
-        os.environ['ES_URI'] = 'http://localhost:9200/'
+        os.environ['ES_HOST'] = 'localhost:9200'
         from src.server import app
 
         self.es_search_response = {

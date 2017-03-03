@@ -7,12 +7,11 @@ import requests
 
 class ESMapping:
 
-    def __init__(self, es_uri, es_index, aws):
+    def __init__(self, es_host, es_index, aws):
         if aws == "true":
-            self.es = Elasticsearch(es_uri, timeout=5, retry_on_timeout=False, use_ssl=True, verify_certs=True)
+            self.es = Elasticsearch(es_host, timeout=5, retry_on_timeout=False, use_ssl=True, verify_certs=True)
         else:
-            self.es = Elasticsearch(es_uri, timeout=5, retry_on_timeout=False)
-        self.es_uri = es_uri
+            self.es = Elasticsearch(es_host, timeout=5, retry_on_timeout=False)
         self.es_index = es_index
 
     def start_index(self):

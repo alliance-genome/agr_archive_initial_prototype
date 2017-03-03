@@ -33,7 +33,7 @@ Add below to .bash_profile
 export PRODUCTION=true
 export ES_AWS=true
 export ES_INDEX=es1
-export ES_URI="https://search-es1-oyqxarxm2djn35dfodzniituhe.us-west-2.es.amazonaws.com/"
+export ES_HOST="search-es1-oyqxarxm2djn35dfodzniituhe.us-west-2.es.amazonaws.com"
 ```
 
 ## Getting started With Virtualenv
