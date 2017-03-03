@@ -60,7 +60,7 @@ class AggregateLoader:
 
         es = ESMapping(os.environ['ES_HOST'], os.environ['ES_INDEX'], os.environ['ES_AWS'])
         es.start_index()
-        es.index_data(self.genes)
-        es.index_data(self.go_entries)
+        es.index_data(self.genes, "Gene Data")
+        es.index_data(self.go_entries, "Go Data")
         # self.index_into_es(disease_entries)
         es.finish_index()

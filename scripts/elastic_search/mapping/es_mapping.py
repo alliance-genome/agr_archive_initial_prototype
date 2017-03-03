@@ -66,9 +66,9 @@ class ESMapping:
         print "Deleting Index: " + index
         self.es.indices.delete(index=index, ignore=[400, 404])
 
-    def index_data(self, data):
+    def index_data(self, data, data_type):
         s = time.time()
-        print "Send data into Index: " + self.new_index_name
+        print "Send " + data_type + " into Index: " + self.new_index_name
         bulk_data = []
 
         for id in data:
