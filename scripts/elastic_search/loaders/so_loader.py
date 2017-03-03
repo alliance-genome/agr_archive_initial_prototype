@@ -5,7 +5,9 @@ import re
 class SoLoader:
 
     def __init__(self):
-        self.so_data = TXTFile("data/so.obo").get_data()
+        path = "tmp";
+        S3File("mod-datadumps/data", "so.obo", path).download()
+        self.so_data = TXTFile(path + "/so.obo").get_data()
 
     def get_data(self):
         so_dataset = {}
