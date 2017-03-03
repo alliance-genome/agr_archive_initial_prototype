@@ -3,7 +3,6 @@ from mapping_schema import mapping_schema
 
 import os
 import time
-import requests
 
 class ESMapping:
 
@@ -14,56 +13,68 @@ class ESMapping:
             self.es = Elasticsearch(es_host, timeout=5, retry_on_timeout=False)
         self.es_index = es_index
 
+    def get_current_index(self):
+        current = self.es.indices.get(self.es_index, ignore=[400, 404])
+        if "status" in current and current["status"] == 404:
+            current = None
+            current_name = None
+        else:
+            current_name, value = current.popitem()
+
+        if current_name != None:
+            map = self.es.indices.get(self.es_index + "*")
+            for i in map:
+                if i != current_name:
+                    self.delete_index(i)
+        return current_name
+
     def start_index(self):
-        self.es_index_tmp = self.es_index + "_tmp"
-        #self.delete_index(self.es_index_tmp)
-        self.create_index(self.es_index_tmp)
+        self.new_index_name = self.es_index + "_" + str(int(time.time()))
+        self.current_name = self.get_current_index()
+        print "Current Index: " + str(self.current_name)
+
+        self.create_index(self.new_index_name)
 
     def finish_index(self):
-        self.delete_index(self.es_index)
-        self.create_index(self.es_index)
-        self.copy_index(self.es_index_tmp, self.es_index)
-        self.delete_index(self.es_index_tmp)
+        if self.current_name != None:
+            self.remove_alias(self.es_index, self.current_name)
+
+        if self.current_name != self.es_index:
+            self.create_alias(self.es_index, self.new_index_name)
+            if self.current_name != None:
+                self.delete_index(self.current_name)
+        else:
+            # This only happens if there is a index existing
+            # with the same name missing the time stamp
+            # this else can be removed after the initial migration
+            self.delete_index(self.current_name)
+            self.create_alias(self.es_index, self.new_index_name)
+
+    def create_alias(self, alias, index):
+        print "Add Alias: " + alias + " to: " + index
+        self.es.indices.put_alias(index=index, name=alias)
+
+    def remove_alias(self, alias, index):
+        print "Remove Alias: " + alias + " from: " + index
+        self.es.indices.delete_alias(index=index, name=alias, ignore=[400, 404])
 
     def create_index(self, index):
-        from mapping_schema import mapping_schema
-        s = time.time()
-
-        print "Creating Index: " + self.es_uri + index + "/"
-        response = requests.put(self.es_uri + index + "/", json=mapping_schema)
-        if response.status_code != 200:
-            print "ERROR: " + response.json()['error']['reason']
-        else:
-            print "SUCCESS: " + str(time.time() - s) + " seconds"
+        print "Creating Index: " + index
+        self.es.indices.create(index=index, body=mapping_schema, ignore=400)
 
     def delete_index(self, index):
-        s = time.time()
-        print "Deleting Index: " + self.es_uri + index + "/"
-        response = requests.delete(self.es_uri + index + "/")
-        if response.status_code != 200:
-            print "WARNING: " + response.json()['error']['reason']
-        else:
-            print "SUCCESS: " + str(time.time() - s) + " seconds"
-
-    def copy_index(self, index_src, index_dst):
-        s = time.time()
-        print "Copying Documents from: " + index_src + " to " + index_dst
-
-        response = requests.post(self.es_uri + "_reindex", data='{ "source": { "index": "' + self.es_index_tmp + '" }, "dest": { "index": "' + self.es_index + '" } }')
-        if response.status_code != 200:
-            print "ERROR: " + response.json()['error']['reason']
-        else:
-            print "SUCCESS: " + str(time.time() - s) + " seconds"
+        print "Deleting Index: " + index
+        self.es.indices.delete(index=index, ignore=[400, 404])
 
     def index_data(self, data):
         s = time.time()
-        print "Send data into Index: " + self.es_index_tmp
+        print "Send data into Index: " + self.new_index_name
         bulk_data = []
 
         for id in data:
             bulk_data.append({
                 'index': {
-                    '_index': self.es_index_tmp, 
+                    '_index': self.new_index_name, 
                     '_type': "searchable_item",
                     '_id': id
                 }
@@ -71,9 +82,9 @@ class ESMapping:
             bulk_data.append(data[id])
 
             if len(bulk_data) == 5000:
-                self.es.bulk(index=self.es_index_tmp, body=bulk_data, refresh=True)
+                self.es.bulk(index=self.new_index_name, body=bulk_data, refresh=True)
                 bulk_data = []
 
         if len(bulk_data) > 0:
-            self.es.bulk(index=self.es_index_tmp, body=bulk_data, refresh=True)
+            self.es.bulk(index=self.new_index_name, body=bulk_data, refresh=True)
         print "Indexing took: " + str(time.time() - s) + " seconds"
