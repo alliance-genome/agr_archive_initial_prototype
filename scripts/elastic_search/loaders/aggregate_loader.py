@@ -44,17 +44,17 @@ class AggregateLoader:
 
     def load_from_files(self):
         print "Load data from saved files"
-        self.genes = PickleFile("data/genes_bkp.pickle").load()
-        self.go_entries = PickleFile("data/go_bkp.pickle").load()
-        #so_entries = PickleFile("data/so_bkp.pickle").load()
-        #disease_entries = PickleFile("data/diseases_bkp.pickle").load()
+        self.genes = PickleFile("tmp/genes_bkp.pickle").load()
+        self.go_entries = PickleFile("tmp/go_bkp.pickle").load()
+        #so_entries = PickleFile("tmp/so_bkp.pickle").load()
+        #disease_entries = PickleFile("tmp/diseases_bkp.pickle").load()
 
     def save_to_files(self):
         print "Saving processed data to files"
-        PickleFile("data/genes_bkp.pickle").save(self.genes)
-        PickleFile("data/go_bkp.pickle").save(self.go_entries)
-        # PickleFile("data/diseases_bkp.pickle").save(disease_entries)
-        # PickleFile("data/so_bkp.pickle").save(so_loader.get_data())
+        PickleFile("tmp/genes_bkp.pickle").save(self.genes)
+        PickleFile("tmp/go_bkp.pickle").save(self.go_entries)
+        # PickleFile("tmp/diseases_bkp.pickle").save(disease_entries)
+        # PickleFile("tmp/so_bkp.pickle").save(so_loader.get_data())
 
     def index_data(self):
 
