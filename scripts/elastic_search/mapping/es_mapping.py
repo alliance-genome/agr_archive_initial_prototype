@@ -2,6 +2,7 @@ from elasticsearch import Elasticsearch
 from mapping_schema import mapping_schema
 
 import os
+import time
 import requests
 
 class ESMapping:
@@ -27,33 +28,36 @@ class ESMapping:
 
     def create_index(self, index):
         from mapping_schema import mapping_schema
+        s = time.time()
 
         print "Creating Index: " + self.es_uri + index + "/"
         response = requests.put(self.es_uri + index + "/", json=mapping_schema)
         if response.status_code != 200:
             print "ERROR: " + response.json()['error']['reason']
         else:
-            print "SUCCESS"
+            print "SUCCESS: " + str(time.time() - s) + " seconds"
 
     def delete_index(self, index):
+        s = time.time()
         print "Deleting Index: " + self.es_uri + index + "/"
         response = requests.delete(self.es_uri + index + "/")
         if response.status_code != 200:
             print "WARNING: " + response.json()['error']['reason']
         else:
-            print "SUCCESS"
+            print "SUCCESS: " + str(time.time() - s) + " seconds"
 
     def copy_index(self, index_src, index_dst):
+        s = time.time()
         print "Copying Documents from: " + index_src + " to " + index_dst
 
         response = requests.post(self.es_uri + "_reindex", data='{ "source": { "index": "' + self.es_index_tmp + '" }, "dest": { "index": "' + self.es_index + '" } }')
         if response.status_code != 200:
             print "ERROR: " + response.json()['error']['reason']
         else:
-            print "SUCCESS"
+            print "SUCCESS: " + str(time.time() - s) + " seconds"
 
     def index_data(self, data):
-
+        s = time.time()
         print "Send data into Index: " + self.es_index_tmp
         bulk_data = []
 
@@ -67,10 +71,10 @@ class ESMapping:
             })
             bulk_data.append(data[id])
 
-            if len(bulk_data) == 300:
+            if len(bulk_data) == 5000:
                 self.es.bulk(index=self.es_index_tmp, body=bulk_data, refresh=True)
                 bulk_data = []
 
         if len(bulk_data) > 0:
             self.es.bulk(index=self.es_index_tmp, body=bulk_data, refresh=True)
-
+        print "Indexing took: " + str(time.time() - s) + " seconds"
