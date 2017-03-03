@@ -8,6 +8,13 @@ class DataSourceCard extends Component {
   render() {
     let d = this.props.sourceData;
     let speciesClass = style[d.species.replace(' ', '-')];
+
+    // This is a workaround fix for issue 207 while waiting
+    // for a permanent solution from the backend groups
+    if(d.primaryId.search(/HGNC:/)>=0){
+      d.dataProvider='HGNC';
+    }
+    // workaround ends 
     return (
       <div className='card'>
         {speciesClass && <div className={`${style.speciesIcon} ${speciesClass}`} />}

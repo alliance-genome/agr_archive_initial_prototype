@@ -10,8 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - basic gene information loaded from standard JSON schema, loaded into ES and displayed on gene page dynamically
 - DIOPT data loaded into AGR Postgres DB and also available in JSON format
 - DIOPT ElasticSearch loader written but not currently loading data as a result of memory issues
-- hardcoded example data disease and orthology tables on the gene page
-- jbrowse integration on the gene page
+- hardcoded example data disease, jbrowse, and orthology tables on the gene page
 - search mapping updated to use basic gene information JSON schema and data
 - autocomplete of search functions with symbols and names
 - implemented class architecture for load scripts

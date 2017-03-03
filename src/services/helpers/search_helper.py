@@ -1,5 +1,6 @@
 import json
 
+
 def build_es_aggregation_body_request(es_query, category, category_filters):
     agg_query_body = {
         'query': es_query,
@@ -82,8 +83,12 @@ def build_es_search_body_request(query, category, es_query, json_response_fields
     else:
         es_search_body["query"] = es_query
 
+    # we may want to move this to somewhere more global
+    highlight_blacklist_fields = ['go_genes']
+
     for field in search_fields:
-        es_search_body['highlight']['fields'][field] = {}
+        if field not in highlight_blacklist_fields:
+            es_search_body['highlight']['fields'][field] = {}
 
     if sort_by == 'alphabetical':
         es_search_body['sort'] = [
@@ -136,14 +141,16 @@ def build_search_params(query, search_fields):
         es_query['dis_max']['queries'] = []
 
         custom_boosts = {
-            "id": 120,
-            "symbol": 120,
+            "primaryId": 400,
+            "symbol": 500,
+            "symbol.raw": 1000,
             "synonyms": 120,
-            "name": 200,
-            "name.symbol": 300,
-            "gene_biological_process.symbol": 120,
-            "gene_molecular_function.symbol": 120,
-            "gene_cellular_component.symbol": 120
+            "synonyms.raw": 200,
+            "name": 100,
+            "name.symbol": 200,
+            "gene_biological_process.symbol": 50,
+            "gene_molecular_function.symbol": 50,
+            "gene_cellular_component.symbol": 50
         }
 
         fields = search_fields + [
