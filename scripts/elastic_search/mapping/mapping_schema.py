@@ -1,4 +1,4 @@
-mapping = {
+mapping_schema = {
     "settings": {
         "index": {
             "max_result_window": 15000,
