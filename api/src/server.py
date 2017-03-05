@@ -9,7 +9,7 @@ import os
 
 app = Flask(__name__)
 webpack = Webpack()
-app.config.update({ 'DEBUG': True, 'WEBPACK_MANIFEST_PATH': './build/manifest.json' })
+app.config.update({ 'DEBUG': True, 'WEBPACK_MANIFEST_PATH': 'webpack/manifest.json' })
 webpack.init_app(app)
 auth = HTTPBasicAuth()
 
@@ -77,7 +77,7 @@ def gene_delete_api(service, id):
 # make static assets available
 @app.route('/assets/<path:path>')
 def send_static(path):
-    return send_from_directory('build', path)
+    return send_from_directory('webpack', path)
 
 # render user interfaces in client JS
 @app.route('/')

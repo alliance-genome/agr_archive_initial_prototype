@@ -6,15 +6,7 @@ PRODUCTION:= $(or $(PRODUCTION),$(PRODUCTION),)
 
 OPTIONS = PRODUCTION=$(PRODUCTION) API_PASSWORD=$(API_PASSWORD) ES_HOST=$(ES_HOST) ES_AWS=$(ES_AWS) ES_INDEX=$(ES_INDEX)
 
-# if possible have a virtualenv setup first
-
-build: build-frontend build-backend
-
-build-frontend:
-	npm install
-	npm run build
-
-build-backend:
+install:
 	pip install -r requirements.txt
 
 run:
@@ -29,19 +21,5 @@ restart:
 stop:
 	kill -s TERM $(cat gunicorn.pid)
 
-tests: test-py test-js
-
-fetch_and_save:
-	cd scripts/elastic_search && $(OPTIONS) python fetch_and_save.py
-
-load_and_index:
-	cd scripts/elastic_search && $(OPTIONS) python load_and_index.py
-
-index:
-	cd scripts/elastic_search && $(OPTIONS) python fetch_save_index.py
-
-test-py:
+test:
 	$(OPTIONS) nosetests -s
-
-test-js:
-	$(OPTIONS) npm test
