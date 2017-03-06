@@ -46,6 +46,7 @@ Create a virtualenv for isolating the python dependencies:
 ```
 
 Now you should be able to use the API, an example URL would be: [http://localhost.jax.org:5000/api/gene/MGI:97490][5] Note* If this link does not work, you might need to run the indexer or you don't have elasticsearch running, or that Gene no longer exists See [running the indexer][6] for more info.
+If you want to run this in a docker container vs running locally, see the [running docker][7] for more info. 
 
 ### Point to remote ES instance
 
@@ -79,4 +80,5 @@ These are the default settings that don't need to be set unless you want to chan
 [3]: https://github.com/alliance-genome/agr_api
 [4]: ES_SETUP.md
 [5]: http://localhost.jax.org:5000/api/gene/MGI:97490
-[6]: indexer
+[6]: https://github.com/alliance-genome/agr_indexer
+[7]: DOCKER.md

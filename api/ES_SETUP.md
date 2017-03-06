@@ -1,6 +1,6 @@
-# Install and start a local instance of [elasticsearch][8]
+# Install and start a local instance of [elasticsearch][1]
 
-## Download ES package, 5 or higher.
+## Download tar.gz ES package, 5 or higher.
 Save into your favorite location for downloading files, the file format should be something like: elasticsearch-5.x.x.tar.gz
 
 ## Install ES
@@ -13,7 +13,7 @@ Save into your favorite location for downloading files, the file format should b
 
 ```bash
     a) > cd elasticsearch-5.x.x/
-    b) > ./bin/elasticsearch
+    b) elasticsearch-5.x.x> ./bin/elasticsearch
     c) Check that ES is running - check http:://localhost:9200/ in a web browser
 	    Output should look something like the following:
 		{
@@ -33,5 +33,8 @@ Save into your favorite location for downloading files, the file format should b
     e) Hit CTRL-C to stop the running server.
 ``` 
 
+## Runnig the Indexer
+In order to get data into this Local elasticsearch instance you will need to run the indexer: See [running the indexer][2] for more info.
 
-[8]: https://www.elastic.co/downloads/elasticsearch
+[1]: https://www.elastic.co/downloads/elasticsearch
+[2]: https://github.com/alliance-genome/agr_indexer
