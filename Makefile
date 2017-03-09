@@ -44,7 +44,7 @@ index:
 	cd scripts/elastic_search && python fetch_save_index.py
 
 test-py:
-	$(OPTIONS) nosetests -s
+	nosetests -s
 
 test-js:
-	$(OPTIONS) npm test
+	npm test
