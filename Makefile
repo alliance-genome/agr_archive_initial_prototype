@@ -29,7 +29,7 @@ restart:
 stop:
 	kill -s TERM $(cat gunicorn.pid)
 
-tests: test-py test-js
+tests: test-js test-py
 
 fetch_and_save:
 	cd scripts/elastic_search && $(OPTIONS) python fetch_and_save.py
