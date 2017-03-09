@@ -12,7 +12,7 @@ class Config(object):
         print "\tSQLALCHEMY_ECHO: " + str(config.SQLALCHEMY_ECHO)
         print "\tSQLALCHEMY_DATABASE_URI: " + str(config.SQLALCHEMY_DATABASE_URI)
         print "\tES_INDEX: " + str(config.ES_INDEX)
-        print "\tES_URI: " + str(config.ES_URI)
+        print "\tES_HOST: " + str(config.ES_HOST)
         print "\tES_AWS: " + str(config.ES_AWS)
         print "\tPRODUCTION: " + str(config.PRODUCTION)
 
@@ -25,8 +25,8 @@ class ProductionConfig(Config):
         SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     if 'ES_INDEX' in os.environ and os.environ['ES_INDEX']:
         ES_INDEX = os.environ['ES_INDEX']
-    if 'ES_URI' in os.environ and os.environ['ES_URI']:
-        ES_URI = os.environ['ES_URI']
+    if 'ES_HOST' in os.environ and os.environ['ES_HOST']:
+        ES_HOST = os.environ['ES_HOST']
     ES_AWS = True
     PRODUCTION = True
 
@@ -49,10 +49,10 @@ class DevelopmentConfig(Config):
     else:
         ES_INDEX = 'searchable_items_blue'
 
-    if 'ES_URI' in os.environ and os.environ['ES_URI']:
-        ES_URI = os.environ['ES_URI']
+    if 'ES_HOST' in os.environ and os.environ['ES_HOST']:
+        ES_HOST = os.environ['ES_HOST']
     else:
-        ES_URI = 'http://127.0.0.1:9200/'
+        ES_HOST = '127.0.0.1:9200'
 
     ES_AWS = False
 
