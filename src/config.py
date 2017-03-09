@@ -39,7 +39,7 @@ class DevelopmentConfig(Config):
     else:
         API_PASSWORD = 'api_password'
 
-    if os.environ['DATABASE_URL']:
+    if 'DATABASE_URL' in os.environ and os.environ['DATABASE_URL']:
         SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     else:
         SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
