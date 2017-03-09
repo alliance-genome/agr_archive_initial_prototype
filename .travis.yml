@@ -5,6 +5,12 @@ python:
 
 node_js: 6
 
+cache:
+  directories:
+    - $HOME/.cache/pip
+    - $HOME/virtualenv/python2.7.9/lib/python2.7/site-packages
+    - node_modules
+
 install:
   - pip install -r requirements.txt
   - npm install
