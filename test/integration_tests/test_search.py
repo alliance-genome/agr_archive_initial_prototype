@@ -240,7 +240,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.side_effect = side_effect
 
-        response = self.app.get('/api/search?q=act1&category=gene&go_names=cytoplasm')
+        response = self.app.get('/api/search?q=thisisntgoingtomatchanything&category=gene&go_names=thiswontmatcheither')
 
         self.assertEqual(response.status_code, 200)
 
@@ -267,18 +267,6 @@ class SearchEndpointsTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
         data = json.loads(response.data)
-        self.assertEqual(data, {
-            'total': self.es_search_response['hits']['total'],
-            'results': format_search_results(
-                self.es_search_response,
-                self.json_response_fields
-            ),
-            'aggregations': format_aggregation_results(
-                self.es_aggregation_response,
-                'gene',
-                self.category_filters
-            )
-        })
 
     @mock.patch('src.dao.elasticsearch_dao.ElasticSearchDAO.es.search')
     def test_search_autocomplete_es_params(self, mock_es):
