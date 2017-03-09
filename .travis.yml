@@ -6,7 +6,8 @@ python:
 node_js: 6
 
 install:
-  - make build
+  - pip install -r requirements.txt
+  - npm install
 
 script:
   - make tests
