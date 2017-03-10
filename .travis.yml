@@ -13,11 +13,11 @@ cache:
     - node_modules
 
 install:
+  - node --version
+  - npm --version
   - make build
 
 script:
-  - node --version
-  - npm --version
   - make tests
 
 notifications:
