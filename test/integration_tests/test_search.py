@@ -82,6 +82,12 @@ class SearchEndpointsTest(unittest.TestCase):
         self.app.testing = True
 
     @mock.patch('src.dao.elasticsearch_dao.ElasticSearchDAO.es.search')
+    def test_mock_es(self, mock_es):
+        mock_es.return_value = self.es_search_response
+        self.app.get('/api/search_autocomplete?q=act')
+        mock_es.assert_called()
+
+    @mock.patch('src.dao.elasticsearch_dao.ElasticSearchDAO.es.search')
     def test_search_default_params(self, mock_es):
         def side_effect(*args, **kwargs):
             if "size" in kwargs:
@@ -267,6 +273,12 @@ class SearchEndpointsTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
         data = json.loads(response.data)
+
+    @mock.patch('src.services.SearchService.autocomplete')
+    def test_autocomplete(self,mock_autocomplete):
+        mock_autocomplete.return_value = self.es_search_response
+        response = self.app.get('/api/search_autocomplete?q=act')
+        mock_autocomplete.assert_called()
 
     @mock.patch('src.dao.elasticsearch_dao.ElasticSearchDAO.es.search')
     def test_search_autocomplete_es_params(self, mock_es):
