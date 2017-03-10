@@ -4,7 +4,7 @@ python:
   - "2.7"
 
 env:
-  - TRAVIS_NODE_VERSION="4.5"
+  - TRAVIS_NODE_VERSION="6"
 
 cache:
   directories:
