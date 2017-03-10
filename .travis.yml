@@ -13,7 +13,7 @@ cache:
     - node_modules
 
 install:
-  - make build
+  - make install
 
 script:
   - make tests
