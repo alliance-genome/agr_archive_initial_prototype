@@ -22,6 +22,7 @@
     "react-redux": "^4.4.5",
     "react-router": "^2.8.1",
     "react-router-redux": "^4.0.6",
+    "react-router-scroll": "^0.4.1",
     "react-select": "^1.0.0-rc.2",
     "redux": "^3.6.0",
     "reselect": "^2.5.4",
