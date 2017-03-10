@@ -21,5 +21,5 @@ restart:
 stop:
 	kill -s TERM $(cat gunicorn.pid)
 
-test:
-	$(OPTIONS) nosetests -s
+tests:
+	$(OPTIONS) nosetests -s test
