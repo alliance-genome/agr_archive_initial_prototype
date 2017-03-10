@@ -8,9 +8,9 @@ class ESMapping:
 
     def __init__(self, es_host, es_index, aws):
         if aws == "true":
-            self.es = Elasticsearch(es_host, timeout=5, retry_on_timeout=False, use_ssl=True, verify_certs=True)
+            self.es = Elasticsearch(es_host, timeout=30, retry_on_timeout=False, use_ssl=True, verify_certs=True)
         else:
-            self.es = Elasticsearch(es_host, timeout=5, retry_on_timeout=False)
+            self.es = Elasticsearch(es_host, timeout=30, retry_on_timeout=False)
         self.es_index = es_index
 
     def get_current_index(self):
