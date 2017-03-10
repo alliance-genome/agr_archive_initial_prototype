@@ -3,8 +3,8 @@ language: python
 python:
   - "2.7"
 
-node_js:
-  - "4.5"
+env:
+  - TRAVIS_NODE_VERSION="4.5"
 
 cache:
   directories:
@@ -13,6 +13,7 @@ cache:
     - node_modules
 
 install:
+  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - node --version
   - npm --version
   - make build
