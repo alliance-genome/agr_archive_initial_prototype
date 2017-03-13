@@ -4,3 +4,6 @@ from term import Term
 from term_relationship import TermRelationship
 from term_synonym import TermSynonym
 from vocabulary import Vocabulary
+from data_entry import DataEntry
+from data_provider import DataProvider
+from data_set import DataSet
