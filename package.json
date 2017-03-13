@@ -11,6 +11,7 @@
     "url": "https://github.com/alliance-genome/agr_prototype.git"
   },
   "dependencies": {
+    "aphrodite": "^1.2.0",
     "d3": "^3.5.17",
     "extract-text-webpack-plugin": "^1.0.1",
     "immutable": "^3.8.1",
@@ -19,6 +20,7 @@
     "react-autosuggest": "^6.1.0",
     "react-bootstrap": "^0.30.5",
     "react-dom": "^15.3.2",
+    "react-flybase-datagrid": "^0.4.7",
     "react-redux": "^4.4.5",
     "react-router": "^2.8.1",
     "react-router-redux": "^4.0.6",
