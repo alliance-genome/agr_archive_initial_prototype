@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FlybaseDataGrid from 'react-flybase-datagrid';
 import faker from 'faker';
-import './agr.css';
+//import './agr.css';
 import {StyleSheet, css} from 'aphrodite';
 
 const styles = StyleSheet.create({
