@@ -277,12 +277,6 @@ class SearchEndpointsTest(unittest.TestCase):
 
         data = json.loads(response.data)
 
-    @mock.patch('src.services.SearchService.autocomplete')
-    def test_autocomplete(self,mock_autocomplete):
-        mock_autocomplete.return_value = self.es_search_response
-        response = self.app.get('/api/search_autocomplete?q=act')
-        mock_autocomplete.assert_called()
-
     @mock.patch('src.server.es.search')
     def test_search_autocomplete_es_params(self, mock_es):
         mock_es.return_value = self.es_search_response
