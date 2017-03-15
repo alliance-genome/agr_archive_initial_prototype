@@ -374,57 +374,20 @@
   }
 }
 
-.public_fixedDataTable_main {
-  border-color: #000000;
+/**************  React-Flybase-DataGrid  *************/
+
+.fixedDataTableLayout_main {
+  border:none;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
 }
 
-.public_fixedDataTableCell_main {
-  border-color: #000000;
+.fixedDataTableLayout_header,
+.fixedDataTableLayout_hasBottomBorder {
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
 }
-
-.public_fixedDataTable_header{
-  border-color: #000000;
-}
-
-.field_label{
-  background-color: #CCC6AE;
-  border-color: #000000;
-  border-right: 1px;
-  font-weight: bold;
-  word-wrap: break-word;
-
-  /*override fixed-data-table stylesheet*/
-  height: 100%;
-  width: 100%;
-}
-
-
-
-
-
-
-
-/**
- * FixedDataTable v0.6.3
- *
- * Copyright (c) 2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
-
-/**
- * Copyright (c) 2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule fixedDataTableCellGroupLayout
- */
 
 .fixedDataTableCellGroupLayout_cellGroup {
   -webkit-backface-visibility: hidden;
@@ -442,154 +405,6 @@
   white-space: normal;
 }
 
-.fixedDataTableCellGroupLayout_cellGroupWrapper {
-  position: absolute;
-  top: 0;
-}
-/**
- * Copyright (c) 2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule fixedDataTableCellLayout
- */
-
-.fixedDataTableCellLayout_main {
-  border-right-style: solid;
-  border-right-width: 1px;
-  border-width: 0 1px 0 0;
-  box-sizing: border-box;
-  display: block;
-  overflow: hidden;
-  position: absolute;
-  white-space: normal;
-}
-
-.fixedDataTableCellLayout_lastChild {
-  border-width: 0 1px 1px 0;
-}
-
-.fixedDataTableCellLayout_alignRight {
-  text-align: right;
-}
-
-.fixedDataTableCellLayout_alignCenter {
-  text-align: center;
-}
-
-.fixedDataTableCellLayout_wrap1 {
-  display: table;
-}
-
-.fixedDataTableCellLayout_wrap2 {
-  display: table-row;
-}
-
-.fixedDataTableCellLayout_wrap3 {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.fixedDataTableCellLayout_columnResizerContainer {
-  position: absolute;
-  right: 0px;
-  width: 6px;
-  z-index: 1;
-}
-
-.fixedDataTableCellLayout_columnResizerContainer:hover {
-  cursor: ew-resize;
-}
-
-.fixedDataTableCellLayout_columnResizerContainer:hover .fixedDataTableCellLayout_columnResizerKnob {
-  visibility: visible;
-}
-
-.fixedDataTableCellLayout_columnResizerKnob {
-  position: absolute;
-  right: 0px;
-  visibility: hidden;
-  width: 4px;
-}
-/**
- * Copyright (c) 2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule fixedDataTableColumnResizerLineLayout
- */
-
-.fixedDataTableColumnResizerLineLayout_mouseArea {
-  cursor: ew-resize;
-  position: absolute;
-  right: -5px;
-  width: 12px;
-}
-
-.fixedDataTableColumnResizerLineLayout_main {
-  border-right-style: solid;
-  border-right-width: 1px;
-  box-sizing: border-box;
-  position: absolute;
-  z-index: 10;
-}
-
-body[dir="rtl"] .fixedDataTableColumnResizerLineLayout_main {
-  /* the resizer line is in the wrong position in RTL with no easy fix.
-   * Disabling is more useful than displaying it.
-   * #167 (github) should look into this and come up with a permanent fix.
-   */
-  display: none !important;
-}
-
-.fixedDataTableColumnResizerLineLayout_hiddenElem {
-  display: none !important;
-}
-/**
- * Copyright (c) 2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule fixedDataTableLayout
- */
-
-.fixedDataTableLayout_main {
-  border-style: solid;
-  border-width: 1px;
-  box-sizing: border-box;
-  overflow: hidden;
-  position: relative;
-}
-
-.fixedDataTableLayout_header,
-.fixedDataTableLayout_hasBottomBorder {
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-}
-
-.fixedDataTableLayout_footer .public_fixedDataTableCell_main {
-  border-top-style: solid;
-  border-top-width: 1px;
-}
-
-.fixedDataTableLayout_topShadow,
-.fixedDataTableLayout_bottomShadow {
-  height: 4px;
-  left: 0;
-  position: absolute;
-  right: 0;
-  z-index: 1;
-}
-
 .fixedDataTableLayout_bottomShadow {
   margin-top: -4px;
 }
@@ -603,28 +418,39 @@ body[dir="rtl"] .fixedDataTableColumnResizerLineLayout_main {
   bottom: 0;
   position: absolute;
 }
-/**
- * Copyright (c) 2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule fixedDataTableRowLayout
- */
 
 .fixedDataTableRowLayout_main {
   box-sizing: border-box;
   overflow: hidden;
   position: absolute;
   top: 0;
+
+ /* controls the header bottom border of all rows*/
+  /*border-bottom: 5px solid #eceeef;*/
 }
+
 
 .fixedDataTableRowLayout_body {
   left: 0;
   position: absolute;
   top: 0;
+}
+
+
+.fixedDataTableLayout_main {
+ /*main table body border*/
+/*  border-bottom: 1px solid #eceeef;*/
+}
+
+.fixedDataTableLayout_header,
+.fixedDataTableLayout_hasBottomBorder {
+  /*doesnt do anything*/
+/*  border-bottom: 1px solid #eceeef;*/
+}
+
+.fixedDataTableLayout_topShadow,
+.fixedDataTableLayout_bottomShadow {
+/*  left: 0;*/
 }
 
 .fixedDataTableRowLayout_fixedColumnsDivider {
@@ -645,17 +471,12 @@ body[dir="rtl"] .fixedDataTableColumnResizerLineLayout_main {
 .fixedDataTableRowLayout_rowWrapper {
   position: absolute;
   top: 0;
+  border-top: 1px solid #eceeef;
 }
-/**
- * Copyright (c) 2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule ScrollbarLayout
- */
+
+.fixedDataTableCellLayout_main {
+  border-right-style:none;
+}
 
 .ScrollbarLayout_main {
   box-sizing: border-box;
@@ -707,12 +528,6 @@ body[dir="rtl"] .fixedDataTableColumnResizerLineLayout_main {
   z-index: 1;
 }
 
-/**
- * This selector renders the "nub" of the scrollface. The nub must
- * be rendered as pseudo-element so that it won't receive any UI events then
- * we can get the correct `event.offsetX` and `event.offsetY` from the
- * scrollface element while dragging it.
- */
 .ScrollbarLayout_face:after {
   border-radius: 6px;
   content: '';
@@ -747,28 +562,14 @@ body[dir="rtl"] .fixedDataTableColumnResizerLineLayout_main {
   right: 4px;
   top: 0;
 }
-/**
- * Copyright (c) 2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule fixedDataTable
- *
- */
 
-/**
- * Table.
- */
 .public_fixedDataTable_main {
   border-color: #d3d3d3;
 }
 
 .public_fixedDataTable_header,
 .public_fixedDataTable_hasBottomBorder {
-  border-color: #d3d3d3;
+  border-bottom: 2px solid #eceeef;
 }
 
 .public_fixedDataTable_header .public_fixedDataTableCell_main {
@@ -777,14 +578,9 @@ body[dir="rtl"] .fixedDataTableColumnResizerLineLayout_main {
 
 .public_fixedDataTable_header,
 .public_fixedDataTable_header .public_fixedDataTableCell_main {
-  background-color: #f6f7f8;
-  background-image: -webkit-linear-gradient(#fff, #efefef);
-  background-image: linear-gradient(#fff, #efefef);
-}
-
-.public_fixedDataTable_footer .public_fixedDataTableCell_main {
-  background-color: #f6f7f8;
-  border-color: #d3d3d3;
+  background-color: #ffffff;
+  background-image: none;
+  background-image: none;
 }
 
 .public_fixedDataTable_topShadow {
@@ -795,121 +591,9 @@ body[dir="rtl"] .fixedDataTableColumnResizerLineLayout_main {
   background: 0 0 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAECAYAAABP2FU6AAAAHElEQVQI12MwNjZmZdAT1+Nm0JDWEGZQk1GTBgAWkwIeAEp52AAAAABJRU5ErkJggg==) repeat-x;
 }
 
-.public_fixedDataTable_horizontalScrollbar .public_Scrollbar_mainHorizontal {
-  background-color: #fff;
-}
-/**
- * Copyright (c) 2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule fixedDataTableCell
- */
-
-/**
- * Table cell.
- */
-.public_fixedDataTableCell_main {
-  background-color: #fff;
-  border-color: #d3d3d3;
-}
-
-.public_fixedDataTableCell_highlighted {
-  background-color: #f4f4f4;
-}
-
 .public_fixedDataTableCell_cellContent {
   padding: 8px;
 }
 
-.public_fixedDataTableCell_columnResizerKnob {
-  background-color: #0284ff;
-}
-/**
- * Copyright (c) 2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule fixedDataTableColumnResizerLine
- *
- */
+/**************  React-Flybase-DataGrid  *************/
 
-/**
- * Column resizer line.
- */
-.public_fixedDataTableColumnResizerLine_main {
-  border-color: #0284ff;
-}
-/**
- * Copyright (c) 2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule fixedDataTableRow
- */
-
-/**
- * Table row.
- */
-.public_fixedDataTableRow_main {
-  background-color: #fff;
-}
-
-.public_fixedDataTableRow_highlighted,
-.public_fixedDataTableRow_highlighted .public_fixedDataTableCell_main {
-  background-color: #f6f7f8;
-}
-
-.public_fixedDataTableRow_fixedColumnsDivider {
-  border-color: #d3d3d3;
-}
-
-.public_fixedDataTableRow_columnsShadow {
-  background: 0 0 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABCAYAAAD5PA/NAAAAFklEQVQIHWPSkNeSBmJhTQVtbiDNCgASagIIuJX8OgAAAABJRU5ErkJggg==) repeat-y;
-}
-/**
- * Copyright (c) 2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @providesModule Scrollbar
- *
- */
-
-/**
- * Scrollbars.
- */
-
-/* Touching the scroll-track directly makes the scroll-track bolder */
-.public_Scrollbar_main.public_Scrollbar_mainActive,
-.public_Scrollbar_main:hover {
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-.public_Scrollbar_mainOpaque,
-.public_Scrollbar_mainOpaque.public_Scrollbar_mainActive,
-.public_Scrollbar_mainOpaque:hover {
-  background-color: #fff;
-}
-
-.public_Scrollbar_face:after {
-  background-color: #c2c2c2;
-}
-
-.public_Scrollbar_main:hover .public_Scrollbar_face:after,
-.public_Scrollbar_mainActive .public_Scrollbar_face:after,
-.public_Scrollbar_faceActive:after {
-  background-color: #7d7d7d;
-}
