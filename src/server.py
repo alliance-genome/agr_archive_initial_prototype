@@ -105,7 +105,7 @@ if __name__ == '__main__':
 from services.helpers.search_helper import *
 
 from elasticsearch import Elasticsearch
-es = Elasticsearch(os.environ['ES_URI'], timeout=5, retry_on_timeout=False)
+es = Elasticsearch(os.environ['ES_HOST'], timeout=5, retry_on_timeout=False)
 ES_INDEX = os.environ['ES_INDEX']
 
 @app.route('/api/search')
