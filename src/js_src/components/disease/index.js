@@ -1,33 +1,35 @@
 import React, { Component } from 'react';
 import FlybaseDataGrid from 'react-flybase-datagrid';
-import faker from 'faker';
 import './agr.css';
 
 function getHeaders(){
 
   var columns = [
-   {id:'id', name:'ID'},
-   {id:'name', name:'Name'},
-   {id:'address', name:'Street Address'},
-   {id:'state', name:'State'},
-   {id:'zip', name:'Zip Code'}
+   {id:'name', name:'Disease Name'},
+   {id:'assc', name:'Association'},
+   {id:'ec', name:'Evidence Code'},
+   {id:'as', name:'Association Source'},
+   {id:'ref', name:'References'}
   ];
 
   return columns;
 
 }
 
-function generateList(){
-  var items = [];
-
-  for (var i=1; i<=5000; i++){
-    items.push({ id: i, name: faker.name.findName(), address: faker.address.streetAddress(), state: faker.address.stateAbbr(), zip: faker.address.zipCode()});
-  }
-
-  return items;
-}
-
-const data = generateList();
+const data = [
+{ name: 'Bannayan-Riley-Ruvalcaba syndrome', assc: 'is model of', ec: 'TAS', as: 'MGI', ref: 'PMID:12345, PMID:12345'},
+{ name: 'brain glioma', assc: 'causes or contributes to condition', ec: 'TAS', as: 'FB', ref: 'PMID:12345'},
+{ name: 'Cowden disease', assc: 'is model of', ec: 'TAS', as: 'MGI', ref: 'PMID:12345'},
+{ name: 'endometrial cancer', assc: 'causes or contributes to condition', ec: 'ISS', as: 'RGD', ref: 'PMID:12345'},
+{ name: 'prostate cancer', assc: 'is model of', ec: 'IC', as: 'ZFIN', ref: 'PMID:12345'},
+{ name: 'prostate cancer', assc: 'causes or contributes to condition', ec: 'ISS', as: 'SGD', ref: 'PMID:12345'},
+{ name: 'acute lymphocytic leukemia', assc: 'is model of', ec: 'TAS', as: 'MGI', ref: 'PMID:12345'},
+{ name: 'fatty liver disease', assc: 'causes or contributes to condition', ec: 'IEP', as: 'RGD', ref: 'PMID:12345'},
+{ name: 'fatty liver disease', assc: 'is model of', ec: 'TAS', as: 'MGI', ref: 'PMID:12345'},
+{ name: 'hepatocellular carcinoma', assc: 'causes or contributes to condition', ec: 'ISS', as: 'WB', ref: 'PMID:12345'},
+{ name: 'persistent fetal circulation syndrome', assc: 'is model of', ec: 'TAS', as: 'MGI', ref: 'PMID:12345'},
+{ name: 'urinary bladder cancer', assc: 'is marker for', ec: 'ISS', as: 'RGD', ref: 'PMID:12345'},
+];
 
 class DiseaseTable extends Component {
   render() {
