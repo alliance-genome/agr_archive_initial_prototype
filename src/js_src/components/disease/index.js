@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import FlybaseDataGrid from 'react-flybase-datagrid';
-import './agr.css';
 
 function getHeaders(){
 
