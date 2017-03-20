@@ -210,6 +210,54 @@ def format_search_results(search_results, json_response_fields):
     return formatted_results
 
 
+def build_aggregation_autocomplete_search_body_request(query, category='gene', field='name_key'):
+    es_query = {
+        "query": {
+            "bool": {
+                "must": [{
+                    "match": {
+                        "name_key.autocomplete": {
+                            "query": query
+                        }
+                    }
+                }],
+                "should": [
+                    {
+                        "match": {
+                            "category": {
+                                "query": "gene",
+                                "boost": 2
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        '_source': ['name', 'href', 'category', 'symbol']
+    }
+
+    if category != '':
+        es_query["query"]["bool"]["must"].append({"match": {"category": category}})
+        if category != "gene":
+            es_query["query"]["bool"].pop("should")
+
+    if field != 'name_key':
+        es_query['aggs'] = {}
+        es_query['aggs'][field] = {
+            'terms': {'field': field + '.raw', 'size': 999}
+        }
+
+        es_query['query']['bool']['must'][0]['match'] = {}
+        es_query['query']['bool']['must'][0]['match'][field + '.autocomplete'] = {
+            'query': query,
+            'analyzer': 'standard'
+        }
+
+        es_query['_source'] = [field, 'href', 'category']
+
+    return es_query
+
+
 def build_autocomplete_search_body_request(query, category='gene', field='name_key'):
     es_query = {
         "query": {
@@ -256,7 +304,6 @@ def build_autocomplete_search_body_request(query, category='gene', field='name_k
         }
 
         es_query['_source'] = [field, 'href', 'category']
-
 
 
     return es_query
