@@ -89,13 +89,12 @@ class ESMapping:
             self.es.bulk(index=self.new_index_name, body=bulk_data, refresh=True)
         print "Indexing took: " + str(time.time() - s) + " seconds"
 
-    def update_data(self, data, data_type):
-        s = time.time()
-        print "Updating " + data_type + " into Index: " + self.new_index_name
-        bulk_data = []
+    # def update_data(self, data, data_type):
+    #     s = time.time()
+    #     print "Updating " + data_type + " into Index: " + self.new_index_name
+    #     bulk_data = []
 
-        for id in data:
-            bulk.data.append({
-                'update'
-                #asdf smart commit test
-                })
+    #     for id in data:
+    #         bulk.data.append({
+    #             'update'
+    #             })
