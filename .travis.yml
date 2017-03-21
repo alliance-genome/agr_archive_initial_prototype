@@ -22,7 +22,7 @@ cache:
   directories:
     - $HOME/.cache/pip
     - $HOME/virtualenv/python2.7.9/lib/python2.7/site-packages
-    - $HOME/tmp
+    - $TRAVIS_BUILD_DIR/scripts/elastic_search/tmp
     - node_modules
 
 install:
