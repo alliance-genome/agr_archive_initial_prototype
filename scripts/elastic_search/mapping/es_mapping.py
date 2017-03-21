@@ -83,8 +83,14 @@ class ESMapping:
 
             if len(bulk_data) == 5000:
                 self.es.bulk(index=self.new_index_name, body=bulk_data, refresh=True)
-                bulk_data = []
+                bulk_data[:] = []
 
         if len(bulk_data) > 0:
             self.es.bulk(index=self.new_index_name, body=bulk_data, refresh=True)
         print "Indexing took: " + str(time.time() - s) + " seconds"
+
+    def update_data(self, data, data_type):
+        s = time.time()
+        print "Updating " + data_type + " into Index: " + self.new_index_name
+        bulk_data = []
+        
