@@ -56,7 +56,7 @@ class GenePage extends Component {
         </Subsection>
 
 
-        <Subsection hardcoded title='Transcript Viewer' if={genomeLocation}>
+        <Subsection title='Transcript Viewer'>
           {genomeLocation
             ?
             <TranscriptViewer geneSymbol={this.props.data.symbol} species={this.props.data.species} fmin={genomeLocation.fmin } fmax={genomeLocation.fmax} chromosome={genomeLocation.chromosome}/>
