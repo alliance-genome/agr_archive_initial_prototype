@@ -59,7 +59,7 @@ class GenePage extends Component {
         <Subsection hardcoded title='Transcript Viewer' if={genomeLocation}>
           {genomeLocation
             ?
-            <TranscriptViewer geneSymbol={this.props.data.symbol} species={this.props.data.species} fmin={genomeLocation.fmin ? genomeLocation.fmin : 0} fmax={genomeLocation.fmax ? genomeLocation.fmax:100} chromosome={genomeLocation.chromosome}/>
+            <TranscriptViewer geneSymbol={this.props.data.symbol} species={this.props.data.species} fmin={genomeLocation.fmin } fmax={genomeLocation.fmax} chromosome={genomeLocation.chromosome}/>
             :
             <div className="alert alert-warning">Genome Location Data Unavailable</div>
           }
