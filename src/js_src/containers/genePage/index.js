@@ -34,6 +34,18 @@ class GenePage extends Component {
       return null;
     }
 
+    // todo, add chromosome
+    var genomeLocation ;
+    if(this.props.data.genomeLocations.length==1){
+      genomeLocation = this.props.data.genomeLocations[0];
+    }
+    else
+    if(this.props.data.genomeLocations.length>1){
+      // TODO: figure out the proper assembly
+      genomeLocation = this.props.data.genomeLocations[0];
+    }
+
+
     return (
       <div className='container'>
 
@@ -43,8 +55,14 @@ class GenePage extends Component {
           <BasicGeneInfo geneData={this.props.data} />
         </Subsection>
 
-        <Subsection hardcoded title='Transcript Viewer'>
-          <TranscriptViewer geneSymbol={this.props.data.symbol} species={this.props.data.species} />
+
+        <Subsection hardcoded title='Transcript Viewer' if={genomeLocation}>
+          {genomeLocation
+            ?
+            <TranscriptViewer geneSymbol={this.props.data.symbol} species={this.props.data.species} fmin={genomeLocation.fmin ? genomeLocation.fmin : 0} fmax={genomeLocation.fmax ? genomeLocation.fmax:100} chromosome={genomeLocation.chromosome}/>
+            :
+            <div className="alert alert-warning">Genome Location Data Unavailable</div>
+          }
         </Subsection>
 
         <Subsection hardcoded title='Orthology'>
