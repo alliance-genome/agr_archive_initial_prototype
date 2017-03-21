@@ -5,6 +5,9 @@ python:
 
 env:
   - TRAVIS_NODE_VERSION="6"
+  - ES_HOST="localhost:9200"
+  - ES_AWS="false"
+  - ES_INDEX="searchable_items_blue"
 
 cache:
   directories:
@@ -12,13 +15,20 @@ cache:
     - $HOME/virtualenv/python2.7.9/lib/python2.7/site-packages
     - node_modules
 
+services:
+    - elasticsearch
+
 install:
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - node --version
   - npm --version
   - make build
 
+before_script:
+  - sleep 10
+
 script:
+  - make index
   - make tests
 
 notifications:
