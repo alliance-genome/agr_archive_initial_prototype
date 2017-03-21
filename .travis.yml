@@ -16,20 +16,18 @@ cache:
     - $HOME/tmp
     - node_modules
 
-services:
-    - elasticsearch
-
 install:
+  - rm -rf elasticsearch-5.1.2 && curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.2.zip && unzip elastic
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - node --version
   - npm --version
-  - curl "http://localhost:9200"
   - make build
 
 before_script:
   - sleep 10
 
 script:
+  - curl "http://localhost:9200"
   - make index
   - make tests
 
