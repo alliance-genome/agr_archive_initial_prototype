@@ -9,11 +9,12 @@ addons:
       - oracle-java8-set-default
 
 env:
-  - TRAVIS_NODE_VERSION="6"
-  - JAVA_HOME="/usr/lib/jvm/java-8-oracle"
-#  - ES_HOST="localhost:9200"
-#  - ES_AWS="false"
-#  - ES_INDEX="searchable_items_blue"
+  global:
+    - TRAVIS_NODE_VERSION="6"
+    - JAVA_HOME="/usr/lib/jvm/java-8-oracle"
+    - ES_HOST="localhost:9200"
+    - ES_AWS="false"
+    - ES_INDEX="searchable_items_blue"
 
 cache:
   directories:
