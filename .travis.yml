@@ -35,7 +35,7 @@ install:
   - make build
 
 before_script:
-  - sleep 20
+  - sleep 5
 
 script:
   - curl "http://localhost:9200"
