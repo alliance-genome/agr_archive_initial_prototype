@@ -8,6 +8,7 @@ class SoLoader:
         path = "tmp";
         S3File("mod-datadumps/data", "so.obo", path).download()
         self.so_data = TXTFile(path + "/so.obo").get_data()
+        self.so_dataset = self.get_data()
 
     def get_data(self):
         so_dataset = {}
@@ -44,7 +45,5 @@ class SoLoader:
         return so_dataset
 
     def attach_so_data(self, genes):
-        so_dataset = self.get_data()
-
         for key in genes:
-            genes[key]["soTermName"] = so_dataset[genes[key]["soTermId"]]["name"][0]
+            genes[key]["soTermName"] = self.so_dataset[genes[key]["soTermId"]]["name"][0]

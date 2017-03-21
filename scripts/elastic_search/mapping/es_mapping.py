@@ -1,4 +1,5 @@
 from elasticsearch import Elasticsearch
+from elasticsearch.helpers import parallel_bulk, streaming_bulk
 from mapping_schema import mapping_schema
 
 import os
@@ -66,27 +67,24 @@ class ESMapping:
         print "Deleting Index: " + index
         self.es.indices.delete(index=index, ignore=[400, 404])
 
-    def index_data(self, data, data_type):
+    def index_data(self, data, data_type, op_type):
         s = time.time()
-        print "Send " + data_type + " into Index: " + self.new_index_name
+        print "Sending " + data_type + " into Index: " + self.new_index_name
         bulk_data = []
 
         for id in data:
-            bulk_data.append({
-                'index': {
+            bulk_data.append(
+                {   '_op_type': op_type,
                     '_index': self.new_index_name, 
                     '_type': "searchable_item",
-                    '_id': id
-                }
-            })
-            bulk_data.append(data[id])
+                    '_id': id,
+                    'doc': data[id]
+                })
 
-            if len(bulk_data) == 5000:
-                self.es.bulk(index=self.new_index_name, body=bulk_data, refresh=True)
-                bulk_data[:] = []
+        for success, info in parallel_bulk(self.es, actions=bulk_data, refresh=False, request_timeout=60, thread_count=4):
+                if not success:
+                    print "A document failed: %s" % (info)
 
-        if len(bulk_data) > 0:
-            self.es.bulk(index=self.new_index_name, body=bulk_data, refresh=True)
         print "Indexing took: " + str(time.time() - s) + " seconds"
 
     # def update_data(self, data, data_type):
