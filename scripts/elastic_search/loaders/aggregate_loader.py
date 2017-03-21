@@ -8,7 +8,8 @@ import os
 class AggregateLoader:
 
     def load_from_mods(self):
-        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        #mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        mods = [FlyBase()]
 
         print "Loading GO Data"
         go_data = GoLoader().get_data() 
@@ -56,11 +57,12 @@ class AggregateLoader:
         # PickleFile("tmp/diseases_bkp.pickle").save(disease_entries)
         # PickleFile("tmp/so_bkp.pickle").save(so_loader.get_data())
 
-    def index_data(self):
+    def establish_index(self):
+        self.es = ESMapping(os.environ['ES_HOST'], os.environ['ES_INDEX'], os.environ['ES_AWS'])
+        self.es.start_index()
 
-        es = ESMapping(os.environ['ES_HOST'], os.environ['ES_INDEX'], os.environ['ES_AWS'])
-        es.start_index()
-        es.index_data(self.genes, "Gene Data")
-        es.index_data(self.go_entries, "Go Data")
+    def index_data(self):
+        self.es.index_data(self.genes, "Gene Data")
+        self.es.index_data(self.go_entries, "Go Data")
         # self.index_into_es(disease_entries)
-        es.finish_index()
+        self.es.finish_index()

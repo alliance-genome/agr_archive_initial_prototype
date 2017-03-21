@@ -3,7 +3,6 @@ from mods import MOD
 
 import re
 
-
 class GeneLoader:
     def __init__(self, filename):
         self.gene_data = JSONFile(filename).get_data()
