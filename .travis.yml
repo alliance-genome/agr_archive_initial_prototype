@@ -23,6 +23,7 @@ cache:
 
 install:
   - cd $HOME && curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.2.zip && unzip elasticsearch-5.1.2.zip
+  - echo $JAVA_HOME
   - java -version
   - $HOME/elasticsearch-5.1.2/bin/elasticsearch --version
   - $HOME/elasticsearch-5.1.2/bin/elasticsearch -d
