@@ -93,4 +93,9 @@ class ESMapping:
         s = time.time()
         print "Updating " + data_type + " into Index: " + self.new_index_name
         bulk_data = []
-        
+
+        for id in data:
+            bulk.data.append({
+                'update'
+                #asdf smart commit test
+                })
