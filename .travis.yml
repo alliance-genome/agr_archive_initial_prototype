@@ -13,6 +13,7 @@ cache:
   directories:
     - $HOME/.cache/pip
     - $HOME/virtualenv/python2.7.9/lib/python2.7/site-packages
+    - $HOME/tmp
     - node_modules
 
 services:
