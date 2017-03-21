@@ -17,7 +17,7 @@ cache:
     - node_modules
 
 install:
-  - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.2.zip && unzip elasticsearch-5.1.2.zip
+  - cd $HOME && curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.2.zip && unzip elasticsearch-5.1.2.zip
   - $HOME/elasticsearch-5.1.2/bin/elasticsearch -d
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - node --version
