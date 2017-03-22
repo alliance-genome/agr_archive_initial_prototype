@@ -6,7 +6,7 @@ def step_impl(context):
     context.browser.visit("/gene/ZDB-GENE-990415-72")
 
 
-@then('the page will return')
+@then('the gene page will return')
 def step_impl(context):
     assert context.failed is False
 
