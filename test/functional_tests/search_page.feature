@@ -10,7 +10,6 @@ Feature: navigate the search page
         | fgf8   | MGI:99604          |
         | mod-5  | WBGene00003387     |
         | POP8   | S000000114         |
-        | TERF2  | 1322035            |
 # These will require a better way to get at the id for GO terms, since they're not a link
 #      Examples: GO Terms
 #        | query               | id          |
