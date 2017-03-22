@@ -11,7 +11,7 @@ def step_impl(context):
     assert context.failed is False
 
 
-@then('"{id}" will be part of the first page of search results')
-def step_impl(context, id):
-    assert context.browser.find_by_link_text(id)
+@then('"{linktext}" will be on the first page of search results')
+def step_impl(context, linktext):
+    assert context.browser.find_by_link_text(linktext)
 
