@@ -38,6 +38,7 @@ script:
   - curl "http://localhost:9200"
   - make index
   - make tests
+  - behave test/functional_tests/
 
 notifications:
   slack:
