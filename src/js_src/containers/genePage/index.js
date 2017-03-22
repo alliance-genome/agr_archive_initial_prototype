@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 
 import fetchData from '../../lib/fetchData';
@@ -36,7 +37,11 @@ class GenePage extends Component {
 
     return (
       <div className='container'>
-
+        <Helmet
+           title={'AGR gene page for ' + this.props.data.species + ' gene: ' + this.props.data.symbol}
+           meta={[
+               {property: 'og:title', content: 'Gene'},
+           ]} />
         <GenePageHeader symbol={this.props.data.symbol} />
 
         <Subsection>
