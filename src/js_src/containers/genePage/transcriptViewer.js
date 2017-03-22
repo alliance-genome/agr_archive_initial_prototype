@@ -1,17 +1,51 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
-import mockViewer from './transcript-viewer-full.png';
 import style from './style.css';
 
-class TranscriptViewer extends Component {
-  render() {
-    let jbrowseUrl = 'http://bw.scottcain.net/jbrowse/?data=data%2FDanio%20rerio&loc=25%3A14926862..14955898&tracks=DNA%2CAll%20Genes&highlight=';
 
+class TranscriptViewer extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {imageStatus: 'loading'};
+
+  }
+
+  handleImageErrored() {
+    this.setState({imageStatus: 'Error loading transcript preview.'});
+  }
+
+  handleImageLoaded() {
+    this.setState({imageStatus: ''});
+  }
+
+  render() {
+    let jbrowsePrefx = 'http://bw.scottcain.net/jbrowse/?data=data%2F';
+    // location based data
+    let locationString = this.props.fmin && this.props.fmax ? this.props.chromosome + ':' + this.props.fmin + '..' + this.props.fmax : this.props.geneSymbol;
+
+    let jbrowseUrl = jbrowsePrefx + encodeURI(this.props.species) + '&loc=' + encodeURI(locationString) + '&tracks=DNA%2CAll%20Genes&highlight=';
+    let visualizationUrl = 'http://dev.alliancegenome.org:8891/?url=';
+
+    // original URL
+    let delay = 5000;
+    let pngSuffix = '&format=PNG&delay=' + delay + '&width=600&height=300&zoom=1&quality=0.7';
+    let hideControlsSuffix = '&tracklist=0&nav=0&tracklabels=0';
+
+
+    let finalUrl = visualizationUrl + encodeURIComponent(jbrowseUrl.replace('DNA%2C', '') + hideControlsSuffix) + pngSuffix;
     return (
       <div className={style.jbrowse}>
         <a href={jbrowseUrl} rel="noopener noreferrer" target='_blank'>
-          <img src={mockViewer} />
+          <img src={finalUrl}
+               onError={this.handleImageErrored.bind(this)}
+               onLoad={this.handleImageLoaded.bind(this)}
+          />
         </a>
+          {this.state.imageStatus === 'loading'
+              ?   <div>Loading ... <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"/></div>
+            : ''
+          }
       </div>
     );
   }
@@ -20,6 +54,9 @@ class TranscriptViewer extends Component {
 TranscriptViewer.propTypes = {
   geneSymbol: React.PropTypes.string.isRequired,
   species: React.PropTypes.string.isRequired,
+  fmin: React.PropTypes.number,
+  fmax: React.PropTypes.number,
+  chromosome: React.PropTypes.string,
 };
 
 export default TranscriptViewer;
