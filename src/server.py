@@ -81,11 +81,9 @@ def send_static(path):
 
 # render user interfaces in client JS
 @app.route('/')
-@app.route('/about')
-@app.route('/help')
-@app.route('/search')
-@app.route('/gene/<gene_id>')
-def react_render(gene_id = None):
+@app.route('/<route>')
+@app.route('/<route>/<term_id>')
+def react_render(term_id = None):
     return render_template('index.jinja2')
 
 @auth.get_password
