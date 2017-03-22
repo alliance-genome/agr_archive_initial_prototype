@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { createMemoryHistory } from 'react-router';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import _ from 'underscore';
 
@@ -104,6 +105,11 @@ class SearchComponent extends Component {
     return (
       <div className={style.root}>
         {this.renderErrorNode()}
+        <Helmet
+           title={'Searching Alliance of Genome Resources for: ' + this.props.queryParams.q}
+           meta={[
+               {property: 'og:title', content: 'Search'},
+           ]} />
         <div className='row'>
           <div className={SMALL_COL_CLASS}>
             <FilterSelector />
