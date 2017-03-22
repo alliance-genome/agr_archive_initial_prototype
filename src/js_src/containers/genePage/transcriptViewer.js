@@ -30,7 +30,7 @@ class TranscriptViewer extends Component {
     // original URL
     let delay = 5000;
     let pngSuffix = '&format=PNG&delay=' + delay + '&width=600&height=300&zoom=1&quality=0.7';
-    let hideControlsSuffix = '&tracklist=0&nav=0&tracklabels=0';
+    let hideControlsSuffix = '&tracklist=0&nav=0&tracklabels=0&fullviewlink=0';
 
 
     let finalUrl = visualizationUrl + encodeURIComponent(jbrowseUrl.replace('DNA%2C', '') + hideControlsSuffix) + pngSuffix;
