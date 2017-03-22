@@ -1,18 +1,17 @@
 from behave import *
 
 
-@when('we open the search url for a simple search')
-def step_impl(context):
-    context.browser.visit("/search?q=fgf8")
+@given('we open the search url querying for "{query}"')
+def step_impl(context, query):
+    context.browser.visit("/search?q=" + query)
 
 
-@then('the search page will return')
+@When('the search page returns')
 def step_impl(context):
     assert context.failed is False
 
 
-@then('it will contain the id of the search result we expect to find')
-def step_impl(context):
-    id_list = (o.text for o in context.browser.find_all_by_class('symbol-value'))
-    assert "ZDB-GENE-990415-72" in id_list
+@then('"{id}" will be part of the first page of search results')
+def step_impl(context, id):
+    assert context.browser.find_by_link_text(id)
 

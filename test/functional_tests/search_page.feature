@@ -1,7 +1,20 @@
 Feature: navigate the search page
 
-  Scenario: Confirm results of a basic search
-      when we open the search url for a simple search
-      then the search page will return
-      then it will contain the id of the search result we expect to find
-
+  Scenario Outline: Confirm results of search for <query>
+      Given: we open the search url querying for "<query>"
+        | query   | id   |
+        | <query> | <id> |
+      When: the search page returns
+      Then: "<id>" will be part of the first page of search results
+      Examples: Genes
+        | query  | id                 |
+        | fgf8   | ZDB-GENE-990415-72 |
+        | fgf8   | MGI:99604          |
+        | mod-5  | WBGene00003387     |
+        | POP8   | S000000114         |
+        | TERF2  | 1322035            |
+      Examples: GO Terms
+        | query               | id          |
+        | ubiquinone binding  | GO:0048039  |
+        | fin regeneration    | GO:0031101  |
+        | costamere           | GO:0043034  |

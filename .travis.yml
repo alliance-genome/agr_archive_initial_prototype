@@ -7,8 +7,11 @@ python:
 
 addons:
   apt:
+    sources:
+      - google-chrome
     packages:
       - oracle-java8-set-default
+      - google-chrome-stable
 
 env:
   global:

@@ -19,3 +19,6 @@ class Browser(object):
 
     def find_all_by_class(self, selector):
         return self.driver.find_elements_by_class_name(selector)
+
+    def find_by_link_text(self, selector):
+        return self.driver.find_element_by_link_text(selector)
