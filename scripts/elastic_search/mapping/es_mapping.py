@@ -69,17 +69,28 @@ class ESMapping:
 
     def index_data(self, data, data_type, op_type):
         s = time.time()
-        print "Sending " + data_type + " into Index: " + self.new_index_name
         bulk_data = []
 
-        for id in data:
-            bulk_data.append(
-                {   '_op_type': op_type,
-                    '_index': self.new_index_name, 
-                    '_type': "searchable_item",
-                    '_id': id,
-                    'doc': data[id]
-                })
+        if data_type == 'Go Data':
+            print "Sending GO Data into Index: %s (batches of 5000 entries)." % (self.new_index_name)
+            for entry in data:
+                bulk_data.append(
+                    {   '_op_type': op_type,
+                        '_index': self.new_index_name, 
+                        '_type': "searchable_item",
+                        '_id': entry['id'],
+                        'doc': entry
+                    })
+        
+        elif data_type == 'Gene Data':
+            for entry in data:
+                bulk_data.append(
+                    {   '_op_type': op_type,
+                        '_index': self.new_index_name, 
+                        '_type': "searchable_item",
+                        '_id': entry,
+                        'doc': data[entry]
+                    })
 
         for success, info in parallel_bulk(self.es, actions=bulk_data, refresh=False, request_timeout=60, thread_count=4):
                 if not success:

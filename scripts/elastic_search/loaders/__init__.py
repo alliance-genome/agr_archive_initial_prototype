@@ -6,4 +6,3 @@ from gene_loader import GeneLoader
 from go_gene_annot_loader import GoGeneAnnot
 from disease_gene_annot_loader import DiseaseGeneAnnotLoader
 from aggregate_loader import AggregateLoader
-import obo_parser
