@@ -1,9 +1,11 @@
 from mapping import ESMapping
 from loaders import *
+from annotators import *
 from files import *
 from mods import *
 import memory_profiler
 import psutil
+import gc
 
 import os
 
@@ -11,43 +13,40 @@ class AggregateLoader:
 
     @profile
     def load_from_mods(self):
-        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
-        #mods = [FlyBase()]
+        #mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        mods = [FlyBase(), WormBase()]
 
         print "Loading GO Data"
-        go_data = GoLoader().get_data() 
+        go_loader = GoLoader()
+        go_dataset = go_loader.get_data()
         print "Loading OMIM Data"
         omim_data = OMIMLoader().get_data()
         print "Loading SO Data"
         so_loader = SoLoader()
+        so_dataset = so_loader.get_data()
 
         self.gene_master_list = [] # Master list of gene IDs across all MODs.
 
         print "Gathering genes from Each Mod"
         for mod in mods:
-            self.genes = {}
-            self.genes.update(mod.load_genes())
+            genes = mod.load_genes()
 
             print "Attaching SO terms."
-            so_loader.attach_so_data(self.genes)
+            genes = SoAnnotator().attach_annotations(genes, so_dataset)
+            
+            self.es.index_data(genes, 'Gene Data', 'index') # Use 'index' for the initial gene indexing.
 
-            print "Loading GO annotations for genes from mines."
+            print "Loading GO annotations from mines or files."
             gene_go_annots = mod.load_go()
 
             print "Attaching GO annotations to genes."
-            go_annot_loader = GoGeneAnnotLoader(self.genes, go_data)
-            self.go_entries = go_annot_loader.attach_annotations(gene_go_annots)
+            genes = GoAnnotator().attach_annotations(genes, gene_go_annots, go_dataset)
             
-            gene_go_annots[:] = [] # Clear gene_go_annots, might be unnecessary.
-
-            self.es.index_data(self.genes, 'Gene Data', 'index') # Use 'index' for the initial gene indexing.
-
-            gene_list =  self.genes.keys() # Create a new list with only the keys from self.genes.
-            self.genes.clear() # Clear self genes.
-
             self.gene_master_list.extend(gene_list)
 
             # print gene_list
+            # gene_list = genes.keys() # Create a new list with only the keys from self.genes.
+            # genes.clear() # Remove the genes dictionary.
 
     def load_from_files(self):
         print "Load data from saved files"
@@ -57,8 +56,8 @@ class AggregateLoader:
         #disease_entries = PickleFile("tmp/diseases_bkp.pickle").load()
 
     def save_to_files(self):
-        print "Saving processed data to files"
-        PickleFile("tmp/genes_bkp.pickle").save(self.genes)
+         print "Saving processed data to files"
+        # PickleFile("tmp/genes_bkp.pickle").save(self.genes)
         # PickleFile("tmp/go_bkp.pickle").save(self.go_entries)
         # PickleFile("tmp/diseases_bkp.pickle").save(disease_entries)
         # PickleFile("tmp/so_bkp.pickle").save(so_loader.get_data())

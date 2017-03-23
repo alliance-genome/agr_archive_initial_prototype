@@ -8,7 +8,6 @@ class SoLoader:
         path = "tmp";
         S3File("mod-datadumps/data", "so.obo", path).download()
         self.so_data = TXTFile(path + "/so.obo").get_data()
-        self.so_dataset = self.get_data()
 
     def get_data(self):
         so_dataset = {}
