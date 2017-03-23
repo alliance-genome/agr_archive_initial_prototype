@@ -7,9 +7,9 @@ Feature: navigating the gene page
 
     Examples: Human
     | id                | symbol   |
-    | HGNC:1348836      | RNF31    |
-    | HGNC:1316511      | BRD9     |
-    | HGNC:733956       | FGF8     |
+    | HGNC:17889        | APEX2    |
+    | HGNC:25818        | BRD9     |
+    | HGNC:3686         | FGF8     |
 
     Examples: Rat
     | id                | symbol   |
