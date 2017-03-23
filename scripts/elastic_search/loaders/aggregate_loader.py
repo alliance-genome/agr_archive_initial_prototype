@@ -17,8 +17,10 @@ class AggregateLoader:
         mods = [FlyBase(), WormBase()]
 
         print "Loading GO Data"
-        go_loader = GoLoader()
-        go_dataset = go_loader.get_data()
+        go_loader = GoLoader().use_obo_parser()
+        for line in go_loader:
+            print line
+        #go_dataset = go_loader.get_data()
         print "Loading OMIM Data"
         omim_data = OMIMLoader().get_data()
         print "Loading SO Data"

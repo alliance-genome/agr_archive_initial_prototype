@@ -4,6 +4,13 @@ import re
 
 class GoLoader:
 
+    def use_obo_parser(self):
+        path = "tmp";
+        S3File("mod-datadumps/data", "go.obo", path).download()
+        yield_line = obo_parser.parseGOOBO(path + "/go.obo")
+        for line in yield_lines:
+            yield line
+
     def __init__(self):
         self.path = "tmp";
         S3File("mod-datadumps/data", "go.obo", self.path).download()
@@ -39,7 +46,7 @@ class GoLoader:
                         go_dataset[creating_term][key].append(value)
                     else:
                         go_dataset[creating_term][key] = [value]
-        return go_dataset
+        return go_dataset   
 
     def process_data(self):
 
