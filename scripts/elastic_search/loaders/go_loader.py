@@ -9,11 +9,11 @@ class GoLoader:
         S3File("mod-datadumps/data", "go.obo", self.path).download()
 
     def get_data(self):
-        go_data = TXTFile(self.path + "/go.obo").get_data()
-        go_dataset = {}
-        creating_term = None
+        go_data = TXTFile(self.path + "/go.obo").get_GO_data()
 
         for line in go_data:
+            creating_term = None
+            go_dataset = {}
             line = line.strip()
 
             if line == "[Term]":
