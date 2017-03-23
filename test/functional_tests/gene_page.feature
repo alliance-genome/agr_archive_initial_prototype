@@ -7,15 +7,15 @@ Feature: navigating the gene page
 
     Examples: Human
     | id                | symbol   |
-    | 1348836           | RNF31    |
-    | 1316511           | BRD9     |
-    | 733956            | FGF8     |
+    | HGNC:1348836      | RNF31    |
+    | HGNC:1316511      | BRD9     |
+    | HGNC:733956       | FGF8     |
 
     Examples: Rat
     | id                | symbol   |
-    | 70891             | Fgf8     |
-    | 1306349           | Fmn1     |
-    | 620796            | Srm      |
+    | RGD:70891         | Fgf8     |
+    | RGD:1306349       | Fmn1     |
+    | RGD:620796        | Srm      |
 
     Examples: Mouse
     | id                | symbol   |
