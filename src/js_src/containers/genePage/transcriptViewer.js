@@ -30,20 +30,21 @@ class TranscriptViewer extends Component {
     // original URL
     let delay = 5000;
     let pngSuffix = '&format=PNG&delay=' + delay + '&width=600&height=300&zoom=1&quality=0.7';
-    let hideControlsSuffix = '&tracklist=0&nav=0&tracklabels=0';
+    let hideControlsSuffix = '&tracklist=0&nav=0&tracklabels=0&fullviewlink=0';
 
 
     let finalUrl = visualizationUrl + encodeURIComponent(jbrowseUrl.replace('DNA%2C', '') + hideControlsSuffix) + pngSuffix;
     return (
       <div className={style.jbrowse}>
         <a href={jbrowseUrl} rel="noopener noreferrer" target='_blank'>
-          <img src={finalUrl}
+          <img
                onError={this.handleImageErrored.bind(this)}
                onLoad={this.handleImageLoaded.bind(this)}
+               src={finalUrl}
           />
         </a>
           {this.state.imageStatus === 'loading'
-              ?   <div>Loading ... <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"/></div>
+              ?   <div>Loading ... <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" /> </div>
             : ''
           }
       </div>
@@ -52,11 +53,11 @@ class TranscriptViewer extends Component {
 }
 
 TranscriptViewer.propTypes = {
+  chromosome: React.PropTypes.string,
+  fmax: React.PropTypes.number,
+  fmin: React.PropTypes.number,
   geneSymbol: React.PropTypes.string.isRequired,
   species: React.PropTypes.string.isRequired,
-  fmin: React.PropTypes.number,
-  fmax: React.PropTypes.number,
-  chromosome: React.PropTypes.string,
 };
 
 export default TranscriptViewer;
