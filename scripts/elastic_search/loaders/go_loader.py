@@ -1,4 +1,5 @@
 from files import *
+from obo_parser import *
 
 import re
 
@@ -7,46 +8,24 @@ class GoLoader:
     def use_obo_parser(self):
         path = "tmp";
         S3File("mod-datadumps/data", "go.obo", path).download()
-        yield_line = obo_parser.parseGOOBO(path + "/go.obo")
-        for line in yield_lines:
-            yield line
+        parsed_line = parseGOOBO(path + "/go.obo")
+        list_to_yield = []
+        for line in parsed_line: # Convert parsed obo term into a schema-friendly AGR dictionary.
+            list_to_yield.append({ # Append anonymous dictionary to list.
+                    'name': line['name'],
+                    'description': line['def'],
+                    'go_type': line['namespace'],
+                    'go_synonyms': line.get('synonym'),
 
-    def __init__(self):
-        self.path = "tmp";
-        S3File("mod-datadumps/data", "go.obo", self.path).download()
-
-    def get_data(self):
-        go_data = TXTFile(self.path + "/go.obo").get_GO_data()
-
-        for line in go_data:
-            creating_term = None
-            go_dataset = {}
-            line = line.strip()
-
-            if line == "[Term]":
-                creating_term = True
-            elif creating_term:
-                key = (line.split(":")[0]).strip()
-                value = ("".join(":".join(line.split(":")[1:]))).strip()
-
-                if key == "id":
-                    creating_term = value
-                    go_dataset[creating_term] = {}
-                else:
-                    if key == "synonym":
-                        if value.split(" ")[-2] == "EXACT":
-                            value = (" ".join(value.split(" ")[:-2]))[1:-1]
-                        else:
-                            continue
-                    if key == "def":
-                        m = re.search('\"(.+)\"', value)
-                        value = m.group(1)
-
-                    if key in go_dataset[creating_term]:
-                        go_dataset[creating_term][key].append(value)
-                    else:
-                        go_dataset[creating_term][key] = [value]
-        return go_dataset   
+                    'name_key': line['name'],
+                    'id': line['id'],
+                    'href': 'http://amigo.geneontology.org/amigo/term/' + line['id'],
+                    'category': 'go'
+            })
+            if len(list_to_yield) == 5000:
+                yield list_to_yield
+        if len(list_to_yield) > 0:
+            yield list_to_yield
 
     def process_data(self):
 

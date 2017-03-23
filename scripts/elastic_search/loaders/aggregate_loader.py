@@ -11,15 +11,15 @@ import os
 
 class AggregateLoader:
 
-    @profile
+    # @profile
     def load_from_mods(self):
         #mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
         mods = [FlyBase(), WormBase()]
 
         print "Loading GO Data"
-        go_loader = GoLoader().use_obo_parser()
-        for line in go_loader:
-            print line
+        go_parsed_entries = GoLoader().use_obo_parser()
+        for go_list_of_entries in go_parsed_entries: # Sending lists of anonymous dictionaries to be indexed.
+            self.es.index_data(go_list_of_entries, 'Go Data', 'index') # Use 'index' for the initial indexing.
         #go_dataset = go_loader.get_data()
         print "Loading OMIM Data"
         omim_data = OMIMLoader().get_data()
@@ -38,13 +38,13 @@ class AggregateLoader:
             
             self.es.index_data(genes, 'Gene Data', 'index') # Use 'index' for the initial gene indexing.
 
-            print "Loading GO annotations from mines or files."
-            gene_go_annots = mod.load_go()
+            # print "Loading GO annotations from mines or files."
+            # gene_go_annots = mod.load_go()
 
-            print "Attaching GO annotations to genes."
-            genes = GoAnnotator().attach_annotations(genes, gene_go_annots, go_dataset)
+            # print "Attaching GO annotations to genes."
+            # genes = GoAnnotator().attach_annotations(genes, gene_go_annots, go_dataset)
             
-            self.gene_master_list.extend(gene_list)
+            # self.gene_master_list.extend(gene_list)
 
             # print gene_list
             # gene_list = genes.keys() # Create a new list with only the keys from self.genes.
