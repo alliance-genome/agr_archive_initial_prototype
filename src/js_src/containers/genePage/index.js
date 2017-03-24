@@ -11,6 +11,7 @@ import { OrthologyTable, mockOrthologData } from '../../components/orthology';
 import { DiseaseTable, mockDiseaseData } from '../../components/disease';
 import Subsection from '../../components/subsection';
 import TranscriptViewer from './transcriptViewer';
+import TranscriptInlineViewer from './transcriptInlineViewer';
 
 
 class GenePage extends Component {
@@ -55,6 +56,14 @@ class GenePage extends Component {
           <BasicGeneInfo geneData={this.props.data} />
         </Subsection>
 
+        <Subsection title='Transcript Inline Viewer'>
+          {genomeLocation
+            ?
+            <TranscriptInlineViewer geneSymbol={this.props.data.symbol} species={this.props.data.species} fmin={genomeLocation.fmin } fmax={genomeLocation.fmax} chromosome={genomeLocation.chromosome}/>
+            :
+            <div className="alert alert-warning">Genome Location Data Unavailable</div>
+          }
+        </Subsection>
 
         <Subsection title='Transcript Viewer'>
           {genomeLocation
