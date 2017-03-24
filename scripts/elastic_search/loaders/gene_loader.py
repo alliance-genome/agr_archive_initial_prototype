@@ -4,20 +4,19 @@ from mods import MOD
 import re
 
 class GeneLoader:
-    def __init__(self, filename):
-        self.gene_data = JSONFile(filename).get_data()
-
-    def get_data(self):
+    def get_data(self, gene_data):
+        
         gene_dataset = {}
+        list_to_yield = []
 
-        dateProduced = self.gene_data['metaData']['dateProduced']
-        dataProvider = self.gene_data['metaData']['dataProvider']
+        dateProduced = gene_data['metaData']['dateProduced']
+        dataProvider = gene_data['metaData']['dataProvider']
         release = None
 
-        if 'release' in self.gene_data['metaData']:
-            release = self.gene_data['metaData']['release']
+        if 'release' in gene_data['metaData']:
+            release = gene_data['metaData']['release']
 
-        for geneRecord in self.gene_data['data']:
+        for geneRecord in gene_data['data']:
             cross_references = []
             external_ids = []
             gene_chromosomes = []
@@ -59,7 +58,7 @@ class GeneLoader:
             if geneRecord['taxonId'] == "10116" and not primary_id.startswith("RGD"):
                 primary_id = dataProvider + ":" + geneRecord['primaryId']
 
-            gene_dataset[primary_id] = {
+            gene_dataset = {
                 "symbol": geneRecord['symbol'],
                 "name": geneRecord.get('name'),
                 "description": geneRecord.get('description'),
@@ -92,7 +91,12 @@ class GeneLoader:
                 "release": release
             }
 
-        return gene_dataset
+            list_to_yield.append(gene_dataset)
+            if len(list_to_yield) == 5000:
+                yield list_to_yield
+                list_to_yield[:] = [] # Empty the list.
+        if len(list_to_yield) > 0:
+            yield list_to_yield
 
     def get_species(self, taxon_id):
         if taxon_id in ("7955"):

@@ -3,47 +3,40 @@ from loaders import *
 from annotators import *
 from files import *
 from mods import *
-import memory_profiler
-import psutil
+#import memory_profiler
+#import psutil
 import gc
 
 import os
 
 class AggregateLoader:
 
-    # @profile
+    #@profile
     def load_from_mods(self):
         #mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
-        mods = [FlyBase(), WormBase()]
+        mods = [FlyBase()]
 
         print "Loading GO Data"
-        go_parsed_entries = GoLoader().use_obo_parser()
-        for go_list_of_entries in go_parsed_entries: # Sending lists of anonymous dictionaries to be indexed.
-            self.es.index_data(go_list_of_entries, 'Go Data', 'index') # Use 'index' for the initial indexing.
-        #go_dataset = go_loader.get_data()
-        print "Loading OMIM Data"
-        omim_data = OMIMLoader().get_data()
-        print "Loading SO Data"
-        so_loader = SoLoader()
-        so_dataset = so_loader.get_data()
+        go_dataset = GoLoader().get_data()
+        print "Loading SO Data" 
+        so_dataset = SoLoader().get_data()
 
         self.gene_master_list = [] # Master list of gene IDs across all MODs.
 
-        print "Gathering genes from Each Mod"
+        print "Gathering genes from each MOD"
         for mod in mods:
-            genes = mod.load_genes()
+            genes = mod.load_genes() # generator object
+            print "Loading GO annotations."
+            gene_go_annots = mod.load_go()
 
-            print "Attaching SO terms."
-            genes = SoAnnotator().attach_annotations(genes, so_dataset)
-            
-            self.es.index_data(genes, 'Gene Data', 'index') # Use 'index' for the initial gene indexing.
+            for gene_list_of_entries in genes:
+                # Annotations to individual genes occurs in the loop below.
+                print "Attaching annotations to individual genes."
+                for individual_gene in gene_list_of_entries:
+                    GoAnnotator().attach_annotations(individual_gene, gene_go_annots, go_dataset)
+                    SoAnnotator().attach_annotations(individual_gene, so_dataset)
+                self.es.index_data(gene_list_of_entries, 'Gene Data', 'index') # Use 'index' for the initial gene indexing.
 
-            # print "Loading GO annotations from mines or files."
-            # gene_go_annots = mod.load_go()
-
-            # print "Attaching GO annotations to genes."
-            # genes = GoAnnotator().attach_annotations(genes, gene_go_annots, go_dataset)
-            
             # self.gene_master_list.extend(gene_list)
 
             # print gene_list

@@ -1,6 +1,5 @@
 class SoAnnotator:
 
-    def attach_annotations(self, genes, so_dataset):
-        for key in genes:
-            genes[key]["soTermName"] = so_dataset[genes[key]["soTermId"]]["name"][0]
-        return genes
+	@staticmethod
+    def attach_annotations(self, gene, so_dataset):
+        gene['SoTermName'] = so_dataset[gene['soTermId']]['name'][0]

@@ -42,7 +42,3 @@ class SoLoader:
                         so_dataset[creating_term][key] = [value]
 
         return so_dataset
-
-    def attach_so_data(self, genes):
-        for key in genes:
-            genes[key]["soTermName"] = self.so_dataset[genes[key]["soTermId"]]["name"][0]

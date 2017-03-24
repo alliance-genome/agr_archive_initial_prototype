@@ -25,7 +25,10 @@ class WormBase(MOD):
         path = "tmp"
         S3File("mod-datadumps", "WB_0.3.0_2.tar.gz", path).download()
         TARFile(path, "WB_0.3.0_2.tar.gz").extract_all()
-        return GeneLoader(path + "/WB_0.3_basicgeneinformation.json").get_data()
+        gene_data = JSONFile().get_data(path + "/WB_0.3_basicgeneinformation.json")
+        gene_lists = GeneLoader().get_data(gene_data)
+        for entry in gene_lists:
+             yield entry
 
     def load_go(self):
         path = "tmp"

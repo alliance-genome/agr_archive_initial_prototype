@@ -4,45 +4,28 @@ from obo_parser import *
 import re
 
 class GoLoader:
-
-    def use_obo_parser(self):
+    
+    @staticmethod
+    def get_data():
         path = "tmp";
         S3File("mod-datadumps/data", "go.obo", path).download()
         parsed_line = parseGOOBO(path + "/go.obo")
-        list_to_yield = []
+        dict_to_return = {}
         for line in parsed_line: # Convert parsed obo term into a schema-friendly AGR dictionary.
-            list_to_yield.append({ # Append anonymous dictionary to list.
-                    'name': line['name'],
-                    'description': line['def'],
-                    'go_type': line['namespace'],
-                    'go_synonyms': line.get('synonym'),
+            go_id = line['id']
+            dict_to_return[go_id] = {
+                'name': line['name'],
+                'description': line['def'],
+                'go_type': line['namespace'],
+                'go_synonyms': line.get('synonym'),
 
-                    'name_key': line['name'],
-                    'id': line['id'],
-                    'href': 'http://amigo.geneontology.org/amigo/term/' + line['id'],
-                    'category': 'go'
-            })
-            if len(list_to_yield) == 5000:
-                yield list_to_yield
-        if len(list_to_yield) > 0:
-            yield list_to_yield
-
-    def process_data(self):
-
-            self.go[go_id] = {
-                "go_genes": [gene_symbol],
-                "go_species": [species],
-
-                "name": self.go_dataset[go_id]["name"][0],
-                "description": self.go_dataset[go_id]["def"][0],
-                "go_type": self.go_dataset[go_id]["namespace"][0],
-                "go_synonyms": self.go_dataset[go_id].get("synonym"),
-
-                "name_key": self.go_dataset[go_id]["name"][0],
-                "id": go_id,
-                "href": "http://amigo.geneontology.org/amigo/term/" + go_id,
-                "category": "go"
+                'name_key': line['name'],
+                'id': go_id,
+                'href': 'http://amigo.geneontology.org/amigo/term/' + line['id'],
+                'category': 'go'
             }
+        return dict_to_return
+
 
     # def process_go_data():
     #     if species == "Danio rerio":
