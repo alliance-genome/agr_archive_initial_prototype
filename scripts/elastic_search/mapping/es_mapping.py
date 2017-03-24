@@ -70,40 +70,26 @@ class ESMapping:
     def index_data(self, data, data_type, op_type):
         s = time.time()
         bulk_data = []
+        id_to_use = None
 
-        if data_type == 'Go Data':
-            print "Sending GO Data into Index: %s (batches of 5000 entries)." % (self.new_index_name)
-            for entry in data:
-                bulk_data.append(
-                    {   '_op_type': op_type,
-                        '_index': self.new_index_name, 
-                        '_type': "searchable_item",
-                        '_id': entry['id'],
-                        'doc': entry
-                    })
-        
-        elif data_type == 'Gene Data':
-            for entry in data:
-                bulk_data.append(
-                    {   '_op_type': op_type,
-                        '_index': self.new_index_name, 
-                        '_type': "searchable_item",
-                        '_id': entry,
-                        'doc': data[entry]
-                    })
+        print "%s %s into Index: %s (batches of 5000)." % (op_type, data_type, self.new_index_name)
 
-        for success, info in parallel_bulk(self.es, actions=bulk_data, refresh=False, request_timeout=60, thread_count=4):
+        for entry in data:
+            if data_type == "Gene Data":
+                id_to_use = entry['primaryId']
+            elif data_type == "GO Data":
+                id_to_use = entry['id']
+
+            bulk_data.append(
+                {   '_op_type': op_type,
+                    '_index': self.new_index_name, 
+                    '_type': "searchable_item",
+                    '_id': id_to_use,
+                    'doc': entry
+                })
+
+        for success, info in parallel_bulk(self.es, actions=bulk_data, refresh=True, request_timeout=60, thread_count=4):
                 if not success:
                     print "A document failed: %s" % (info)
 
         print "Indexing took: " + str(time.time() - s) + " seconds"
-
-    # def update_data(self, data, data_type):
-    #     s = time.time()
-    #     print "Updating " + data_type + " into Index: " + self.new_index_name
-    #     bulk_data = []
-
-    #     for id in data:
-    #         bulk.data.append({
-    #             'update'
-    #             })

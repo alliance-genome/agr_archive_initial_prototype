@@ -18,7 +18,10 @@ class FlyBase(MOD):
         path = "tmp"
         S3File("mod-datadumps", "FB_0.3.0_1.tar.gz", path).download()
         TARFile(path, "FB_0.3.0_1.tar.gz").extract_all()
-        return GeneLoader(path + "/FB_0.3_basicGeneInformation.json").get_data()
+        gene_data = JSONFile().get_data(path + "/FB_0.3_basicGeneInformation.json")
+        gene_lists = GeneLoader().get_data(gene_data)
+        for entry in gene_lists:
+             yield entry
 
     @staticmethod
     def gene_id_from_panther(panther_id):
@@ -30,12 +33,20 @@ class FlyBase(MOD):
         S3File("mod-datadumps", "FlyBase_GO_output_fb_2016_05.tsv", path).download()
         go_data = CSVFile(path + "/FlyBase_GO_output_fb_2016_05.tsv").get_data()
 
-        list = []
+        go_annot_dict = {}
         for row in go_data:
-            go_genes = map(lambda s: s.strip(), row[4].split(","))
-            for gene in go_genes:
-                list.append({"gene_id": gene, "go_id": 'GO:' + row[2], "species": FlyBase.species})
-        return list
+            go_id = 'GO:' + row[2]
+            gene_entries = map(lambda s: s.strip(), row[4].split(","))
+            for gene in gene_entries:
+                if gene in go_annot_dict:
+                    go_annot_dict[gene]['go_id'].append(go_id)
+                else:
+                    go_annot_dict[gene] = {
+                        'gene_id': gene,
+                        'go_id': [go_id],
+                        'species': FlyBase.species
+                    }
+        return go_annot_dict
 
     def load_diseases(self):
         path = "tmp"
