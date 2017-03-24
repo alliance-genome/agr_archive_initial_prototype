@@ -43,12 +43,15 @@ class GeneLoader:
                     chromosome = genomeLocation['chromosome']
                     gene_chromosome_assemblies.append(genomeLocation['assembly'])
                     assembly = genomeLocation['assembly']
-                    if 'start' in genomeLocation:
-                        gene_chromosome_starts.append(genomeLocation['start'])
-                        start = genomeLocation['start']
-                    if 'end' in geneRecord['genomeLocations']:
-                        gene_chromosome_ends.append(genomeLocation['end'])
-                        end = genomeLocation['end']
+                    if 'startPosition' in genomeLocation:
+                        gene_chromosome_starts.append(genomeLocation['startPosition'])
+                        start = genomeLocation['startPosition']
+                    if 'endPosition' in genomeLocation:
+                        gene_chromosome_ends.append(genomeLocation['endPosition'])
+                        end = genomeLocation['endPosition']
+                    # if 'end' in geneRecord['genomeLocations']:
+                    #     gene_chromosome_ends.append(genomeLocation['end'])
+                    #     end = genomeLocation['end']
                     if 'strand' in geneRecord['genomeLocations']:
                         gene_chromosome_strands.append(genomeLocation['strand'])
                         strand = genomeLocation['strand']
