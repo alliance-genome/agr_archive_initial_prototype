@@ -49,7 +49,7 @@ class GeneLoader:
                     if 'endPosition' in genomeLocation:
                         gene_chromosome_ends.append(genomeLocation['endPosition'])
                         end = genomeLocation['endPosition']
-                    if 'strand' in genomeLocation['strand']:
+                    if 'strand' in geneRecord['genomeLocations']:
                         gene_chromosome_strands.append(genomeLocation['strand'])
                         strand = genomeLocation['strand']
                     genomic_locations.append(
