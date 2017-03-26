@@ -36,7 +36,6 @@ class TranscriptViewer extends Component {
     // let externalPrefix = 'http://bw.scottcain.net/jbrowse/?data=data%2F';
     let externalPrefix = 'http://34.208.22.23/jbrowse/overview.html?data=data%2F';
     let internalPrefix = 'http://localhost/jbrowse/overview.html?data=data%2F';
-    let visualizationPrefix = 'http://localhost/jbrowse/@IMAGEID@?data=data%2F';
     // let visualizationUrl = 'http://dev.alliancegenome.org:8891/?url=';
     // let delay = 5000;
     // let pngSuffix = '&format=PNG&delay=' + delay + '&width=600&height=300&zoom=1&quality=0.7';
@@ -47,15 +46,16 @@ class TranscriptViewer extends Component {
     let locationString = this.props.chromosome + ':' + fmin + '..' + fmax;
     let uniqueLocation = encodeURI(this.props.species) + '&loc=' + encodeURI(locationString);
 
-    let internalJbrowseUrl = internalPrefix + uniqueLocation + '&tracks=All%20Genes&highlight=';
-    let externalJbrowseUrl = externalPrefix + uniqueLocation + '&tracks=All%20Genes&highlight=';
+    let geneSymbolUrl = '&lookupSymbol='+this.props.geneSymbol;
+    let internalJbrowseUrl = internalPrefix + uniqueLocation + '&tracks=All%20Genes&highlight='+ geneSymbolUrl;
+    let externalJbrowseUrl = externalPrefix + uniqueLocation + '&tracks=All%20Genes&highlight='+geneSymbolUrl;
 
     // TODO: move EVERYTHING to the externalJBrowseUrl
     // let finalUrl = visualizationUrl + encodeURIComponent(externalJbrowseUrl.replace('DNA%2C', '')) + pngSuffix;
     // let finalUrl = visualizationUrl + encodeURIComponent(internalJbrowseUrl.replace('DNA%2C', '')) ;
-    let visualizationUrl = visualizationPrefix.replace('@IMAGEID@', 'snapshots/' + encodeURI(this.props.species) +'/' + encodeURI(locationString)+ '.jpeg') + uniqueLocation + '&tracks=All%20Genes&highlight=';
-
-    let virualizationUrl2 = 'https://phantomjscloud.com/api/browser/v2/a-demo-key-with-low-quota-per-ip-address/?request={url:'+encodeURI('\"'+externalJbrowseUrl+'\"')+',renderType:"jpg"}';
+    // let visualizationUrl = visualizationPrefix.replace('@IMAGEID@', 'snapshots/' + encodeURI(this.props.species) +'/' + encodeURI(locationString)+ '.jpeg') + uniqueLocation + '&tracks=All%20Genes&highlight=';
+    //
+    // let virualizationUrl2 = 'https://phantomjscloud.com/api/browser/v2/a-demo-key-with-low-quota-per-ip-address/?request={url:'+encodeURI('\"'+externalJbrowseUrl+'\"')+',renderType:"jpg"}';
 
     return (
       <div className={style.jbrowse}>
