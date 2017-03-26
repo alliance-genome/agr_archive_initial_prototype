@@ -20,39 +20,59 @@ class TranscriptViewer extends Component {
     this.setState({imageStatus: ''});
   }
 
+  generateHash(inputString) {
+    var hash = 0, i, chr;
+    if (inputString.length === 0) return hash;
+    for (i = 0; i < inputString.length; i++) {
+      chr = inputString.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+  }
+
+
   render() {
-    let externalPrefx = 'http://bw.scottcain.net/jbrowse/?data=data%2F';
+    // let externalPrefix = 'http://bw.scottcain.net/jbrowse/?data=data%2F';
+    let externalPrefix = 'http://34.208.22.23/jbrowse/overview.html?data=data%2F';
     let internalPrefix = 'http://localhost/jbrowse/overview.html?data=data%2F';
-    let visualizationUrl = 'http://dev.alliancegenome.org:8891/?url=';
-    let delay = 5000;
-    let pngSuffix = '&format=PNG&delay=' + delay + '&width=600&height=300&zoom=1&quality=0.7';
+    let visualizationPrefix = 'http://localhost/jbrowse/@IMAGEID@?data=data%2F';
+    // let visualizationUrl = 'http://dev.alliancegenome.org:8891/?url=';
+    // let delay = 5000;
+    // let pngSuffix = '&format=PNG&delay=' + delay + '&width=600&height=300&zoom=1&quality=0.7';
     // location based data
     // let locationString = this.props.fmin && this.props.fmax ? this.props.chromosome + ':' + this.props.fmin + '..' + this.props.fmax : this.props.geneSymbol;
     let fmin = this.props.fmin ? this.props.fmin : 10000;
     let fmax = this.props.fmax ? this.props.fmax : 20000;
     let locationString = this.props.chromosome + ':' + fmin + '..' + fmax;
+    let uniqueLocation = encodeURI(this.props.species) + '&loc=' + encodeURI(locationString);
 
-    let internalJbrowseUrl = internalPrefix + encodeURI(this.props.species) + '&loc=' + encodeURI(locationString) + '&tracks=All%20Genes&highlight=';
-    let externalJbrowseUrl = externalPrefx + encodeURI(this.props.species) + '&loc=' + encodeURI(locationString) + '&tracks=All%20Genes&highlight=';
+    let internalJbrowseUrl = internalPrefix + uniqueLocation + '&tracks=All%20Genes&highlight=';
+    let externalJbrowseUrl = externalPrefix + uniqueLocation + '&tracks=All%20Genes&highlight=';
 
     // TODO: move EVERYTHING to the externalJBrowseUrl
-    let finalUrl = visualizationUrl + encodeURIComponent(internalJbrowseUrl.replace('DNA%2C', '')) + pngSuffix;
+    // let finalUrl = visualizationUrl + encodeURIComponent(externalJbrowseUrl.replace('DNA%2C', '')) + pngSuffix;
+    // let finalUrl = visualizationUrl + encodeURIComponent(internalJbrowseUrl.replace('DNA%2C', '')) ;
+    let visualizationUrl = visualizationPrefix.replace('@IMAGEID@', 'snapshots/' + encodeURI(this.props.species) +'/' + encodeURI(locationString)+ '.jpeg') + uniqueLocation + '&tracks=All%20Genes&highlight=';
+
+    let virualizationUrl2 = 'https://phantomjscloud.com/api/browser/v2/a-demo-key-with-low-quota-per-ip-address/?request={url:'+encodeURI('\"'+externalJbrowseUrl+'\"')+',renderType:"jpg"}';
 
     return (
       <div className={style.jbrowse}>
+        {/*{alert(visualizationUrl)}*/}
         {/*<a href={externalJbrowseUrl}>*/}
-        <iframe id="genomeFrame" className={style.jbrowse} src={internalJbrowseUrl}  />
+        <iframe id="genomeFrame" className={style.jbrowse} src={internalJbrowseUrl}/>
         {/*</a>*/}
-        {/*<a href={jbrowseUrl} rel="noopener noreferrer" target='_blank'>*/}
+        {/*<a href={externalJbrowseUrl} rel="noopener noreferrer" target='_blank'>*/}
           {/*<img*/}
             {/*onError={this.handleImageErrored.bind(this)}*/}
             {/*onLoad={this.handleImageLoaded.bind(this)}*/}
-            {/*src={finalUrl}*/}
+            {/*src={virualizationUrl2}*/}
           {/*/>*/}
         {/*</a>*/}
         {/*{this.state.imageStatus === 'loading'*/}
-          {/*? <div>Loading ... <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"/></div>*/}
-          {/*: ''*/}
+        {/*? <div>Loading ... <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"/></div>*/}
+        {/*: ''*/}
         {/*}*/}
       </div>
 
