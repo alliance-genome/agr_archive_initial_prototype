@@ -40,7 +40,9 @@ class TranscriptViewer extends Component {
     let finalUrl = visualizationUrl + encodeURIComponent(jbrowseUrl.replace('DNA%2C', '') + hideControlsSuffix) + pngSuffix;
     // jbrowseUrl = 'http://localhost/jbrowse/overview.html?data=data%2FDanio%20rerio&loc=3%3A28911808..28967174&tracks=All%20Genes&highlight=';
     return (
+      <div>
         <iframe id="genomeFrame" className={style.jbrowse} src={jbrowseUrl} />
+      </div>
     );
   }
 
