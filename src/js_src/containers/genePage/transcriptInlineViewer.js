@@ -61,7 +61,9 @@ class TranscriptViewer extends Component {
       <div className={style.jbrowse}>
         {/*{alert(visualizationUrl)}*/}
         {/*<a href={externalJbrowseUrl}>*/}
-        <iframe id="genomeFrame" className={style.jbrowse} src={internalJbrowseUrl}/>
+        <a href={externalJbrowseUrl.replace('overview.html','index.html')}>Genome Viewer<i className="fa fa-link"></i> </a>
+        <a href={externalJbrowseUrl}>Overview<i className="fa fa-link"></i> </a>
+        <iframe id="genomeFrame" className={style.jbrowse} src={externalJbrowseUrl}/>
         {/*</a>*/}
         {/*<a href={externalJbrowseUrl} rel="noopener noreferrer" target='_blank'>*/}
           {/*<img*/}
@@ -75,7 +77,6 @@ class TranscriptViewer extends Component {
         {/*: ''*/}
         {/*}*/}
       </div>
-
     );
   }
 

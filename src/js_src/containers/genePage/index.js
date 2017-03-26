@@ -67,6 +67,8 @@ class GenePage extends Component {
           }
         </Subsection>
 
+        <br/>
+
         {/*<Subsection title='Transcript Viewer'>*/}
           {/*{genomeLocation*/}
             {/*?*/}
