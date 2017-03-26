@@ -25,20 +25,12 @@ class TranscriptViewer extends Component {
     let jbrowsePrefx = 'http://localhost/jbrowse/overview.html?data=data%2F';
     // location based data
     // let locationString = this.props.fmin && this.props.fmax ? this.props.chromosome + ':' + this.props.fmin + '..' + this.props.fmax : this.props.geneSymbol;
-    var fmin = this.props.fmin ? this.props.fmin : 10000;
-    var fmax = this.props.fmax ? this.props.fmax : 20000;
+    let fmin = this.props.fmin ? this.props.fmin : 10000;
+    let fmax = this.props.fmax ? this.props.fmax : 20000;
     let locationString = this.props.chromosome + ':' + fmin + '..' + fmax ;
 
-    let jbrowseUrl = jbrowsePrefx + encodeURI(this.props.species) + '&loc=' + encodeURI(locationString) + '&tracks=DNA%2CAll%20Genes&highlight=';
-    let visualizationUrl = 'http://dev.alliancegenome.org:8891/?url=';
+    let jbrowseUrl = jbrowsePrefx + encodeURI(this.props.species) + '&loc=' + encodeURI(locationString) + '&tracks=All%20Genes&highlight=';
 
-    // original URL
-    let delay = 5000;
-    let pngSuffix = '&format=PNG&delay=' + delay + '&width=600&height=300&zoom=1&quality=0.7';
-    let hideControlsSuffix = '&tracklist=0&nav=0&tracklabels=0&fullviewlink=0';
-
-    let finalUrl = visualizationUrl + encodeURIComponent(jbrowseUrl.replace('DNA%2C', '') + hideControlsSuffix) + pngSuffix;
-    // jbrowseUrl = 'http://localhost/jbrowse/overview.html?data=data%2FDanio%20rerio&loc=3%3A28911808..28967174&tracks=All%20Genes&highlight=';
     return (
       <div>
         <iframe id="genomeFrame" className={style.jbrowse} src={jbrowseUrl} />
