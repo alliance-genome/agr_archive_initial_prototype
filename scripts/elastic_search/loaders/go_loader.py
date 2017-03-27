@@ -27,17 +27,3 @@ class GoLoader:
                 'category': 'go'
             }
         return dict_to_return
-
-
-    # def process_go_data():
-    #     if species == "Danio rerio":
-    #         gene_symbol = self.genes[gene_id]["symbol"]
-    #     else:
-    #         gene_symbol = self.genes[gene_id]["symbol"].upper()   
-
-    #     if go_id in self.go:
-    #         if gene_symbol not in self.go[go_id]["go_genes"]:
-    #             self.go[go_id]["go_genes"].append(gene_symbol)
-    #         if species not in self.go[go_id]["go_species"]:
-    #             self.go[go_id]["go_species"].append(species)
-    #     else:
