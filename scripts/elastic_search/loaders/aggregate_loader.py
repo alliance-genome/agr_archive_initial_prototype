@@ -3,15 +3,12 @@ from loaders import *
 from annotators import *
 from files import *
 from mods import *
-#import memory_profiler
-#import psutil
 import gc
 
 import os
 
 class AggregateLoader:
 
-    #@profile
     def load_from_mods(self):
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
         #mods = [RGD()]
