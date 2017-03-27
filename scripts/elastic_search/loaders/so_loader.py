@@ -4,17 +4,17 @@ import re
 
 class SoLoader:
 
-    def __init__(self):
+    @staticmethod
+    def get_data():
         path = "tmp";
         S3File("mod-datadumps/data", "so.obo", path).download()
-        self.so_data = TXTFile(path + "/so.obo").get_data()
+        so_data = TXTFile(path + "/so.obo").get_data()
 
-    def get_data(self):
         so_dataset = {}
 
         creating_term = None
 
-        for line in self.so_data:
+        for line in so_data:
             line = line.strip()
 
             if line == "[Term]":

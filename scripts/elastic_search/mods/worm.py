@@ -1,9 +1,9 @@
 from mod import MOD
 from files import *
 from loaders.gene_loader import GeneLoader
+import gzip
 import xlrd
 import csv
-
 
 class WormBase(MOD):
     species = "Caenorhabditis elegans"
@@ -32,22 +32,24 @@ class WormBase(MOD):
 
     def load_go(self):
         path = "tmp"
-        S3File("mod-datadumps/data", "wormbase_gene_association.tsv", path).download()
-
-        go_data_csv_filename = path + "/wormbase_gene_association.tsv"
-
-        print("Fetching go data from WormBase txt file (" + go_data_csv_filename + ") ...")
-
-        list = []
-        with open(go_data_csv_filename, 'rb') as f:
-            reader = csv.reader(f, delimiter='\t')
-
-            for i in xrange(24):
-                next(reader, None)
-
-            for row in reader:
-                list.append({"gene_id": row[1], "go_id": row[4], "species": WormBase.species})
-        return list
+        S3File("mod-datadumps/GO/ANNOT", "gene_association.wb.gz", path).download()
+        go_annot_dict = {}
+        with gzip.open(path + "/gene_association.wb.gz", 'rb') as file:
+            reader = csv.reader(file, delimiter='\t')
+            for line in reader:
+                if line[0].startswith('!'):
+                    continue
+                gene = line[1]
+                go_id = line[4]
+                if gene in go_annot_dict:
+                    go_annot_dict[gene]['go_id'].append(go_id)
+                else:
+                    go_annot_dict[gene] = {
+                        'gene_id': gene,
+                        'go_id': [go_id],
+                        'species': WormBase.species
+                    }
+        return go_annot_dict
 
     def load_diseases(self):
         path = "tmp"

@@ -1,6 +1,7 @@
 from loaders.gene_loader import GeneLoader
 from mod import MOD
 from files import *
+import gzip
 import csv
 
 class FlyBase(MOD):
@@ -30,14 +31,15 @@ class FlyBase(MOD):
 
     def load_go(self):
         path = "tmp"
-        S3File("mod-datadumps", "FlyBase_GO_output_fb_2016_05.tsv", path).download()
-        go_data = CSVFile(path + "/FlyBase_GO_output_fb_2016_05.tsv").get_data()
-
+        S3File("mod-datadumps/GO/ANNOT", "gene_association.fb.gz", path).download()
         go_annot_dict = {}
-        for row in go_data:
-            go_id = 'GO:' + row[2]
-            gene_entries = map(lambda s: s.strip(), row[4].split(","))
-            for gene in gene_entries:
+        with gzip.open(path + "/gene_association.fb.gz", 'rb') as file:
+            reader = csv.reader(file, delimiter='\t')
+            for line in reader:
+                if line[0].startswith('!'):
+                    continue
+                gene = line[1]
+                go_id = line[4]
                 if gene in go_annot_dict:
                     go_annot_dict[gene]['go_id'].append(go_id)
                 else:

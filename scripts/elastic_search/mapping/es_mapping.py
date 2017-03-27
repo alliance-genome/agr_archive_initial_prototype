@@ -72,20 +72,22 @@ class ESMapping:
         bulk_data = []
         id_to_use = None
 
-        print "%s %s into Index: %s (batches of 5000)." % (op_type, data_type, self.new_index_name)
+        print "Indexing %s into Index: %s." % (data_type, self.new_index_name)
 
         for entry in data:
             if data_type == "Gene Data":
                 id_to_use = entry['primaryId']
+                doc = entry
             elif data_type == "GO Data":
-                id_to_use = entry['id']
+                id_to_use = data[entry]['id']
+                doc = data[entry]
 
             bulk_data.append(
                 {   '_op_type': op_type,
                     '_index': self.new_index_name, 
                     '_type': "searchable_item",
                     '_id': id_to_use,
-                    'doc': entry
+                    'doc': doc
                 })
 
         for success, info in parallel_bulk(self.es, actions=bulk_data, refresh=True, request_timeout=60, thread_count=4):

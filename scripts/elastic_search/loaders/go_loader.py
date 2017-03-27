@@ -14,6 +14,8 @@ class GoLoader:
         for line in parsed_line: # Convert parsed obo term into a schema-friendly AGR dictionary.
             go_id = line['id']
             dict_to_return[go_id] = {
+                'go_genes': [],
+                'go_species': [],
                 'name': line['name'],
                 'description': line['def'],
                 'go_type': line['namespace'],
