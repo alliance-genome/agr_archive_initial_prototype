@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 
 import fetchData from '../../lib/fetchData';
@@ -11,6 +10,7 @@ import GenePageHeader from './genePageHeader';
 import { OrthologyTable, mockOrthologData } from '../../components/orthology';
 import { DiseaseTable, mockDiseaseData } from '../../components/disease';
 import Subsection from '../../components/subsection';
+import HeadMetaTags from '../../components/headMetaTags';
 import TranscriptViewer from './transcriptViewer';
 
 
@@ -34,14 +34,10 @@ class GenePage extends Component {
     if (!this.props.data) {
       return null;
     }
-
+    let title = 'AGR gene page for ' + this.props.data.species + ' gene: ' + this.props.data.symbol;
     return (
       <div className='container'>
-        <Helmet
-           title={'AGR gene page for ' + this.props.data.species + ' gene: ' + this.props.data.symbol}
-           meta={[
-               {property: 'og:title', content: 'Gene'},
-           ]} />
+        <HeadMetaTags title={title} />
         <GenePageHeader symbol={this.props.data.symbol} />
 
         <Subsection>
