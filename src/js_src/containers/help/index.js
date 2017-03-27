@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import Helmet from 'react-helmet';
+import HeadMetaTags from '../../components/headMetaTags';
 
 class Help extends Component {
   render() {
+    let title='Help Using Alliance of Genome Resources ';
     return (
       <div>
-        <Helmet
-           title="Help Using Alliance of Genome Resources "
-           meta={[
-               {property: 'og:title', content: 'Help'},
-           ]} />
+        <HeadMetaTags title={title} />
         <h1>Help</h1>
       </div>
     );
