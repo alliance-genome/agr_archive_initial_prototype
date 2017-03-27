@@ -8,16 +8,16 @@ import style from './style.css';
 var removeImageBlanks = function(imageObject) {
   let imgWidth = imageObject.width;
   let imgHeight = imageObject.height;
-  var canvas = document.createElement('canvas');
+  let canvas = document.createElement('canvas');
   canvas.setAttribute('width', imgWidth);
   canvas.setAttribute('height', imgHeight);
-  var context = canvas.getContext('2d');
+  let context = canvas.getContext('2d');
   context.drawImage(imageObject, 0, 0);
 
-  var imageData = context.getImageData(0, 0, imgWidth, imgHeight),
+  let imageData = context.getImageData(0, 0, imgWidth, imgHeight),
     data = imageData.data,
     getRBG = function (x, y) {
-      var offset = imgWidth * y + x;
+      let offset = imgWidth * y + x;
       return {
         red: data[offset * 4],
         green: data[offset * 4 + 1],
@@ -30,14 +30,14 @@ var removeImageBlanks = function(imageObject) {
       return rgb.red > 200 && rgb.green > 200 && rgb.blue > 200;
     },
     scanY = function (fromTop) {
-      var offset = fromTop ? 1 : -1;
+      let offset = fromTop ? 1 : -1;
 
       // loop through each row
-      for (var y = fromTop ? 0 : imgHeight - 1; fromTop ? (y < imgHeight) : (y > -1); y += offset) {
+      for (let y = fromTop ? 0 : imgHeight - 1; fromTop ? (y < imgHeight) : (y > -1); y += offset) {
 
         // loop through each column
-        for (var x = 0; x < imgWidth; x++) {
-          var rgb = getRBG(x, y);
+        for (let x = 0; x < imgWidth; x++) {
+          let rgb = getRBG(x, y);
           if (!isWhite(rgb)) {
             return y;
           }
@@ -46,14 +46,14 @@ var removeImageBlanks = function(imageObject) {
       return null; // all image is white
     },
     scanX = function (fromLeft) {
-      var offset = fromLeft ? 1 : -1;
+      let offset = fromLeft ? 1 : -1;
 
       // loop through each column
-      for (var x = fromLeft ? 0 : imgWidth - 1; fromLeft ? (x < imgWidth) : (x > -1); x += offset) {
+      for (let x = fromLeft ? 0 : imgWidth - 1; fromLeft ? (x < imgWidth) : (x > -1); x += offset) {
 
         // loop through each row
-        for (var y = 0; y < imgHeight; y++) {
-          var rgb = getRBG(x, y);
+        for (let y = 0; y < imgHeight; y++) {
+          let rgb = getRBG(x, y);
           if (!isWhite(rgb)) {
             return x;
           }
@@ -62,7 +62,7 @@ var removeImageBlanks = function(imageObject) {
       return null; // all image is white
     };
 
-  var cropTop = scanY(true),
+  let cropTop = scanY(true),
     cropBottom = scanY(false),
     cropLeft = scanX(true),
     cropRight = scanX(false),
@@ -77,7 +77,7 @@ var removeImageBlanks = function(imageObject) {
     0, 0, cropWidth, cropHeight);
 
   return canvas.toDataURL();
-}
+};
 
 class TranscriptViewer extends Component {
 
@@ -99,10 +99,10 @@ class TranscriptViewer extends Component {
     let myImage = new Image();
     myImage.crossOrigin = 'anonymous';
     myImage['Access-Control-Allow-Origin'] = '*';
+    myImage.src = vizUrl;
     myImage.onload = function () {
       return removeImageBlanks(myImage); //Will return cropped image data
     };
-    myImage.src = vizUrl;
   }
 
   render() {
@@ -131,22 +131,22 @@ class TranscriptViewer extends Component {
     // let virualizationUrl2 = 'https://phantomjscloud.com/api/browser/v2/a-demo-key-with-low-quota-per-ip-address/?request={url:'+encodeURI('\"'+externalJbrowseUrl+'\"')+',renderType:"jpg"}';
 
     return (
-      <div className={style.jbrowse}>
+      <div className={style.jbrowse} id="genomeViewer">
         {/*{alert(visualizationUrl)}*/}
         {/*<a href={externalJbrowseUrl.replace('overview.html','index.html')}>Genome Viewer<i className="fa fa-link"></i> </a>*/}
         {/*<a href={externalJbrowseUrl}>Overview<i className="fa fa-link"></i> </a>*/}
         {/*<iframe id="genomeFrame" className={style.jbrowse} src={internalJbrowseUrl}/>*/}
         <a href={externalJbrowseUrl} rel="noopener noreferrer" target='_blank'>
           <img
-            onError={this.handleImageErrored.bind(this)}
-            onLoad={this.handleImageLoaded.bind(this)}
+            // onError={this.handleImageErrored.bind(this)}
+            // onLoad={this.handleImageLoaded.bind(this)}
             src={this.getImage(visualizationUrl)}
           />
         </a>
-        {this.state.imageStatus === 'loading'
-          ? <div>Loading ... <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"/></div>
-          : ''
-        }
+        {/*{this.state.imageStatus === 'loading'*/}
+          {/*? <div>Loading ... <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"/></div>*/}
+          {/*: ''*/}
+        {/*}*/}
       </div>
     );
   }
