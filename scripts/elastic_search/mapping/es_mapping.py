@@ -82,13 +82,13 @@ class ESMapping:
                 id_to_use = data[entry]['id']
                 doc = data[entry]
 
-            bulk_data.append(
+            doc.update(
                 {   '_op_type': op_type,
                     '_index': self.new_index_name, 
                     '_type': "searchable_item",
                     '_id': id_to_use,
-                    'doc': doc
                 })
+            bulk_data.append(doc)
 
         for success, info in parallel_bulk(self.es, actions=bulk_data, refresh=True, request_timeout=60, thread_count=4):
                 if not success:
