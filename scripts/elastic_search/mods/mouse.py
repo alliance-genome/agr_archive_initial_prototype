@@ -1,5 +1,7 @@
 from mod import MOD
 from files import *
+import gzip
+import csv
 from loaders.gene_loader import GeneLoader
 from intermine.webservice import Service
 
@@ -28,26 +30,31 @@ class MGI(MOD):
         path = "tmp"
         S3File("mod-datadumps", "MGI_0.3.0_1.tar.gz", path).download()
         TARFile(path, "MGI_0.3.0_1.tar.gz").extract_all()
-        return GeneLoader(path + "/MGI_0.3_basicGeneInformation.json").get_data()
+        gene_data = JSONFile().get_data(path + "/MGI_0.3_basicGeneInformation.json")
+        gene_lists = GeneLoader().get_data(gene_data)
+        for entry in gene_lists:
+             yield entry
 
     def load_go(self):
-        query = self.service.new_query("GOTerm")
-        query.add_constraint("ontologyAnnotations.subject", "SequenceFeature")
-        query.add_view(
-            "identifier", "name", "namespace", "ontologyAnnotations.qualifier",
-            "ontologyAnnotations.subject.primaryIdentifier",
-            "ontologyAnnotations.subject.symbol", "synonyms.name", "synonyms.type"
-        )
-        query.outerjoin("ontologyAnnotations")
-        query.outerjoin("ontologyAnnotations.subject")
-        query.outerjoin("synonyms")
-
-        print ("Fetching go data from MouseMine...")
-
-        list = []
-        for row in query.rows():
-            list.append({"gene_id": row["ontologyAnnotations.subject.primaryIdentifier"], "go_id": row["identifier"], "species": MGI.species})
-        return list
+        path = "tmp"
+        S3File("mod-datadumps/GO/ANNOT", "gene_association.mgi.gz", path).download()
+        go_annot_dict = {}
+        with gzip.open(path + "/gene_association.mgi.gz", 'rb') as file:
+            reader = csv.reader(file, delimiter='\t')
+            for line in reader:
+                if line[0].startswith('!'):
+                    continue
+                gene = line[1]
+                go_id = line[4]
+                if gene in go_annot_dict:
+                    go_annot_dict[gene]['go_id'].append(go_id)
+                else:
+                    go_annot_dict[gene] = {
+                        'gene_id': gene,
+                        'go_id': [go_id],
+                        'species': MGI.species
+                    }
+        return go_annot_dict
 
     def load_diseases(self):
         query = self.service.new_query("OMIMTerm")
