@@ -63,7 +63,7 @@ class TranscriptViewer extends Component {
         {/*<a href={externalJbrowseUrl}>*/}
         <a href={externalJbrowseUrl.replace('overview.html','index.html')}>Genome Viewer<i className="fa fa-link"></i> </a>
         <a href={externalJbrowseUrl}>Overview<i className="fa fa-link"></i> </a>
-        <iframe id="genomeFrame" className={style.jbrowse} src={externalJbrowseUrl}/>
+        <iframe id="genomeFrame" className={style.jbrowse} src={internalJbrowseUrl}/>
         {/*</a>*/}
         {/*<a href={externalJbrowseUrl} rel="noopener noreferrer" target='_blank'>*/}
           {/*<img*/}
