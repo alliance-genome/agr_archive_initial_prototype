@@ -25,12 +25,12 @@ class SGD(MOD):
         # example: SGD=S000000226
         return panther_id.split("=")[1]
 
-    def load_genes(self):
+    def load_genes(self, batch_size, test_set):
         path = "tmp"
         S3File("mod-datadumps", "SGD_0.3.0_1.tar.gz", path).download()
         TARFile(path, "SGD_0.3.0_1.tar.gz").extract_all()
         gene_data = JSONFile().get_data(path + "/SGD_0.3_basicGeneInformation.json")
-        gene_lists = GeneLoader().get_data(gene_data)
+        gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
 

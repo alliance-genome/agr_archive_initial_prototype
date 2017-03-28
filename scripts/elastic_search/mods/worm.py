@@ -21,12 +21,12 @@ class WormBase(MOD):
         # example: WormBase=WBGene00004831
         return panther_id.split("=")[1]
 
-    def load_genes(self):
+    def load_genes(self, batch_size, test_set):
         path = "tmp"
         S3File("mod-datadumps", "WB_0.3.0_2.tar.gz", path).download()
         TARFile(path, "WB_0.3.0_2.tar.gz").extract_all()
         gene_data = JSONFile().get_data(path + "/WB_0.3_basicgeneinformation.json")
-        gene_lists = GeneLoader().get_data(gene_data)
+        gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
 

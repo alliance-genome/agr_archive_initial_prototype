@@ -24,12 +24,12 @@ class ZFIN(MOD):
         # example: ZFIN=ZDB-GENE-050522-480
         return panther_id.split("=")[1]
 
-    def load_genes(self):
+    def load_genes(self, batch_size, test_set):
         path = "tmp"
         S3File("mod-datadumps", "ZFIN_0.3.0_6.tar.gz", path).download()
         TARFile(path, "ZFIN_0.3.0_6.tar.gz").extract_all()
         gene_data = JSONFile().get_data(path + "/ZFIN_0.3.0_BGI.json")
-        gene_lists = GeneLoader().get_data(gene_data)
+        gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
 

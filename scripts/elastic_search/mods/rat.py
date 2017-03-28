@@ -22,12 +22,12 @@ class RGD(MOD):
         # example: RGD=628644
         return panther_id.replace("=", ":")
 
-    def load_genes(self):
+    def load_genes(self, batch_size, test_set):
         path = "tmp"
         S3File("mod-datadumps", "RGD_0.3_1.tar.gz", path).download()
         TARFile(path, "RGD_0.3_1.tar.gz").extract_all()
         gene_data = JSONFile().get_data(path + "/agr/RGD_0.3_basicGeneInformation.10116.json")
-        gene_lists = GeneLoader().get_data(gene_data)
+        gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
 

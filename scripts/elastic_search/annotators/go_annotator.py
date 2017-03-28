@@ -14,9 +14,10 @@ class GoAnnotator:
                     term_name = go_data[entry]['name']
                     go_type = go_data[entry]['go_type']
                     # Add the gene symbol and species to the main GO dataset under the particular GO id.
-                    GoAnnotator().update_go_dataset(entry, go_data, gene_symbol, species)  
+                    go_data = GoAnnotator().update_go_dataset(entry, go_data, gene_symbol, species)  
                     if term_name not in gene['gene_' + go_type]:
                         gene['gene_' + go_type].append(term_name)
+        return (gene, go_data)
 
     # Attach gene symbols and species to the GO dataset.
     @staticmethod
@@ -28,3 +29,5 @@ class GoAnnotator:
             go_data[go_id]['go_genes'].append(gene_symbol)
         if species not in go_data[go_id]['go_species']:
             go_data[go_id]['go_species'].append(species)
+
+        return go_data

@@ -67,7 +67,7 @@ class ESMapping:
         print "Deleting Index: " + index
         self.es.indices.delete(index=index, ignore=[400, 404])
 
-    def index_data(self, data, data_type, op_type):
+    def index_data(self, data, data_type, op_type, threads):
         s = time.time()
         bulk_data = []
         id_to_use = None
@@ -90,7 +90,7 @@ class ESMapping:
                 })
             bulk_data.append(doc)
 
-        for success, info in parallel_bulk(self.es, actions=bulk_data, refresh=True, request_timeout=60, thread_count=4):
+        for success, info in parallel_bulk(self.es, actions=bulk_data, refresh=True, request_timeout=60, thread_count=threads):
                 if not success:
                     print "A document failed: %s" % (info)
 
