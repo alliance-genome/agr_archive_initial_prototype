@@ -63,16 +63,23 @@ class GenePage extends Component {
           <BasicGeneInfo geneData={this.props.data} />
         </Subsection>
 
+
         <Subsection title='Transcript Viewer'>
           {genomeLocation && genomeLocation.start && genomeLocation.end
             ?
-            <TranscriptInlineViewer geneSymbol={this.props.data.symbol} species={this.props.data.species} fmin={genomeLocation.start} fmax={genomeLocation.end} chromosome={genomeLocation.chromosome}/>
+            <TranscriptInlineViewer
+              chromosome={genomeLocation.chromosome}
+              fmax={genomeLocation.end}
+              fmin={genomeLocation.start}
+              geneSymbol={this.props.data.symbol}
+              species={this.props.data.species}
+            />
             :
             <div className="alert alert-warning">Genome Location Data Unavailable</div>
           }
         </Subsection>
 
-        <br/>
+        <br />
 
         {/*<Subsection title='Transcript Viewer'>*/}
           {/*{genomeLocation*/}
