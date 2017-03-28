@@ -109,14 +109,14 @@ class TranscriptViewer extends Component {
     // let externalPrefix = 'http://bw.scottcain.net/jbrowse/?data=data%2F';
     let externalPrefix = 'http://34.208.22.23/jbrowse/overview.html?data=data%2F';
     let internalPrefix = 'http://localhost/jbrowse/overview.html?data=data%2F';
-    let visualizationPrefix = 'http://dev.alliancegenome.org:8891/?url=';
-    let delay = 5000;
-    let visualizationSuffix = '&format=PNG&delay=' + delay + '&width=800&height=1000&zoom=1&quality=0.7&cors=true&selector=div.genomeViewDisplay&selectorCrop=true';
+    // let visualizationPrefix = 'http://dev.alliancegenome.org:8891/?url=';
+    let visualizationPrefix = 'http://localhost:8891/?url=';
+    // let visualizationPrefix = 'http://34.208.22.23:8080/?url=';
+    let delay = 8000;
+    let visualizationSuffix = '&format=PNG&delay=' + delay + '&width=800&height=1000&zoom=1&quality=0.7&cors=true';
     // location based data
     // let locationString = this.props.fmin && this.props.fmax ? this.props.chromosome + ':' + this.props.fmin + '..' + this.props.fmax : this.props.geneSymbol;
-    let fmin = this.props.fmin ? this.props.fmin : 10000;
-    let fmax = this.props.fmax ? this.props.fmax : 20000;
-    let locationString = this.props.chromosome + ':' + fmin + '..' + fmax;
+    let locationString = this.props.chromosome + ':' + this.props.fmin + '..' + this.props.fmax;
     let uniqueLocation = encodeURI(this.props.species) + '&loc=' + encodeURI(locationString);
 
     let geneSymbolUrl = '&lookupSymbol=' + this.props.geneSymbol;
@@ -137,7 +137,7 @@ class TranscriptViewer extends Component {
         <a href={externalJbrowseUrl}>Overview<i className="fa fa-link"></i> </a>
         <br/>
         <br/>
-        <a href={externalJbrowseUrl} rel="noopener noreferrer" target='_blank'>
+        <a href={externalJbrowseUrl.replace('overview.html','index.html')} rel="noopener noreferrer" target='_blank'>
           <img
             onError={this.handleImageErrored.bind(this)}
             onLoad={this.handleImageLoaded.bind(this)}

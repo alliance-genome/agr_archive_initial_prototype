@@ -36,7 +36,7 @@ class GenePage extends Component {
     }
 
     // todo, add chromosome
-    var genomeLocation ;
+    let genomeLocation ;
     if(this.props.data.genomeLocations){
       if(this.props.data.genomeLocations.length==1){
         genomeLocation = this.props.data.genomeLocations[0];
@@ -44,7 +44,12 @@ class GenePage extends Component {
       else
       if(this.props.data.genomeLocations.length>1){
         // TODO: figure out the proper assembly
-        genomeLocation = this.props.data.genomeLocations[0];
+        for(var i in this.props.data.genomeLocations){
+          let tempGenomeLocation = this.props.data.genomeLocations[i];
+          if(tempGenomeLocation.start && tempGenomeLocation.end){
+            genomeLocation = tempGenomeLocation;
+          }
+        }
       }
     }
 
@@ -59,7 +64,7 @@ class GenePage extends Component {
         </Subsection>
 
         <Subsection title='Transcript Viewer'>
-          {genomeLocation
+          {genomeLocation && genomeLocation.start && genomeLocation.end
             ?
             <TranscriptInlineViewer geneSymbol={this.props.data.symbol} species={this.props.data.species} fmin={genomeLocation.start} fmax={genomeLocation.end} chromosome={genomeLocation.chromosome}/>
             :
