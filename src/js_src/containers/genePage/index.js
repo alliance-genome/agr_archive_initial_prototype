@@ -10,7 +10,7 @@ import GenePageHeader from './genePageHeader';
 import { OrthologyTable, mockOrthologData } from '../../components/orthology';
 import { DiseaseTable, mockDiseaseData } from '../../components/disease';
 import Subsection from '../../components/subsection';
-import TranscriptViewer from './transcriptViewer';
+import TranscriptInlineViewer from './transcriptInlineViewer';
 
 
 class GenePage extends Component {
@@ -35,14 +35,21 @@ class GenePage extends Component {
     }
 
     // todo, add chromosome
-    var genomeLocation ;
-    if(this.props.data.genomeLocations.length==1){
-      genomeLocation = this.props.data.genomeLocations[0];
-    }
-    else
-    if(this.props.data.genomeLocations.length>1){
-      // TODO: figure out the proper assembly
-      genomeLocation = this.props.data.genomeLocations[0];
+    let genomeLocation ;
+    if(this.props.data.genomeLocations){
+      if(this.props.data.genomeLocations.length==1){
+        genomeLocation = this.props.data.genomeLocations[0];
+      }
+      else
+      if(this.props.data.genomeLocations.length>1){
+        // TODO: figure out the proper assembly
+        for(var i in this.props.data.genomeLocations){
+          let tempGenomeLocation = this.props.data.genomeLocations[i];
+          if(tempGenomeLocation.start && tempGenomeLocation.end){
+            genomeLocation = tempGenomeLocation;
+          }
+        }
+      }
     }
 
 
@@ -57,13 +64,30 @@ class GenePage extends Component {
 
 
         <Subsection title='Transcript Viewer'>
-          {genomeLocation
+          {genomeLocation && genomeLocation.start && genomeLocation.end
             ?
-            <TranscriptViewer geneSymbol={this.props.data.symbol} species={this.props.data.species} fmin={genomeLocation.fmin } fmax={genomeLocation.fmax} chromosome={genomeLocation.chromosome}/>
+            <TranscriptInlineViewer
+              chromosome={genomeLocation.chromosome}
+              fmax={genomeLocation.end}
+              fmin={genomeLocation.start}
+              geneSymbol={this.props.data.symbol}
+              species={this.props.data.species}
+            />
             :
             <div className="alert alert-warning">Genome Location Data Unavailable</div>
           }
         </Subsection>
+
+        <br />
+
+        {/*<Subsection title='Transcript Viewer'>*/}
+          {/*{genomeLocation*/}
+            {/*?*/}
+            {/*<TranscriptViewer geneSymbol={this.props.data.symbol} species={this.props.data.species} fmin={genomeLocation.fmin } fmax={genomeLocation.fmax} chromosome={genomeLocation.chromosome}/>*/}
+            {/*:*/}
+            {/*<div className="alert alert-warning">Genome Location Data Unavailable</div>*/}
+          {/*}*/}
+        {/*</Subsection>*/}
 
         <Subsection hardcoded title='Orthology'>
           <OrthologyTable data={mockOrthologData} />
