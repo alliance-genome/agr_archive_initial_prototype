@@ -58,7 +58,7 @@ class GenePage extends Component {
           <BasicGeneInfo geneData={this.props.data} />
         </Subsection>
 
-        <Subsection title='Transcript Inline Viewer'>
+        <Subsection title='Transcript Viewer'>
           {genomeLocation
             ?
             <TranscriptInlineViewer geneSymbol={this.props.data.symbol} species={this.props.data.species} fmin={genomeLocation.start} fmax={genomeLocation.end} chromosome={genomeLocation.chromosome}/>

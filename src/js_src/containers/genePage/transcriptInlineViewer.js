@@ -111,7 +111,7 @@ class TranscriptViewer extends Component {
     let internalPrefix = 'http://localhost/jbrowse/overview.html?data=data%2F';
     let visualizationPrefix = 'http://dev.alliancegenome.org:8891/?url=';
     let delay = 5000;
-    let visualizationSuffix = '&format=PNG&delay=' + delay + '&width=800&height=1000&zoom=1&quality=0.7&cors=true';
+    let visualizationSuffix = '&format=PNG&delay=' + delay + '&width=800&height=1000&zoom=1&quality=0.7&cors=true&selector=div.genomeViewDisplay&selectorCrop=true';
     // location based data
     // let locationString = this.props.fmin && this.props.fmax ? this.props.chromosome + ':' + this.props.fmin + '..' + this.props.fmax : this.props.geneSymbol;
     let fmin = this.props.fmin ? this.props.fmin : 10000;
@@ -131,22 +131,23 @@ class TranscriptViewer extends Component {
     // let virualizationUrl2 = 'https://phantomjscloud.com/api/browser/v2/a-demo-key-with-low-quota-per-ip-address/?request={url:'+encodeURI('\"'+externalJbrowseUrl+'\"')+',renderType:"jpg"}';
 
     return (
-      <div className={style.jbrowse} id="genomeViewer">
+      <div id="genomeViewer">
         {/*{alert(visualizationUrl)}*/}
-        {/*<a href={externalJbrowseUrl.replace('overview.html','index.html')}>Genome Viewer<i className="fa fa-link"></i> </a>*/}
-        {/*<a href={externalJbrowseUrl}>Overview<i className="fa fa-link"></i> </a>*/}
         {/*<iframe id="genomeFrame" className={style.jbrowse} src={internalJbrowseUrl}/>*/}
+        <a href={externalJbrowseUrl.replace('overview.html','index.html')}>Genome Viewer<i className="fa fa-link"></i> </a>
+        <a href={externalJbrowseUrl}>Overview<i className="fa fa-link"></i> </a>
+        <br/>
         <a href={externalJbrowseUrl} rel="noopener noreferrer" target='_blank'>
           <img
-            // onError={this.handleImageErrored.bind(this)}
-            // onLoad={this.handleImageLoaded.bind(this)}
-            src={this.getImage(visualizationUrl)}
+            onError={this.handleImageErrored.bind(this)}
+            onLoad={this.handleImageLoaded.bind(this)}
+            src={visualizationUrl}
           />
         </a>
-        {/*{this.state.imageStatus === 'loading'*/}
-          {/*? <div>Loading ... <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"/></div>*/}
-          {/*: ''*/}
-        {/*}*/}
+        {this.state.imageStatus === 'loading'
+          ? <div>Loading ... <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"/></div>
+          : ''
+        }
       </div>
     );
   }
