@@ -10,7 +10,6 @@ import GenePageHeader from './genePageHeader';
 import { OrthologyTable, mockOrthologData } from '../../components/orthology';
 import { DiseaseTable, mockDiseaseData } from '../../components/disease';
 import Subsection from '../../components/subsection';
-// import TranscriptViewer from './transcriptViewer';
 import TranscriptInlineViewer from './transcriptInlineViewer';
 
 
