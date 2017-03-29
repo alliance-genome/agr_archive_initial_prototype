@@ -32,6 +32,7 @@ class AggregateLoader:
         print "Loading SO Data" 
         self.so_dataset = SoLoader().get_data()
 
+
     def load_from_mods(self, pickle, index):
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
         #mods = [FlyBase()]
@@ -87,5 +88,8 @@ class AggregateLoader:
         PickleFile("tmp/so_bkp.pickle").save(self.so_dataset)
 
     def index_data(self):
+        print "ES_HOST: " + os.environ['ES_HOST']
+        print "ES_INDEX: " + os.environ['ES_INDEX']
+        print "ES_AWS: " + os.environ['ES_AWS']
         self.es.index_data(self.go_dataset, 'GO Data', 'index', self.threads) # Load the GO dataset into ES
         self.es.finish_index()

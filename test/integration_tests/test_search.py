@@ -8,7 +8,6 @@ from werkzeug.datastructures import ImmutableMultiDict
 
 class SearchEndpointsTest(unittest.TestCase):
     def setUp(self):
-        os.environ['ES_HOST'] = 'localhost:9200'
         from src.server import app
 
         self.es_search_response = {
@@ -69,11 +68,11 @@ class SearchEndpointsTest(unittest.TestCase):
                 }
             }
         }
-        self.index = 'searchable_items_blue'
+        self.index = os.environ['ES_INDEX']
         self.search_fields = ['primaryId', 'name', 'symbol', 'symbol.raw', 'synonyms', 'synonyms.raw', 'description',
-                         'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function',
-                         'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes',
-                         'disease_synonyms']
+                              'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function',
+                              'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes',
+                              'disease_synonyms']
         self.json_response_fields = ['name', 'symbol', 'synonyms', 'soTermName', 'gene_chromosomes','gene_chromosome_starts', 'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs', 'crossReferences', 'category', 'href']
         self.category_filters = {
             "gene": ['soTermName', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species'],
