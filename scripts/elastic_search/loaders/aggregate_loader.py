@@ -18,6 +18,9 @@ class AggregateLoader:
         self.threads = 2 # Set number of CPU threads used for indexing.
     
     def establish_index(self):
+        print "ES_HOST: " + os.environ['ES_HOST']
+        print "ES_INDEX: " + os.environ['ES_INDEX']
+        print "ES_AWS: " + os.environ['ES_AWS']
         self.es = ESMapping(os.environ['ES_HOST'], os.environ['ES_INDEX'], os.environ['ES_AWS'])
         self.es.start_index()
 
@@ -88,8 +91,5 @@ class AggregateLoader:
         PickleFile("tmp/so_bkp.pickle").save(self.so_dataset)
 
     def index_data(self):
-        print "ES_HOST: " + os.environ['ES_HOST']
-        print "ES_INDEX: " + os.environ['ES_INDEX']
-        print "ES_AWS: " + os.environ['ES_AWS']
         self.es.index_data(self.go_dataset, 'GO Data', 'index', self.threads) # Load the GO dataset into ES
         self.es.finish_index()
