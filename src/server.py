@@ -14,7 +14,7 @@ app.config.update({'DEBUG': True, 'WEBPACK_MANIFEST_PATH': './build/manifest.jso
 webpack.init_app(app)
 auth = HTTPBasicAuth()
 
-es = Elasticsearch(os.environ['ES_HOST'], timeout=5, retry_on_timeout=False)
+es = Elasticsearch(os.environ['ES_HOST'], timeout=30, retry_on_timeout=False)
 ES_INDEX = os.environ['ES_INDEX']
 
 services = {
