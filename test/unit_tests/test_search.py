@@ -6,14 +6,16 @@ from werkzeug.datastructures import ImmutableMultiDict
 class SearchHelpersTest(unittest.TestCase):
     def _query_builder(self, query, fields):
         custom_boosts = {
-            "id": 120,
-            "symbol": 120,
+            "primaryId": 400,
+            "symbol": 500,
+            "symbol.raw": 1000,
             "synonyms": 120,
-            "name": 200,
-            "name.symbol": 300,
-            "gene_biological_process.symbol": 120,
-            "gene_molecular_function.symbol": 120,
-            "gene_cellular_component.symbol": 120
+            "synonyms.raw": 200,
+            "name": 100,
+            "name.symbol": 200,
+            "gene_biological_process.symbol": 50,
+            "gene_molecular_function.symbol": 50,
+            "gene_cellular_component.symbol": 50
         }
 
         search_fields = fields + [
@@ -516,10 +518,14 @@ class SearchHelpersTest(unittest.TestCase):
             "query": {
                 "bool": {
                     "must": [{
-                        "match": {
-                            "name_key.autocomplete": {
-                                "query": query
-                            }
+                        "dis_max": {
+                            "queries": [
+                                {"match": {"symbol.raw": {"query": query, "operator": "and", "boost": 100}}},
+                                {"match": {"symbol.autocomplete": {"query": query, "operator": "and", "boost": 10}}},
+                                {"match": {"name.autocomplete": {"query": query, "operator": "and", "boost": 1}}},
+                                {"match": {"synonyms.raw": {"query": query, "operator": "and", "boost": 50}}},
+                                {"match": {"synonyms.autocomplete": {"query": query, "operator": "and", "boost": 5}}}
+                            ]
                         }
                     }],
                     "should": [
@@ -543,10 +549,14 @@ class SearchHelpersTest(unittest.TestCase):
             "query": {
                 "bool": {
                     "must": [{
-                        "match": {
-                            "name_key.autocomplete": {
-                                "query": query
-                            }
+                        "dis_max": {
+                            "queries": [
+                                {"match": {"symbol.raw": {"query": query, "operator": "and", "boost": 100}}},
+                                {"match": {"symbol.autocomplete": {"query": query, "operator": "and", "boost": 10}}},
+                                {"match": {"name.autocomplete": {"query": query, "operator": "and", "boost": 1}}},
+                                {"match": {"synonyms.raw": {"query": query, "operator": "and", "boost": 50}}},
+                                {"match": {"synonyms.autocomplete": {"query": query, "operator": "and", "boost": 5}}}
+                            ]
                         }
                     }, {
                         "match": {
@@ -558,9 +568,9 @@ class SearchHelpersTest(unittest.TestCase):
             '_source': ['name', 'href', 'category', 'symbol']
         })
 
-    def test_build_autocomplete_search_body_request_with_field(self):
+    def test_build_aggregation_autocomplete_search_body_request_with_field(self):
         query = "act"
-        es_query = build_autocomplete_search_body_request(query, 'go', 'go_id')
+        es_query = build_aggregation_autocomplete_search_body_request(query, 'go', 'go_id')
         self.assertEqual(es_query, {
             "query": {
                 "bool": {

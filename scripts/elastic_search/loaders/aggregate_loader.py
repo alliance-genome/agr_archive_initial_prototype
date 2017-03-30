@@ -11,7 +11,7 @@ class AggregateLoader:
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
 
         print "Loading GO Data"
-        go_data = GoLoader().get_data() 
+        go_data = GoLoader().get_data()
         print "Loading OMIM Data"
         omim_data = OMIMLoader().get_data()
         print "Loading SO Data"
@@ -57,7 +57,9 @@ class AggregateLoader:
         # PickleFile("tmp/so_bkp.pickle").save(so_loader.get_data())
 
     def index_data(self):
-
+        print "ES_HOST: " + os.environ['ES_HOST']
+        print "ES_INDEX: " + os.environ['ES_INDEX']
+        print "ES_AWS: " + os.environ['ES_AWS']
         es = ESMapping(os.environ['ES_HOST'], os.environ['ES_INDEX'], os.environ['ES_AWS'])
         es.start_index()
         es.index_data(self.genes, "Gene Data")
