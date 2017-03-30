@@ -10,8 +10,8 @@ import GenePageHeader from './genePageHeader';
 import { OrthologyTable, mockOrthologData } from '../../components/orthology';
 import DiseaseTable from '../../components/disease';
 import Subsection from '../../components/subsection';
+import HeadMetaTags from '../../components/headMetaTags';
 import TranscriptInlineViewer from './transcriptInlineViewer';
-
 
 class GenePage extends Component {
   componentDidMount() {
@@ -34,6 +34,8 @@ class GenePage extends Component {
       return null;
     }
 
+    let title = 'AGR gene page for ' + this.props.data.species + ' gene: ' + this.props.data.symbol;
+
     // todo, add chromosome
     let genomeLocation ;
     if(this.props.data.genomeLocations){
@@ -52,10 +54,9 @@ class GenePage extends Component {
       }
     }
 
-
     return (
       <div className='container'>
-
+        <HeadMetaTags title={title} />
         <GenePageHeader symbol={this.props.data.symbol} />
 
         <Subsection>
