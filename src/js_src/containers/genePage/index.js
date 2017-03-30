@@ -8,7 +8,7 @@ import { selectGene } from '../../selectors/geneSelectors';
 import BasicGeneInfo from './basicGeneInfo';
 import GenePageHeader from './genePageHeader';
 import { OrthologyTable, mockOrthologData } from '../../components/orthology';
-import { DiseaseTable, mockDiseaseData } from '../../components/disease';
+import DiseaseTable from '../../components/disease';
 import Subsection from '../../components/subsection';
 import TranscriptInlineViewer from './transcriptInlineViewer';
 
@@ -94,7 +94,7 @@ class GenePage extends Component {
         </Subsection>
 
         <Subsection hardcoded title='Disease Associations'>
-          <DiseaseTable data={mockDiseaseData} />
+          <DiseaseTable/>
         </Subsection>
 
       </div>
