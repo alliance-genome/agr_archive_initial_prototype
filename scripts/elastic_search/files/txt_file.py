@@ -12,9 +12,3 @@ class TXTFile:
                 lines.append(line)
         f.close()    
         return lines
-
-    def get_GO_data(self):
-        print "Loading txt data from (" + self.filename + ") ..."
-        with open(self.filename, "r") as f:
-            for line in f:
-                yield line
