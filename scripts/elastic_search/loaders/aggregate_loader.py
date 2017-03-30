@@ -38,7 +38,6 @@ class AggregateLoader:
 
     def load_from_mods(self, pickle, index):
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
-        #mods = [FlyBase()]
 
         if self.test_set == 'true':
             print "WARNING: test_set is enabled. Limiting dataset to 100 genes per MOD."
