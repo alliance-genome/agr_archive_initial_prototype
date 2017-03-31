@@ -38,7 +38,8 @@ class ESMapping:
         self.create_index(self.new_index_name)
 
     def finish_index(self):
-        es.indices.refresh(index=self.new_index_name)
+        print "Finished loading, refreshing index."
+        self.es.indices.refresh(index=self.new_index_name)
 
         if self.current_name != None:
             self.remove_alias(self.es_index, self.current_name)
