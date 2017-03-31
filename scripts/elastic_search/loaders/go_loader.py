@@ -1,42 +1,29 @@
 from files import *
+from obo_parser import *
 
 import re
 
 class GoLoader:
-
-    def __init__(self):
+    
+    @staticmethod
+    def get_data():
         path = "tmp";
         S3File("mod-datadumps/data", "go.obo", path).download()
-        self.go_data = TXTFile(path + "/go.obo").get_data()
+        parsed_line = parseGOOBO(path + "/go.obo")
+        dict_to_return = {}
+        for line in parsed_line: # Convert parsed obo term into a schema-friendly AGR dictionary.
+            go_id = line['id']
+            dict_to_return[go_id] = {
+                'go_genes': [],
+                'go_species': [],
+                'name': line['name'],
+                'description': line['def'],
+                'go_type': line['namespace'],
+                'go_synonyms': line.get('synonym'),
 
-    def get_data(self):
-        go_dataset = {}
-        creating_term = None
-
-        for line in self.go_data:
-            line = line.strip()
-
-            if line == "[Term]":
-                creating_term = True
-            elif creating_term:
-                key = (line.split(":")[0]).strip()
-                value = ("".join(":".join(line.split(":")[1:]))).strip()
-
-                if key == "id":
-                    creating_term = value
-                    go_dataset[creating_term] = {}
-                else:
-                    if key == "synonym":
-                        if value.split(" ")[-2] == "EXACT":
-                            value = (" ".join(value.split(" ")[:-2]))[1:-1]
-                        else:
-                            continue
-                    if key == "def":
-                        m = re.search('\"(.+)\"', value)
-                        value = m.group(1)
-
-                    if key in go_dataset[creating_term]:
-                        go_dataset[creating_term][key].append(value)
-                    else:
-                        go_dataset[creating_term][key] = [value]
-        return go_dataset
+                'name_key': line['name'],
+                'id': go_id,
+                'href': 'http://amigo.geneontology.org/amigo/term/' + line['id'],
+                'category': 'go'
+            }
+        return dict_to_return

@@ -1,20 +1,20 @@
 from files import *
+from obo_parser import *
 
 import re
 
 class SoLoader:
-
-    def __init__(self):
+    @staticmethod
+    def get_data():
         path = "tmp";
         S3File("mod-datadumps/data", "so.obo", path).download()
-        self.so_data = TXTFile(path + "/so.obo").get_data()
+        so_data = TXTFile(path + "/so.obo").get_data()
 
-    def get_data(self):
         so_dataset = {}
 
         creating_term = None
 
-        for line in self.so_data:
+        for line in so_data:
             line = line.strip()
 
             if line == "[Term]":
@@ -43,8 +43,17 @@ class SoLoader:
 
         return so_dataset
 
-    def attach_so_data(self, genes):
-        so_dataset = self.get_data()
 
-        for key in genes:
-            genes[key]["soTermName"] = so_dataset[genes[key]["soTermId"]]["name"][0]
+    # TODO The commented code below is not functioning correctly (key error for SO:3000000)
+    # @staticmethod
+    # def get_data():
+    #     path = "tmp";
+    #     S3File("mod-datadumps/data", "so.obo", path).download()
+    #     parsed_line = parseGOOBO(path + "/so.obo")
+    #     dict_to_return = {}
+    #     for line in parsed_line: # Convert parsed obo term into a schema-friendly AGR dictionary.
+    #         go_id = line['id']
+    #         dict_to_return[go_id] = {
+    #             'name': line['name']
+    #         }
+    #     return dict_to_return
