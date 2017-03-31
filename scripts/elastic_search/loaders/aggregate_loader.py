@@ -5,6 +5,7 @@ from files import *
 from mods import *
 import gc
 import time
+import multiprocessing
 
 import os
 
@@ -15,7 +16,14 @@ class AggregateLoader:
         self.so_dataset = {}
         self.batch_size = 5000 # Set size of gene batches created from JSON file.
         self.test_set = 'false' # Limit dataset to 100 gene entries from each MOD.
-        self.threads = 2 # Set number of CPU threads used for indexing.
+        self.threads = None
+        cpu_check = multiprocessing.cpu_count()
+        if cpu_check > 1:
+            self.threads = 2
+        else:
+            self.threads = 1
+        print "Processing with %s threads." % (self.threads)
+
     
     def establish_index(self):
         print "ES_HOST: " + os.environ['ES_HOST']
