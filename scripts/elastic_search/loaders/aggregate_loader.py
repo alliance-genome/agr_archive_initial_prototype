@@ -14,22 +14,14 @@ class AggregateLoader:
     def __init__(self):
         self.go_dataset = {}
         self.so_dataset = {}
-        self.batch_size = 5000 # Set size of gene batches created from JSON file.
+        self.batch_size = 5000 # Set size of gene batches created from JSON file AND the size of the chunks used for sending data to ES.
         self.test_set = 'false' # Limit dataset to 100 gene entries from each MOD.
-        self.threads = None
-        cpu_check = multiprocessing.cpu_count()
-        if cpu_check > 1:
-            self.threads = 2
-        else:
-            self.threads = 1
-        print "Processing with %s threads." % (self.threads)
 
-    
     def establish_index(self):
         print "ES_HOST: " + os.environ['ES_HOST']
         print "ES_INDEX: " + os.environ['ES_INDEX']
         print "ES_AWS: " + os.environ['ES_AWS']
-        self.es = ESMapping(os.environ['ES_HOST'], os.environ['ES_INDEX'], os.environ['ES_AWS'])
+        self.es = ESMapping(os.environ['ES_HOST'], os.environ['ES_INDEX'], os.environ['ES_AWS'], self.batch_size)
         self.es.start_index()
 
     def load_from_files(self):
@@ -78,7 +70,7 @@ class AggregateLoader:
                     PickleFile(pickle_file_name).save_append(gene_list_of_entries)
 
                 if index == 'true':
-                    self.es.index_data(gene_list_of_entries, 'Gene Data', 'index', self.threads) # Load genes into ES
+                    self.es.index_data(gene_list_of_entries, 'Gene Data', 'index') # Load genes into ES
                 
     def index_mods_from_pickle(self):
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
@@ -90,7 +82,7 @@ class AggregateLoader:
             gene_pickle = PickleFile(pickle_file_name).load_multi() # generator object
 
             for gene in gene_pickle:
-                self.es.index_data(list_to_load, 'Gene Data', 'index', self.threads) # Load genes into ES
+                self.es.index_data(list_to_load, 'Gene Data', 'index') # Load genes into ES
 
     def save_to_files(self):
         print "Saving processed data to files"
@@ -98,5 +90,5 @@ class AggregateLoader:
         PickleFile("tmp/so_bkp.pickle").save(self.so_dataset)
 
     def index_data(self):
-        self.es.index_data(self.go_dataset, 'GO Data', 'index', self.threads) # Load the GO dataset into ES
+        self.es.index_data(self.go_dataset, 'GO Data', 'index') # Load the GO dataset into ES
         self.es.finish_index()

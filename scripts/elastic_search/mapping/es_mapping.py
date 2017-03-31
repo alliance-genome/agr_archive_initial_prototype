@@ -1,5 +1,5 @@
 from elasticsearch import Elasticsearch
-from elasticsearch.helpers import parallel_bulk, streaming_bulk
+from elasticsearch.helpers import streaming_bulk
 from mapping_schema import mapping_schema
 
 import os
@@ -7,7 +7,8 @@ import time
 
 class ESMapping:
 
-    def __init__(self, es_host, es_index, aws):
+    def __init__(self, es_host, es_index, aws, batch_size):
+        self.batch_size = batch_size
         if aws == "true":
             self.es = Elasticsearch(es_host, timeout=30, retry_on_timeout=False, use_ssl=True, verify_certs=True)
         else:
@@ -37,6 +38,8 @@ class ESMapping:
         self.create_index(self.new_index_name)
 
     def finish_index(self):
+        es.indices.refresh(index=self.new_index_name)
+
         if self.current_name != None:
             self.remove_alias(self.es_index, self.current_name)
 
@@ -67,7 +70,7 @@ class ESMapping:
         print "Deleting Index: " + index
         self.es.indices.delete(index=index, ignore=[400, 404])
 
-    def index_data(self, data, data_type, op_type, threads):
+    def index_data(self, data, data_type, op_type):
         s = time.time()
         bulk_data = []
         id_to_use = None
@@ -90,7 +93,7 @@ class ESMapping:
                 })
             bulk_data.append(doc)
 
-        for success, info in parallel_bulk(self.es, actions=bulk_data, refresh=True, request_timeout=60, thread_count=threads):
+        for success, info in streaming_bulk(self.es, actions=bulk_data, refresh=False, request_timeout=60, chunk_size=self.batch_size):
                 if not success:
                     print "A document failed: %s" % (info)
 
