@@ -71,4 +71,3 @@ class FlyBase(MOD):
                         for gene_id in disease_gene_ids:
                             list.append({"gene_id": gene_id, "omim_id": "OMIM:"+omim_id, "species": FlyBase.species})
             return list
-
