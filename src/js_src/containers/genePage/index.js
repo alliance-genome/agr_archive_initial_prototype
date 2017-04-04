@@ -23,7 +23,7 @@ class GenePage extends Component {
     this.props.dispatch(fetchGene());
     fetchData(`/api/gene/${this.props.params.geneId}`)
       .then(data => {
-        $('body').scrollspy({ offset: -30, target: '#agrGeneMenu' });
+        $('body').scrollspy({ target: '#agrGeneMenu' });
         this.props.dispatch(fetchGeneSuccess(data));
       })
       .catch(error => this.props.dispatch(fetchGeneFailure(error)));
