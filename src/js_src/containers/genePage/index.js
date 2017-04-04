@@ -1,39 +1,58 @@
+/*eslint-disable no-undef */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Sticky } from 'react-sticky';
 
 import fetchData from '../../lib/fetchData';
 import { fetchGene, fetchGeneSuccess, fetchGeneFailure } from '../../actions/genes';
 import { selectGene } from '../../selectors/geneSelectors';
 
+import style from './style.css';
 import BasicGeneInfo from './basicGeneInfo';
 import GenePageHeader from './genePageHeader';
+import LoadingPage from '../../components/loadingPage';
 import { OrthologyTable, mockOrthologData } from '../../components/orthology';
 import DiseaseTable from '../../components/disease';
 import Subsection from '../../components/subsection';
 import HeadMetaTags from '../../components/headMetaTags';
 import TranscriptInlineViewer from './transcriptInlineViewer';
+import { SMALL_COL_CLASS, LARGE_COL_CLASS } from '../../constants';
 
 class GenePage extends Component {
   componentDidMount() {
     this.props.dispatch(fetchGene());
     fetchData(`/api/gene/${this.props.params.geneId}`)
-      .then(data => this.props.dispatch(fetchGeneSuccess(data)))
+      .then(data => {
+        $('body').scrollspy({ offset: -30, target: '#agrGeneMenu' });
+        this.props.dispatch(fetchGeneSuccess(data));
+      })
       .catch(error => this.props.dispatch(fetchGeneFailure(error)));
   }
 
-  render() {
-    if (this.props.loading) {
-      return <span>loading...</span>;
-    }
+  renderMenu() {
+    return (
+      <Sticky>
+        <div id='agrGeneMenu'>
+          <ul className={`nav flex-column" ${style.geneNavContainer}`}>
+            <li className={`nav-item ${style.navItem}`}>
+              <a className='nav-link' href='#basic'>Basic</a>
+            </li>
+            <li className={`nav-item ${style.navItem}`}>
+              <a className='nav-link' href='#transcript'>Transcript Viewer</a>
+            </li>
+            <li className={`nav-item ${style.navItem}`}>
+              <a className='nav-link' href='#orthology'>Orthology</a>
+            </li>
+            <li className={`nav-item ${style.navItem}`}>
+              <a className='nav-link' href='#disease'>Disease Associations</a>
+            </li>
+          </ul>
+        </div>
+      </Sticky>
+    );
+  }
 
-    if (this.props.error) {
-      return <div className='alert alert-danger'>{this.props.error}</div>;
-    }
-
-    if (!this.props.data) {
-      return null;
-    }
-
+  renderBody() {
     let title = 'AGR gene page for ' + this.props.data.species + ' gene: ' + this.props.data.symbol;
 
     // todo, add chromosome
@@ -55,29 +74,33 @@ class GenePage extends Component {
     }
 
     return (
-      <div className='container'>
+      <div className='container' data-spy="scroll" data-target="#agrGeneMenu">
         <HeadMetaTags title={title} />
-        <GenePageHeader symbol={this.props.data.symbol} />
+        <Sticky stickyStyle={{ background: 'white', zIndex: 1 }}>
+          <GenePageHeader symbol={this.props.data.symbol} />
+        </Sticky>
+        <div id='basic'>
+          <Subsection>
+            <BasicGeneInfo geneData={this.props.data} />
+          </Subsection>
+        </div>
 
-        <Subsection>
-          <BasicGeneInfo geneData={this.props.data} />
-        </Subsection>
-
-
-        <Subsection title='Transcript Viewer'>
-          {genomeLocation && genomeLocation.start && genomeLocation.end
-            ?
-            <TranscriptInlineViewer
-              chromosome={genomeLocation.chromosome}
-              fmax={genomeLocation.end}
-              fmin={genomeLocation.start}
-              geneSymbol={this.props.data.symbol}
-              species={this.props.data.species}
-            />
-            :
-            <div className="alert alert-warning">Genome Location Data Unavailable</div>
-          }
-        </Subsection>
+        <div id='transcript'>
+          <Subsection title='Transcript Viewer'>
+            {genomeLocation && genomeLocation.start && genomeLocation.end
+              ?
+              <TranscriptInlineViewer
+                chromosome={genomeLocation.chromosome}
+                fmax={genomeLocation.end}
+                fmin={genomeLocation.start}
+                geneSymbol={this.props.data.symbol}
+                species={this.props.data.species}
+              />
+              :
+              <div className="alert alert-warning">Genome Location Data Unavailable</div>
+            }
+          </Subsection>
+        </div>
 
         <br />
 
@@ -89,15 +112,40 @@ class GenePage extends Component {
             {/*<div className="alert alert-warning">Genome Location Data Unavailable</div>*/}
           {/*}*/}
         {/*</Subsection>*/}
+        <div id='orthology'>
+          <Subsection hardcoded title='Orthology'>
+            <OrthologyTable data={mockOrthologData} />
+          </Subsection>
+        </div>
+        <div id='disease'>
+          <Subsection hardcoded title='Disease Associations'>
+            <DiseaseTable />
+          </Subsection>
+        </div>
+      </div>
+    );
+  }
 
-        <Subsection hardcoded title='Orthology'>
-          <OrthologyTable data={mockOrthologData} />
-        </Subsection>
+  render() {
+    if (this.props.loading) {
+      return <LoadingPage />;
+    }
 
-        <Subsection hardcoded title='Disease Associations'>
-          <DiseaseTable/>
-        </Subsection>
+    if (this.props.error) {
+      return <div className='alert alert-danger'>{this.props.error}</div>;
+    }
 
+    if (!this.props.data) {
+      return null;
+    }
+    return (
+      <div className='row'>
+        <div className={SMALL_COL_CLASS}>
+          {this.renderMenu()}
+        </div>
+        <div className={LARGE_COL_CLASS}>
+          {this.renderBody()}
+        </div>
       </div>
     );
   }

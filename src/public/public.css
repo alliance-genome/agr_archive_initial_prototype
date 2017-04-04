@@ -1,3 +1,15 @@
+body {
+  position: relative;
+}
+
+.nav-item.active {
+  background-color: #0275d8;
+}
+
+.nav-item.active a.nav-link {
+  color: white;
+}
+
 /**
  * React Select
  * ============

@@ -1,3 +1,4 @@
+/*eslint-disable react/prop-types */
 import React from 'react';
 import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { ALL_METHODS, methodCellStyle } from './constants';
@@ -67,7 +68,7 @@ const MethodCell = ({methods}) => {
 };
 
 MethodCell.propTypes = {
-  methods: React.PropTypes.arrayOf(React.PropTypes.string),
+  // methods: React.PropTypes.arrayOf(React.PropTypes.string),
 };
 
 export default MethodCell;
