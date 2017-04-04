@@ -3,29 +3,22 @@ from mods import MOD
 
 import re
 
-
 class GeneLoader:
-    def __init__(self, filename):
-        self.gene_data = JSONFile(filename).get_data()
-
-    def get_data(self):
+    def get_data(self, gene_data, batch_size, test_set):
+        
         gene_dataset = {}
+        list_to_yield = []
 
-        dateProduced = self.gene_data['metaData']['dateProduced']
-        dataProvider = self.gene_data['metaData']['dataProvider']
+        dateProduced = gene_data['metaData']['dateProduced']
+        dataProvider = gene_data['metaData']['dataProvider']
         release = None
 
-        if 'release' in self.gene_data['metaData']:
-            release = self.gene_data['metaData']['release']
+        if 'release' in gene_data['metaData']:
+            release = gene_data['metaData']['release']
 
-        for geneRecord in self.gene_data['data']:
+        for geneRecord in gene_data['data']:
             cross_references = []
             external_ids = []
-            gene_chromosomes = []
-            gene_chromosome_starts = []
-            gene_chromosome_ends = []
-            gene_chromosome_strands = []
-            gene_chromosome_assemblies = []
             genomic_locations = []
             start = None
             end = None
@@ -39,18 +32,13 @@ class GeneLoader:
                     cross_references.append({"dataProvider": crossRef['dataProvider'], "id": crossRef['id']})
             if 'genomeLocations' in geneRecord:
                 for genomeLocation in geneRecord['genomeLocations']:
-                    gene_chromosomes.append(genomeLocation['chromosome'])
                     chromosome = genomeLocation['chromosome']
-                    gene_chromosome_assemblies.append(genomeLocation['assembly'])
                     assembly = genomeLocation['assembly']
-                    if 'start' in genomeLocation:
-                        gene_chromosome_starts.append(genomeLocation['start'])
-                        start = genomeLocation['start']
-                    if 'end' in geneRecord['genomeLocations']:
-                        gene_chromosome_ends.append(genomeLocation['end'])
-                        end = genomeLocation['end']
+                    if 'startPosition' in genomeLocation:
+                        start = genomeLocation['startPosition']
+                    if 'endPosition' in genomeLocation:
+                        end = genomeLocation['endPosition']
                     if 'strand' in geneRecord['genomeLocations']:
-                        gene_chromosome_strands.append(genomeLocation['strand'])
                         strand = genomeLocation['strand']
                     genomic_locations.append(
                         {"chromosome": chromosome, "start": start, "end": end, "strand": strand, "assembly": assembly})
@@ -60,7 +48,7 @@ class GeneLoader:
             if geneRecord['taxonId'] == "10116" and not primary_id.startswith("RGD"):
                 primary_id = dataProvider + ":" + geneRecord['primaryId']
 
-            gene_dataset[primary_id] = {
+            gene_dataset = {
                 "symbol": geneRecord['symbol'],
                 "name": geneRecord.get('name'),
                 "description": geneRecord.get('description'),
@@ -70,10 +58,6 @@ class GeneLoader:
                 "secondaryIds": geneRecord.get('secondaryIds'),
                 "geneSynopsis": geneRecord.get('geneSynopsis'),
                 "geneSynopsisUrl": geneRecord.get('geneSynopsisUrl'),
-                "gene_chromosomes": gene_chromosomes,
-                "gene_chromosome_starts": gene_chromosome_starts,
-                "gene_chromosome_ends": gene_chromosome_ends,
-                "gene_chromosome_strand": gene_chromosome_strands,
                 "taxonId": geneRecord['taxonId'],
                 "species": self.get_species(geneRecord['taxonId']),
                 "external_ids": external_ids,
@@ -93,7 +77,20 @@ class GeneLoader:
                 "release": release
             }
 
-        return gene_dataset
+            if test_set == 'false':
+                # Establishes the number of genes to yield (return) at a time.
+                list_to_yield.append(gene_dataset)
+                if len(list_to_yield) == batch_size:
+                    yield list_to_yield
+                    list_to_yield[:] = [] # Empty the list.
+            elif test_set == 'true':
+                list_to_yield.append(gene_dataset)
+                if len(list_to_yield) == 100:
+                    yield list_to_yield
+                    return
+
+        if len(list_to_yield) > 0:
+            yield list_to_yield
 
     def get_species(self, taxon_id):
         if taxon_id in ("7955"):

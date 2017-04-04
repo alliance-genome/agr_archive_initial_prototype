@@ -72,8 +72,11 @@ class SearchEndpointsTest(unittest.TestCase):
                 }
             }
         }
-        self.index = 'searchable_items_blue'
-        self.search_fields = ['id', 'name', 'symbol', 'synonyms', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs.symbol', 'homologs.panther_family']
+        self.index = os.environ['ES_INDEX']
+        self.search_fields = ['primaryId', 'name', 'symbol', 'symbol.raw', 'synonyms', 'synonyms.raw', 'description',
+                              'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function',
+                              'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes',
+                              'disease_synonyms']
         self.json_response_fields = ['name', 'symbol', 'synonyms', 'soTermName', 'gene_chromosomes','gene_chromosome_starts', 'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs', 'crossReferences', 'category', 'href']
         self.category_filters = {
             "gene": ['soTermName', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species'],
@@ -84,7 +87,13 @@ class SearchEndpointsTest(unittest.TestCase):
         self.app = app.test_client()
         self.app.testing = True
 
-    @mock.patch('dao.elasticsearch_dao.ElasticSearchDAO.es.search')
+    @mock.patch('src.server.es.search')
+    def test_mock_es(self, mock_es):
+        mock_es.return_value = self.es_search_response
+        self.app.get('/api/search_autocomplete?q=act')
+        mock_es.assert_called()
+
+    @mock.patch('src.server.es.search')
     def test_search_default_params(self, mock_es):
         def side_effect(*args, **kwargs):
             if "size" in kwargs:
@@ -130,7 +139,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    @mock.patch('dao.elasticsearch_dao.ElasticSearchDAO.es.search')
+    @mock.patch('src.server.es.search')
     def test_search_with_custom_params(self, mock_es):
         def side_effect(*args, **kwargs):
             if "size" in kwargs:
@@ -182,7 +191,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    @mock.patch('dao.elasticsearch_dao.ElasticSearchDAO.es.search')
+    @mock.patch('src.server.es.search')
     def test_search_with_aggregation_params(self, mock_es):
         def side_effect(*args, **kwargs):
             if "size" in kwargs:
@@ -232,7 +241,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    @mock.patch('dao.elasticsearch_dao.ElasticSearchDAO.es.search')
+    @mock.patch('src.server.es.search')
     def test_empty_search_returns_json_object(self, mock_es):
         def side_effect(*args, **kwargs):
             if "size" in kwargs:
@@ -243,7 +252,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         mock_es.side_effect = side_effect
 
-        response = self.app.get('/api/search?q=act1&category=gene&go_names=cytoplasm')
+        response = self.app.get('/api/search?q=thisisntgoingtomatchanything&category=gene&go_names=thiswontmatcheither')
 
         self.assertEqual(response.status_code, 200)
 
@@ -255,7 +264,7 @@ class SearchEndpointsTest(unittest.TestCase):
             'aggregations': []
         })
 
-    @mock.patch('dao.elasticsearch_dao.ElasticSearchDAO.es.search')
+    @mock.patch('src.server.es.search')
     def test_search_returns_json_object(self, mock_es):
         def side_effect(*args, **kwargs):
             if "size" in kwargs:
@@ -270,20 +279,8 @@ class SearchEndpointsTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
         data = json.loads(response.data)
-        self.assertEqual(data, {
-            'total': self.es_search_response['hits']['total'],
-            'results': format_search_results(
-                self.es_search_response,
-                self.json_response_fields
-            ),
-            'aggregations': format_aggregation_results(
-                self.es_aggregation_response,
-                'gene',
-                self.category_filters
-            )
-        })
 
-    @mock.patch('dao.elasticsearch_dao.ElasticSearchDAO.es.search')
+    @mock.patch('src.server.es.search')
     def test_search_autocomplete_es_params(self, mock_es):
         mock_es.return_value = self.es_search_response
 
@@ -339,7 +336,7 @@ class SearchEndpointsTest(unittest.TestCase):
             body=build_autocomplete_search_body_request('act', 'go', 'go_name')
         )
 
-    @mock.patch('dao.elasticsearch_dao.ElasticSearchDAO.es.search')
+    @mock.patch('src.server.es.search')
     def test_search_autocomplete_returns_object(self, mock_es):
         mock_es.return_value = self.es_search_response
 

@@ -12,6 +12,10 @@ class SearchService:
         if query == '':
             return {"results": None}
 
+        if not field or field != 'name_key':
+            return {"results": format_autocomplete_results(
+                self.dao.search_by_body(build_aggregation_autocomplete_search_body_request(query, category, field)), field)}
+
         return {"results": format_autocomplete_results(
             self.dao.search_by_body(build_autocomplete_search_body_request(query, category, field)), field)}
 

@@ -1,66 +1,94 @@
 from mapping import ESMapping
 from loaders import *
+from annotators import *
 from files import *
 from mods import *
+import gc
+import time
+import multiprocessing
 
 import os
 
 class AggregateLoader:
 
-    def load_from_mods(self):
-        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+    def __init__(self):
+        self.go_dataset = {}
+        self.so_dataset = {}
+        self.batch_size = 5000 # Set size of gene batches created from JSON file AND the size of the chunks used for sending data to ES.
+        self.test_set = 'false' # Limit dataset to 100 gene entries from each MOD.
 
-        print "Loading GO Data"
-        go_data = GoLoader().get_data() 
-        print "Loading OMIM Data"
-        omim_data = OMIMLoader().get_data()
-        print "Loading SO Data"
-        so_loader = SoLoader()
-
-        self.genes = {}
-        print "Gathering genes from Each Mod"
-        for mod in mods:
-            self.genes.update(mod.load_genes())
-
-        # print "Loading Homologs for all genes"
-        # HomoLogLoader(mods).attach_homolog_data(genes)
-        print "Loading SO terms for all genes"
-        so_loader.attach_so_data(self.genes)
-
-        print "Loading GO annotations for genes from mines"
-        gene_go_annots = []
-        # gene_disease_annots = []
-        for mod in mods:
-            gene_go_annots.extend(mod.load_go())
-            # gene_disease_annots.extend(mod.load_diseases())
-
-        print "Attaching GO annotations to genes"
-        go_annot_loader = GoGeneAnnotLoader(self.genes, go_data)
-        self.go_entries = go_annot_loader.attach_annotations(gene_go_annots)
-
-        # print "Attaching Disease annotations to genes"
-        # disease_annot_loader = DiseaseGeneAnnotLoader(genes, omim_data)
-        # disease_entries = disease_annot_loader.attach_annotations(gene_disease_annots)
+    def establish_index(self):
+        print "ES_HOST: " + os.environ['ES_HOST']
+        print "ES_INDEX: " + os.environ['ES_INDEX']
+        print "ES_AWS: " + os.environ['ES_AWS']
+        self.es = ESMapping(os.environ['ES_HOST'], os.environ['ES_INDEX'], os.environ['ES_AWS'], self.batch_size)
+        self.es.start_index()
 
     def load_from_files(self):
-        print "Load data from saved files"
-        self.genes = PickleFile("tmp/genes_bkp.pickle").load()
-        self.go_entries = PickleFile("tmp/go_bkp.pickle").load()
-        #so_entries = PickleFile("tmp/so_bkp.pickle").load()
-        #disease_entries = PickleFile("tmp/diseases_bkp.pickle").load()
+        print "Loading data from saved files"
+        self.go_dataset = PickleFile("tmp/go_bkp.pickle").load()
+        self.so_dataset = PickleFile("tmp/so_bkp.pickle").load()
+
+    def load_annotations(self):
+        print "Loading GO Data"
+        self.go_dataset = GoLoader().get_data()
+        print "Loading SO Data" 
+        self.so_dataset = SoLoader().get_data()
+
+
+    def load_from_mods(self, pickle, index):
+        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+
+        if self.test_set == 'true':
+            print "WARNING: test_set is enabled. Limiting dataset to 100 genes per MOD."
+            time.sleep(3)
+
+        print "Gathering genes from each MOD"
+        for mod in mods:
+
+            pickle_file_name = "tmp/genes_bkp_%s.pickle" % (mod.__class__.__name__)
+            if pickle == 'save':
+                try:
+                    print "Removing %s if it exists." % (pickle_file_name)
+                    os.remove(pickle_file_name)
+                except OSError:
+                    pass
+
+            genes = mod.load_genes(self.batch_size, self.test_set) # generator object
+            print "Loading GO annotations for %s" % (mod.species)
+            gene_go_annots = mod.load_go()
+
+            for gene_list_of_entries in genes:
+                # Annotations to individual genes occurs in the loop below via static methods.
+                print "Attaching annotations to individual genes."
+                
+                for item, individual_gene in enumerate(gene_list_of_entries):
+                    (gene_list_of_entries[item], self.go_dataset) = GoAnnotator().attach_annotations(individual_gene, gene_go_annots, self.go_dataset)
+                    gene_list_of_entries[item] = SoAnnotator().attach_annotations(individual_gene, self.so_dataset)
+
+                if pickle == 'save':
+                    PickleFile(pickle_file_name).save_append(gene_list_of_entries)
+
+                if index == 'true':
+                    self.es.index_data(gene_list_of_entries, 'Gene Data', 'index') # Load genes into ES
+                
+    def index_mods_from_pickle(self):
+        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        #mods = [FlyBase()]
+
+        for mod in mods:
+            list_to_load = []
+            pickle_file_name = "tmp/genes_bkp_%s.pickle" % (mod.__class__.__name__)
+            gene_pickle = PickleFile(pickle_file_name).load_multi() # generator object
+
+            for gene in gene_pickle:
+                self.es.index_data(list_to_load, 'Gene Data', 'index') # Load genes into ES
 
     def save_to_files(self):
         print "Saving processed data to files"
-        PickleFile("tmp/genes_bkp.pickle").save(self.genes)
-        PickleFile("tmp/go_bkp.pickle").save(self.go_entries)
-        # PickleFile("tmp/diseases_bkp.pickle").save(disease_entries)
-        # PickleFile("tmp/so_bkp.pickle").save(so_loader.get_data())
+        PickleFile("tmp/go_bkp.pickle").save(self.go_dataset)
+        PickleFile("tmp/so_bkp.pickle").save(self.so_dataset)
 
     def index_data(self):
-
-        es = ESMapping(os.environ['ES_HOST'], os.environ['ES_INDEX'], os.environ['ES_AWS'])
-        es.start_index()
-        es.index_data(self.genes, "Gene Data")
-        es.index_data(self.go_entries, "Go Data")
-        # self.index_into_es(disease_entries)
-        es.finish_index()
+        self.es.index_data(self.go_dataset, 'GO Data', 'index') # Load the GO dataset into ES
+        self.es.finish_index()

@@ -21,5 +21,22 @@ restart:
 stop:
 	kill -s TERM $(cat gunicorn.pid)
 
-tests:
+fetch_and_save:
+	cd scripts/elastic_search && $(OPTIONS) python fetch_and_save.py
+
+load_and_index:
+	cd scripts/elastic_search && $(OPTIONS) python load_and_index.py
+
+index:
+	cd scripts/elastic_search && $(OPTIONS) python fetch_save_index.py
+
+tests: test-js test-py test-end-to-end
+
+test-py:
 	$(OPTIONS) nosetests -s test
+
+test-js:
+	$(OPTIONS) npm test
+
+test-end-to-end:
+	behave test/functional_tests

@@ -2,6 +2,8 @@ from loaders import *
 
 if __name__ == '__main__':
     al = AggregateLoader()
-    al.load_from_mods()
+    al.establish_index()
+    al.load_annotations()
+    al.load_from_mods(pickle = 'save', index = 'true')
     al.index_data()
     al.save_to_files()
