@@ -34,9 +34,9 @@ class AggregateLoader:
         print "Loading SO Data" 
         self.so_dataset = SoLoader().get_data()
 
-
     def load_from_mods(self, pickle, index):
-        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        # mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        mods = [FlyBase()]
 
         if self.test_set == 'true':
             print "WARNING: test_set is enabled. Limiting dataset to 100 genes per MOD."
@@ -57,6 +57,9 @@ class AggregateLoader:
             print "Loading GO annotations for %s" % (mod.species)
             gene_go_annots = mod.load_go()
 
+            print "Loading Orthology data for %s" % (mod.species)
+            ortho_dataset = OrthoLoader().get_data(mod.__class__.__name__)
+
             for gene_list_of_entries in genes:
                 # Annotations to individual genes occurs in the loop below via static methods.
                 print "Attaching annotations to individual genes."
@@ -64,6 +67,7 @@ class AggregateLoader:
                 for item, individual_gene in enumerate(gene_list_of_entries):
                     (gene_list_of_entries[item], self.go_dataset) = GoAnnotator().attach_annotations(individual_gene, gene_go_annots, self.go_dataset)
                     gene_list_of_entries[item] = SoAnnotator().attach_annotations(individual_gene, self.so_dataset)
+                    gene_list_of_entries[item] = OrthoAnnotator().attach_annotations(individual_gene, ortho_dataset)
 
                 if pickle == 'save':
                     PickleFile(pickle_file_name).save_append(gene_list_of_entries)
