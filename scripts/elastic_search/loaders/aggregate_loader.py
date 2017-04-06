@@ -5,6 +5,7 @@ from files import *
 from mods import *
 import gc
 import time
+from multiprocessing import Process, Manager
 
 import os
 
@@ -35,8 +36,8 @@ class AggregateLoader:
         self.so_dataset = SoLoader().get_data()
 
     def load_from_mods(self, pickle, index):
-        # mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
-        mods = [FlyBase()]
+        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        # mods = [FlyBase()]
 
         if self.test_set == 'true':
             print "WARNING: test_set is enabled. Limiting dataset to 100 genes per MOD."

@@ -1,5 +1,7 @@
 from files import *
 import time
+import gc
+import json
 
 class OrthoLoader:
 
@@ -42,4 +44,5 @@ class OrthoLoader:
                 'confidence': orthoRecord['confidence']
             })
 
+        del ortho_data
         return ortho_dataset
