@@ -38,22 +38,19 @@ install:
   - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.2.zip && unzip elasticsearch-5.1.2.zip
   - ./elasticsearch-5.1.2/bin/elasticsearch -d
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
-  - cd webapp
-  - make build
-  - make run &
-  - cd ../api
-  - make build
-  - make run &
+  - make -C webapp
+  - make -C webapp run &
+  - make -C api
+  - make -C api run &
 
 before_script:
   - sleep 5
 
 script:
   - curl "http://localhost:9200"
-  - cd indexer
-  - make index
-  - cd ../webapp
-  - make tests
+  - make -C indexer
+  - make -C indexer index
+  - make -C webapp tests
 
 notifications:
   slack:

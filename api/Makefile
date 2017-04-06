@@ -30,13 +30,10 @@ load_and_index:
 index:
 	cd scripts/elastic_search && $(OPTIONS) python fetch_save_index.py
 
-tests: test-js test-py test-end-to-end
+tests: test-py test-end-to-end
 
 test-py:
 	$(OPTIONS) nosetests -s test
-
-test-js:
-	$(OPTIONS) npm test
 
 test-end-to-end:
 	behave test/functional_tests
