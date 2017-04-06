@@ -35,7 +35,7 @@ class OrthoLoader:
                 'gene2':orthoRecord['gene2'],
                 # 'gene2Symbol': orthoRecord['gene2Symbol'],
                 # 'gene2SymbolAsId': orthoRecord['gene2SymbolAsId'],
-                'gene1DataProvider': orthoRecord['gene1DataProvider'],
+                'gene2DataProvider': orthoRecord['gene2DataProvider'],
                 'predictionMethodsMatched': orthoRecord['predictionMethodsMatched'],
                 'predictionMethodsNotMatched': orthoRecord['predictionMethodsNotMatched'],
                 'predictionMethodsNotCalled': orthoRecord['predictionMethodsNotCalled'],
