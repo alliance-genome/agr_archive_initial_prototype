@@ -50,7 +50,7 @@ script:
   - curl "http://localhost:9200"
   - make -C indexer
   - make -C indexer index
-  - make -C webapp tests
+  - make -C api tests
 
 notifications:
   slack:
