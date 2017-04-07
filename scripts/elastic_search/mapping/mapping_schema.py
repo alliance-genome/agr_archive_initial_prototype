@@ -157,38 +157,6 @@ mapping_schema = {
                         }
                     }
                 },
-                "gene_chromosomes": {
-                    "type": "text",
-                    "fields": {
-                        "raw": {
-                            "type": "keyword"
-                        }
-                    }
-                },
-                "gene_chromosome_starts": {
-                    "type": "text",
-                    "fields": {
-                        "raw": {
-                            "type": "keyword"
-                        }
-                    }
-                },
-                "gene_chromosome_ends": {
-                    "type": "text",
-                    "fields": {
-                        "raw": {
-                            "type": "keyword"
-                        }
-                    }
-                },
-                "gene_chromosome_strand": {
-                    "type": "text",
-                    "fields": {
-                        "raw": {
-                            "type": "keyword"
-                        }
-                    }
-                },
                 "description": {
                     "type": "text"
                 },
