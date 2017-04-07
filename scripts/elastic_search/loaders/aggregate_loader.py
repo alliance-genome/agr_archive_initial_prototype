@@ -66,6 +66,7 @@ class AggregateLoader:
                 print "Attaching annotations to individual genes."
                 
                 for item, individual_gene in enumerate(gene_list_of_entries):
+                    # The GoAnnotator also updates the go_dataset as it annotates genes, hence the two variable assignment.
                     (gene_list_of_entries[item], self.go_dataset) = GoAnnotator().attach_annotations(individual_gene, gene_go_annots, self.go_dataset)
                     gene_list_of_entries[item] = SoAnnotator().attach_annotations(individual_gene, self.so_dataset)
                     gene_list_of_entries[item] = OrthoAnnotator().attach_annotations(individual_gene, ortho_dataset)

@@ -31,12 +31,8 @@ class OrthoLoader:
             ortho_dataset[primaryId].append({
                 'isBestScore': orthoRecord['isBestScore'],
                 'isBestRevScore': orthoRecord['isBestRevScore'],
-                # 'gene1Symbol': orthoRecord['gene1Symbol'],
-                # 'gene1SymbolAsId': orthoRecord['gene1SymbolAsId'],
                 'gene1DataProvider': orthoRecord['gene1DataProvider'],
                 'gene2':orthoRecord['gene2'],
-                # 'gene2Symbol': orthoRecord['gene2Symbol'],
-                # 'gene2SymbolAsId': orthoRecord['gene2SymbolAsId'],
                 'gene2DataProvider': orthoRecord['gene2DataProvider'],
                 'predictionMethodsMatched': orthoRecord['predictionMethodsMatched'],
                 'predictionMethodsNotMatched': orthoRecord['predictionMethodsNotMatched'],
