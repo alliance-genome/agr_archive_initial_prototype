@@ -38,8 +38,9 @@ class AggregateLoader:
     def load_from_mods(self, pickle, index, test_set):
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
 
+        self.test_set = test_set
         if self.test_set == 'true':
-            print "WARNING: test_set is enabled -- only loading test genes."
+            print "WARNING: test_set is enabled -- only indexing test genes."
             time.sleep(3)
 
         print "Gathering genes from each MOD"
