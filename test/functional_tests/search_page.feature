@@ -12,7 +12,7 @@ Feature: navigate the search page
         | fgf8                      | fgf8a              |
         | dunk                      | dunk               |
         | THG1                      | THG1               |
-        | early onset breast cancer | BRCA2              |
+        | early onset breast cancer | Brca2              |
 
       Examples: GO Terms
         | query               | linktext             |
