@@ -25,6 +25,16 @@ class GeneLoader:
             strand = None
             name = None
 
+            primary_id = geneRecord['primaryId']
+
+            if geneRecord['taxonId'] == "10116" and not primary_id.startswith("RGD"):
+                primary_id = dataProvider + ":" + geneRecord['primaryId']
+
+            if test_set == 'true':
+                is_it_test_entry = self.check_for_test_entry(primary_id, geneRecord['taxonId'])
+                if is_it_test_entry == 'false':
+                    continue
+
             if 'crossReferences' in geneRecord:
                 for crossRef in geneRecord['crossReferences']:
                     ref_text = crossRef['dataProvider'] + " " + crossRef['id']
@@ -42,11 +52,6 @@ class GeneLoader:
                         strand = genomeLocation['strand']
                     genomic_locations.append(
                         {"chromosome": chromosome, "start": start, "end": end, "strand": strand, "assembly": assembly})
-
-            primary_id = geneRecord['primaryId']
-
-            if geneRecord['taxonId'] == "10116" and not primary_id.startswith("RGD"):
-                primary_id = dataProvider + ":" + geneRecord['primaryId']
 
             gene_dataset = {
                 "symbol": geneRecord['symbol'],
@@ -77,17 +82,11 @@ class GeneLoader:
                 "release": release
             }
 
-            if test_set == 'false':
-                # Establishes the number of genes to yield (return) at a time.
-                list_to_yield.append(gene_dataset)
-                if len(list_to_yield) == batch_size:
-                    yield list_to_yield
-                    list_to_yield[:] = [] # Empty the list.
-            elif test_set == 'true':
-                list_to_yield.append(gene_dataset)
-                if len(list_to_yield) == 100:
-                    yield list_to_yield
-                    return
+            # Establishes the number of genes to yield (return) at a time.
+            list_to_yield.append(gene_dataset)
+            if len(list_to_yield) == batch_size:
+                yield list_to_yield
+                list_to_yield[:] = [] # Empty the list.
 
         if len(list_to_yield) > 0:
             yield list_to_yield
@@ -109,3 +108,19 @@ class GeneLoader:
             return "Homo sapiens"
         else:
             return None
+
+    def check_for_test_entry(self, primary_id, taxon):
+        test_dict = {
+            '9606': ['HGNC:17889', 'HGNC:25818', 'HGNC:3686'],
+            '10116': ['RGD:70891', 'RGD:1306349', 'RGD:620796'],
+            '10090': ['MGI:109337', 'MGI:108202', 'MGI:2676586'],
+            '7955': ['ZDB-GENE-990415-72', 'ZDB-GENE-030131-3445', 'ZDB-GENE-980526-388'],
+            '7227': ['FBgn0083973', 'FBgn0037960', 'FBgn0027296'],
+            '6239': ['WBGene00044305', 'WBGene00169423', 'WBGene00000987'],
+            '559292': ['S000003256', 'S000003513', 'S000000119']
+        }
+
+        if primary_id in test_dict[taxon]:
+            return 'true'
+        else:
+            return 'false'
