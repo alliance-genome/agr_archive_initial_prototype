@@ -46,7 +46,7 @@ before_script:
 
 script:
   - curl "http://localhost:9200"
-  - make index
+  - make test_index
   - make tests
 
 notifications:
