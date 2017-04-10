@@ -7,8 +7,8 @@ import time
 
 class ESMapping:
 
-    def __init__(self, es_host, es_index, aws, batch_size):
-        self.batch_size = batch_size
+    def __init__(self, es_host, es_index, aws, chunk_size):
+        self.chunk_size = chunk_size
         if aws == "true":
             self.es = Elasticsearch(es_host, timeout=30, retry_on_timeout=False, use_ssl=True, verify_certs=True)
         else:
@@ -94,7 +94,7 @@ class ESMapping:
                 })
             bulk_data.append(doc)
 
-        for success, info in streaming_bulk(self.es, actions=bulk_data, refresh=False, request_timeout=60, chunk_size=self.batch_size):
+        for success, info in streaming_bulk(self.es, actions=bulk_data, refresh=False, request_timeout=60, chunk_size=self.chunk_size):
                 if not success:
                     print "A document failed: %s" % (info)
 
