@@ -14,6 +14,7 @@ class AggregateLoader:
     def __init__(self):
         self.go_dataset = {}
         self.so_dataset = {}
+        self.do_dataset = {}
         self.batch_size = 5000 # Set size of gene batches created from JSON file AND the size of the chunks used for sending data to ES.
         self.test_set = 'false' # Limit dataset to 100 gene entries from each MOD.
 
@@ -28,13 +29,15 @@ class AggregateLoader:
         print "Loading data from saved files"
         self.go_dataset = PickleFile("tmp/go_bkp.pickle").load()
         self.so_dataset = PickleFile("tmp/so_bkp.pickle").load()
+        self.do_dataset = PickleFile("tmp/do_bkp.pickle").load()
 
     def load_annotations(self):
         print "Loading GO Data"
         self.go_dataset = GoLoader().get_data()
-        print "Loading SO Data" 
+        print "Loading SO Data"
         self.so_dataset = SoLoader().get_data()
-
+        print "Loading DO Data"
+        self.do_dataset = DoLoader().get_data()
 
     def load_from_mods(self, pickle, index):
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
@@ -57,13 +60,15 @@ class AggregateLoader:
             genes = mod.load_genes(self.batch_size, self.test_set) # generator object
             print "Loading GO annotations for %s" % (mod.species)
             gene_go_annots = mod.load_go()
+            disease_dataset = mod.load_disease()
 
             for gene_list_of_entries in genes:
                 # Annotations to individual genes occurs in the loop below via static methods.
                 print "Attaching annotations to individual genes."
-                
+
                 for item, individual_gene in enumerate(gene_list_of_entries):
                     (gene_list_of_entries[item], self.go_dataset) = GoAnnotator().attach_annotations(individual_gene, gene_go_annots, self.go_dataset)
+                    (gene_list_of_entries[item], self.do_dataset) = DoAnnotator().attach_annotations(individual_gene, disease_dataset, self.do_dataset)
                     gene_list_of_entries[item] = SoAnnotator().attach_annotations(individual_gene, self.so_dataset)
 
                 if pickle == 'save':
@@ -71,7 +76,7 @@ class AggregateLoader:
 
                 if index == 'true':
                     self.es.index_data(gene_list_of_entries, 'Gene Data', 'index') # Load genes into ES
-                
+
     def index_mods_from_pickle(self):
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
         #mods = [FlyBase()]
@@ -88,7 +93,9 @@ class AggregateLoader:
         print "Saving processed data to files"
         PickleFile("tmp/go_bkp.pickle").save(self.go_dataset)
         PickleFile("tmp/so_bkp.pickle").save(self.so_dataset)
+        PickleFile("tmp/do_bkp.pickle").save(self.do_dataset)
 
     def index_data(self):
         self.es.index_data(self.go_dataset, 'GO Data', 'index') # Load the GO dataset into ES
+        self.es.index_data(self.do_dataset, 'DO Data', 'index') # Load the DO dataset into ES
         self.es.finish_index()
