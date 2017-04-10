@@ -1,6 +1,5 @@
 from flask import Flask, render_template, send_from_directory, request, jsonify
 from flask_httpauth import HTTPBasicAuth
-from flask_webpack import Webpack
 from gevent.wsgi import WSGIServer
 from random import randint
 from services import *
@@ -9,9 +8,6 @@ from elasticsearch import Elasticsearch
 import os
 
 app = Flask(__name__)
-webpack = Webpack()
-app.config.update({'DEBUG': True, 'WEBPACK_MANIFEST_PATH': './build/manifest.json'})
-webpack.init_app(app)
 auth = HTTPBasicAuth()
 
 es = Elasticsearch(os.environ['ES_HOST'], timeout=30, retry_on_timeout=False)
@@ -152,23 +148,6 @@ def gene_update_api(service, id):
 def gene_delete_api(service, id):
     service_c = services[service]
     return jsonify(service_c.delete(id))
-
-
-# make static assets available
-@app.route('/assets/<path:path>')
-def send_static(path):
-    return send_from_directory('build', path)
-
-
-# render user interfaces in client JS
-@app.route('/')
-@app.route('/about')
-@app.route('/help')
-@app.route('/search')
-@app.route('/gene/<gene_id>')
-def react_render(gene_id=None):
-    return render_template('index.jinja2')
-
 
 @auth.get_password
 def get_pw(username):

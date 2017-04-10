@@ -1,7 +1,6 @@
 import unittest
-from src.services.helpers import *
+from services.helpers import *
 from werkzeug.datastructures import ImmutableMultiDict
-
 
 class SearchHelpersTest(unittest.TestCase):
     def _query_builder(self, query, fields):

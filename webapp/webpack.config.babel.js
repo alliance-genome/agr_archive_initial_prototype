@@ -5,28 +5,36 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import ManifestRevisionPlugin from 'manifest-revision-webpack-plugin';
 
 let isProduction = process.env.NODE_ENV === 'production';
+let API_URL = process.env.API_URL || 'http://localhost:5000';
+let DEV_SERVER_UI_PORT = process.env.DEV_SERVER_UI_PORT || '2992';
 
 // Development asset host, asset location and build output path.
-const publicHost = isProduction ? '': 'http://localhost:2992';
 const rootAssetPath = './assets';
-const buildOutputPath = './src/build';
+const buildOutputPath = 'dist';
 
 let config = {
-  context: path.join(__dirname, 'src/js_src'),
+  context: path.join(__dirname, 'src'),
   debug: true,
   entry: [
     './index.js'
   ],
   output: {
     path: buildOutputPath,
-    publicPath: publicHost + '/assets/',
-    filename: '[name].[hash].js',
-    chunkFilename: '[id].[hash].js'
+    publicPath: '/assets/',
+    filename: '[name].js',
+    chunkFilename: '[id].js'
   },
   devtool: 'eval-source-map',
   devServer: {
-    contentBase: 'public',
-    historyApiFallback: true
+    contentBase: 'dist',
+    historyApiFallback: true,
+    port: DEV_SERVER_UI_PORT,
+    proxy: {
+      '/api': {
+        target: API_URL,
+        secure: false
+      }
+    }
   },
   module: {
     preLoaders: [
@@ -61,7 +69,7 @@ let config = {
   },
   plugins: [
     new ExtractTextPlugin('[name].[chunkhash].css'),
-    new ManifestRevisionPlugin(path.join('src/build', 'manifest.json'), {
+    new ManifestRevisionPlugin(path.join('dist', 'manifest.json'), {
         rootAssetPath: rootAssetPath,
         ignorePaths: ['/styles', '/scripts']
     })
@@ -78,7 +86,7 @@ if (isProduction) {
       }
     }),
     new ExtractTextPlugin('[name].[chunkhash].css'),
-    new ManifestRevisionPlugin(path.join('src/build', 'manifest.json'), {
+    new ManifestRevisionPlugin(path.join('dist', 'manifest.json'), {
       rootAssetPath: rootAssetPath,
       ignorePaths: ['/styles', '/scripts']
     })

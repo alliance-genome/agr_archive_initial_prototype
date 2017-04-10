@@ -2,13 +2,17 @@ import os
 import unittest
 import mock
 import json
-from src.services.helpers import *
 from werkzeug.datastructures import ImmutableMultiDict
 
+os.environ['ES_HOST'] = 'localhost:9200'
+os.environ['ES_INDEX'] = 'searchable_items_blue'
+os.environ['ES_AWS'] = 'false'
+
+from services.helpers import *
+from server import app
 
 class SearchEndpointsTest(unittest.TestCase):
     def setUp(self):
-        from src.server import app
 
         self.es_search_response = {
             "took": 4,
@@ -83,13 +87,13 @@ class SearchEndpointsTest(unittest.TestCase):
         self.app = app.test_client()
         self.app.testing = True
 
-    @mock.patch('src.server.es.search')
+    @mock.patch('server.es.search')
     def test_mock_es(self, mock_es):
         mock_es.return_value = self.es_search_response
         self.app.get('/api/search_autocomplete?q=act')
         mock_es.assert_called()
 
-    @mock.patch('src.server.es.search')
+    @mock.patch('server.es.search')
     def test_search_default_params(self, mock_es):
         def side_effect(*args, **kwargs):
             if "size" in kwargs:
@@ -135,7 +139,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    @mock.patch('src.server.es.search')
+    @mock.patch('server.es.search')
     def test_search_with_custom_params(self, mock_es):
         def side_effect(*args, **kwargs):
             if "size" in kwargs:
@@ -187,7 +191,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    @mock.patch('src.server.es.search')
+    @mock.patch('server.es.search')
     def test_search_with_aggregation_params(self, mock_es):
         def side_effect(*args, **kwargs):
             if "size" in kwargs:
@@ -237,7 +241,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    @mock.patch('src.server.es.search')
+    @mock.patch('server.es.search')
     def test_empty_search_returns_json_object(self, mock_es):
         def side_effect(*args, **kwargs):
             if "size" in kwargs:
@@ -260,7 +264,7 @@ class SearchEndpointsTest(unittest.TestCase):
             'aggregations': []
         })
 
-    @mock.patch('src.server.es.search')
+    @mock.patch('server.es.search')
     def test_search_returns_json_object(self, mock_es):
         def side_effect(*args, **kwargs):
             if "size" in kwargs:
@@ -276,7 +280,7 @@ class SearchEndpointsTest(unittest.TestCase):
 
         data = json.loads(response.data)
 
-    @mock.patch('src.server.es.search')
+    @mock.patch('server.es.search')
     def test_search_autocomplete_es_params(self, mock_es):
         mock_es.return_value = self.es_search_response
 
@@ -332,7 +336,7 @@ class SearchEndpointsTest(unittest.TestCase):
             body=build_autocomplete_search_body_request('act', 'go', 'go_name')
         )
 
-    @mock.patch('src.server.es.search')
+    @mock.patch('server.es.search')
     def test_search_autocomplete_returns_object(self, mock_es):
         mock_es.return_value = self.es_search_response
 
