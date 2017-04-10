@@ -16,7 +16,7 @@ load_and_index:
 index:
 	cd src && $(OPTIONS) python fetch_save_index.py
 
-index_test:
+test_index:
 	cd src && $(OPTIONS) python fetch_save_test_index.py
 
 test:
