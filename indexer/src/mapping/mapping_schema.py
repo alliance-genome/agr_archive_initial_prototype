@@ -286,30 +286,6 @@ mapping_schema = {
                         }
                     }
                 },
-                "homologs": {
-                    "properties": {
-                        "symbol": {
-                            "type": "text",
-                            "analyzer": "symbols"
-                        },
-                        "species": {
-                            "type": "text"
-                        },
-                        "relationship_type": {
-                            "type": "text"
-                        },
-                        "ancestral": {
-                            "type": "text"
-                        },
-                        "panther_family": {
-                            "type": "text",
-                            "analyzer": "symbols"
-                        },
-                        "href": {
-                            "type": "text"
-                        }
-                    }
-                }
             }
         }
     }

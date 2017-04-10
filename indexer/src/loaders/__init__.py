@@ -1,6 +1,7 @@
 from go_loader import GoLoader
 from homolog_loader import HomoLogLoader
 from so_loader import SoLoader
+from ortho_loader import OrthoLoader
 from omim_loader import OMIMLoader
 from gene_loader import GeneLoader
 from go_gene_annot_loader import GoGeneAnnot

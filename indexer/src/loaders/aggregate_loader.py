@@ -5,7 +5,6 @@ from files import *
 from mods import *
 import gc
 import time
-import multiprocessing
 
 import os
 
@@ -34,7 +33,6 @@ class AggregateLoader:
         print "Loading SO Data" 
         self.so_dataset = SoLoader().get_data()
 
-
     def load_from_mods(self, pickle, index, test_set):
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
 
@@ -58,13 +56,18 @@ class AggregateLoader:
             print "Loading GO annotations for %s" % (mod.species)
             gene_go_annots = mod.load_go()
 
+            print "Loading Orthology data for %s" % (mod.species)
+            ortho_dataset = OrthoLoader().get_data(mod.__class__.__name__, self.test_set)
+
             for gene_list_of_entries in genes:
                 # Annotations to individual genes occurs in the loop below via static methods.
                 print "Attaching annotations to individual genes."
                 
                 for item, individual_gene in enumerate(gene_list_of_entries):
+                    # The GoAnnotator also updates the go_dataset as it annotates genes, hence the two variable assignment.
                     (gene_list_of_entries[item], self.go_dataset) = GoAnnotator().attach_annotations(individual_gene, gene_go_annots, self.go_dataset)
                     gene_list_of_entries[item] = SoAnnotator().attach_annotations(individual_gene, self.so_dataset)
+                    gene_list_of_entries[item] = OrthoAnnotator().attach_annotations(individual_gene, ortho_dataset)
 
                 if pickle == 'save':
                     PickleFile(pickle_file_name).save_append(gene_list_of_entries)
@@ -74,7 +77,6 @@ class AggregateLoader:
                 
     def index_mods_from_pickle(self):
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
-        #mods = [FlyBase()]
 
         for mod in mods:
             list_to_load = []
