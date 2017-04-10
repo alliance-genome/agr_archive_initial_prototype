@@ -19,7 +19,7 @@ class DiseaseLoader:
 
         for diseaseRecord in disease_data['data']:
             #experimentalConditions = []
-            objectRelation = {}
+            objectRelationMap = {}
             evidenceList = []
             #geneticModifiers = []
             #experimentalConditionsText = []
@@ -52,10 +52,9 @@ class DiseaseLoader:
             if 'objectRelation' in diseaseRecord:
                 diseaseObjectType = diseaseRecord['objectRelation'].get("objectType")
                 diseaseAssociationType = diseaseRecord['objectRelation'].get("objectRelation")
-                #if 'inferredGeneAssociation' in diseaseRecord['objectRelation']:
-                #    for gene in diseaseRecord['objectRelation']['inferredGeneAssociation']:
+                #for gene in diseaseRecord['objectRelation']['inferredGeneAssociation']:
                 #        inferredFromGeneAssociations.append(gene.get('primaryId'))
-                objectRelation = {"diseaseObjectType": diseaseObjectType, "diseaseAssociationType": diseaseAssociationType}
+                objectRelationMap = {"diseaseObjectType": diseaseObjectType, "diseaseAssociationType": diseaseAssociationType}
 
             # if 'modifier' in diseaseRecord:
             #     associationType = diseaseRecord['modifier']['associationType'].get('associationType')
@@ -82,7 +81,7 @@ class DiseaseLoader:
                 #"diseaseObjectType": diseaseRecord.get('objectRelation').get('objectType'),
                 #"evidenceList": evidenceList,
                 #"modifier": modifier,
-                #"objectRelation": objectRelation,
+                "objectRelation": objectRelationMap,
                 "evidence": evidenceList,
                 "do_id": diseaseRecord.get('DOid'),
                 "do_name": None
