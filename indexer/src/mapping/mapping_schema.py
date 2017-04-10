@@ -157,38 +157,6 @@ mapping_schema = {
                         }
                     }
                 },
-                "gene_chromosomes": {
-                    "type": "text",
-                    "fields": {
-                        "raw": {
-                            "type": "keyword"
-                        }
-                    }
-                },
-                "gene_chromosome_starts": {
-                    "type": "text",
-                    "fields": {
-                        "raw": {
-                            "type": "keyword"
-                        }
-                    }
-                },
-                "gene_chromosome_ends": {
-                    "type": "text",
-                    "fields": {
-                        "raw": {
-                            "type": "keyword"
-                        }
-                    }
-                },
-                "gene_chromosome_strand": {
-                    "type": "text",
-                    "fields": {
-                        "raw": {
-                            "type": "keyword"
-                        }
-                    }
-                },
                 "description": {
                     "type": "text"
                 },
@@ -318,30 +286,6 @@ mapping_schema = {
                         }
                     }
                 },
-                "homologs": {
-                    "properties": {
-                        "symbol": {
-                            "type": "text",
-                            "analyzer": "symbols"
-                        },
-                        "species": {
-                            "type": "text"
-                        },
-                        "relationship_type": {
-                            "type": "text"
-                        },
-                        "ancestral": {
-                            "type": "text"
-                        },
-                        "panther_family": {
-                            "type": "text",
-                            "analyzer": "symbols"
-                        },
-                        "href": {
-                            "type": "text"
-                        }
-                    }
-                }
             }
         }
     }
