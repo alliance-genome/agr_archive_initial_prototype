@@ -36,7 +36,6 @@ class AggregateLoader:
 
     def load_from_mods(self, pickle, index, test_set):
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
-        # mods = [FlyBase()]
 
         self.test_set = test_set
         if self.test_set == 'true':
@@ -59,7 +58,7 @@ class AggregateLoader:
             gene_go_annots = mod.load_go()
 
             print "Loading Orthology data for %s" % (mod.species)
-            ortho_dataset = OrthoLoader().get_data(mod.__class__.__name__)
+            ortho_dataset = OrthoLoader().get_data(mod.__class__.__name__, self.test_set)
 
             for gene_list_of_entries in genes:
                 # Annotations to individual genes occurs in the loop below via static methods.
@@ -79,7 +78,6 @@ class AggregateLoader:
                 
     def index_mods_from_pickle(self):
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
-        #mods = [FlyBase()]
 
         for mod in mods:
             list_to_load = []
