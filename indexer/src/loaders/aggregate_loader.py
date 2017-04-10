@@ -15,7 +15,6 @@ class AggregateLoader:
         self.go_dataset = {}
         self.so_dataset = {}
         self.batch_size = 5000 # Set size of gene batches created from JSON file AND the size of the chunks used for sending data to ES.
-        self.test_set = 'false' # Limit dataset to 100 gene entries from each MOD.
 
     def establish_index(self):
         print "ES_HOST: " + os.environ['ES_HOST']
@@ -36,11 +35,12 @@ class AggregateLoader:
         self.so_dataset = SoLoader().get_data()
 
 
-    def load_from_mods(self, pickle, index):
+    def load_from_mods(self, pickle, index, test_set):
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
 
+        self.test_set = test_set
         if self.test_set == 'true':
-            print "WARNING: test_set is enabled. Limiting dataset to 100 genes per MOD."
+            print "WARNING: test_set is enabled -- only indexing test genes."
             time.sleep(3)
 
         print "Gathering genes from each MOD"

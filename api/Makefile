@@ -27,6 +27,9 @@ fetch_and_save:
 load_and_index:
 	cd scripts/elastic_search && $(OPTIONS) python load_and_index.py
 
+test_index:
+	cd scripts/elastic_search && $(OPTIONS) python fetch_save_test_index.py
+
 index:
 	cd scripts/elastic_search && $(OPTIONS) python fetch_save_index.py
 
