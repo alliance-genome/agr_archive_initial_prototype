@@ -53,10 +53,5 @@ class RGD(MOD):
         return go_annot_dict
 
     def load_disease(self):
-        path = "tmp"
-        S3File("mod-datadumps", "RGD_0.6.0_1.tar.gz", path).download()
-        TARFile(path, "RGD_0.6.0_1.tar.gz").extract_all()
-        disease_data = JSONFile().get_data(path + "/RGD_0.6_disease.json")
-        gene_disease_lists = DiseaseLoader().get_data(disease_data)
-
-        return gene_disease_lists
+        list = []
+        return list

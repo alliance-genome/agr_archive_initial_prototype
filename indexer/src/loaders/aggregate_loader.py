@@ -38,9 +38,9 @@ class AggregateLoader:
         print "Loading DO Data"
         self.do_dataset = DoLoader().get_data()
 
-    def load_from_mods(self, pickle, index):
-        #mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
-        mods = [ZFIN()]
+    def load_from_mods(self, pickle, index, test_set):
+        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        #mods = [ZFIN()]
 
         self.test_set = test_set
         if self.test_set == 'true':
@@ -84,7 +84,8 @@ class AggregateLoader:
                     self.es.index_data(gene_list_of_entries, 'Gene Data', 'index') # Load genes into ES
 
     def index_mods_from_pickle(self):
-        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        #mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        mods = [ZFIN()]
 
         for mod in mods:
             list_to_load = []
