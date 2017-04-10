@@ -84,8 +84,8 @@ class AggregateLoader:
                     self.es.index_data(gene_list_of_entries, 'Gene Data', 'index') # Load genes into ES
 
     def index_mods_from_pickle(self):
-        #mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
-        mods = [ZFIN()]
+        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        #mods = [ZFIN()]
 
         for mod in mods:
             list_to_load = []
