@@ -53,19 +53,9 @@ class WormBase(MOD):
 
     def load_diseases(self):
         path = "tmp"
-        disease_data_csv_filename = path = "/Diseases_OMIM_IDs_and_synonyms_(WormBase).txt"
-        S3File("mod-datadumps/data", "Diseases_OMIM_IDs_and_synonyms_(WormBase).txt", path).download()
+        S3File("mod-datadumps", "WB_0.6.0_1.tar.gz", path).download()
+        TARFile(path, "WB_0.6.0_1.tar.gz").extract_all()
+        disease_data = JSONFile().get_data(path + "/FB_0.6_disease.json")
+        gene_disease_lists = DiseaseLoader().get_data(disease_data, batch_size, test_set)
 
-        print("Fetching disease data from WormBase txt file (" + disease_data_csv_filename + ") ...")
-        list = []
-        with open(disease_data_csv_filename, 'rb') as f:
-            reader = csv.reader(f, delimiter='\t')
-            next(reader, None)
-
-            for row in reader:
-                if row[2] and row[2] != "":
-                    omim_ids = map(lambda s: s.strip(), row[2].split(","))
-
-                    for omim_id in omim_ids:
-                        list.append({"gene_id": None, "omim_id": "OMIM:"+omim_id, "species": WormBase.species})
-        return list
+        return gene_disease_lists

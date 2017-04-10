@@ -54,11 +54,9 @@ class RGD(MOD):
 
     def load_diseases(self):
         path = "tmp"
-        S3File("mod-datadumps/data", "rat_disease.tsv", path).download()
-        disease_data = CSVFile(path + "/rat_disease.tsv").get_data()
+        S3File("mod-datadumps", "RGD_0.6.0_1.tar.gz", path).download()
+        TARFile(path, "RGD_0.6.0_1.tar.gz").extract_all()
+        disease_data = JSONFile().get_data(path + "/FB_0.6_disease.json")
+        gene_disease_lists = DiseaseLoader().get_data(disease_data, batch_size, test_set)
 
-        list = []
-        for row in disease_data:
-            if (row[5].startswith("OMIM:")):
-                list.append({"gene_id": row[0], "omim_id": row[5], "species": RGD.species})
-        return list
+        return gene_disease_lists

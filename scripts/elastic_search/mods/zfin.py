@@ -55,17 +55,10 @@ class ZFIN(MOD):
         return go_annot_dict
 
     def load_diseases(self):
-        query = self.service.new_query("OmimPhenotype")
-        query.add_view(
-            "disease", "phenotypeLink.identifier", "phenotypeLink.linkType",
-            "genes.primaryIdentifier", "genes.symbol", "genes.name"
-        )
-        query.outerjoin("phenotypeLink")
+        path = "tmp"
+        S3File("mod-datadumps", "ZFIN_0.6.0_1.tar.gz", path).download()
+        TARFile(path, "ZFIN_0.6.0_1.tar.gz").extract_all()
+        disease_data = JSONFile().get_data(path + "/FB_0.6_disease.json")
+        gene_disease_lists = DiseaseLoader().get_data(disease_data, batch_size, test_set)
 
-        print ("Fetching disease data from ZebraFishMine...")
-
-        list = []
-        for row in query.rows():
-            if row["phenotypeLink.identifier"] is not None:
-                list.append({"gene_id": row["genes.primaryIdentifier"], "omim_id": "OMIM:"+row["phenotypeLink.identifier"], "species": ZFIN.species})
-        return list
+        return gene_disease_lists
