@@ -13,13 +13,14 @@ class AggregateLoader:
     def __init__(self):
         self.go_dataset = {}
         self.so_dataset = {}
-        self.batch_size = 5000 # Set size of gene batches created from JSON file AND the size of the chunks used for sending data to ES.
+        self.batch_size = 5000 # Set size of gene batches created from JSON file.
+        self.chunk_size = 500 # Set size of chunks sent to ES.
 
     def establish_index(self):
         print "ES_HOST: " + os.environ['ES_HOST']
         print "ES_INDEX: " + os.environ['ES_INDEX']
         print "ES_AWS: " + os.environ['ES_AWS']
-        self.es = ESMapping(os.environ['ES_HOST'], os.environ['ES_INDEX'], os.environ['ES_AWS'], self.batch_size)
+        self.es = ESMapping(os.environ['ES_HOST'], os.environ['ES_INDEX'], os.environ['ES_AWS'], self.chunk_size)
         self.es.start_index()
 
     def load_from_files(self):
