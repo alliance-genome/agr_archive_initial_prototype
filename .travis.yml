@@ -48,7 +48,6 @@ before_script:
 
 script:
   - curl "http://localhost:9200"
-  - make -C indexer
   - make -C indexer test_index
   - make -C api tests
   
