@@ -48,6 +48,6 @@ class Human(MOD):
                     }
         return go_annot_dict
 
-    def load_diseases(self):
+    def load_disease(self):
         list = []
         return list

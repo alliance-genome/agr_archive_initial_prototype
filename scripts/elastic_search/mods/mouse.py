@@ -56,11 +56,11 @@ class MGI(MOD):
                     }
         return go_annot_dict
 
-    def load_diseases(self):
+    def load_disease(self):
         path = "tmp"
         S3File("mod-datadumps", "MGI_0.6.0_1.tar.gz", path).download()
         TARFile(path, "MGI_0.6.0_1.tar.gz").extract_all()
-        disease_data = JSONFile().get_data(path + "/FB_0.6_disease.json")
-        gene_disease_lists = DiseaseLoader().get_data(disease_data, batch_size, test_set)
+        disease_data = JSONFile().get_data(path + "/SGD_0.6_disease.json")
+        gene_disease_lists = DiseaseLoader().get_data(disease_data)
 
         return gene_disease_lists

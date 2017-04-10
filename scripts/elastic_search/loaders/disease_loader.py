@@ -7,7 +7,7 @@ import re
 class DiseaseLoader:
     def get_data(self, disease_data):
 
-        disease_dataset = {}
+        disease_annots = {}
         list_to_yield = []
 
         dateProduced = disease_data['metaData']['dateProduced']
@@ -52,10 +52,10 @@ class DiseaseLoader:
             if 'objectRelation' in diseaseRecord:
                 diseaseObjectType = diseaseRecord['objectRelation'].get("objectType")
                 diseaseAssociationType = diseaseRecord['objectRelation'].get("objectRelation")
-                if 'inferredGeneAssociation' in diseaseRecord['objectRelation']:
-                    for gene in diseaseRecord['objectRelation']['inferredGeneAssociation']:
-                        inferredFromGeneAssociations.append(gene.get('primaryId'))
-                objectRelation.append({"diseaseObjectType": diseaseObjectType, "diseaseAssociationType": diseaseAssociationType, "inferredGeneAssociation": inferredFromGeneAssociations})
+                #if 'inferredGeneAssociation' in diseaseRecord['objectRelation']:
+                #    for gene in diseaseRecord['objectRelation']['inferredGeneAssociation']:
+                #        inferredFromGeneAssociations.append(gene.get('primaryId'))
+                objectRelation = {"diseaseObjectType": diseaseObjectType, "diseaseAssociationType": diseaseAssociationType}
 
             # if 'modifier' in diseaseRecord:
             #     associationType = diseaseRecord['modifier']['associationType'].get('associationType')
@@ -69,8 +69,8 @@ class DiseaseLoader:
             #                      "experimentalConditionsText": experimentalConditionsText,
             #                      "modifierQualifier": modifierQualifier})
 
-            disease_dataset[diseaseRecord.get('objectId')] = {
-                "diseaseObjectId":diseaseRecord('objectId'),
+            disease_annots[diseaseRecord.get('objectId')] = {
+                "diseaseObjectId": diseaseRecord.get('objectId'),
                 #"diseaseObjectName": diseaseRecord.get('objectName'),
                 #"qualifier": diseaseRecord.get('qualifier'),
                 #"with": diseaseRecord.get('with'),
@@ -88,4 +88,4 @@ class DiseaseLoader:
                 "do_name": None
               }
 
-        return disease_dataset
+        return disease_annots
