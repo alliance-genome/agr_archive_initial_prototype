@@ -20,11 +20,6 @@ class GeneLoader:
         for geneRecord in gene_data['data']:
             cross_references = []
             external_ids = []
-            gene_chromosomes = []
-            gene_chromosome_starts = []
-            gene_chromosome_ends = []
-            gene_chromosome_strands = []
-            gene_chromosome_assemblies = []
             genomic_locations = []
             start = None
             end = None
@@ -48,18 +43,13 @@ class GeneLoader:
                     cross_references.append({"dataProvider": crossRef['dataProvider'], "id": crossRef['id']})
             if 'genomeLocations' in geneRecord:
                 for genomeLocation in geneRecord['genomeLocations']:
-                    gene_chromosomes.append(genomeLocation['chromosome'])
                     chromosome = genomeLocation['chromosome']
-                    gene_chromosome_assemblies.append(genomeLocation['assembly'])
                     assembly = genomeLocation['assembly']
                     if 'startPosition' in genomeLocation:
-                        gene_chromosome_starts.append(genomeLocation['startPosition'])
                         start = genomeLocation['startPosition']
                     if 'endPosition' in genomeLocation:
-                        gene_chromosome_ends.append(genomeLocation['endPosition'])
                         end = genomeLocation['endPosition']
                     if 'strand' in geneRecord['genomeLocations']:
-                        gene_chromosome_strands.append(genomeLocation['strand'])
                         strand = genomeLocation['strand']
                     genomic_locations.append(
                         {"chromosome": chromosome, "start": start, "end": end, "strand": strand, "assembly": assembly})
@@ -74,10 +64,6 @@ class GeneLoader:
                 "secondaryIds": geneRecord.get('secondaryIds'),
                 "geneSynopsis": geneRecord.get('geneSynopsis'),
                 "geneSynopsisUrl": geneRecord.get('geneSynopsisUrl'),
-                "gene_chromosomes": gene_chromosomes,
-                "gene_chromosome_starts": gene_chromosome_starts,
-                "gene_chromosome_ends": gene_chromosome_ends,
-                "gene_chromosome_strand": gene_chromosome_strands,
                 "taxonId": geneRecord['taxonId'],
                 "species": self.get_species(geneRecord['taxonId']),
                 "external_ids": external_ids,
