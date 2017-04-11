@@ -14,7 +14,7 @@ class AggregateLoader:
         self.go_dataset = {}
         self.so_dataset = {}
         self.batch_size = 5000 # Set size of gene batches created from JSON file.
-        self.chunk_size = 800 # Set size of chunks sent to ES.
+        self.chunk_size = 650 # Set size of chunks sent to ES.
 
     def establish_index(self):
         print "ES_HOST: " + os.environ['ES_HOST']
