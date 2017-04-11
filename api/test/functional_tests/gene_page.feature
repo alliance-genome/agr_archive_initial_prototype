@@ -19,15 +19,15 @@ Feature: navigating the gene page
 
     Examples: Mouse
     | id                | symbol   |
-    | MGI:109337        | Brca2    |
-    | MGI:108202        | Pcbp2    |
-    | MGI:2676586       | Foxo6    |
+    | MGI:MGI:109337        | Brca2    |
+    | MGI:MGI:108202        | Pcbp2    |
+    | MGI:MGI:2676586       | Foxo6    |
 
     Examples: Fish
     | id                   | symbol  |
-    | ZDB-GENE-990415-72   | fgf8a   |
-    | ZDB-GENE-030131-3445 | dicer1  |
-    | ZDB-GENE-980526-388  | bmp2a   |
+    | ZFIN:ZDB-GENE-990415-72   | fgf8a   |
+    | ZFIN:ZDB-GENE-030131-3445 | dicer1  |
+    | ZFIN:ZDB-GENE-980526-388  | bmp2a   |
 
     Examples: Fly
     | id                | symbol   |
