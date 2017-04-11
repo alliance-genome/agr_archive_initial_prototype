@@ -3,7 +3,7 @@ from selenium import webdriver
 
 class Browser(object):
 
-    base_url = 'http://localhost:2992'
+    base_url = os.environ['BEHAVE_TEST_URL']
     driver = webdriver.Chrome()
     driver.implicitly_wait(10)
 
