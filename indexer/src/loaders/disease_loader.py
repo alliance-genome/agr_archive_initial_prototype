@@ -18,7 +18,7 @@ class DiseaseLoader:
             release = disease_data['metaData']['release']
 
         for diseaseRecord in disease_data['data']:
-            #experimentalConditions = []
+            experimentalConditions = []
             objectRelationMap = {}
             evidenceList = []
             #geneticModifiers = []
@@ -56,6 +56,16 @@ class DiseaseLoader:
                 #        inferredFromGeneAssociations.append(gene.get('primaryId'))
                 objectRelationMap = {"diseaseObjectType": diseaseObjectType, "diseaseAssociationType": diseaseAssociationType}
 
+            if 'experimentalConditions' in diseaseRecord:
+                for experimentalCondition in diseaseRecord['experimentalConditions']:
+                    experimentalConditions.append({"zecoId": experimentalCondition.get('zecoId'),
+                                                   "geneOntologyId": experimentalCondition.get('geneOntologyId'),
+                                                   "ncbiTaxonId": experimentalCondition.get('ncbiTaxonID'),
+                                                   "chebiOntologyId": experimentalCondition.get('chebiOntologyId'),
+                                                   "anatomicalId": experimentalCondition.get('anatomicalId'),
+                                                   "experimentalConditionIsStandard": experimentalCondition.get(
+                                                       'conditiionIsStandard'),
+                                                   "freeTextCondition": experimentalCondition.get('textCondition')})
             # if 'modifier' in diseaseRecord:
             #     associationType = diseaseRecord['modifier']['associationType'].get('associationType')
             #     if 'genetic' in diseaseRecord['modifier']['associationType']:
@@ -76,7 +86,7 @@ class DiseaseLoader:
                 #"taxonId": diseaseRecord.get('taxonId'),
                 #"geneticSex": diseaseRecord.get('geneticSex'),
                 #"dataAssigned": diseaseRecord.get('dateAssigned'),
-                #"experimentalConditions": experimentalConditions,
+                "experimentalConditions": experimentalConditions,
                 "associationType": diseaseRecord.get('objectRelation').get('associationType'),
                 #"diseaseObjectType": diseaseRecord.get('objectRelation').get('objectType'),
                 #"evidenceList": evidenceList,
