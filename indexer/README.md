@@ -42,6 +42,10 @@ Create a virtualenv for isolating the python dependencies:
    agr_indexer> make        #( to Setup dev working platform )
    agr_indexer> make index  #( to start running data into the index )
 ```
+```
+Make sure the Elastic search instance is running before running the command "make index" otherwise it will fail
+
+```
 
 [1]: https://pip.pypa.io/en/stable/installing/
 [2]: https://virtualenv.pypa.io/en/stable/installation/
