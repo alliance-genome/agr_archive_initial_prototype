@@ -1,5 +1,6 @@
-from selenium import webdriver
+import os
 
+from selenium import webdriver
 
 class Browser(object):
 
