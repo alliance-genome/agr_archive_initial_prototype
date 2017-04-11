@@ -52,13 +52,6 @@ class RGD(MOD):
                     }
         return go_annot_dict
 
-    def load_diseases(self):
-        path = "tmp"
-        S3File("mod-datadumps/data", "rat_disease.tsv", path).download()
-        disease_data = CSVFile(path + "/rat_disease.tsv").get_data()
-
+    def load_disease(self):
         list = []
-        for row in disease_data:
-            if (row[5].startswith("OMIM:")):
-                list.append({"gene_id": row[0], "omim_id": row[5], "species": RGD.species})
         return list

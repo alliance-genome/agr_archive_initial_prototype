@@ -4,7 +4,8 @@ from obo_parser import *
 import re
 
 class GoLoader:
-    
+
+
     @staticmethod
     def get_data():
         path = "tmp";

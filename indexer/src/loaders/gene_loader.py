@@ -6,7 +6,7 @@ import re
 
 class GeneLoader:
     def get_data(self, gene_data, batch_size, test_set):
-        
+
         gene_dataset = {}
         list_to_yield = []
 
@@ -80,7 +80,8 @@ class GeneLoader:
                 "category": "gene",
                 "dateProduced": dateProduced,
                 "dataProvider": dataProvider,
-                "release": release
+                "release": release,
+                "diseases": []
             }
 
             # Establishes the number of genes to yield (return) at a time.

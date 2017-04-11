@@ -3,6 +3,7 @@ from files import *
 from loaders.gene_loader import GeneLoader
 import csv
 import gzip
+from loaders.disease_loader import DiseaseLoader
 from mod import MOD
 
 class ZFIN(MOD):
@@ -21,14 +22,14 @@ class ZFIN(MOD):
 
     @staticmethod
     def gene_id_from_panther(panther_id):
-        # example: ZFIN=ZDB-GENE-050522-480
+        # example: ZFIN=ZDB-GENE-010525-1
         return panther_id.split("=")[1]
 
     def load_genes(self, batch_size, test_set):
         path = "tmp"
-        S3File("mod-datadumps", "ZFIN_0.3.0_6.tar.gz", path).download()
-        TARFile(path, "ZFIN_0.3.0_6.tar.gz").extract_all()
-        gene_data = JSONFile().get_data(path + "/ZFIN_0.3.0_BGI.json")
+        S3File("mod-datadumps", "ZFIN_0.6.0_8.tar.gz", path).download()
+        TARFile(path, "ZFIN_0.6.0_8.tar.gz").extract_all()
+        gene_data = JSONFile().get_data(path + "/ZFIN_0.6.0_BGI.json")
         gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
@@ -54,18 +55,11 @@ class ZFIN(MOD):
                     }
         return go_annot_dict
 
-    def load_diseases(self):
-        query = self.service.new_query("OmimPhenotype")
-        query.add_view(
-            "disease", "phenotypeLink.identifier", "phenotypeLink.linkType",
-            "genes.primaryIdentifier", "genes.symbol", "genes.name"
-        )
-        query.outerjoin("phenotypeLink")
+    def load_disease(self):
+        path = "tmp"
+        S3File("mod-datadumps", "ZFIN_0.6.0_8.tar.gz", path).download()
+        TARFile(path, "ZFIN_0.6.0_8.tar.gz").extract_all()
+        disease_data = JSONFile().get_data(path + "/ZFIN_0.6.0_DAF.json")
+        gene_disease_dict = DiseaseLoader().get_data(disease_data)
 
-        print ("Fetching disease data from ZebraFishMine...")
-
-        list = []
-        for row in query.rows():
-            if row["phenotypeLink.identifier"] is not None:
-                list.append({"gene_id": row["genes.primaryIdentifier"], "omim_id": "OMIM:"+row["phenotypeLink.identifier"], "species": ZFIN.species})
-        return list
+        return gene_disease_dict
