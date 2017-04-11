@@ -83,7 +83,9 @@ class DiseaseLoader:
                 "objectRelation": objectRelationMap,
                 "evidence": evidenceList,
                 "do_id": diseaseRecord.get('DOid'),
-                "do_name": None
+                "do_name": None,
+                "dateProduced": dateProduced,
+                "release": release
               }
 
         return disease_annots
