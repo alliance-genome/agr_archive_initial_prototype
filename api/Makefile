@@ -40,4 +40,4 @@ test-py:
 	$(OPTIONS) nosetests -s test
 
 test-end-to-end:
-	$(BEHAVE_TEST_URL) behave test/functional_tests
+	BEHAVE_TEST_URL=$(BEHAVE_TEST_URL) behave test/functional_tests
