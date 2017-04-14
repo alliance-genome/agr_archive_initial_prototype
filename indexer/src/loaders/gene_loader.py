@@ -28,7 +28,7 @@ class GeneLoader:
 
             primary_id = geneRecord['primaryId']
 
-            if geneRecord['taxonId'] == "10116" and not primary_id.startswith("RGD"):
+            if geneRecord['taxonId'] == "NCBITaxon:10116" and not primary_id.startswith("RGD"):
                 primary_id = dataProvider + ":" + geneRecord['primaryId']
 
             if test_set == 'true':
@@ -36,11 +36,6 @@ class GeneLoader:
                 if is_it_test_entry == 'false':
                     continue
 
-            if 'crossReferences' in geneRecord:
-                for crossRef in geneRecord['crossReferences']:
-                    ref_text = crossRef['dataProvider'] + " " + crossRef['id']
-                    external_ids.append(ref_text)
-                    cross_references.append({"dataProvider": crossRef['dataProvider'], "id": crossRef['id']})
             if 'genomeLocations' in geneRecord:
                 for genomeLocation in geneRecord['genomeLocations']:
                     chromosome = genomeLocation['chromosome']
@@ -66,7 +61,7 @@ class GeneLoader:
                 "geneSynopsisUrl": geneRecord.get('geneSynopsisUrl'),
                 "taxonId": geneRecord['taxonId'],
                 "species": self.get_species(geneRecord['taxonId']),
-                "external_ids": external_ids,
+                "external_ids": geneRecord.get('crossReferenceIds'),
                 "gene_biological_process": [],
                 "gene_molecular_function": [],
                 "gene_cellular_component": [],
@@ -75,7 +70,7 @@ class GeneLoader:
                 "geneLiteratureUrl": geneRecord.get('geneLiteratureUrl'),
                 "name_key": geneRecord['symbol'],
                 "primaryId": primary_id,
-                "crossReferences": cross_references,
+                "crossReferences": geneRecord.get('crossReferenceIds'),
                 "href": None,
                 "category": "gene",
                 "dateProduced": dateProduced,

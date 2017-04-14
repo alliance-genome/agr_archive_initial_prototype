@@ -24,6 +24,7 @@ class DiseaseLoader:
             geneticModifiers = []
             inferredFromGeneAssociations = []
             modifier = {}
+            primaryId = diseaseRecord.get('objectId')
 
             if 'evidence' in diseaseRecord:
                 for evidence in diseaseRecord['evidence']:
@@ -61,14 +62,16 @@ class DiseaseLoader:
                         geneticModifier.append(diseaseRecord['modifier'].get('genetic'))
                 if 'experimentalConditionsText' in diseaseRecord['modifier']:
                     experimentalConditionsText = diseaseRecord['modifier'].get('experimentalConditionsText')
+
                 modifierQualifier = diseaseRecord['modifier']['qualifier']
                 modifier = {"associationType": associationType,
                             "geneticModifiers": geneticModifiers,
                             "experimentalConditionsText": experimentalConditionsText,
                             "modifierQualifier": modifierQualifier}
 
-            disease_annots[diseaseRecord.get('objectId')] = {
-                "diseaseObjectId": diseaseRecord.get('objectId'),
+            if primaryId not in disease_annots:
+                disease_annots[primaryId] = []
+            disease_annots[primaryId].append({
                 "diseaseObjectName": diseaseRecord.get('objectName'),
                 "qualifier": diseaseRecord.get('qualifier'),
                 "with": diseaseRecord.get('with'),
@@ -86,6 +89,6 @@ class DiseaseLoader:
                 "do_name": None,
                 "dateProduced": dateProduced,
                 "release": release
-              }
+              })
 
         return disease_annots

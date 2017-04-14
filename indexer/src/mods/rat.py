@@ -42,13 +42,15 @@ class RGD(MOD):
                     continue
                 gene = line[1]
                 go_id = line[4]
+                prefix = line[0]
                 if gene in go_annot_dict:
                     go_annot_dict[gene]['go_id'].append(go_id)
                 else:
                     go_annot_dict[gene] = {
                         'gene_id': gene,
                         'go_id': [go_id],
-                        'species': RGD.species
+                        'species': RGD.species,
+                        'prefix':prefix
                     }
         return go_annot_dict
 

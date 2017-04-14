@@ -70,7 +70,7 @@ class AggregateLoader:
                 print "Attaching annotations to individual genes."
 
                 for item, individual_gene in enumerate(gene_list_of_entries):
-                    # The GoAnnotator also updates the go_dataset as it annotates genes, hence the two variable assignment.
+                    # The Do and GoAnnotators also updates their ontology datasets as they annotates genes, hence the two variable assignment.
                     (gene_list_of_entries[item], self.go_dataset) = GoAnnotator().attach_annotations(individual_gene, gene_go_annots, self.go_dataset)
                     gene_list_of_entries[item] = DoAnnotator().attach_annotations(individual_gene, disease_annots)
                     gene_list_of_entries[item] = SoAnnotator().attach_annotations(individual_gene, self.so_dataset)
@@ -83,8 +83,9 @@ class AggregateLoader:
                     self.es.index_data(gene_list_of_entries, 'Gene Data', 'index') # Load genes into ES
 
     def index_mods_from_pickle(self):
-        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
-        #mods = [ZFIN()]
+        #mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        #only loading those with 0.6 files available since there was a schema change.
+        mods = [ZFIN(), WB()]
 
         for mod in mods:
             list_to_load = []

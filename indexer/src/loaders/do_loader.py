@@ -14,7 +14,7 @@ class DoLoader:
         dict_to_return = {}
         for line in parsed_line: # Convert parsed obo term into a schema-friendly AGR dictionary.
             do_id = line['id']
-            dict_to_return[go_id] = {
+            dict_to_return[do_id] = {
                 'do_genes': [],
                 'do_species': [],
                 'name': line['name'],
