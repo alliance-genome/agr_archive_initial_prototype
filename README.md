@@ -62,13 +62,13 @@ Local ES hosted INDEX see [elasticsearch setup][4] for more info
 To run a full install of all sub directories run the following:
 
 ```bash
-   (agr) > git clone https://github.com/alliance-genome/agr.git
-   (agr) > cd agr
-   (agr) agr> source ~/.virtualenvs/agr/bin/activate
-   (agr) agr> make -C webapp install
-   (agr) agr> make -C webapp build
-   (agr) agr> make -C api install
-   (agr) agr> make -C indexer install
+	(agr) > git clone https://github.com/alliance-genome/agr.git
+	(agr) > cd agr
+	(agr) agr> source ~/.virtualenvs/agr/bin/activate
+	(agr) agr> make -C webapp install
+	(agr) agr> make -C webapp build
+	(agr) agr> make -C api install
+	(agr) agr> make -C indexer install
 ```
 
 ## Configuration
@@ -81,9 +81,9 @@ To run a full install of all sub directories run the following:
 These params default to localhost and 2992, but if you want to override them then run the following:
 
 ```bash
-   (agr) agr> cd webapp
-   (agr) agr/webapp> export API_URL=http://dev.alliancegenome.org
-   (agr) agr/webapp> export DEV_SERVER_UI_PORT=12345
+	(agr) agr> cd webapp
+	(agr) agr/webapp> export API_URL=http://dev.alliancegenome.org
+	(agr) agr/webapp> export DEV_SERVER_UI_PORT=12345
 ```
 
 After running the WEBPACK server, the server will be running on http://localhost:12345 making calls to the API running at dev.alliancegenome.org.
@@ -121,9 +121,9 @@ The defaults for these variables are set to:
 
 ```bash
 	(agr) agr> cd indexer
-   (agr) agr/indexer> export ES_AWS=true
-   (agr) agr/indexer> export ES_HOST="search-es1-oyqxarxm2djn35dfodzniituhe.us-west-2.es.amazonaws.com"
-   (agr) agr/indexer> export ES_INDEX=es_username
+	(agr) agr/indexer> export ES_AWS=true
+	(agr) agr/indexer> export ES_HOST="search-es1-oyqxarxm2djn35dfodzniituhe.us-west-2.es.amazonaws.com"
+	(agr) agr/indexer> export ES_INDEX=es_username
 ```
 
 The defaults for these params point to the localhost running elasticsearch.
@@ -146,18 +146,18 @@ In a seperate terminal window run the following:
 
 ```bash
 	(agr) agr> make -C webapp run
-npm start
+	npm start
 
-> agr@0.0.5 start /Users/oblod/git/agr/webapp
-> webpack-dev-server --history-api-fallback --hot --inline
+	> agr@0.0.5 start /Users/oblod/git/agr/webapp
+	> webpack-dev-server --history-api-fallback --hot --inline
 
-[HPM] Proxy created: /api  ->  http://localhost:5000
- http://localhost:2992/
-webpack result is served from /assets/
-content is served from dist
-404s will fallback to /index.html
-The react/require-extension rule is deprecated. Please use the import/extensions rule from eslint-plugin-import instead.
-The react/wrap-multilines rule is deprecated. Please use the react/jsx-wrap-multilines rule instead.
+	[HPM] Proxy created: /api  ->  http://localhost:5000
+	 http://localhost:2992/
+	webpack result is served from /assets/
+	content is served from dist
+	404s will fallback to /index.html
+	The react/require-extension rule is deprecated. Please use the import/extensions rule from eslint-plugin-import instead.
+	The react/wrap-multilines rule is deprecated. Please use the react/jsx-wrap-multilines rule instead.
 ```
 
 Now the server is running on port 2992 and proxying /api requests to localhost:5000 which should be the running flask server.

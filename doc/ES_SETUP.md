@@ -37,4 +37,4 @@ Save into your favorite location for downloading files, the file format should b
 In order to get data into this Local elasticsearch instance you will need to run the indexer: See [running the indexer][2] for more info.
 
 [1]: https://www.elastic.co/downloads/elasticsearch
-[2]: https://github.com/alliance-genome/agr_indexer
+[2]: ../indexer
