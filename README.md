@@ -1,4 +1,5 @@
 # Alliance of Genome Resources (AGR)
+
 [![Build status](https://travis-ci.org/alliance-genome/agr.svg?branch=master)](https://travis-ci.org/alliance-genome/agr)
 [![Overall test coverage](https://coveralls.io/repos/github/alliance-genome/agr/badge.svg?branch=master)](https://coveralls.io/github/alliance-genome/agr)
 [![Code Climate](https://codeclimate.com/github/alliance-genome/agr.svg)](https://codeclimate.com/github/alliance-genome/agr)
@@ -200,9 +201,39 @@ For running a local ElasticSearch instance see the [elasticsearch setup][4] for 
 
 ## API Usage
 
+Once you have the API up and running with it pointed at a valid ES instance that has all loaded data. You should be able to run the following and with results.
 
+```bash
+	> curl http://dev.alliancegenome.org/api/gene/MGI:98341
+	{
+		"category": "gene",
+		"crossReferences": [ { ... }],
+		"dataProvider": "MGI",
+		"dateProduced": "2017-02-10T08:53:14-05:00",
+		"description": null,
+		...
+		"geneLiteratureUrl": "http://www.informatics.jax.org/reference/marker/MGI:98341?typeFilter=Literature",
+		"geneSynopsis": null,
+		"geneSynopsisUrl": "https://en.wikipedia.org/wiki/SnRNP70",
+		"gene_biological_process": [ ... ],
+		"soTermName": "protein_coding_gene",
+		"species": "Mus musculus",
+		"symbol": "Snrnp70",
+		"taxonId": "10090"
+	}
+```
 
 ## Running the tests
 
+The first three examples of running tests, run tests on the code in the directory that is being tested. The api tests, does integration tests across the system.
+
+```bash
+	(agr) agr> make -C webapp test
+	(agr) agr> make -C api test-py
+	(agr) agr> make -C indexer test
+	# If the full system is up and running then the following can be run
+	(agr) agr> make -C api tests
+	
+```
 
 [4]: doc/ES_SETUP.md
