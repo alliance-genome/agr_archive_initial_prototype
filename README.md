@@ -11,7 +11,7 @@ This software is written to support the goals of [Alliance of Genome Resources](
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+These instructions will get you a copy of the project up and running on your local machine for development and testing. This includes both the default configuration and instructions on how to customize your environment. This configuration allows user to have flexible development environment.
 
 ## Contents
 
@@ -81,7 +81,7 @@ To run a full install of all sub directories run the following:
 - API_URL A url pointing to the server that is hosting the /api endpoint for the frontend
 - DEV\_SERVER\_UI\_PORT Used to specify the local port that the WEBPACK server will be listening on
 
-These params default to localhost and 2992, but if you want to override them then run the following:
+These parameters will default to host: "localhost" and port "2992".  If you want to override them, you can do so through setting the environment variables. One such configuration a UI developer might be want to use is something along the lines of:
 
 ```bash
 	(agr) agr> cd webapp
@@ -89,15 +89,17 @@ These params default to localhost and 2992, but if you want to override them the
 	(agr) agr/webapp> export DEV_SERVER_UI_PORT=12345
 ```
 
-After running the WEBPACK server, the server will be running on http://localhost:12345 making calls to the API running at dev.alliancegenome.org.
+After running this set of commands the webpack-dev-server will be hosting the website at the URL http://localhost:12345 and will be pulling data from the API running on dev.alliancegenome.org.
 
 ### API
 
-- PRODUCTION Used to control the start up of the flask server. If set to false then debugging will be turned on and the server will crash upon first encountered error. If set to true then the server runs the WSGIServer.
-- ES\_AWS Used to control wether or not SSL will be used on the connection to ES_HOST.
-- ES\_HOST Used to point the flask server to the running Elastic Search instance.
-- ES\_INDEX Used to indicate which index the flask server will be using to get its data.
-- API\_PASSWORD Not used at the moment, but will be the password controlling access to the writable API's
+The following variables can be used to customize your development environment:
+
+- "PRODUCTION" Controls the start up of the flask server. If set to "false", debugging will be turned on and the server will crash upon first encountered error. If set to "true" the server runs the WSGIServer.
+- "ES\_AWS" controls whether or not SSL will be used on the connection to ES_HOST.
+- "ES\_HOST" points the flask server to the running Elastic Search instance.
+- "ES\_INDEX" indicates the index the flask server will be using to get its data.
+- "API\_PASSWORD" Not used at the moment, but will be the password controlling access to the writable API's
 
 ```bash
 	(agr) agr> cd api
@@ -118,9 +120,9 @@ The defaults for these variables are set to:
 
 ### Indexer
 
-- ES\_AWS Used to control wether or not SSL will be used on the connection to ES_HOST.
-- ES\_HOST Used to point the flask server to the running Elastic Search instance.
-- ES\_INDEX Used to indicate which index the flask server will be using to get its data.
+- ES\_AWS controls whether or not SSL will be used on the connection to ES_HOST.
+- ES\_HOST points the flask server to the running ElasticSearch instance.
+- ES\_INDEX indicates which index the flask server will be using to get its data.
 
 ```bash
 	(agr) agr> cd indexer
@@ -129,7 +131,7 @@ The defaults for these variables are set to:
 	(agr) agr/indexer> export ES_INDEX=es_username
 ```
 
-The defaults for these params point to the localhost running elasticsearch.
+The defaults for these params point to the "localhost" to find ElasticSearch.
 
 ### ElasticSearch
 
@@ -137,15 +139,15 @@ There is no configuration for ElasticSearch please see the [elasticsearch setup]
 
 ## Running the Enviroment
 
-All the following steps are not nessasary, if one wants to only develop part of the system. The frontend (webapp) can be pointed to a different API server and the webpack dev server will run on its own without the API, Indexer, or ES running.
+All of the following steps are not nessasary, if developing only one part of the system. The frontend (webapp) can be pointed to a different API server and the webpack dev server will run on its own without the API, indexer, or ES running.
 
-Simularly if only the API needs to be developed then one can start the API and point the ES_HOST to somewhere that already has data and there is no need to run the webapp, indexer, or elasticsearch instance.
+Simularly, if only the API needs to be developed then one can start the API and set the ES_HOST variable to the location of an instance that already has data and there is no need to run the webapp, indexer, or ElasticSearch instance.
 
-Also simularly if someone is developing the indexer, they can go through the local setup of the elasticsearch and point the indexer to run against the localhost elasticsearch with out having to run the API or webapp.
+Also, if someone is developing the indexer, they can go through the local setup of the ElasticSearch and point the indexer to run against the ElasticSearch server running on localhost, with out having to run the API or webapp.
 
 ### Webapp
 
-In a seperate terminal window run the following:
+In a seperate terminal window run the following commands:
 
 ```bash
 	(agr) agr> make -C webapp run
@@ -163,11 +165,11 @@ In a seperate terminal window run the following:
 	The react/wrap-multilines rule is deprecated. Please use the react/jsx-wrap-multilines rule instead.
 ```
 
-Now the server is running on port 2992 and proxying /api requests to localhost:5000 which should be the running flask server.
+Now the server is running on port 2992 and is redirecting "/api" with proxy to localhost:5000 which should be hosted by the flask server.
 
 ### API
 
-In a seperate terminal window run the following:
+In a seperate terminal window run the following set of commands:
 
 ```bash
 	(agr) agr> make -C api run
@@ -180,7 +182,7 @@ In a seperate terminal window run the following:
 
 ### Indexer
 
-In a seperate terminal window run the following:
+In a seperate terminal window run the following commands:
 
 ```bash
 
@@ -199,11 +201,11 @@ After the indexer has run, the Elastic search instance will be loaded with data 
 
 ### ElasticSearch
 
-For running a local ElasticSearch instance see the [elasticsearch setup][4] for more info
+For running a local ElasticSearch instance see the [elasticsearch setup][4] for more info.
 
 ## API Usage
 
-Once you have the API up and running with it pointed at a valid ES instance that has all loaded data. You should be able to run the following and with results.
+Once you have the API up and running, with it pointed at a valid ES instance that has all loaded data, you should be able to run the following command and get the same results.
 
 ```bash
 	> curl http://dev.alliancegenome.org/api/gene/MGI:98341
