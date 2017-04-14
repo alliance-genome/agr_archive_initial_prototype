@@ -72,7 +72,7 @@ class AggregateLoader:
                 for item, individual_gene in enumerate(gene_list_of_entries):
                     # The Do and GoAnnotators also updates their ontology datasets as they annotates genes, hence the two variable assignment.
                     (gene_list_of_entries[item], self.go_dataset) = GoAnnotator().attach_annotations(individual_gene, gene_go_annots, self.go_dataset)
-                    #gene_list_of_entries[item] = DoAnnotator().attach_annotations(individual_gene, disease_annots)
+                    gene_list_of_entries[item] = DoAnnotator().attach_annotations(individual_gene, disease_annots)
                     gene_list_of_entries[item] = SoAnnotator().attach_annotations(individual_gene, self.so_dataset)
                     gene_list_of_entries[item] = OrthoAnnotator().attach_annotations(individual_gene, ortho_dataset)
 

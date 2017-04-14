@@ -60,6 +60,7 @@ class MGI(MOD):
     def load_diseases(self):
         list = []
         return list
+
         #path = "tmp"
         #S3File("mod-datadumps", "MGI_0.6.0_2.tar.gz", path).download()
         #TARFile(path, "MGI_0.6.0_2.tar.gz").extract_all()
