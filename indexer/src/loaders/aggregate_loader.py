@@ -13,7 +13,6 @@ class AggregateLoader:
     def __init__(self):
         self.go_dataset = {}
         self.so_dataset = {}
-        self.batch_size = 5000 # Set size of gene batches created from JSON file AND the size of the chunks used for sending data to ES.
         self.batch_size = 5000 # Set size of gene batches created from JSON file.
         self.chunk_size = 5000 # Set size of chunks sent to ES.
 
