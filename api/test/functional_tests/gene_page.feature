@@ -19,9 +19,9 @@ Feature: navigating the gene page
 
     Examples: Mouse
     | id                | symbol   |
-    | MGI:MGI:109337        | Brca2    |
-    | MGI:MGI:108202        | Pcbp2    |
-    | MGI:MGI:2676586       | Foxo6    |
+    | MGI:109337        | Brca2    |
+    | MGI:108202        | Pcbp2    |
+    | MGI:2676586       | Foxo6    |
 
     Examples: Fish
     | id                   | symbol  |

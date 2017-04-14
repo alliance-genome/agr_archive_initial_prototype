@@ -60,7 +60,7 @@ class AggregateLoader:
             genes = mod.load_genes(self.batch_size, self.test_set) # generator object
             print "Loading GO annotations for %s" % (mod.species)
             gene_go_annots = mod.load_go()
-            disease_annots = mod.load_disease()
+            disease_annots = mod.load_diseases()
 
             print "Loading Orthology data for %s" % (mod.species)
             ortho_dataset = OrthoLoader().get_data(mod.__class__.__name__, self.test_set)
@@ -72,7 +72,7 @@ class AggregateLoader:
                 for item, individual_gene in enumerate(gene_list_of_entries):
                     # The Do and GoAnnotators also updates their ontology datasets as they annotates genes, hence the two variable assignment.
                     (gene_list_of_entries[item], self.go_dataset) = GoAnnotator().attach_annotations(individual_gene, gene_go_annots, self.go_dataset)
-                    gene_list_of_entries[item] = DoAnnotator().attach_annotations(individual_gene, disease_annots)
+                    #gene_list_of_entries[item] = DoAnnotator().attach_annotations(individual_gene, disease_annots)
                     gene_list_of_entries[item] = SoAnnotator().attach_annotations(individual_gene, self.so_dataset)
                     gene_list_of_entries[item] = OrthoAnnotator().attach_annotations(individual_gene, ortho_dataset)
 
@@ -83,9 +83,7 @@ class AggregateLoader:
                     self.es.index_data(gene_list_of_entries, 'Gene Data', 'index') # Load genes into ES
 
     def index_mods_from_pickle(self):
-        #mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
-        #only loading those with 0.6 files available since there was a schema change.
-        mods = [ZFIN(), WB()]
+        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
 
         for mod in mods:
             list_to_load = []
