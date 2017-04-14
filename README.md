@@ -12,20 +12,20 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Contents
 
-- [Prerequisites](#Prerequisites)
-- [Installing](#Installing)
-- [Configuration](#Configuration)
-  * [Webapp](#Webapp)
-  * [API](#API)
-  * [Indexer](#Indexer)
-  * [ElasticSearch](#ElasticSearch)
-- [Running the Enviroment](#Running-the-Enviroment)
-  * [Webapp](#Webapp-1)
-  * [API](#API-1)
-  * [Indexer](#Indexer-1)
-  * [ElasticSearch](#ElasticSearch-1)
-- [API Usage](#API-Usage)
-- [Running the tests](#Running-the-tests)
+- [Prerequisites](#prerequisites)
+- [Installing](#installing)
+- [Configuration](#configuration)
+  * [Webapp](#webapp)
+  * [API](#api)
+  * [Indexer](#indexer)
+  * [ElasticSearch](#elasticsearch)
+- [Running the Enviroment](#running-the-enviroment)
+  * [Webapp](#webapp-1)
+  * [API](#api-1)
+  * [Indexer](#indexer-1)
+  * [ElasticSearch](#elasticsearch-1)
+- [API Usage](#api-usage)
+- [Running the tests](#running-the-tests)
 
 ## Prerequisites
 
