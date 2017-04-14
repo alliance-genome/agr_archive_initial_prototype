@@ -7,6 +7,8 @@
 
 This software is written to support the goals of [Alliance of Genome Resources](http://www.alliancegenome.org/)
 
+[<img src="doc/Development_Diagram.png">](doc/Development_Diagram.png)
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
