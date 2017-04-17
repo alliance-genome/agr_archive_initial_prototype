@@ -3,6 +3,7 @@ from files import *
 import gzip
 import csv
 from loaders.gene_loader import GeneLoader
+from loaders.disease_loader import DiseaseLoader
 from intermine.webservice import Service
 
 import json
@@ -57,21 +58,13 @@ class MGI(MOD):
         return go_annot_dict
 
     def load_diseases(self):
-        query = self.service.new_query("OMIMTerm")
-        query.add_constraint("ontologyAnnotations.subject", "SequenceFeature")
-        query.add_view(
-            "identifier", "name", "synonyms.name", "synonyms.type",
-            "ontologyAnnotations.qualifier",
-            "ontologyAnnotations.subject.primaryIdentifier",
-            "ontologyAnnotations.subject.symbol"
-        )
-        query.add_constraint("ontologyAnnotations.subject.organism.taxonId", "=", "10090", code = "A")
-        query.outerjoin("synonyms")
-        query.outerjoin("ontologyAnnotations")
-
-        print ("Fetching disease data from MouseMine...")
-        
         list = []
-        for row in query.rows():
-            list.append({"gene_id": row["ontologyAnnotations.subject.primaryIdentifier"], "omim_id": row["identifier"], "species": MGI.species})
         return list
+
+        #path = "tmp"
+        #S3File("mod-datadumps", "MGI_0.6.0_2.tar.gz", path).download()
+        #TARFile(path, "MGI_0.6.0_2.tar.gz").extract_all()
+        #disease_data = JSONFile().get_data(path + "/MGI_0.6_diseaseAnnotations.json")
+        #gene_disease_dict = DiseaseLoader().get_data(disease_data)
+
+        #return gene_disease_dict

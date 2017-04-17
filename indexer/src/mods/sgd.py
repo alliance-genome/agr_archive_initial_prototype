@@ -45,36 +45,18 @@ class SGD(MOD):
                     continue
                 gene = line[1]
                 go_id = line[4]
+                prefix = line[0]
                 if gene in go_annot_dict:
                     go_annot_dict[gene]['go_id'].append(go_id)
                 else:
                     go_annot_dict[gene] = {
                         'gene_id': gene,
                         'go_id': [go_id],
-                        'species': SGD.species
+                        'species': SGD.species,
+                        'prefix':prefix
                     }
         return go_annot_dict
 
     def load_diseases(self):
-        query = self.service.new_query("Gene")
-
-        query.add_view(
-            "primaryIdentifier", "secondaryIdentifier", "symbol",
-            "homologues.homologue.primaryIdentifier", "homologues.homologue.symbol",
-            "homologues.homologue.name",
-            "homologues.homologue.crossReferences.identifier",
-            "homologues.homologue.diseases.identifier",
-            "homologues.homologue.diseases.name"
-        )
-
-        query.add_sort_order("Gene.symbol", "ASC")
-        query.add_constraint("homologues.homologue.crossReferences.source.name", "=", "MIM", code = "D")
-        query.add_constraint("homologues.homologue.organism.shortName", "=", "H. sapiens", code = "C")
-        query.add_constraint("organism.shortName", "=", "S. cerevisiae", code = "B")
-        query.add_constraint("homologues.dataSets.dataSource.name", "=", "Panther", code = "A")
-
-        print("Fetching disease data from Yeastmine...")
         list = []
-        for row in query.rows():
-            list.append({"gene_id": row["primaryIdentifier"], "omim_id":'OMIM:' + row["homologues.homologue.diseases.identifier"], "species": SGD.species})
         return list

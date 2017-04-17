@@ -51,23 +51,6 @@ class FlyBase(MOD):
         return go_annot_dict
 
     def load_diseases(self):
-        path = "tmp"
-        S3File("mod-datadumps", "FlyBase_DOID_output_fb_2016_05.tsv", path).download()
-        diseases_data_csv_filename = (path + "/FlyBase_DOID_output_fb_2016_05.tsv")
+        list = []
+        return list
 
-        print("Fetching disease data from FlyBase tsv file (" + diseases_data_csv_filename + ") ...")
-
-        with open(diseases_data_csv_filename, 'rb') as f:
-            reader = csv.reader(f, delimiter='\t')
-            next(reader, None)
-
-            list = []
-            for row in reader:
-                if row[3]:
-                    omim_ids = map(lambda s: s.strip(), row[3].split(","))
-                    disease_gene_ids = map(lambda s: s.strip(), row[5].split(","))
-
-                    for omim_id in omim_ids:
-                        for gene_id in disease_gene_ids:
-                            list.append({"gene_id": gene_id, "omim_id": "OMIM:"+omim_id, "species": FlyBase.species})
-            return list

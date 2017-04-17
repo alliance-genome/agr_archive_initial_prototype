@@ -52,20 +52,5 @@ class WormBase(MOD):
         return go_annot_dict
 
     def load_diseases(self):
-        path = "tmp"
-        disease_data_csv_filename = path = "/Diseases_OMIM_IDs_and_synonyms_(WormBase).txt"
-        S3File("mod-datadumps/data", "Diseases_OMIM_IDs_and_synonyms_(WormBase).txt", path).download()
-
-        print("Fetching disease data from WormBase txt file (" + disease_data_csv_filename + ") ...")
         list = []
-        with open(disease_data_csv_filename, 'rb') as f:
-            reader = csv.reader(f, delimiter='\t')
-            next(reader, None)
-
-            for row in reader:
-                if row[2] and row[2] != "":
-                    omim_ids = map(lambda s: s.strip(), row[2].split(","))
-
-                    for omim_id in omim_ids:
-                        list.append({"gene_id": None, "omim_id": "OMIM:"+omim_id, "species": WormBase.species})
         return list

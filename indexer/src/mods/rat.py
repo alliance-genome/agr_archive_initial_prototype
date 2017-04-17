@@ -42,23 +42,18 @@ class RGD(MOD):
                     continue
                 gene = line[1]
                 go_id = line[4]
+                prefix = line[0]
                 if gene in go_annot_dict:
                     go_annot_dict[gene]['go_id'].append(go_id)
                 else:
                     go_annot_dict[gene] = {
                         'gene_id': gene,
                         'go_id': [go_id],
-                        'species': RGD.species
+                        'species': RGD.species,
+                        'prefix':prefix
                     }
         return go_annot_dict
 
     def load_diseases(self):
-        path = "tmp"
-        S3File("mod-datadumps/data", "rat_disease.tsv", path).download()
-        disease_data = CSVFile(path + "/rat_disease.tsv").get_data()
-
         list = []
-        for row in disease_data:
-            if (row[5].startswith("OMIM:")):
-                list.append({"gene_id": row[0], "omim_id": row[5], "species": RGD.species})
         return list

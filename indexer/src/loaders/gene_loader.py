@@ -4,9 +4,10 @@ from mods import MOD
 
 import re
 
+
 class GeneLoader:
     def get_data(self, gene_data, batch_size, test_set):
-        
+
         gene_dataset = {}
         list_to_yield = []
 
@@ -87,7 +88,7 @@ class GeneLoader:
             list_to_yield.append(gene_dataset)
             if len(list_to_yield) == batch_size:
                 yield list_to_yield
-                list_to_yield[:] = [] # Empty the list.
+                list_to_yield[:] = []  # Empty the list.
 
         if len(list_to_yield) > 0:
             yield list_to_yield

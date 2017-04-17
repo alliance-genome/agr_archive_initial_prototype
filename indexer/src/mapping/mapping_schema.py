@@ -286,6 +286,37 @@ mapping_schema = {
                         }
                     }
                 },
+                "diseases": {
+                    "properties": {
+                        "do_id": {
+                            "type": "text",
+                            "analyzer": "symbols"
+                        },
+                        "do_name": {
+                            "type": "text"
+                        },
+                        "associationType": {
+                            "type": "text"
+                        },
+                        "evidence": {
+                            "properties": {
+                                "evidenceCode": {
+                                    "type": "text"
+                                },
+                                "pubs": {
+                                    "properties": {
+                                        "pubmedId": {
+                                            "type": "text"
+                                        },
+                                        "publicationModId": {
+                                            "type": "text"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
