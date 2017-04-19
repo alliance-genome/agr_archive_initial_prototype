@@ -15,8 +15,8 @@ class DoAnnotator:
             for d_annot in disease_dataset[gene_id]:
                 d_annot['do_name'] = do_dataset[d_annot['do_id']]['name']
 
-        if species == 'Danio rerio':
-            print "update gene\n"
-            print gene
+        #if species == 'Danio rerio':
+            #print "update gene\n"
+            #print gene
         return gene
 
