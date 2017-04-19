@@ -27,4 +27,5 @@ class GoLoader:
                 'href': 'http://amigo.geneontology.org/amigo/term/' + line['id'],
                 'category': 'go'
             }
+
         return dict_to_return

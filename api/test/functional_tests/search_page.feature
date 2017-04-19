@@ -13,6 +13,7 @@ Feature: navigate the search page
         | dunk                      | dunk               |
         | THG1                      | THG1               |
         | early onset breast cancer | Brca2              |
+        | slc4a1                    | slc4a1a            |
 
       Examples: GO Terms
         | query               | linktext             |

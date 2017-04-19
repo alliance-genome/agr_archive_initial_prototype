@@ -59,6 +59,7 @@ class AggregateLoader:
             genes = mod.load_genes(self.batch_size, self.test_set) # generator object
             print "Loading GO annotations for %s" % (mod.species)
             gene_go_annots = mod.load_go()
+            print "Loading DO annotations for %s" % (mod.species)
             disease_annots = mod.load_diseases()
 
             print "Loading Orthology data for %s" % (mod.species)
@@ -71,7 +72,7 @@ class AggregateLoader:
                 for item, individual_gene in enumerate(gene_list_of_entries):
                     # The Do and GoAnnotators also updates their ontology datasets as they annotates genes, hence the two variable assignment.
                     (gene_list_of_entries[item], self.go_dataset) = GoAnnotator().attach_annotations(individual_gene, gene_go_annots, self.go_dataset)
-                    gene_list_of_entries[item] = DoAnnotator().attach_annotations(individual_gene, disease_annots)
+                    gene_list_of_entries[item] = DoAnnotator().attach_annotations(individual_gene, disease_annots, self.do_dataset)
                     gene_list_of_entries[item] = SoAnnotator().attach_annotations(individual_gene, self.so_dataset)
                     gene_list_of_entries[item] = OrthoAnnotator().attach_annotations(individual_gene, ortho_dataset)
 
@@ -100,5 +101,5 @@ class AggregateLoader:
 
     def index_data(self):
         self.es.index_data(self.go_dataset, 'GO Data', 'index') # Load the GO dataset into ES
-        self.es.index_data(self.do_dataset, 'DO Data', 'index') # Load the DO dataset into ES
+        #self.es.index_data(self.do_dataset, 'DO Data', 'index') # Load the DO dataset into ES
         self.es.finish_index()

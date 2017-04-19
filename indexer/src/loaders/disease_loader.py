@@ -11,7 +11,7 @@ class DiseaseLoader:
         list_to_yield = []
 
         dateProduced = disease_data['metaData']['dateProduced']
-
+        dataProvider = disease_data['metaData']['dataProvider']
         release = None
 
         if 'release' in disease_data['metaData']:
@@ -38,7 +38,7 @@ class DiseaseLoader:
 
             if 'objectRelation' in diseaseRecord:
                 diseaseObjectType = diseaseRecord['objectRelation'].get("objectType")
-                diseaseAssociationType = diseaseRecord['objectRelation'].get("objectRelation")
+                diseaseAssociationType = diseaseRecord['objectRelation'].get("associationType")
                 #for gene in diseaseRecord['objectRelation']['inferredGeneAssociation']:
                 #        inferredFromGeneAssociations.append(gene.get('primaryId'))
                 objectRelationMap = {"diseaseObjectType": diseaseObjectType, "diseaseAssociationType": diseaseAssociationType}
@@ -71,6 +71,7 @@ class DiseaseLoader:
 
             if primaryId not in disease_annots:
                 disease_annots[primaryId] = []
+            # many fields are commented out to fulfill 0.6 requirements only, but still parse the entire file.
             disease_annots[primaryId].append({
                 "diseaseObjectName": diseaseRecord.get('objectName'),
                 "qualifier": diseaseRecord.get('qualifier'),
@@ -81,14 +82,15 @@ class DiseaseLoader:
                 "experimentalConditions": experimentalConditions,
                 "associationType": diseaseRecord.get('objectRelation').get('associationType'),
                 "diseaseObjectType": diseaseRecord.get('objectRelation').get('objectType'),
-                "evidenceList": evidenceList,
+                #"evidenceList": evidenceList,
                 "modifier": modifier,
-                "objectRelation": objectRelationMap,
+                #"objectRelation": objectRelationMap,
                 "evidence": evidenceList,
                 "do_id": diseaseRecord.get('DOid'),
                 "do_name": None,
                 "dateProduced": dateProduced,
-                "release": release
+                "release": release,
+                "dataProvider": dataProvider
               })
 
         return disease_annots
