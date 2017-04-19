@@ -1,4 +1,3 @@
-from intermine.webservice import Service
 from loaders.gene_loader import GeneLoader
 from mod import MOD
 import gzip
@@ -7,7 +6,6 @@ from files import *
 
 class RGD(MOD):
     species = "Rattus norvegicus"
-    service = Service("http://ratmine.mcw.edu/ratmine/service")
 
     @staticmethod
     def gene_href(gene_id):

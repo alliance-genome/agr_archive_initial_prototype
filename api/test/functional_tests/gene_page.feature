@@ -28,6 +28,7 @@ Feature: navigating the gene page
     | ZFIN:ZDB-GENE-990415-72   | fgf8a   |
     | ZFIN:ZDB-GENE-030131-3445 | dicer1  |
     | ZFIN:ZDB-GENE-980526-388  | bmp2a   |
+    | ZFIN:ZDB-GENE-010525-1 | slc4a1a |
 
     Examples: Fly
     | id                | symbol   |

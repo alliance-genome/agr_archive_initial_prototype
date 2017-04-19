@@ -1,4 +1,3 @@
-from intermine.webservice import Service
 from files import *
 from loaders.gene_loader import GeneLoader
 from loaders.disease_loader import DiseaseLoader
@@ -8,9 +7,6 @@ from mod import MOD
 
 class ZFIN(MOD):
     species = "Danio rerio"
-
-    def __init__(self):
-        self.service = Service("http://www.zebrafishmine.org/service")
 
     @staticmethod
     def gene_href(gene_id):

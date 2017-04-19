@@ -4,15 +4,12 @@ import gzip
 import csv
 from loaders.gene_loader import GeneLoader
 from loaders.disease_loader import DiseaseLoader
-from intermine.webservice import Service
 
 import json
 
 class MGI(MOD):
     species = "Mus musculus"
 
-    def __init__(self):
-        self.service = Service("http://www.mousemine.org/mousemine/service")
 
     @staticmethod
     def gene_href(gene_id):

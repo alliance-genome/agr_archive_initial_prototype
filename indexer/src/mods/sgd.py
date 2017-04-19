@@ -1,5 +1,4 @@
 from loaders.gene_loader import GeneLoader
-from intermine.webservice import Service
 import gzip
 import csv
 from files import *
@@ -8,9 +7,6 @@ from mod import MOD
 
 class SGD(MOD):
     species = "Saccharomyces cerevisiae"
-
-    def __init__(self):
-        self.service = Service("http://yeastmine.yeastgenome.org/yeastmine/service")
 
     @staticmethod
     def gene_href(gene_id):
