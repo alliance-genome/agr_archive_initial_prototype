@@ -2,7 +2,6 @@ from mod import MOD
 from files import *
 from loaders.gene_loader import GeneLoader
 import gzip
-import xlrd
 import csv
 
 class WormBase(MOD):
