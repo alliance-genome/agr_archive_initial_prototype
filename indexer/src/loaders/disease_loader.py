@@ -90,7 +90,8 @@ class DiseaseLoader:
                 "do_name": None,
                 "dateProduced": dateProduced,
                 "release": release,
-                "dataProvider": dataProvider
+                "dataProvider": dataProvider,
+                "doIdDisplay": {"displayId": diseaseRecord.get('DOid'), "url": "http://disease-ontology.org/term/" + diseaseRecord.get('DOid'), "prefix": "DOID"}
               })
 
         return disease_annots

@@ -12,3 +12,5 @@ class TXTFile:
                 lines.append(line)
         f.close()    
         return lines
+
+#codecs.open('filename', encoding='whatever')

@@ -322,6 +322,19 @@ mapping_schema = {
                                     }
                                 }
                             }
+                        },
+                        "doIdDisplay": {
+                            "properties": {
+                                "displayId": {
+                                    "type": "text"
+                                },
+                                "url": {
+                                    "type": "text"
+                                },
+                                "prefix": {
+                                    "type": "text"
+                                }
+                            }
                         }
                     }
                 }
