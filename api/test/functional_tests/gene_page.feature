@@ -44,6 +44,6 @@ Feature: navigating the gene page
 
     Examples: Yeast
     | id                | symbol   |
-    | S000003256        | THG1     |
-    | S000003513        | YOR1     |
-    | S000000119        | MCM2     |
+    | SGD:S000003256        | THG1     |
+    | SGD:S000003513        | YOR1     |
+    | SGD:S000000119        | MCM2     |

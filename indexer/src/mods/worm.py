@@ -39,7 +39,7 @@ class WormBase(MOD):
             for line in reader:
                 if line[0].startswith('!'):
                     continue
-                gene = line[1]
+                gene = line[0] + ":" + line[1]
                 go_id = line[4]
                 if gene in go_annot_dict:
                     go_annot_dict[gene]['go_id'].append(go_id)

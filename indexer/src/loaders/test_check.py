@@ -5,7 +5,7 @@ def check_for_test_entry(primary_id):
                 'ZFIN:ZDB-GENE-990415-72', 'ZFIN:ZDB-GENE-030131-3445', 'ZFIN:ZDB-GENE-980526-388','ZFIN:ZDB-GENE-010525-1',
                 'FBgn0083973', 'FBgn0037960', 'FBgn0027296',
                 'WB:WBGene00044305', 'WB:WBGene00169423', 'WB:WBGene00000987',
-                'S000003256', 'S000003513', 'S000000119'}
+                'SGD:S000003256', 'SGD:S000003513', 'SGD:S000000119'}
 
     if primary_id in test_set:
         return 'true'

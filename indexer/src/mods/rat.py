@@ -39,7 +39,7 @@ class RGD(MOD):
             for line in reader:
                 if line[0].startswith('!'):
                     continue
-                gene = line[1]
+                gene = line[0] + ":" + line[1]
                 go_id = line[4]
                 prefix = line[0]
                 if gene in go_annot_dict:
