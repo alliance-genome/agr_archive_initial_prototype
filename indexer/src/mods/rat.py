@@ -1,4 +1,5 @@
 from loaders.gene_loader import GeneLoader
+from loaders.disease_loader import DiseaseLoader
 from mod import MOD
 import gzip
 import csv
@@ -22,9 +23,9 @@ class RGD(MOD):
 
     def load_genes(self, batch_size, test_set):
         path = "tmp"
-        S3File("mod-datadumps", "RGD_0.3_1.tar.gz", path).download()
-        TARFile(path, "RGD_0.3_1.tar.gz").extract_all()
-        gene_data = JSONFile().get_data(path + "/agr/RGD_0.3_basicGeneInformation.10116.json")
+        S3File("mod-datadumps", "RGD_0.6_1.tar.gz", path).download()
+        TARFile(path, "RGD_0.6_1.tar.gz").extract_all()
+        gene_data = JSONFile().get_data(path + "/RGD_0.6_basicGeneInformation.10116.json")
         gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
@@ -53,5 +54,10 @@ class RGD(MOD):
         return go_annot_dict
 
     def load_diseases(self):
-        list = []
-        return list
+        path = "tmp"
+        S3File("mod-datadumps", "RGD_0.6_1.tar.gz", path).download()
+        TARFile(path, "RGD_0.6_1.tar.gz").extract_all()
+        disease_data = JSONFile().get_data(path + "/RGD_0.6_disease.10116.daf.json")
+        gene_disease_dict = DiseaseLoader().get_data(disease_data)
+
+        return gene_disease_dict

@@ -29,7 +29,7 @@ class GeneLoader:
 
             primary_id = geneRecord['primaryId']
 
-            if geneRecord['taxonId'] == "10116" and not primary_id.startswith("RGD"):
+            if geneRecord['taxonId'] == "NCBITaxon:10116" and not primary_id.startswith("RGD"):
                 primary_id = dataProvider + ":" + geneRecord['primaryId']
 
             if test_set == 'true':
@@ -39,8 +39,7 @@ class GeneLoader:
 
             if 'crossReferences' in geneRecord:
                 for crossRef in geneRecord['crossReferences']:
-                    ref_text = crossRef['dataProvider'] + " " + crossRef['id']
-                    external_ids.append(ref_text)
+                    external_ids.append(crossRef['id'])
                     cross_references.append({"dataProvider": crossRef['dataProvider'], "id": crossRef['id']})
             if 'genomeLocations' in geneRecord:
                 for genomeLocation in geneRecord['genomeLocations']:
@@ -94,19 +93,19 @@ class GeneLoader:
             yield list_to_yield
 
     def get_species(self, taxon_id):
-        if taxon_id in ("7955"):
+        if taxon_id in ("NCBITaxon:7955"):
             return "Danio rerio"
-        elif taxon_id in ("6239"):
+        elif taxon_id in ("NCBITaxon:6239"):
             return "Caenorhabditis elegans"
-        elif taxon_id in ("10090"):
+        elif taxon_id in ("NCBITaxon:10090"):
             return "Mus musculus"
-        elif taxon_id in ("10116"):
+        elif taxon_id in ("NCBITaxon:10116"):
             return "Rattus norvegicus"
-        elif taxon_id in ("559292"):
+        elif taxon_id in ("NCBITaxon:559292"):
             return "Saccharomyces cerevisiae"
-        elif taxon_id in ("7227"):
+        elif taxon_id in ("NCBITaxon:7227"):
             return "Drosophila melanogaster"
-        elif taxon_id in ("9606"):
+        elif taxon_id in ("NCBITaxon:9606"):
             return "Homo sapiens"
         else:
             return None

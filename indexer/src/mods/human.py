@@ -22,9 +22,9 @@ class Human(MOD):
 
     def load_genes(self, batch_size, test_set):
         path = "tmp"
-        S3File("mod-datadumps", "RGD_0.3_1.tar.gz", path).download()
-        TARFile(path, "RGD_0.3_1.tar.gz").extract_all()
-        gene_data = JSONFile().get_data(path + "/agr/RGD_0.3_basicGeneInformation.9606.json")
+        S3File("mod-datadumps", "RGD_0.6_1.tar.gz", path).download()
+        TARFile(path, "RGD_0.6_1.tar.gz").extract_all()
+        gene_data = JSONFile().get_data(path + "/RGD_0.6_basicGeneInformation.9606.json")
         gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
