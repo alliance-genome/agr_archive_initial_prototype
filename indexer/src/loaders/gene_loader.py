@@ -28,19 +28,36 @@ class GeneLoader:
             name = None
 
             primary_id = geneRecord['primaryId']
+            global_id = geneRecord['primaryId']
 
-            if geneRecord['taxonId'] == "NCBITaxon:10116" and not primary_id.startswith("RGD"):
-                primary_id = dataProvider + ":" + geneRecord['primaryId']
+            #this can be removed when all MODs have their prefixed id files
+            if ':' in geneRecord['primaryId']:
+                local_id = global_id.split(":")[1]
+            else:
+                local_id = global_id
+
+            if geneRecord['taxonId'] == "NCBITaxon:9606" or geneRecord['taxonId'] == "NCBITaxon:10090":
+                local_id = geneRecord['primaryId']
 
             if test_set == 'true':
                 is_it_test_entry = check_for_test_entry(primary_id)
                 if is_it_test_entry == 'false':
                     continue
 
-            if 'crossReferences' in geneRecord:
-                for crossRef in geneRecord['crossReferences']:
-                    external_ids.append(crossRef['id'])
-                    cross_references.append({"dataProvider": crossRef['dataProvider'], "id": crossRef['id']})
+            if 'crossReferenceIds' in geneRecord:
+                for crossRef in geneRecord['crossReferenceIds']:
+                    print crossRef
+                    external_ids.append(crossRef)
+                    #this can be simplified when all data is available with colons from MODs
+                    if ':' in crossRef:
+                        local_crossref_id = crossRef.split(":")[1]
+                        cross_references.append({"id": crossRef, "global_crossref_id": crossRef, "local_id": local_crossref_id, "crossref_complete_url": self.get_complete_url(local_crossref_id, crossRef)})
+                    else:
+                        local_crossref_id = crossRef
+                        crossref_complete_url = None
+                        cross_references.append(
+                            {"id": crossRef, "global_crossref_id": crossRef, "local_id": local_crossref_id,
+                             "crossref_complete_url": self.get_complete_url(local_crossref_id, crossRef)})
             if 'genomeLocations' in geneRecord:
                 for genomeLocation in geneRecord['genomeLocations']:
                     chromosome = genomeLocation['chromosome']
@@ -71,10 +88,12 @@ class GeneLoader:
                 "gene_molecular_function": [],
                 "gene_cellular_component": [],
                 "genomeLocations": genomic_locations,
-                "homologs": [],
                 "geneLiteratureUrl": geneRecord.get('geneLiteratureUrl'),
                 "name_key": geneRecord['symbol'],
                 "primaryId": primary_id,
+                "localGeneId": local_id,
+                "globalGeneId": global_id,
+                "completeGeneModUrl": self.get_complete_url(local_id, global_id),
                 "crossReferences": cross_references,
                 "href": None,
                 "category": "gene",
@@ -109,3 +128,38 @@ class GeneLoader:
             return "Homo sapiens"
         else:
             return None
+
+    def get_complete_url (self, local_id, global_id):
+
+        complete_url = None
+
+        if 'MGI' in global_id:
+            complete_url = 'http://www.informatics.jax.org/marker/' + local_id
+        if 'RGD' in global_id:
+            complete_url = 'http://rgd.mcw.edu/rgdweb/report/gene/main.html?id=' + local_id
+        if 'SGD' in global_id:
+            complete_url = 'http://www.yeastgenome.org/locus/' + local_id + '/overview'
+        if 'FB' in global_id:
+            complete_url = 'http://flybase.org/reports/' + local_id + '.html'
+        if 'ZFIN' in global_id:
+            complete_url = 'http://zfin.org/' + local_id
+        if 'WB:' in global_id:
+            complete_url = 'http://www.wormbase.org/species/c_elegans/gene/' + local_id
+        if 'HGNC:' in global_id:
+            complete_url = 'http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=' + local_id
+        if 'NCBI_Gene' in global_id:
+            complete_url = 'https://www.ncbi.nlm.nih.gov/gene/' + local_id
+        if 'UniProtKB' in global_id:
+            complete_url = 'http://www.uniprot.org/uniprot/' + local_id
+        if 'ENSEMBL' in global_id:
+            complete_url = 'http://www.ensembl.org/id/' + local_id
+        if 'RNAcentral' in global_id:
+            complete_url = 'http://rnacentral.org/rna/' + local_id
+        if 'PMID' in global_id:
+            complete_url = 'https://www.ncbi.nlm.nih.gov/pubmed/' + local_id
+        if 'SO:' in global_id:
+            complete_url = 'http://www.sequenceontology.org/browser/current_svn/term/' + local_id
+        if 'DRSC' in global_id:
+            complete_url = None
+
+        return complete_url

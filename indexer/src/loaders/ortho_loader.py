@@ -37,7 +37,7 @@ class OrthoLoader:
                 'isBestScore': orthoRecord['isBestScore'],
                 'isBestRevScore': orthoRecord['isBestRevScore'],
                 'gene1DataProvider': orthoRecord['gene1DataProvider'],
-                'gene2':orthoRecord['gene2'],
+                'gene2': orthoRecord['gene2'],
                 'gene2DataProvider': orthoRecord['gene2DataProvider'],
                 'predictionMethodsMatched': orthoRecord['predictionMethodsMatched'],
                 'predictionMethodsNotMatched': orthoRecord['predictionMethodsNotMatched'],

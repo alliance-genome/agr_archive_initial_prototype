@@ -1,3 +1,4 @@
+import codecs
 
 class TXTFile:
 
@@ -7,10 +8,8 @@ class TXTFile:
     def get_data(self):
         print "Loading txt data from (" + self.filename + ") ..."
         lines = []
-        with open(self.filename, "r") as f:
+        with codecs.open(self.filename, 'r', 'UTF-8') as f:
             for line in f:
                 lines.append(line)
         f.close()    
         return lines
-
-#codecs.open('filename', encoding='whatever')
