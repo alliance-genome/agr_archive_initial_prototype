@@ -4,7 +4,6 @@ from mods import MOD
 
 import re
 
-
 class GeneLoader:
     def get_data(self, gene_data, batch_size, test_set):
 
@@ -46,7 +45,6 @@ class GeneLoader:
 
             if 'crossReferenceIds' in geneRecord:
                 for crossRef in geneRecord['crossReferenceIds']:
-                    print crossRef
                     external_ids.append(crossRef)
                     #this can be simplified when all data is available with colons from MODs
                     if ':' in crossRef:
