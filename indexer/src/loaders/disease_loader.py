@@ -33,7 +33,10 @@ class DiseaseLoader:
                     for pub in evidence['publications']:
                         pubMedId = pub.get('pubMedId')
                         publicationModId = pub.get('publicationModId')
-                        pubs.append({'pubMedId': pubMedId, 'publicationModId': publicationModId})
+                        if pubMedId is not None:
+                            pubs.append({'pubMedId': pubMedId, 'publicationModId': publicationModId, 'pubMedUrl': 'https://www.ncbi.nlm.nih.gov/pubmed/' + pubMedId})
+                        else:
+                            pubs.append({'pubMedId': pubMedId, 'publicationModId': publicationModId})
                     evidenceList.append({"pubs": pubs, "evidenceCode": evidenceCode})
 
             if 'objectRelation' in diseaseRecord:
@@ -55,10 +58,8 @@ class DiseaseLoader:
                                                    "freeTextCondition": experimentalCondition.get('textCondition')})
             if 'modifier' in diseaseRecord:
                 associationType = diseaseRecord['modifier']['associationType']
-                print associationType
                 if 'genetic' in diseaseRecord['modifier']:
                     for geneticModifier in diseaseRecord['modifier'].get('genetic'):
-                        print geneticModifier
                         geneticModifier.append(diseaseRecord['modifier'].get('genetic'))
                 if 'experimentalConditionsText' in diseaseRecord['modifier']:
                     experimentalConditionsText = diseaseRecord['modifier'].get('experimentalConditionsText')
@@ -90,7 +91,8 @@ class DiseaseLoader:
                 "do_name": None,
                 "dateProduced": dateProduced,
                 "release": release,
-                "dataProvider": dataProvider
+                "dataProvider": dataProvider,
+                "doIdDisplay": {"displayId": diseaseRecord.get('DOid'), "url": "http://www.disease-ontology.org/?id=" + diseaseRecord.get('DOid'), "prefix": "DOID"}
               })
 
         return disease_annots
