@@ -235,9 +235,34 @@ mapping_schema = {
                         }
                     }
                 },
+                "do_type": {
+                    "type": "text",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
+                },
                 "go_genes": {
                     "type": "text",
                     "analyzer": "symbols",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "do_genes": {
+                    "type": "text",
+                    "analyzer": "symbols",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "do_species": {
+                    "type": "text",
                     "fields": {
                         "raw": {
                             "type": "keyword"
@@ -251,26 +276,6 @@ mapping_schema = {
                             "type": "keyword"
                         }
                     }
-                },
-                "disease_genes": {
-                    "type": "text",
-                    "analyzer": "symbols",
-                    "fields": {
-                        "raw": {
-                            "type": "keyword"
-                        }
-                    }
-                },
-                "disease_species": {
-                    "type": "text",
-                    "fields": {
-                        "raw": {
-                            "type": "keyword"
-                        }
-                    }
-                },
-                "disease_synonyms": {
-                    "type": "text"
                 },
                 "id": {
                     "type": "text",
@@ -295,6 +300,9 @@ mapping_schema = {
                         "do_name": {
                             "type": "text"
                         },
+                        "dataProvider": {
+                            "type": "text"
+                        },
                         "associationType": {
                             "type": "text"
                         },
@@ -312,6 +320,19 @@ mapping_schema = {
                                             "type": "text"
                                         }
                                     }
+                                }
+                            }
+                        },
+                        "doIdDisplay": {
+                            "properties": {
+                                "displayId": {
+                                    "type": "text"
+                                },
+                                "url": {
+                                    "type": "text"
+                                },
+                                "prefix": {
+                                    "type": "text"
                                 }
                             }
                         }

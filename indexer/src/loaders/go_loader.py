@@ -21,10 +21,10 @@ class GoLoader:
                 'description': line['def'],
                 'go_type': line['namespace'],
                 'go_synonyms': line.get('synonym'),
-
                 'name_key': line['name'],
                 'id': go_id,
                 'href': 'http://amigo.geneontology.org/amigo/term/' + line['id'],
                 'category': 'go'
             }
+
         return dict_to_return
