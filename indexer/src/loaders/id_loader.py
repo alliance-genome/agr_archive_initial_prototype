@@ -7,7 +7,10 @@ class IdLoader:
 		}
 
 		# Remove the prefix of the identifier based on the dataProvider.
-		return identifier.rsplit(dataProviderDict[dataProvider], 1)[0]
+		prefix = dataProviderDict[dataProvider]
+
+		if identifier.startswith(prefix):
+   			return identifier[len(prefix):]
 
 	@staticmethod
 	def add_agr_prefix_by_species(identifier, species):
@@ -19,7 +22,12 @@ class IdLoader:
 			559292 : 'SGD:',
 			4932 : 'SGD:',
 			7227 : 'FB:',
-			9606 : 'HGNC:'
+			9606 : '' # No HGNC prefix
 		}
 
-		return speciesDict[species] + identifier
+		new_identifier = None
+
+		if identifier:
+			new_identifier = speciesDict[species] + identifier
+
+		return new_identifier

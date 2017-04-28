@@ -5,5 +5,5 @@ class OrthoAnnotator:
         gene_id = gene['primaryId']
 
         if gene_id in ortho_dataset:
-            gene['Orthology'] = ortho_dataset[gene_id]
+            gene['orthology'] = ortho_dataset[gene_id]
         return gene

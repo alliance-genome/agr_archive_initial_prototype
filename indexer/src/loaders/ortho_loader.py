@@ -39,7 +39,7 @@ class OrthoLoader:
             gene2AgrPrimaryId = IdLoader().add_agr_prefix_by_species(gene2, gene2Species) # Prefixed according to AGR prefixes.
 
             if test_set == 'true': # If we're using a test set, only import info for test_set genes.
-                is_it_test_entry = check_for_test_entry(primaryId)
+                is_it_test_entry = check_for_test_entry(gene1AgrPrimaryId)
                 if is_it_test_entry == 'false':
                     continue
 
@@ -49,6 +49,7 @@ class OrthoLoader:
                 'isBestScore': orthoRecord['isBestScore'],
                 'isBestRevScore': orthoRecord['isBestRevScore'],
 
+                'gene1AgrPrimaryId': gene1AgrPrimaryId,
                 'gene1DisplayId' : gene1,
                 'gene1Species': gene1Species,
 
