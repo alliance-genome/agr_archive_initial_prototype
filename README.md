@@ -22,11 +22,12 @@ These instructions will get you a copy of the project up and running on your loc
   * [API](#api)
   * [Indexer](#indexer)
   * [ElasticSearch](#elasticsearch)
-- [Running the Enviroment](#running-the-enviroment)
+- [Running the Development Enviroment](#running-the-development-enviroment)
   * [Webapp](#webapp-1)
   * [API](#api-1)
   * [Indexer](#indexer-1)
   * [ElasticSearch](#elasticsearch-1)
+- [Running the Production Enviroment](#running-the-production-enviroment)
 - [API Usage](#api-usage)
 - [Running the tests](#running-the-tests)
 
@@ -137,7 +138,7 @@ The defaults for these params assume ElasticSearch is running on "localhost".
 
 There is no configuration for ElasticSearch please see the [elasticsearch setup][4] for more info
 
-## Running the Enviroment
+## Running the Development Enviroment
 
 All of the following steps are not nessasary, if developing only one part of the system. The frontend (webapp) can be pointed to a different API server and the webpack dev server will run on its own without the API, indexer, or ES running.
 
@@ -204,6 +205,27 @@ After the indexer has run, the Elastic search instance at localhost:9200/searcha
 ### ElasticSearch
 
 For running a local ElasticSearch instance see the [elasticsearch setup][4] for more info.
+
+## Running the Prouduction Enviroment
+
+In a production style running the application. Skip the section for running the webapp and use nginx to server the webapp/dict folder as the root of the site. The nginx configuration is as follows:
+
+```bash
+server {
+        listen 80;
+        root webapp/dist;
+        index index.html;
+        server_name hostname.alliancegenome.org;
+        error_page 404 =200 /index.html;
+        location /api {
+                 proxy_set_header Host $host;
+                 proxy_set_header X-Real-IP $remote_addr;
+                 proxy_pass http://localhost:5000;
+        }
+}
+```
+
+Setup the hostname to whatever hostname you are wanting to use. Error page is set to allways return the index.html page and a 200 status. Change the /api url to point to the running flask server.
 
 ## API Usage
 
