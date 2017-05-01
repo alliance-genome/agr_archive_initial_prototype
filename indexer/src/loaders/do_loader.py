@@ -2,6 +2,7 @@ from files import *
 from obo_parser import *
 import sys
 import re
+import pprint
 
 class DoLoader:
     @staticmethod
