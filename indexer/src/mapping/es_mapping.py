@@ -82,12 +82,9 @@ class ESMapping:
             if data_type == "Gene Data":
                 id_to_use = entry['primaryId']
                 doc = entry
-            elif data_type == "GO Data":
+            elif data_type == "GO Data" or data_type == "DO Data":
                 id_to_use = data[entry]['id']
                 doc = data[entry]
-            #elif data_type == "DO Data":
-            #    id_to_use = data[entry]['id']
-            #    doc = data[entry]
 
             doc.update(
                 {   '_op_type': op_type,
