@@ -28,6 +28,8 @@ class DoLoader:
                 if key == "id":
                     creating_term = value
                     do_dataset[creating_term] = {"id": value}
+                    do_dataset[creating_term]['do_genes'] = [] # Empty dictionaries to receive entries later.
+                    do_dataset[creating_term]['do_species'] = []
                 else:
                     if key == "synonym":
                         if value.split(" ")[-2] == "EXACT":
@@ -42,6 +44,7 @@ class DoLoader:
                         do_dataset[creating_term][key].append(value)
                     else:
                         do_dataset[creating_term][key] = [value]
+
         return do_dataset
     #
     #
