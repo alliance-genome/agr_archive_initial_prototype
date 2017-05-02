@@ -1,3 +1,5 @@
+import pprint
+
 class DoAnnotator:
 
     # get the gene, disease_dataset in bulk, do_dataset
@@ -10,17 +12,20 @@ class DoAnnotator:
 
         # Attach DO terms to genes based on the annotation of DO ids.
         if gene_id in annots:
-            gene['diseases'] = annots[gene_id]
+            for disease_gene_entry in annots[gene_id]:
+                gene['diseases'].append(disease_gene_entry)
+                if disease_gene_entry['do_id'] in do_data:
+                # Add the gene symbol and species to the main DO dataset under the particular DO id.
+                    do_data = DoAnnotator().update_do_dataset(disease_gene_entry['do_id'], do_data, gene_symbol, species)
+            # pp = pprint.PrettyPrinter(indent=4)
+            # pp.pprint(annots)
+            # quit()
 
-            for entry in annots[gene_id]['do_id']:
-                if entry in do_data:
-                    # Add the gene symbol and species to the main DO dataset under the particular DO id.
-                    do_data = DoAnnotator().update_do_dataset(entry, do_data, gene_symbol, species)
-        return gene, go_data
+        return gene, do_data
 
     # Attach gene symbols and species to the DO dataset.
     @staticmethod
-    def update_go_dataset(do_id, do_data, gene_symbol, species):
+    def update_do_dataset(do_id, do_data, gene_symbol, species):
         if species is not "Danio rerio":
             gene_symbol.upper()
 

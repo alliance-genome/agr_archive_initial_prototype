@@ -76,6 +76,7 @@ class GeneLoader:
                 "synonyms": geneRecord.get('synonyms'),
                 "soTermId": geneRecord['soTermId'],
                 "soTermName": None,
+                "diseases": [],
                 "secondaryIds": geneRecord.get('secondaryIds'),
                 "geneSynopsis": geneRecord.get('geneSynopsis'),
                 "geneSynopsisUrl": geneRecord.get('geneSynopsisUrl'),
