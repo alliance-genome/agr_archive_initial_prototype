@@ -32,9 +32,10 @@ class DiseaseLoader:
                     pubs = []
                     for pub in evidence['publications']:
                         pubMedId = pub.get('pubMedId')
+                        local_pubmed_id = pubMedId.split(":")[1]
                         publicationModId = pub.get('publicationModId')
                         if pubMedId is not None:
-                            pubs.append({'pubMedId': pubMedId, 'publicationModId': publicationModId, 'pubMedUrl': 'https://www.ncbi.nlm.nih.gov/pubmed/' + pubMedId})
+                            pubs.append({'pubMedId': pubMedId, 'publicationModId': publicationModId, 'pubMedUrl': 'https://www.ncbi.nlm.nih.gov/pubmed/' + local_pubmed_id})
                         else:
                             pubs.append({'pubMedId': pubMedId, 'publicationModId': publicationModId})
                     evidenceList.append({"pubs": pubs, "evidenceCode": evidenceCode})
