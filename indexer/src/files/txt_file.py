@@ -8,7 +8,7 @@ class TXTFile:
     def get_data(self):
         print "Loading txt data from (" + self.filename + ") ..."
         lines = []
-        with codecs.open(self.filename, 'r', 'UTF-8') as f:
+        with codecs.open(self.filename, 'r', 'utf-8') as f:
             for line in f:
                 lines.append(line)
         f.close()    
