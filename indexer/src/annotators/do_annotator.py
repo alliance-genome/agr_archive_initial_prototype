@@ -1,5 +1,3 @@
-import pprint
-
 class DoAnnotator:
 
     # get the gene, disease_dataset in bulk, do_dataset
