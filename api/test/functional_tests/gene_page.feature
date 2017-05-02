@@ -32,9 +32,9 @@ Feature: navigating the gene page
 
     Examples: Fly
     | id                | symbol   |
-    | FBgn0083973       | dunk     |
-    | FBgn0037960       | mthl5    |
-    | FBgn0027296       | temp     |
+    | FB:FBgn0083973       | dunk     |
+    | FB:FBgn0037960       | mthl5    |
+    | FB:FBgn0027296       | temp     |
 
     Examples: Worm
     | id                | symbol    |

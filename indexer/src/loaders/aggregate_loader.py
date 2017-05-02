@@ -40,7 +40,6 @@ class AggregateLoader:
     def load_from_mods(self, pickle, index, test_set):
         mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
 
-
         self.test_set = test_set
         if self.test_set == 'true':
             print "WARNING: test_set is enabled -- only indexing test genes."
@@ -102,5 +101,5 @@ class AggregateLoader:
 
     def index_data(self):
         self.es.index_data(self.go_dataset, 'GO Data', 'index') # Load the GO dataset into ES
-        #self.es.index_data(self.do_dataset, 'DO Data', 'index') # Load the DO dataset into ES
+        self.es.index_data(self.do_dataset, 'DO Data', 'index') # Load the DO dataset into ES
         self.es.finish_index()
