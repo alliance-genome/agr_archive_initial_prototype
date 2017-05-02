@@ -2,6 +2,7 @@ from files import *
 from obo_parser import *
 import sys
 import re
+import pprint
 
 class DoLoader:
     @staticmethod
@@ -42,7 +43,9 @@ class DoLoader:
                         do_dataset[creating_term][key].append(value)
                     else:
                         do_dataset[creating_term][key] = [value]
-
+        pp = pprint.PrettyPrinter(indent=2)
+        pp.pprint(do_dataset)
+        quit()
         return do_dataset
     #
     #
