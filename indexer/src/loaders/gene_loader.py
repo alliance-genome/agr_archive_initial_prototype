@@ -36,7 +36,7 @@ class GeneLoader:
             else:
                 local_id = global_id
 
-            modCrossReference.append({"id": global_id, "global_mod_id": global_id, "local_id": local_id, "mod_crossref_complete_url": self.get_complete_url(local_id, global_id)})
+            cross_references.append({"id": global_id, "global_crossRef_id": global_id, "local_id": local_id, "crossref_complete_url": self.get_complete_url(local_id, global_id), "isModId": "true"})
             if geneRecord['taxonId'] == "NCBITaxon:9606" or geneRecord['taxonId'] == "NCBITaxon:10090":
                 local_id = geneRecord['primaryId']
 
@@ -51,7 +51,7 @@ class GeneLoader:
                     #this can be simplified when GO YAML reused for AGR has helper fields.
                     if ':' in crossRef:
                         local_crossref_id = crossRef.split(":")[1]
-                        cross_references.append({"id": crossRef, "global_crossref_id": crossRef, "local_id": local_crossref_id, "crossref_complete_url": self.get_complete_url(local_crossref_id, crossRef)})
+                        cross_references.append({"id": crossRef, "global_crossref_id": crossRef, "local_id": local_crossref_id, "crossref_complete_url": self.get_complete_url(local_crossref_id, crossRef), "isModID": "false"})
                     else:
                         local_crossref_id = crossRef
                         cross_references.append(
@@ -91,9 +91,7 @@ class GeneLoader:
                 "geneLiteratureUrl": geneRecord.get('geneLiteratureUrl'),
                 "name_key": geneRecord['symbol'],
                 "primaryId": primary_id,
-                "modCrossReference": modCrossReference,
                 "crossReferences": cross_references,
-                "href": None,
                 "category": "gene",
                 "dateProduced": dateProduced,
                 "dataProvider": dataProvider,
