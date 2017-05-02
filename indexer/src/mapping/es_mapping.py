@@ -85,7 +85,7 @@ class ESMapping:
             elif data_type == "GO Data" or data_type == "DO Data":
                 id_to_use = data[entry]['id']
                 doc = data[entry]
-
+                
             doc.update(
                 {   '_op_type': op_type,
                     '_index': self.new_index_name, 
