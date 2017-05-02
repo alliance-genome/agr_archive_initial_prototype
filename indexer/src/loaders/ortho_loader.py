@@ -55,7 +55,7 @@ class OrthoLoader:
                 'gene2AgrPrimaryId': gene2AgrPrimaryId,
                 'gene2Symbol' : orthoRecord['gene2Symbol'],
                 'gene2Species': gene2Species,
-                'gene2SpeciesName': orthoRecord['gene2SpeciesName']
+                'gene2SpeciesName': orthoRecord['gene2SpeciesName'],
 
 
                 'predictionMethodsMatched': orthoRecord['predictionMethodsMatched'],
