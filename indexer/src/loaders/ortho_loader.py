@@ -57,7 +57,6 @@ class OrthoLoader:
                 'gene2Species': gene2Species,
                 'gene2SpeciesName': orthoRecord['gene2SpeciesName'],
 
-
                 'predictionMethodsMatched': orthoRecord['predictionMethodsMatched'],
                 'predictionMethodsNotMatched': orthoRecord['predictionMethodsNotMatched'],
                 'predictionMethodsNotCalled': orthoRecord['predictionMethodsNotCalled'],
