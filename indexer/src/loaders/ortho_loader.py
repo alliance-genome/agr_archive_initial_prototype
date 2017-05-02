@@ -10,8 +10,8 @@ class OrthoLoader:
     @staticmethod
     def get_data(mod_name, test_set):
         path = "tmp"
-        filename = "/orthology_" + mod_name + "_0.6.1_2.json"
-        filename_comp = "orthology_" + mod_name + "_0.6.1_2.json.tar.gz"
+        filename = "/orthology_" + mod_name + "_0.6.1_3.json"
+        filename_comp = "orthology_" + mod_name + "_0.6.1_3.json.tar.gz"
         S3File("mod-datadumps/ORTHO", filename_comp, path).download()
         TARFile(path, filename_comp).extract_all()
         ortho_data = JSONFile().get_data(path + filename)
