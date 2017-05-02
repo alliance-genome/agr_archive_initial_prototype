@@ -49,13 +49,14 @@ class OrthoLoader:
                 'isBestScore': orthoRecord['isBestScore'],
                 'isBestRevScore': orthoRecord['isBestRevScore'],
 
-                'gene1AgrPrimaryId': gene1AgrPrimaryId,
-                'gene1DisplayId' : gene1,
                 'gene1Species': gene1Species,
+                'gene1SpeciesName': orthoRecord['gene1SpeciesName'],
 
                 'gene2AgrPrimaryId': gene2AgrPrimaryId,
-                'gene2DisplayId' : gene2,
+                'gene2Symbol' : orthoRecord['gene2Symbol'],
                 'gene2Species': gene2Species,
+                'gene2SpeciesName': orthoRecord['gene2SpeciesName']
+
 
                 'predictionMethodsMatched': orthoRecord['predictionMethodsMatched'],
                 'predictionMethodsNotMatched': orthoRecord['predictionMethodsNotMatched'],
