@@ -19,8 +19,6 @@ class DoLoader:
 
             if line == "[Term]":
                 creating_term = True
-            elif line == '': # Skip blank lines
-                continue
             elif creating_term:
                 key = (line.split(":")[0]).strip()
                 value = ("".join(":".join(line.split(":")[1:]))).strip()
@@ -42,6 +40,7 @@ class DoLoader:
                         do_dataset[creating_term][key].append(value)
                     else:
                         do_dataset[creating_term][key] = [value]
+
         return do_dataset
     #
     #
