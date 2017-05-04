@@ -11,13 +11,12 @@ class DoAnnotator:
         # Attach DO terms to genes based on the annotation of DO ids.
         if gene_id in annots:
             for disease_gene_entry in annots[gene_id]:
+                doId = disease_gene_entry['do_id']
+                disease_gene_entry['do_name'] = do_data[doId]['name']
                 gene['diseases'].append(disease_gene_entry)
-                if disease_gene_entry['do_id'] in do_data:
+
                 # Add the gene symbol and species to the main DO dataset under the particular DO id.
-                    do_data = DoAnnotator().update_do_dataset(disease_gene_entry['do_id'], do_data, gene_symbol, species)
-            # pp = pprint.PrettyPrinter(indent=4)
-            # pp.pprint(annots)
-            # quit()
+                do_data = DoAnnotator().update_do_dataset(disease_gene_entry['do_id'], do_data, gene_symbol, species)
 
         return gene, do_data
 
