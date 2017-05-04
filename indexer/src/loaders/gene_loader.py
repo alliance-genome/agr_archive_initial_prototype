@@ -18,7 +18,7 @@ class GeneLoader:
             release = gene_data['metaData']['release']
 
         for geneRecord in gene_data['data']:
-            cross_references = []
+            crossReferences = []
             external_ids = []
             genomic_locations = []
             start = None
@@ -36,7 +36,7 @@ class GeneLoader:
             else:
                 local_id = global_id
 
-            modCrossReference.append({"id": global_id, "global_mod_id": global_id, "local_id": local_id, "mod_crossref_complete_url": self.get_complete_url(local_id, global_id)})
+            modCrossReference = {"id": global_id, "globalCrossRefId": global_id, "localId": local_id, "crossrefCompleteUrl": self.get_complete_url(local_id, global_id)}
             if geneRecord['taxonId'] == "NCBITaxon:9606" or geneRecord['taxonId'] == "NCBITaxon:10090":
                 local_id = geneRecord['primaryId']
 
@@ -51,12 +51,12 @@ class GeneLoader:
                     #this can be simplified when GO YAML reused for AGR has helper fields.
                     if ':' in crossRef:
                         local_crossref_id = crossRef.split(":")[1]
-                        cross_references.append({"id": crossRef, "global_crossref_id": crossRef, "local_id": local_crossref_id, "crossref_complete_url": self.get_complete_url(local_crossref_id, crossRef)})
+                        crossReferences.append({"id": crossRef, "globalCrossrefId": crossRef, "localId": local_crossref_id, "crossrefCompleteUrl": self.get_complete_url(local_crossref_id, crossRef)})
                     else:
                         local_crossref_id = crossRef
-                        cross_references.append(
-                            {"id": crossRef, "global_crossref_id": crossRef, "local_id": local_crossref_id,
-                             "crossref_complete_url": self.get_complete_url(local_crossref_id, crossRef)})
+                        crossReferences.append(
+                            {"id": crossRef, "globalCrossrefId": crossRef, "localId": local_crossref_id,
+                             "crossrefCompleteUrl": self.get_complete_url(local_crossref_id, crossRef)})
             if 'genomeLocations' in geneRecord:
                 for genomeLocation in geneRecord['genomeLocations']:
                     chromosome = genomeLocation['chromosome']
@@ -91,9 +91,8 @@ class GeneLoader:
                 "geneLiteratureUrl": geneRecord.get('geneLiteratureUrl'),
                 "name_key": geneRecord['symbol'],
                 "primaryId": primary_id,
+                "crossReferences": crossReferences,
                 "modCrossReference": modCrossReference,
-                "crossReferences": cross_references,
-                "href": None,
                 "category": "gene",
                 "dateProduced": dateProduced,
                 "dataProvider": dataProvider,
