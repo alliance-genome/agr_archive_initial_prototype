@@ -12,13 +12,13 @@ class OrthoLoader:
         path = "tmp"
         filename = None
         filename_comp = None
-        if test_set == 'true'
+        if test_set == 'true':
             filename = '/orthology_test_data_0.6.1_3.json'
             filename_comp = 'orthology_test_data_0.6.1_3.json.tar.gz'
         else:
             filename = "/orthology_" + mod_name + "_0.6.1_3.json"
             filename_comp = "orthology_" + mod_name + "_0.6.1_3.json.tar.gz"
-            
+
         S3File("mod-datadumps/ORTHO", filename_comp, path).download()
         TARFile(path, filename_comp).extract_all()
         ortho_data = JSONFile().get_data(path + filename)
