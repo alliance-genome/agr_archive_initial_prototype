@@ -10,8 +10,15 @@ class OrthoLoader:
     @staticmethod
     def get_data(mod_name, test_set):
         path = "tmp"
-        filename = "/orthology_" + mod_name + "_0.6.1_3.json"
-        filename_comp = "orthology_" + mod_name + "_0.6.1_3.json.tar.gz"
+        filename = None
+        filename_comp = None
+        if test_set == 'true'
+            filename = '/orthology_test_data_0.6.1_3.json'
+            filename_comp = 'orthology_test_data_0.6.1_3.json.tar.gz'
+        else:
+            filename = "/orthology_" + mod_name + "_0.6.1_3.json"
+            filename_comp = "orthology_" + mod_name + "_0.6.1_3.json.tar.gz"
+            
         S3File("mod-datadumps/ORTHO", filename_comp, path).download()
         TARFile(path, filename_comp).extract_all()
         ortho_data = JSONFile().get_data(path + filename)
@@ -37,11 +44,6 @@ class OrthoLoader:
 
             gene1AgrPrimaryId = IdLoader().add_agr_prefix_by_species(gene1, gene1Species) # Prefixed according to AGR prefixes.
             gene2AgrPrimaryId = IdLoader().add_agr_prefix_by_species(gene2, gene2Species) # Prefixed according to AGR prefixes.
-
-            if test_set == 'true': # If we're using a test set, only import info for test_set genes.
-                is_it_test_entry = check_for_test_entry(gene1AgrPrimaryId)
-                if is_it_test_entry == 'false':
-                    continue
 
             if gene1AgrPrimaryId not in ortho_dataset:
                 ortho_dataset[gene1AgrPrimaryId] = []
