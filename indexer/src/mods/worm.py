@@ -4,6 +4,10 @@ from loaders.gene_loader import GeneLoader
 from loaders.disease_loader import DiseaseLoader
 import gzip
 import csv
+from BCBio import GFF
+from BCBio.GFF import GFFExaminer
+import pprint
+
 
 class WormBase(MOD):
     species = "Caenorhabditis elegans"
@@ -59,3 +63,26 @@ class WormBase(MOD):
         gene_disease_dict = DiseaseLoader().get_data(disease_data)
 
         return gene_disease_dict
+
+    def load_gff(self):
+        path = "tmp"
+        filename = "c_elegans.PRJNA13758.WS258.genes_only.gff3"
+        filenameCompressed = "c_elegans.PRJNA13758.WS258.genes_only.gff3.tar.gz"
+        S3File("mod-datadumps/gff3/", filenameCompressed, path).download()
+        TARFile(path, filenameCompressed).extract_all
+
+        #GFF3 Parsing
+        # limit_info = dict(
+        # gff_id = ["chr1"],
+        # gff_source = ["Coding_transcript"])
+
+        in_handle = open(path + '/' + filename)
+        for rec in GFF.parse(in_handle):
+            for subrec in rec:
+                print subrec
+        in_handle.close()
+
+        # examiner= GFFExaminer()
+        # in_handle = open(path + '/' + filename)
+        # pprint.pprint(examiner.available_limits(in_handle))
+        # in_handle.close()

@@ -38,7 +38,8 @@ class AggregateLoader:
         self.do_dataset = DoLoader().get_data()
 
     def load_from_mods(self, pickle, index, test_set):
-        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        #mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        mods = [WormBase()]
 
         self.test_set = test_set
         if self.test_set == 'true':
@@ -59,11 +60,15 @@ class AggregateLoader:
             genes = mod.load_genes(self.batch_size, self.test_set) # generator object
             print "Loading GO annotations for %s" % (mod.species)
             gene_go_annots = mod.load_go()
+
             print "Loading DO annotations for %s" % (mod.species)
             disease_annots = mod.load_diseases()
 
             print "Loading Orthology data for %s" % (mod.species)
             ortho_dataset = OrthoLoader().get_data(mod.__class__.__name__, self.test_set)
+
+            print "Loading GFF data for %s" % (mod.species)
+            gff_dataset = mod.load_gff()
 
             for gene_list_of_entries in genes:
                 # Annotations to individual genes occurs in the loop below via static methods.
