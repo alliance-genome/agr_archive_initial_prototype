@@ -206,7 +206,7 @@ After the indexer has run, the Elastic search instance at localhost:9200/searcha
 
 For running a local ElasticSearch instance see the [elasticsearch setup][4] for more info.
 
-## Running the Prouduction Enviroment
+## Running the Production Enviroment
 
 In a production style running the application. Skip the section for running the webapp and use nginx to server the webapp/dict folder as the root of the site. The nginx configuration is as follows:
 
