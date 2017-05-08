@@ -94,7 +94,7 @@ class ESMapping:
                 })
             bulk_data.append(doc)
 
-        for success, info in streaming_bulk(self.es, actions=bulk_data, refresh=False, request_timeout=60, chunk_size=self.chunk_size):
+        for success, info in streaming_bulk(self.es, actions=bulk_data, refresh=False, request_timeout=600, chunk_size=self.chunk_size):
                 if not success:
                     print "A document failed: %s" % (info)
 

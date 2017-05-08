@@ -80,6 +80,7 @@ class AggregateLoader:
                     gene_list_of_entries[item] = DoAnnotator().attach_annotations(individual_gene, disease_annots, self.do_dataset)
                     gene_list_of_entries[item] = SoAnnotator().attach_annotations(individual_gene, self.so_dataset)
                     gene_list_of_entries[item] = OrthoAnnotator().attach_annotations(individual_gene, ortho_dataset)
+                    gene_list_of_entries[item] = GFFAnnotator().attach_annotations(individual_gene, gff_dataset)
 
                 if pickle == 'save':
                     PickleFile(pickle_file_name).save_append(gene_list_of_entries)

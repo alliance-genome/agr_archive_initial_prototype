@@ -68,21 +68,60 @@ class WormBase(MOD):
         path = "tmp"
         filename = "c_elegans.PRJNA13758.WS258.genes_only.gff3"
         filenameCompressed = "c_elegans.PRJNA13758.WS258.genes_only.gff3.tar.gz"
-        S3File("mod-datadumps/gff3/", filenameCompressed, path).download()
+        S3File("mod-datadumps/gff3", filenameCompressed, path).download()
         TARFile(path, filenameCompressed).extract_all
 
-        #GFF3 Parsing
-        # limit_info = dict(
-        # gff_id = ["chr1"],
-        # gff_source = ["Coding_transcript"])
+        # GFF3 Parsing
 
-        in_handle = open(path + '/' + filename)
-        for rec in GFF.parse(in_handle):
-            for subrec in rec:
-                print subrec
-        in_handle.close()
+        gene_dict = {}
+        mRNA_dict = {}
 
-        # examiner= GFFExaminer()
-        # in_handle = open(path + '/' + filename)
-        # pprint.pprint(examiner.available_limits(in_handle))
-        # in_handle.close()
+        examiner = GFF.GFFExaminer()
+        with open(path + '/' + filename) as gff_handle:
+            possible_limits = examiner.available_limits(gff_handle)
+        chromosomes = sorted(possible_limits["gff_id"].keys())
+        types = sorted(possible_limits["gff_type"].keys())
+        limits = dict(gff_type = [('gene',), ('mRNA',), ('CDS',)])
+        for chrom in chromosomes:
+            with open(path + '/' + filename) as gff_handle:
+                limits["gff_id"] = chrom
+                print "Processing GFF with limits: %s" % (limits)
+                for rec in GFF.parse(gff_handle, limit_info = limits, target_lines=1):
+                    for feature in rec.features:
+                        # print feature.type
+                        if feature.type == 'gene':
+                            feature_id = 'WB:' + feature.qualifiers['ID'][0].split(":",1).pop()
+                            if feature_id not in gene_dict:
+                                gene_dict[feature_id] = {}
+                        elif feature.type == 'mRNA':
+                            feature_parent = 'WB:' + feature.qualifiers['Parent'][0].split(":",1).pop()
+                            feature_id = feature.qualifiers['ID'][0]
+                            feature_location = {
+                                'startPosition' : feature.location.start,
+                                'endPosition' : feature.location.end,
+                                'strand' : feature.location.strand
+                            }
+                            if feature_id not in gene_dict[feature_parent]:
+                                gene_dict[feature_parent][feature_id] = {}
+                                mRNA_dict[feature_id] = {}
+                            gene_dict[feature_parent][feature_id]['location'] = feature_location
+
+                        elif feature.type == 'CDS':
+                            feature_parent = feature.qualifiers['Parent'][0]
+                            feature_id = feature.qualifiers['ID'][0]
+                            feature_location = {
+                                'startPosition' : feature.location.start,
+                                'endPosition' : feature.location.end,
+                                'strand' : feature.location.strand
+                            }
+
+                            if feature_id not in mRNA_dict[feature_parent]:
+                                mRNA_dict[feature_parent][feature_id] = {}
+                                mRNA_dict[feature_parent][feature_id]['locations'] = []
+                            mRNA_dict[feature_parent][feature_id]['locations'].append(feature_location)
+
+        for genes in gene_dict: # Update the gene_dict with mRNA_dict
+            for mRNA in gene_dict[genes]:
+                gene_dict[genes][mRNA].update(mRNA_dict[mRNA])
+
+        return gene_dict

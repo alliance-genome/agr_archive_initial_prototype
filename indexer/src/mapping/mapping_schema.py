@@ -1,5 +1,6 @@
 mapping_schema = {
     "settings": {
+    "index.mapping.total_fields.limit": 20000,
         "index": {
             "max_result_window": 15000,
             "analysis": {
@@ -38,7 +39,7 @@ mapping_schema = {
                 }
             },
             "number_of_replicas": "0", #temporarily
-            "number_of_shards": "5"
+            "number_of_shards": "5",
         }
     },
     "mappings": {
