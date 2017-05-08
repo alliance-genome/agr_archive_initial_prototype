@@ -76,7 +76,7 @@ class SearchEndpointsTest(unittest.TestCase):
         self.search_fields = ['primaryId', 'name', 'symbol', 'symbol.raw', 'synonyms', 'synonyms.raw', 'description',
                               'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function',
                               'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes',
-                              'disease_synonyms']
+                              'disease_synonyms', 'diseases.do_name']
         self.json_response_fields = ['name', 'symbol', 'synonyms', 'soTermName', 'gene_chromosomes','gene_chromosome_starts', 'gene_chromosome_ends', 'description', 'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs', 'crossReferences', 'category', 'href']
         self.category_filters = {
             "gene": ['soTermName', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component', 'species'],
