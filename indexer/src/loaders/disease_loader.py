@@ -35,7 +35,7 @@ class DiseaseLoader:
                         if pubMedId is not None:
                             if ':' in pubMedId:
                                 local_pubmedid_id = pubMedId.split(":")[1]
-                        publicationModId = pub.get('publicationModId')
+                        publicationModId = pub.get('modPublicationId')
                         if pubMedId is not None:
                             pubs.append({'pubMedId': pubMedId, 'publicationModId': publicationModId, 'pubMedUrl': 'https://www.ncbi.nlm.nih.gov/pubmed/' + local_pubmedid_id})
                         else:
@@ -44,7 +44,7 @@ class DiseaseLoader:
 
             if 'objectRelation' in diseaseRecord:
                 diseaseObjectType = diseaseRecord['objectRelation'].get("objectType")
-                diseaseAssociationType = diseaseRecord['objectRelation'].get("associationType")
+                diseaseAssociationType = diseaseRecord['objectRelation'].get("association_type")
                 #for gene in diseaseRecord['objectRelation']['inferredGeneAssociation']:
                 #        inferredFromGeneAssociations.append(gene.get('primaryId'))
                 objectRelationMap = {"diseaseObjectType": diseaseObjectType, "diseaseAssociationType": diseaseAssociationType}
