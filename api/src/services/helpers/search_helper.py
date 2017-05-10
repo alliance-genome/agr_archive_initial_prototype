@@ -150,7 +150,8 @@ def build_search_params(query, search_fields):
             "name.symbol": 200,
             "gene_biological_process.symbol": 50,
             "gene_molecular_function.symbol": 50,
-            "gene_cellular_component.symbol": 50
+            "gene_cellular_component.symbol": 50,
+            "diseases.do_name": 50
         }
 
         fields = search_fields + [

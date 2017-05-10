@@ -57,7 +57,7 @@ If you don't want to run the ES index locally you can point to the development o
 	agr_api> export PRODUCTION=true
 	agr_api> export ES_AWS=true
 	agr_api> export ES_HOST="search-es1-oyqxarxm2djn35dfodzniituhe.us-west-2.es.amazonaws.com"
-	agr_api> export ES_INDEX=es1
+	agr_api> export ES_INDEX=es_username
 	agr_api> export API_PASSWORD="api_password"
 ```
 
@@ -81,8 +81,8 @@ These are the default settings that don't need to be set unless you want to over
 [1]: https://pip.pypa.io/en/stable/installing/
 [2]: https://virtualenv.pypa.io/en/stable/installation/
 [3]: https://github.com/alliance-genome/agr_api
-[4]: ES_SETUP.md
+[4]: ../doc/ES_SETUP.md
 [5]: http://localhost.jax.org:5000/api/gene/MGI:97490
 [6]: https://github.com/alliance-genome/agr_indexer
-[7]: DOCKER.md
+[7]: ../doc/DOCKER.md
 [8]: https://github.com/alliance-genome/agr_ui

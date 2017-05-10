@@ -1,4 +1,5 @@
 from loaders.gene_loader import GeneLoader
+from loaders.disease_loader import DiseaseLoader
 from mod import MOD
 from files import *
 import gzip
@@ -17,9 +18,9 @@ class FlyBase(MOD):
 
     def load_genes(self, batch_size, test_set):
         path = "tmp"
-        S3File("mod-datadumps", "FB_0.3.0_1.tar.gz", path).download()
-        TARFile(path, "FB_0.3.0_1.tar.gz").extract_all()
-        gene_data = JSONFile().get_data(path + "/FB_0.3_basicGeneInformation.json")
+        S3File("mod-datadumps", "FB_0.6.2_1.tar.gz", path).download()
+        TARFile(path, "FB_0.6.2_1.tar.gz").extract_all()
+        gene_data = JSONFile().get_data(path + "/FB_0.6_basicGeneInformation.json")
         gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
@@ -51,23 +52,11 @@ class FlyBase(MOD):
         return go_annot_dict
 
     def load_diseases(self):
+
         path = "tmp"
-        S3File("mod-datadumps", "FlyBase_DOID_output_fb_2016_05.tsv", path).download()
-        diseases_data_csv_filename = (path + "/FlyBase_DOID_output_fb_2016_05.tsv")
+        S3File("mod-datadumps", "FB_0.6.2_1.tar.gz", path).download()
+        TARFile(path, "FB_0.6.2_1.tar.gz").extract_all()
+        disease_data = JSONFile().get_data(path + "/FB_0.6_diseaseAnnotations.json")
+        gene_disease_dict = DiseaseLoader().get_data(disease_data)
 
-        print("Fetching disease data from FlyBase tsv file (" + diseases_data_csv_filename + ") ...")
-
-        with open(diseases_data_csv_filename, 'rb') as f:
-            reader = csv.reader(f, delimiter='\t')
-            next(reader, None)
-
-            list = []
-            for row in reader:
-                if row[3]:
-                    omim_ids = map(lambda s: s.strip(), row[3].split(","))
-                    disease_gene_ids = map(lambda s: s.strip(), row[5].split(","))
-
-                    for omim_id in omim_ids:
-                        for gene_id in disease_gene_ids:
-                            list.append({"gene_id": gene_id, "omim_id": "OMIM:"+omim_id, "species": FlyBase.species})
-            return list
+        return gene_disease_dict

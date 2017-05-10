@@ -71,4 +71,14 @@ This Docker setup uses 3 containers to manage the AGR portal.
 The Flask and Webpack containers expose external ports on 5000 and 2992 respectively.
 The elasticsearch db container is exposed only to the Flask server container.
 
-The webpack container uses the [hot module replacement][5].
+
+[5]: https://webpack.github.io/docs/hot-module-replacement.html
+[6]: http://eslint.org/
+[7]: https://www.docker.com/
+[8]: https://www.elastic.co/downloads/elasticsearch
+[9]: https://nodejs.org
+[10]: https://www.python.org/ftp/python
+[11]: https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.4.4/elasticsearch-2.4.4.tar.gz
+[7]: DOCKER.md
+
+[12]: https://github.com/alliance-genome/agr

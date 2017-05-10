@@ -47,7 +47,31 @@ Make sure the Elastic search instance is running before running the command "mak
 
 ```
 
+### Point to remote ES instance for indexing
+
+```bash
+	agr_indexer> export ES_AWS=true
+	agr_indexer> export ES_HOST="search-es1-oyqxarxm2djn35dfodzniituhe.us-west-2.es.amazonaws.com"
+	agr_indexer> export ES_INDEX=es_username
+```
+
+### Point to local ES instance (defaults)
+
+These are the default settings that don't need to be set unless you want to override them.
+
+```bash
+	agr_indexer> export ES_HOST="127.0.0.1:9200"
+	agr_indexer> export ES_INDEX=searchable_items_blue
+```
+
+### To run tests
+
+```bash
+	agr_indexer> source ~/.virtualenvs/agr/bin/activate
+	agr_indexer> make test
+```
+
 [1]: https://pip.pypa.io/en/stable/installing/
 [2]: https://virtualenv.pypa.io/en/stable/installation/
 [3]: https://github.com/alliance-genome/agr_indexer
-[4]: https://github.com/alliance-genome/agr_api/ES_SETUP.md
+[4]: ../doc/ES_SETUP.md
