@@ -81,7 +81,7 @@ class WormBase(MOD):
             possible_limits = examiner.available_limits(gff_handle)
         chromosomes = sorted(possible_limits["gff_id"].keys())
         types = sorted(possible_limits["gff_type"].keys())
-        limits = dict(gff_type = [('gene',), ('mRNA',), ('CDS',)])
+        limits = dict(gff_type = [('gene',), ('mRNA',), ('exon',)])
         for chrom in chromosomes:
             with open(path + '/' + filename) as gff_handle:
                 limits["gff_id"] = chrom
@@ -106,7 +106,7 @@ class WormBase(MOD):
                                 mRNA_dict[feature_id] = {}
                             gene_dict[feature_parent][feature_id]['location'] = feature_location
 
-                        elif feature.type == 'CDS':
+                        elif feature.type == 'exon':
                             feature_parent = feature.qualifiers['Parent'][0]
                             feature_id = feature.qualifiers['ID'][0]
                             feature_location = {
