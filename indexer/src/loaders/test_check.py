@@ -3,7 +3,7 @@ def check_for_test_entry(primary_id):
                 'RGD:70891', 'RGD:1306349', 'RGD:620796',
                 'MGI:109337', 'MGI:108202', 'MGI:2676586',
                 'ZFIN:ZDB-GENE-990415-72', 'ZFIN:ZDB-GENE-030131-3445', 'ZFIN:ZDB-GENE-980526-388','ZFIN:ZDB-GENE-010525-1',
-                'FB:FBgn0083973', 'FB:FBgn0037960', 'FB:FBgn0027296',
+                'FB:FBgn0083973', 'FB:FBgn0037960', 'FB:FBgn0027296','FB:FBgn0033885',
                 'WB:WBGene00044305', 'WB:WBGene00169423', 'WB:WBGene00000987',
                 'SGD:S000003256', 'SGD:S000003513', 'SGD:S000000119'}
 
