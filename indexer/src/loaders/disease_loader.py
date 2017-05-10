@@ -44,7 +44,7 @@ class DiseaseLoader:
 
             if 'objectRelation' in diseaseRecord:
                 diseaseObjectType = diseaseRecord['objectRelation'].get("objectType")
-                diseaseAssociationType = diseaseRecord['objectRelation'].get("association_type")
+                diseaseAssociationType = diseaseRecord['objectRelation'].get("associationType")
                 #for gene in diseaseRecord['objectRelation']['inferredGeneAssociation']:
                 #        inferredFromGeneAssociations.append(gene.get('primaryId'))
                 objectRelationMap = {"diseaseObjectType": diseaseObjectType, "diseaseAssociationType": diseaseAssociationType}
