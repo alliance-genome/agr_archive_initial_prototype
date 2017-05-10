@@ -18,8 +18,8 @@ class FlyBase(MOD):
 
     def load_genes(self, batch_size, test_set):
         path = "tmp"
-        S3File("mod-datadumps", "FB_0.6.2_1.tar.gz", path).download()
-        TARFile(path, "FB_0.6.2_1.tar.gz").extract_all()
+        S3File("mod-datadumps", "FB_0.6.2_2.tar.gz", path).download()
+        TARFile(path, "FB_0.6.2_2.tar.gz").extract_all()
         gene_data = JSONFile().get_data(path + "/FB_0.6_basicGeneInformation.json")
         gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
@@ -54,8 +54,8 @@ class FlyBase(MOD):
     def load_diseases(self):
 
         path = "tmp"
-        S3File("mod-datadumps", "FB_0.6.2_1.tar.gz", path).download()
-        TARFile(path, "FB_0.6.2_1.tar.gz").extract_all()
+        S3File("mod-datadumps", "FB_0.6.2_2.tar.gz", path).download()
+        TARFile(path, "FB_0.6.2_2.tar.gz").extract_all()
         disease_data = JSONFile().get_data(path + "/FB_0.6_diseaseAnnotations.json")
         gene_disease_dict = DiseaseLoader().get_data(disease_data)
 
