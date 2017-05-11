@@ -131,11 +131,11 @@ class GeneLoader:
         complete_url = None
 
         if 'MGI' in global_id:
-            complete_url = 'http://www.informatics.jax.org/marker/' + local_id
+            complete_url = 'http://www.informatics.jax.org/accession/' + local_id
         if 'RGD' in global_id:
-            complete_url = 'http://rgd.mcw.edu/rgdweb/report/gene/main.html?id=' + local_id
+            complete_url = 'http://rgd.mcw.edu/rgdweb/search/search.html?term=' + local_id
         if 'SGD' in global_id:
-            complete_url = 'http://www.yeastgenome.org/locus/' + local_id + '/overview'
+            complete_url = 'http://www.yeastgenome.org/locus/' + local_id
         if 'FB' in global_id:
             complete_url = 'http://flybase.org/reports/' + local_id + '.html'
         if 'ZFIN' in global_id:
