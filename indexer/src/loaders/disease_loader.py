@@ -119,7 +119,5 @@ class DiseaseLoader:
             complete_url = 'http://zfin.org/' + local_id
         if 'WB:' in global_id:
             complete_url = 'http://www.wormbase.org/db/misc/paper?name=' + local_id
-        if 'HGNC:' in global_id:
-            complete_url = 'http://www.genenames.org/cgi-bin/gene_symbol_report?hgnc_id=' + local_id
 
         return complete_url
