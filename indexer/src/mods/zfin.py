@@ -23,9 +23,9 @@ class ZFIN(MOD):
 
     def load_genes(self, batch_size, test_set):
         path = "tmp"
-        S3File("mod-datadumps", "ZFIN_0.6.0_8.tar.gz", path).download()
-        TARFile(path, "ZFIN_0.6.0_8.tar.gz").extract_all()
-        gene_data = JSONFile().get_data(path + "/ZFIN_0.6.0_BGI.json")
+        S3File("mod-datadumps", "ZFIN_0.6.1_8.tar.gz", path).download()
+        TARFile(path, "ZFIN_0.6.1_8.tar.gz").extract_all()
+        gene_data = JSONFile().get_data(path + "/ZFIN_0.6.1_BGI.json")
         gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
@@ -39,7 +39,7 @@ class ZFIN(MOD):
             for line in reader:
                 if line[0].startswith('!'):
                     continue
-                gene = line[1]
+                gene = line[0]+":"+line[1]
                 go_id = line[4]
                 if gene in go_annot_dict:
                     go_annot_dict[gene]['go_id'].append(go_id)
@@ -53,9 +53,9 @@ class ZFIN(MOD):
 
     def load_diseases(self):
         path = "tmp"
-        S3File("mod-datadumps", "ZFIN_0.6.0_8.tar.gz", path).download()
-        TARFile(path, "ZFIN_0.6.0_8.tar.gz").extract_all()
-        disease_data = JSONFile().get_data(path + "/ZFIN_0.6.0_DAF.json")
+        S3File("mod-datadumps", "ZFIN_0.6.1_8.tar.gz", path).download()
+        TARFile(path, "ZFIN_0.6.1_8.tar.gz").extract_all()
+        disease_data = JSONFile().get_data(path + "/ZFIN_0.6.1_DAF.json")
         gene_disease_dict = DiseaseLoader().get_data(disease_data)
 
         return gene_disease_dict

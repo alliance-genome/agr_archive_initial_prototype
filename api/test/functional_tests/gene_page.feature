@@ -32,18 +32,19 @@ Feature: navigating the gene page
 
     Examples: Fly
     | id                | symbol   |
-    | FBgn0083973       | dunk     |
-    | FBgn0037960       | mthl5    |
-    | FBgn0027296       | temp     |
+    | FB:FBgn0083973       | dunk     |
+    | FB:FBgn0037960       | mthl5    |
+    | FB:FBgn0027296       | temp     |
+    | FB:FBgn0033885       | DJ-1alpha |
 
     Examples: Worm
     | id                | symbol    |
-    | WBGene00044305    | rad-8     |
-    | WBGene00169423    | 21ur-9605 |
-    | WBGene00000987    | dhs-24    |
+    | WB:WBGene00044305    | rad-8     |
+    | WB:WBGene00169423    | 21ur-9605 |
+    | WB:WBGene00000987    | dhs-24    |
 
     Examples: Yeast
     | id                | symbol   |
-    | S000003256        | THG1     |
-    | S000003513        | YOR1     |
-    | S000000119        | MCM2     |
+    | SGD:S000003256        | THG1     |
+    | SGD:S000003513        | YOR1     |
+    | SGD:S000000119        | MCM2     |

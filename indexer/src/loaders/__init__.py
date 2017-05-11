@@ -1,3 +1,4 @@
+from id_loader import IdLoader
 from go_loader import GoLoader
 from do_loader import DoLoader
 from homolog_loader import HomoLogLoader

@@ -101,5 +101,5 @@ class AggregateLoader:
 
     def index_data(self):
         self.es.index_data(self.go_dataset, 'GO Data', 'index') # Load the GO dataset into ES
-        #self.es.index_data(self.do_dataset, 'DO Data', 'index') # Load the DO dataset into ES
+        self.es.index_data(self.do_dataset, 'DO Data', 'index') # Load the DO dataset into ES
         self.es.finish_index()

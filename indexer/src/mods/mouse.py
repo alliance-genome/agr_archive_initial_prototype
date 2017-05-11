@@ -26,9 +26,9 @@ class MGI(MOD):
 
     def load_genes(self, batch_size, test_set):
         path = "tmp"
-        S3File("mod-datadumps", "MGI_0.3.0_1.tar.gz", path).download()
-        TARFile(path, "MGI_0.3.0_1.tar.gz").extract_all()
-        gene_data = JSONFile().get_data(path + "/MGI_0.3_basicGeneInformation.json")
+        S3File("mod-datadumps", "MGI_0.6.0_2.tar.gz", path).download()
+        TARFile(path, "MGI_0.6.0_2.tar.gz").extract_all()
+        gene_data = JSONFile().get_data(path + "/MGI_0.6_basicGeneInformation.json")
         gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
@@ -55,13 +55,11 @@ class MGI(MOD):
         return go_annot_dict
 
     def load_diseases(self):
-        list = []
-        return list
 
-        #path = "tmp"
-        #S3File("mod-datadumps", "MGI_0.6.0_2.tar.gz", path).download()
-        #TARFile(path, "MGI_0.6.0_2.tar.gz").extract_all()
-        #disease_data = JSONFile().get_data(path + "/MGI_0.6_diseaseAnnotations.json")
-        #gene_disease_dict = DiseaseLoader().get_data(disease_data)
+        path = "tmp"
+        S3File("mod-datadumps", "MGI_0.6.0_2.tar.gz", path).download()
+        TARFile(path, "MGI_0.6.0_2.tar.gz").extract_all()
+        disease_data = JSONFile().get_data(path + "/MGI_0.6_diseaseAnnotations.json")
+        gene_disease_dict = DiseaseLoader().get_data(disease_data)
 
-        #return gene_disease_dict
+        return gene_disease_dict

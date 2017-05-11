@@ -19,6 +19,8 @@ class DoLoader:
 
             if line == "[Term]":
                 creating_term = True
+            elif line == '': # Skip blank lines
+                continue
             elif creating_term:
                 key = (line.split(":")[0]).strip()
                 value = ("".join(":".join(line.split(":")[1:]))).strip()
@@ -26,6 +28,10 @@ class DoLoader:
                 if key == "id":
                     creating_term = value
                     do_dataset[creating_term] = {"id": value}
+                    do_dataset[creating_term]['do_genes'] = [] # Empty dictionaries to receive entries later.
+                    do_dataset[creating_term]['do_species'] = []
+                elif key == "name":
+                    do_dataset[creating_term]['name'] = value
                 else:
                     if key == "synonym":
                         if value.split(" ")[-2] == "EXACT":
