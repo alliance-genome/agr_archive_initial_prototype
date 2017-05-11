@@ -59,7 +59,7 @@ class SGD(MOD):
         path = "tmp"
         S3File("mod-datadumps", "SGD_0.6.0_1.tar.gz", path).download()
         TARFile(path, "SGD_0.6.0_1.tar.gz").extract_all()
-        disease_data = JSONFile().get_data(path + "/MGI_0.6_diseaseAnnotations.json")
+        disease_data = JSONFile().get_data(path + "/SGD_0.6_diseaseAssociation.json")
         gene_disease_dict = DiseaseLoader().get_data(disease_data)
 
         return gene_disease_dict
