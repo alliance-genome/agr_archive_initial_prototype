@@ -48,3 +48,4 @@ Feature: navigating the gene page
     | SGD:S000003256        | THG1     |
     | SGD:S000003513        | YOR1     |
     | SGD:S000000119        | MCM2     |
+    | SGD:S000001015        | NPR3     |

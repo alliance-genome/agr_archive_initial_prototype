@@ -34,12 +34,15 @@ class DiseaseLoader:
                         pubMedId = pub.get('pubMedId')
                         if pubMedId is not None:
                             if ':' in pubMedId:
-                                local_pubmedid_id = pubMedId.split(":")[1]
+                                localPubMedId = pubMedId.split(":")[1]
                         publicationModId = pub.get('modPublicationId')
+                        if publicationModId is not None:
+                            localPubModId = publicationModId.split(":")[1]
                         if pubMedId is not None:
-                            pubs.append({'pubMedId': pubMedId, 'publicationModId': publicationModId, 'pubMedUrl': 'https://www.ncbi.nlm.nih.gov/pubmed/' + local_pubmedid_id})
+                            pubs.append({'pubMedId': pubMedId, 'pubMedUrl': 'https://www.ncbi.nlm.nih.gov/pubmed/' + localPubMedId})
                         else:
-                            pubs.append({'pubMedId': pubMedId, 'publicationModId': publicationModId})
+                            if publicationModId is not None:
+                                pubs.append({'publicationModId': publicationModId, 'pubModUrl': self.get_complete_pub_url(localPubModId, publicationModId)})
                     evidenceList.append({"pubs": pubs, "evidenceCode": evidenceCode})
 
             if 'objectRelation' in diseaseRecord:
@@ -98,5 +101,23 @@ class DiseaseLoader:
                 "dataProvider": dataProvider,
                 "doIdDisplay": {"displayId": diseaseRecord.get('DOid'), "url": "http://www.disease-ontology.org/?id=" + diseaseRecord.get('DOid'), "prefix": "DOID"}
               })
-
         return disease_annots
+
+    def get_complete_pub_url(self, local_id, global_id):
+
+        complete_url = None
+
+        if 'MGI' in global_id:
+            complete_url = 'http://www.informatics.jax.org/accession/' + local_id
+        if 'RGD' in global_id:
+            complete_url = 'http://rgd.mcw.edu/rgdweb/search/search.html?term=' + local_id
+        if 'SGD' in global_id:
+            complete_url = 'http://www.yeastgenome.org/reference/' + local_id
+        if 'FB' in global_id:
+            complete_url = 'http://flybase.org/reports/' + local_id + '.html'
+        if 'ZFIN' in global_id:
+            complete_url = 'http://zfin.org/' + local_id
+        if 'WB:' in global_id:
+            complete_url = 'http://www.wormbase.org/db/misc/paper?name=' + local_id
+
+        return complete_url
