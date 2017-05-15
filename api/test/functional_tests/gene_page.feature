@@ -35,6 +35,7 @@ Feature: navigating the gene page
     | FB:FBgn0083973       | dunk     |
     | FB:FBgn0037960       | mthl5    |
     | FB:FBgn0027296       | temp     |
+    | FB:FBgn0033885       | DJ-1alpha |
 
     Examples: Worm
     | id                | symbol    |
@@ -47,3 +48,4 @@ Feature: navigating the gene page
     | SGD:S000003256        | THG1     |
     | SGD:S000003513        | YOR1     |
     | SGD:S000000119        | MCM2     |
+    | SGD:S000001015        | NPR3     |
