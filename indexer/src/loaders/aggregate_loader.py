@@ -71,7 +71,7 @@ class AggregateLoader:
             list_to_index = []
 
             print "Loading Orthology data for %s" % (mod.species)
-            ortho_dataset = OrthoLoader().get_data(mod.__class__.__name__, self.test_set, gene_master_dict[mod.__class__.__name__])
+            ortho_dataset = OrthoLoader().get_data(mod.__class__.__name__, self.test_set, gene_master_dict)
 
             for gene in gene_master_dict[mod.__class__.__name__]:
                 # Create a simple dictionary for each entry.
