@@ -8,7 +8,7 @@ from test_check import check_for_test_entry
 class OrthoLoader:
 
     @staticmethod
-    def get_data(mod_name, test_set):
+    def get_data(mod_name, test_set, gene_master_set):
         path = "tmp"
         filename = None
         filename_comp = None
@@ -47,6 +47,8 @@ class OrthoLoader:
 
             if gene1AgrPrimaryId not in ortho_dataset:
                 ortho_dataset[gene1AgrPrimaryId] = []
+            if gene2AgrPrimaryId not in gene_master_set:
+                continue # Skip entries where we don't have gene 2 in AGR.
             ortho_dataset[gene1AgrPrimaryId].append({
                 'isBestScore': orthoRecord['isBestScore'],
                 'isBestRevScore': orthoRecord['isBestRevScore'],
