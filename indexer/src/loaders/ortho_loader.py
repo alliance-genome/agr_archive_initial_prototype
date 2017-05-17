@@ -48,12 +48,13 @@ class OrthoLoader:
             if gene1AgrPrimaryId not in ortho_dataset:
                 ortho_dataset[gene1AgrPrimaryId] = []
             gene2_found = None
-            for mod_gene_set in gene_master_dict:
-                if gene2AgrPrimaryId in gene_master_dict[mod_gene_set]:
-                    gene2_found = True
-                    break
-            if gene2_found is None:
-                continue # Skip entries where we don't have gene 2 in AGR.
+            if test_set is not 'true':
+                for mod_gene_set in gene_master_dict:
+                    if gene2AgrPrimaryId in gene_master_dict[mod_gene_set]:
+                        gene2_found = True
+                        break
+                if gene2_found is None:
+                    continue # Skip entries where we don't have gene 2 in AGR.
             ortho_dataset[gene1AgrPrimaryId].append({
                 'isBestScore': orthoRecord['isBestScore'],
                 'isBestRevScore': orthoRecord['isBestRevScore'],
