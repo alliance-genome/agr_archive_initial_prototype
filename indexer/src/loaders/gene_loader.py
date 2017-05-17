@@ -40,9 +40,9 @@ class GeneLoader:
             if geneRecord['taxonId'] == "NCBITaxon:9606" or geneRecord['taxonId'] == "NCBITaxon:10090":
                 local_id = geneRecord['primaryId']
 
-            if test_set == 'true':
+            if test_set == True:
                 is_it_test_entry = check_for_test_entry(primary_id)
-                if is_it_test_entry == 'false':
+                if is_it_test_entry == False:
                     continue
 
             if 'crossReferenceIds' in geneRecord:

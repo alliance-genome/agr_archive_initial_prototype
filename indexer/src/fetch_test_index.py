@@ -4,5 +4,5 @@ if __name__ == '__main__':
     al = AggregateLoader()
     al.establish_index()
     al.load_annotations()
-    al.load_from_mods(test_set = 'true')
+    al.load_from_mods(test_set = True)
     al.index_data()

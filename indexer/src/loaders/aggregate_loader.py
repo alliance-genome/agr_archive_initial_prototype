@@ -37,7 +37,7 @@ class AggregateLoader:
         gene_master_dict = {} # Build a dictionary of sets for all indexed MODs/genes. Used for filtering orthology.
 
         self.test_set = test_set
-        if self.test_set == 'true':
+        if self.test_set == True:
             print "WARNING: test_set is enabled -- only indexing test genes."
             time.sleep(3)
 

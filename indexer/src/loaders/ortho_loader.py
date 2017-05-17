@@ -12,7 +12,7 @@ class OrthoLoader:
         path = "tmp"
         filename = None
         filename_comp = None
-        if test_set == 'true':
+        if test_set == True:
             filename = '/orthology_test_data_0.6.1_3.json'
             filename_comp = 'orthology_test_data_0.6.1_3.json.tar.gz'
         else:
@@ -47,8 +47,8 @@ class OrthoLoader:
 
             if gene1AgrPrimaryId not in ortho_dataset:
                 ortho_dataset[gene1AgrPrimaryId] = []
-            gene2_found = None
-            if test_set is not 'true':
+            if test_set is not True:
+                gene2_found = None
                 for mod_gene_set in gene_master_dict:
                     if gene2AgrPrimaryId in gene_master_dict[mod_gene_set]:
                         gene2_found = True
