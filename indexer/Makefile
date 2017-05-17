@@ -7,17 +7,11 @@ OPTIONS = ES_HOST=$(ES_HOST) ES_AWS=$(ES_AWS) ES_INDEX=$(ES_INDEX)
 install:
 	pip install -r requirements.txt
 
-fetch_and_save:
-	cd src && $(OPTIONS) python fetch_and_save.py
-
-load_and_index:
-	cd src && $(OPTIONS) python load_and_index.py
-
 index:
-	cd src && $(OPTIONS) python fetch_save_index.py
+	cd src && $(OPTIONS) python fetch_index.py
 
 test_index:
-	cd src && $(OPTIONS) python fetch_save_test_index.py
+	cd src && $(OPTIONS) python fetch_test_index.py
 
 test:
 	$(OPTIONS) nosetests -s
