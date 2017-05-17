@@ -99,3 +99,27 @@ class ESMapping:
                     print "A document failed: %s" % (info)
 
         print "Indexing took: " + str(time.time() - s) + " seconds"
+
+    def update_data(self, data):
+        s = time.time()
+        bulk_data = []
+
+        print "Updating Genes in Index: %s." % (self.new_index_name)
+
+        for entry in data:
+            id_to_use = entry['primaryId']
+                
+            doc = { 
+                '_op_type': 'update',
+                '_index': self.new_index_name, 
+                '_type': "searchable_item",
+                '_id': id_to_use,
+                'doc': entry
+            }
+            bulk_data.append(doc)
+
+        for success, info in streaming_bulk(self.es, actions=bulk_data, refresh=False, request_timeout=60, chunk_size=self.chunk_size):
+                if not success:
+                    print "A document failed: %s" % (info)
+
+        print "Indexing took: " + str(time.time() - s) + " seconds"

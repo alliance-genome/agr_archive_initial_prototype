@@ -8,6 +8,6 @@ def check_for_test_entry(primary_id):
                 'SGD:S000003256', 'SGD:S000003513', 'SGD:S000000119', 'SGD:S000001015'}
 
     if primary_id in test_set:
-        return 'true'
+        return True
     else:
-        return 'false'
+        return False
