@@ -96,7 +96,8 @@ class GeneLoader:
                 "category": "gene",
                 "dateProduced": dateProduced,
                 "dataProvider": dataProvider,
-                "release": release
+                "release": release,
+                "href": None
             }
 
             # Establishes the number of genes to yield (return) at a time.
