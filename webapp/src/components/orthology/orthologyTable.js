@@ -59,7 +59,6 @@ class OrthologyTable extends Component {
           }).map((orthData) => {
             const scoreNumerator = orthData.predictionMethodsMatched.length;
             const scoreDemominator = scoreNumerator +
-              orthData.predictionMethodsNotCalled.length +
               orthData.predictionMethodsNotMatched.length;
 
             const rowStyle = getSpeciesOrderScore(orthData.gene2SpeciesName, speciesOrder) % 2 === 0 ?
