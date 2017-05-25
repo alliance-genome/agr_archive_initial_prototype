@@ -4,8 +4,8 @@ import MethodHeader from './methodHeader';
 import MethodCell from './methodCell';
 import BooleanCell from './booleanCell';
 
-const columnNames = ['Species', 'Gene symbol', 'Score',
-  'Best score', 'Best reverse score', 'Method'];
+const columnNames = ['Species', 'Gene symbol', 'Count',
+  'Best', 'Best reverse', 'Method'];
 
 const defaultSpeciesOrder = [
   'H. sapiens',
