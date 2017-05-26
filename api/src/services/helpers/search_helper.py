@@ -149,6 +149,7 @@ def build_search_params(query, search_fields):
 
         custom_boosts = {
             "primaryId": 400,
+            "secondaryIds": 100,
             "symbol": 500,
             "symbol.raw": 1000,
             "synonyms": 120,

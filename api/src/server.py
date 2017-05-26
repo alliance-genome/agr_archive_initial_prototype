@@ -36,7 +36,7 @@ def search():
         "disease": ['disease_species', 'disease_genes']
     }
 
-    search_fields = ['primaryId', 'name', 'symbol', 'symbol.raw', 'synonyms', 'synonyms.raw', 'description',
+    search_fields = ['primaryId', 'secondaryIds', 'name', 'symbol', 'symbol.raw', 'synonyms', 'synonyms.raw', 'description',
                      'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function',
                      'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes',
                      'disease_synonyms', 'diseases.do_name']
