@@ -6,6 +6,7 @@ class SearchHelpersTest(unittest.TestCase):
     def _query_builder(self, query, fields):
         custom_boosts = {
             "primaryId": 400,
+            "secondaryIds": 100,
             "symbol": 500,
             "symbol.raw": 1000,
             "synonyms": 120,
