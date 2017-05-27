@@ -35,7 +35,7 @@ class Human(MOD):
         go_annot_dict = {}
         with gzip.open(path + "/gene_association.human.gz", 'rb') as file:
             reader = csv.reader(file, delimiter='\t')
-            for line in reader:
+            for row in reader:
                 gene = row[0]
                 go_terms = map(lambda s: s.strip(), row[1].split(","))
                 for term in go_terms:
