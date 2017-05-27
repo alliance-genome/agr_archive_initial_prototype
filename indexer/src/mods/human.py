@@ -31,21 +31,22 @@ class Human(MOD):
 
     def load_go(self):
         path = "tmp"
-        S3File("mod-datadumps", "Human_GO_2_23_2017.tsv", path).download()
-        go_data = CSVFile(path + "/Human_GO_2_23_2017.tsv").get_data()
+        S3File("mod-datadumps/GO/ANNOT", "gene_association.human.gz", path).download()
         go_annot_dict = {}
-        for row in go_data:
-            go_terms = map(lambda s: s.strip(), row[1].split(","))
-            for term in go_terms:
+        with gzip.open(path + "/gene_association.human.gz", 'rb') as file:
+            reader = csv.reader(file, delimiter='\t')
+            for line in reader:
                 gene = row[0]
-                if gene in go_annot_dict:
-                    go_annot_dict[gene]['go_id'].append(term)
-                else:
-                    go_annot_dict[gene] = {
-                        'gene_id': gene,
-                        'go_id': [term],
-                        'species': Human.species
-                    }
+                go_terms = map(lambda s: s.strip(), row[1].split(","))
+                for term in go_terms:
+                    if gene in go_annot_dict:
+                        go_annot_dict[gene]['go_id'].append(term)
+                    else:
+                        go_annot_dict[gene] = {
+                            'gene_id': gene,
+                            'go_id': [term],
+                            'species': Human.species
+                        }
         return go_annot_dict
 
     def load_diseases(self):
