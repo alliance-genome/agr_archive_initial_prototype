@@ -10,6 +10,7 @@ Feature: navigating the gene page
     | HGNC:17889        | APEX2    |
     | HGNC:25818        | BRD9     |
     | HGNC:3686         | FGF8     |
+    | HGNC:7881         | NOTCH1   |
 
     Examples: Rat
     | id                | symbol   |
