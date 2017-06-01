@@ -1,5 +1,5 @@
 def check_for_test_entry(primary_id):
-    test_set = {'HGNC:17889', 'HGNC:25818', 'HGNC:3686',
+    test_set = {'HGNC:17889', 'HGNC:25818', 'HGNC:3686', 'HGNC:7881',
                 'RGD:70891', 'RGD:1306349', 'RGD:620796',
                 'MGI:109337', 'MGI:108202', 'MGI:2676586',
                 'ZFIN:ZDB-GENE-990415-72', 'ZFIN:ZDB-GENE-030131-3445', 'ZFIN:ZDB-GENE-980526-388', 'ZFIN:ZDB-GENE-010525-1',
