@@ -25,7 +25,8 @@ class DiseaseLoader:
             inferredFromGeneAssociations = []
             modifier = {}
             primaryId = diseaseRecord.get('objectId')
-
+            if 'HGNC' in primaryId:
+                primaryId = primaryId[5:]
             if 'evidence' in diseaseRecord:
                 for evidence in diseaseRecord['evidence']:
                     evidenceCode = evidence.get('evidenceCode')
