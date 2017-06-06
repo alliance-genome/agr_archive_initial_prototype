@@ -30,8 +30,7 @@ class GeneLoader:
             primary_id = geneRecord['primaryId']
             global_id = geneRecord['primaryId']
 
-            #this can be removed when all MODs have their prefixed id files
-            if ':' in geneRecord['primaryId']:
+            if 'MGI' not in global_id: # Otherwise we remove the `MGI:` from the identifier and it fails for links back to MGI.
                 local_id = global_id.split(":")[1]
             else:
                 local_id = global_id
