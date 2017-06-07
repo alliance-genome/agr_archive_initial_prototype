@@ -21,11 +21,6 @@ class GeneLoader:
             crossReferences = []
             external_ids = []
             genomic_locations = []
-            start = None
-            end = None
-            strand = None
-            name = None
-            modCrossReference = []
 
             primary_id = geneRecord['primaryId']
             global_id = geneRecord['primaryId']
