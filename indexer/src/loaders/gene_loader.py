@@ -63,12 +63,19 @@ class GeneLoader:
                     assembly = genomeLocation['assembly']
                     if 'startPosition' in genomeLocation:
                         start = genomeLocation['startPosition']
+                    else:
+                        start = None
                     if 'endPosition' in genomeLocation:
                         end = genomeLocation['endPosition']
+                    else:
+                        end = None
                     if 'strand' in geneRecord['genomeLocations']:
                         strand = genomeLocation['strand']
-                    genomic_locations.append(
-                        {"chromosome": chromosome, "start": start, "end": end, "strand": strand, "assembly": assembly})
+                    else:
+                        strand = None
+                    if start is not None and end is not None and strand is not None and chromosome is not None:
+                        genomic_locations.append(
+                            {"chromosome": chromosome, "start": start, "end": end, "strand": strand, "assembly": assembly})
 
             gene_dataset = {
                 "symbol": geneRecord['symbol'],
