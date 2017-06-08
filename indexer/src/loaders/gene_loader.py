@@ -30,10 +30,8 @@ class GeneLoader:
             primary_id = geneRecord['primaryId']
             global_id = geneRecord['primaryId']
 
-            if 'MGI' not in global_id: # Otherwise we remove the `MGI:` from the identifier and it fails for links back to MGI.
-                local_id = global_id.split(":")[1]
-            else:
-                local_id = global_id
+            local_id = global_id.split(":")[1]
+
 
             modCrossReference = {"id": global_id, "globalCrossRefId": global_id, "localId": local_id, "crossrefCompleteUrl": self.get_complete_url(local_id, global_id)}
             if geneRecord['taxonId'] == "NCBITaxon:9606" or geneRecord['taxonId'] == "NCBITaxon:10090":
@@ -131,7 +129,7 @@ class GeneLoader:
         complete_url = None
 
         if 'MGI' in global_id:
-            complete_url = 'http://www.informatics.jax.org/accession/' + local_id
+            complete_url = 'http://www.informatics.jax.org/accession/' + global_id
         if 'RGD' in global_id:
             complete_url = 'http://rgd.mcw.edu/rgdweb/search/search.html?term=' + local_id
         if 'SGD' in global_id:
