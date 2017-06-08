@@ -12,11 +12,12 @@ class DoAnnotator:
         if gene_id in annots:
             for disease_gene_entry in annots[gene_id]:
                 doId = disease_gene_entry['do_id']
-                disease_gene_entry['do_name'] = do_data[doId]['name']
-                gene['diseases'].append(disease_gene_entry)
+                if doId in do_data:
+                    disease_gene_entry['do_name'] = do_data[doId]['name']
+                    gene['diseases'].append(disease_gene_entry)
 
-                # Add the gene symbol and species to the main DO dataset under the particular DO id.
-                do_data = DoAnnotator().update_do_dataset(disease_gene_entry['do_id'], do_data, gene_symbol, species)
+                    # Add the gene symbol and species to the main DO dataset under the particular DO id.
+                    do_data = DoAnnotator().update_do_dataset(disease_gene_entry['do_id'], do_data, gene_symbol, species)
 
         return gene, do_data
 
