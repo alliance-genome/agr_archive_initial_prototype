@@ -1,0 +1,9 @@
+flask_server:
+  container_name: flask_server
+  image: flask_server
+  environment:
+    - ES_INDEX='search'
+    - ES_AWS='false'
+    - ES_HOST='localhost'
+  ports:
+    - "80:5000"
