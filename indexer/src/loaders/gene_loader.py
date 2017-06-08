@@ -21,11 +21,6 @@ class GeneLoader:
             crossReferences = []
             external_ids = []
             genomic_locations = []
-            start = None
-            end = None
-            strand = None
-            name = None
-            modCrossReference = []
 
             primary_id = geneRecord['primaryId']
             global_id = geneRecord['primaryId']
@@ -63,10 +58,16 @@ class GeneLoader:
                     assembly = genomeLocation['assembly']
                     if 'startPosition' in genomeLocation:
                         start = genomeLocation['startPosition']
+                    else:
+                        start = None
                     if 'endPosition' in genomeLocation:
                         end = genomeLocation['endPosition']
+                    else:
+                        end = None
                     if 'strand' in geneRecord['genomeLocations']:
                         strand = genomeLocation['strand']
+                    else:
+                        strand = None
                     genomic_locations.append(
                         {"chromosome": chromosome, "start": start, "end": end, "strand": strand, "assembly": assembly})
 
