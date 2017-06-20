@@ -7,7 +7,7 @@ from mod import MOD
 
 class ZFIN(MOD):
     species = "Danio rerio"
-    loadFile = "ZFIN_0.6.1_9.tar.gz"
+    loadFile = "ZFIN_0.6.1_10.tar.gz"
 
     @staticmethod
     def gene_href(gene_id):
