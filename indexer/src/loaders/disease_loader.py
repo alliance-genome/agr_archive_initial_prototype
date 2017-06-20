@@ -24,9 +24,14 @@ class DiseaseLoader:
             geneticModifiers = []
             inferredFromGeneAssociations = []
             modifier = {}
+            modifierQualifier = None;
+            qualifier = None;
             primaryId = diseaseRecord.get('objectId')
+
             if 'HGNC' in primaryId:
                 primaryId = primaryId[5:]
+            if 'qualifier' in diseaseRecord:
+                qualifier = diseaseRecord.get('qualifier')
             if 'evidence' in diseaseRecord:
                 for evidence in diseaseRecord['evidence']:
                     evidenceCode = evidence.get('evidenceCode')
@@ -81,27 +86,29 @@ class DiseaseLoader:
             if primaryId not in disease_annots:
                 disease_annots[primaryId] = []
             # many fields are commented out to fulfill 0.6 requirements only, but still parse the entire file.
-            disease_annots[primaryId].append({
-                "diseaseObjectName": diseaseRecord.get('objectName'),
-                "qualifier": diseaseRecord.get('qualifier'),
-                "with": diseaseRecord.get('with'),
-                "taxonId": diseaseRecord.get('taxonId'),
-                "geneticSex": diseaseRecord.get('geneticSex'),
-                "dataAssigned": diseaseRecord.get('dateAssigned'),
-                "experimentalConditions": experimentalConditions,
-                "associationType": diseaseRecord.get('objectRelation').get('associationType'),
-                "diseaseObjectType": diseaseRecord.get('objectRelation').get('objectType'),
-                #"evidenceList": evidenceList,
-                "modifier": modifier,
-                #"objectRelation": objectRelationMap,
-                "evidence": evidenceList,
-                "do_id": diseaseRecord.get('DOid'),
-                "do_name": None,
-                "dateProduced": dateProduced,
-                "release": release,
-                "dataProvider": dataProvider,
-                "doIdDisplay": {"displayId": diseaseRecord.get('DOid'), "url": "http://www.disease-ontology.org/?id=" + diseaseRecord.get('DOid'), "prefix": "DOID"}
-              })
+
+            if modifierQualifier is None and qualifier is None:
+                disease_annots[primaryId].append({
+                    "diseaseObjectName": diseaseRecord.get('objectName'),
+                    "qualifier": diseaseRecord.get('qualifier'),
+                    "with": diseaseRecord.get('with'),
+                    "taxonId": diseaseRecord.get('taxonId'),
+                    "geneticSex": diseaseRecord.get('geneticSex'),
+                    "dataAssigned": diseaseRecord.get('dateAssigned'),
+                    "experimentalConditions": experimentalConditions,
+                    "associationType": diseaseRecord.get('objectRelation').get('associationType'),
+                    "diseaseObjectType": diseaseRecord.get('objectRelation').get('objectType'),
+                    #"evidenceList": evidenceList,
+                    "modifier": modifier,
+                    #"objectRelation": objectRelationMap,
+                    "evidence": evidenceList,
+                    "do_id": diseaseRecord.get('DOid'),
+                    "do_name": None,
+                    "dateProduced": dateProduced,
+                    "release": release,
+                    "dataProvider": dataProvider,
+                    "doIdDisplay": {"displayId": diseaseRecord.get('DOid'), "url": "http://www.disease-ontology.org/?id=" + diseaseRecord.get('DOid'), "prefix": "DOID"}
+                })
         return disease_annots
 
     def get_complete_pub_url(self, local_id, global_id):
@@ -109,7 +116,8 @@ class DiseaseLoader:
         complete_url = None
 
         if 'MGI' in global_id:
-            complete_url = 'http://www.informatics.jax.org/accession/' + local_id
+            complete_url = 'http://www.informatics.jax.org/accession/' + global_id
+
         if 'RGD' in global_id:
             complete_url = 'http://rgd.mcw.edu/rgdweb/search/search.html?term=' + local_id
         if 'SGD' in global_id:
