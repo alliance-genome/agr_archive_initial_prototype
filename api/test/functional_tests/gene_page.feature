@@ -23,6 +23,11 @@ Feature: navigating the gene page
     | MGI:109337        | Brca2    |
     | MGI:108202        | Pcbp2    |
     | MGI:2676586       | Foxo6    |
+    | MGI:88180         | Bmp4     |
+    | MGI:109583        | Pten     |
+    | MGI:96765         | Ldlr     |
+    | MGI:1916172       | Dnaic1   |
+    | MGI:96680         | Kras     |
 
     Examples: Fish
     | id                   | symbol  |
