@@ -36,6 +36,9 @@ index:
 
 tests: test-py test-end-to-end
 
+docker-build:
+	docker build -t flask_server .
+
 test-py:
 	$(OPTIONS) nosetests -s test
 

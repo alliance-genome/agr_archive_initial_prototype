@@ -1,0 +1,8 @@
+flask_server_run:
+  image: flask_server
+  ports:
+    - "5000:5000"
+  environment:
+    - ES_INDEX=searchable_items_blue
+    - ES_AWS=false
+    - ES_HOST=10.1.100.21:9200
