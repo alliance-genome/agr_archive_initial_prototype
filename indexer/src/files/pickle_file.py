@@ -1,7 +1,7 @@
 import cPickle as pickle
 
-class PickleFile:
 
+class PickleFile:
     def __init__(self, filename):
         self.filename = filename
 

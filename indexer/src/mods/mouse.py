@@ -3,15 +3,13 @@ from files import *
 import gzip
 import csv
 from loaders.gene_loader import GeneLoader
-from intermine.webservice import Service
+from loaders.disease_loader import DiseaseLoader
 
 import json
 
 class MGI(MOD):
     species = "Mus musculus"
 
-    def __init__(self):
-        self.service = Service("http://www.mousemine.org/mousemine/service")
 
     @staticmethod
     def gene_href(gene_id):
@@ -28,9 +26,9 @@ class MGI(MOD):
 
     def load_genes(self, batch_size, test_set):
         path = "tmp"
-        S3File("mod-datadumps", "MGI_0.3.0_1.tar.gz", path).download()
-        TARFile(path, "MGI_0.3.0_1.tar.gz").extract_all()
-        gene_data = JSONFile().get_data(path + "/MGI_0.3_basicGeneInformation.json")
+        S3File("mod-datadumps", "MGI_0.6.0_2.tar.gz", path).download()
+        TARFile(path, "MGI_0.6.0_2.tar.gz").extract_all()
+        gene_data = JSONFile().get_data(path + "/MGI_0.6_basicGeneInformation.json")
         gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
@@ -57,21 +55,11 @@ class MGI(MOD):
         return go_annot_dict
 
     def load_diseases(self):
-        query = self.service.new_query("OMIMTerm")
-        query.add_constraint("ontologyAnnotations.subject", "SequenceFeature")
-        query.add_view(
-            "identifier", "name", "synonyms.name", "synonyms.type",
-            "ontologyAnnotations.qualifier",
-            "ontologyAnnotations.subject.primaryIdentifier",
-            "ontologyAnnotations.subject.symbol"
-        )
-        query.add_constraint("ontologyAnnotations.subject.organism.taxonId", "=", "10090", code = "A")
-        query.outerjoin("synonyms")
-        query.outerjoin("ontologyAnnotations")
 
-        print ("Fetching disease data from MouseMine...")
-        
-        list = []
-        for row in query.rows():
-            list.append({"gene_id": row["ontologyAnnotations.subject.primaryIdentifier"], "omim_id": row["identifier"], "species": MGI.species})
-        return list
+        path = "tmp"
+        S3File("mod-datadumps", "MGI_0.6.0_2.tar.gz", path).download()
+        TARFile(path, "MGI_0.6.0_2.tar.gz").extract_all()
+        disease_data = JSONFile().get_data(path + "/MGI_0.6_diseaseAnnotations.json")
+        gene_disease_dict = DiseaseLoader().get_data(disease_data)
+
+        return gene_disease_dict

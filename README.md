@@ -22,11 +22,12 @@ These instructions will get you a copy of the project up and running on your loc
   * [API](#api)
   * [Indexer](#indexer)
   * [ElasticSearch](#elasticsearch)
-- [Running the Enviroment](#running-the-enviroment)
+- [Running the Development Enviroment](#running-the-development-enviroment)
   * [Webapp](#webapp-1)
   * [API](#api-1)
   * [Indexer](#indexer-1)
   * [ElasticSearch](#elasticsearch-1)
+- [Running the Production Enviroment](#running-the-production-enviroment)
 - [API Usage](#api-usage)
 - [Running the tests](#running-the-tests)
 
@@ -65,9 +66,9 @@ Local ES hosted INDEX see [elasticsearch setup][4] for more info
 To run a full install of all sub directories run the following:
 
 ```bash
-	(agr) > git clone https://github.com/alliance-genome/agr.git
-	(agr) > cd agr
-	(agr) agr> source ~/.virtualenvs/agr/bin/activate
+	> git clone https://github.com/alliance-genome/agr.git
+	> cd agr
+	agr> source ~/.virtualenvs/agr/bin/activate
 	(agr) agr> make -C webapp install
 	(agr) agr> make -C webapp build
 	(agr) agr> make -C api install
@@ -121,8 +122,8 @@ The defaults for these variables are set to:
 ### Indexer
 
 - ES\_AWS controls whether or not SSL will be used on the connection to ES_HOST.
-- ES\_HOST points the flask server to the running ElasticSearch instance.
-- ES\_INDEX indicates which index the flask server will be using to get its data.
+- ES\_HOST points the indexer to the running ElasticSearch instance.
+- ES\_INDEX indicates which index the indexer will be using to put documents into.
 
 ```bash
 	(agr) agr> cd indexer
@@ -131,19 +132,19 @@ The defaults for these variables are set to:
 	(agr) agr/indexer> export ES_INDEX=es_username
 ```
 
-The defaults for these params point to the "localhost" to find ElasticSearch.
+The defaults for these params assume ElasticSearch is running on "localhost".
 
 ### ElasticSearch
 
 There is no configuration for ElasticSearch please see the [elasticsearch setup][4] for more info
 
-## Running the Enviroment
+## Running the Development Enviroment
 
-All of the following steps are not nessasary, if developing only one part of the system. The frontend (webapp) can be pointed to a different API server and the webpack dev server will run on its own without the API, indexer, or ES running.
+All of the following steps are not necessary, if developing only one part of the system. The frontend (webapp) can be pointed to a different API server and the webpack dev server will run on its own without the API, indexer, or ES running.
 
 Simularly, if only the API needs to be developed then one can start the API and set the ES_HOST variable to the location of an instance that already has data and there is no need to run the webapp, indexer, or ElasticSearch instance.
 
-Also, if someone is developing the indexer, they can go through the local setup of the ElasticSearch and point the indexer to run against the ElasticSearch server running on localhost, with out having to run the API or webapp.
+If developing the indexer, go through the local setup of the ElasticSearch and point the indexer to run against the ElasticSearch server running on localhost, without having to run the API or webapp.
 
 ### Webapp
 
@@ -180,6 +181,8 @@ In a seperate terminal window run the following set of commands:
 	 * Debugger pin code: 326-018-460
 ```
 
+The flask server is now running on localhost:5000, serving /api requests.
+
 ### Indexer
 
 In a seperate terminal window run the following commands:
@@ -197,11 +200,32 @@ In a seperate terminal window run the following commands:
 	>
 ```
 
-After the indexer has run, the Elastic search instance will be loaded with data that is now available to the API.
+After the indexer has run, the Elastic search instance at localhost:9200/searchable_items_blue will be loaded with data that is now available to the API.
 
 ### ElasticSearch
 
 For running a local ElasticSearch instance see the [elasticsearch setup][4] for more info.
+
+## Running the Production Enviroment
+
+In a production style running the application. Skip the section for running the webapp and use nginx to server the webapp/dict folder as the root of the site. The nginx configuration is as follows:
+
+```bash
+server {
+        listen 80;
+        root webapp/dist;
+        index index.html;
+        server_name hostname.alliancegenome.org;
+        error_page 404 =200 /index.html;
+        location /api {
+                 proxy_set_header Host $host;
+                 proxy_set_header X-Real-IP $remote_addr;
+                 proxy_pass http://localhost:5000;
+        }
+}
+```
+
+Setup the hostname to whatever hostname you are wanting to use. Error page is set to allways return the index.html page and a 200 status. Change the /api url to point to the running flask server.
 
 ## API Usage
 
@@ -227,9 +251,11 @@ Once you have the API up and running, with it pointed at a valid ES instance tha
 	}
 ```
 
+Plans to make the API documentation available at /api.
+
 ## Running the tests
 
-The first three examples of running tests, run tests on the code in the directory that is being tested. The api tests, does integration tests across the system.
+The first three examples of running tests, run tests on the code in the directory that is being tested. The "api tests", does integration tests across the system (webapp, api, elasticsearch)
 
 ```bash
 	(agr) agr> make -C webapp test

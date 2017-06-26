@@ -1,5 +1,5 @@
-from intermine.webservice import Service
 from loaders.gene_loader import GeneLoader
+from loaders.disease_loader import DiseaseLoader
 from mod import MOD
 import gzip
 import csv
@@ -7,7 +7,6 @@ from files import *
 
 class RGD(MOD):
     species = "Rattus norvegicus"
-    service = Service("http://ratmine.mcw.edu/ratmine/service")
 
     @staticmethod
     def gene_href(gene_id):
@@ -24,9 +23,9 @@ class RGD(MOD):
 
     def load_genes(self, batch_size, test_set):
         path = "tmp"
-        S3File("mod-datadumps", "RGD_0.3_1.tar.gz", path).download()
-        TARFile(path, "RGD_0.3_1.tar.gz").extract_all()
-        gene_data = JSONFile().get_data(path + "/agr/RGD_0.3_basicGeneInformation.10116.json")
+        S3File("mod-datadumps", "RGD_0.6_1.tar.gz", path).download()
+        TARFile(path, "RGD_0.6_1.tar.gz").extract_all()
+        gene_data = JSONFile().get_data(path + "/RGD_0.6_basicGeneInformation.10116.json")
         gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
@@ -40,25 +39,25 @@ class RGD(MOD):
             for line in reader:
                 if line[0].startswith('!'):
                     continue
-                gene = line[1]
+                gene = line[0] + ":" + line[1]
                 go_id = line[4]
+                prefix = line[0]
                 if gene in go_annot_dict:
                     go_annot_dict[gene]['go_id'].append(go_id)
                 else:
                     go_annot_dict[gene] = {
                         'gene_id': gene,
                         'go_id': [go_id],
-                        'species': RGD.species
+                        'species': RGD.species,
+                        'prefix':prefix
                     }
         return go_annot_dict
 
     def load_diseases(self):
         path = "tmp"
-        S3File("mod-datadumps/data", "rat_disease.tsv", path).download()
-        disease_data = CSVFile(path + "/rat_disease.tsv").get_data()
+        S3File("mod-datadumps", "RGD_0.6_1.tar.gz", path).download()
+        TARFile(path, "RGD_0.6_1.tar.gz").extract_all()
+        disease_data = JSONFile().get_data(path + "/RGD_0.6_disease.10116.daf.json")
+        gene_disease_dict = DiseaseLoader().get_data(disease_data)
 
-        list = []
-        for row in disease_data:
-            if (row[5].startswith("OMIM:")):
-                list.append({"gene_id": row[0], "omim_id": row[5], "species": RGD.species})
-        return list
+        return gene_disease_dict

@@ -25,19 +25,19 @@ class SearchService:
             "gene": ['soTermName', 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component',
                      'species'],
             "go": ['go_type', 'go_species', 'go_genes'],
-            "disease": ['disease_species', 'disease_genes']
+            "disease": ['disease_species', 'disease_genes', 'diseases']
         }
 
         search_fields = ['primaryId', 'name', 'symbol', 'symbol.raw', 'synonyms', 'synonyms.raw', 'description',
                          'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function',
                          'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes',
-                         'disease_synonyms']
+                         'disease_synonyms', 'diseases']
 
         json_response_fields = ['name', 'symbol', 'synonyms', 'soTermName', 'gene_chromosomes', 'gene_chromosome_starts',
                                 'gene_chromosome_ends', 'description', 'external_ids', 'species',
                                 'gene_biological_process', 'gene_molecular_function', 'gene_cellular_component',
                                 'go_type', 'go_genes', 'go_synonyms', 'disease_genes', 'disease_synonyms', 'homologs',
-                                'crossReferences', 'category', 'href']
+                                'crossReferences', 'category', 'href', 'diseases']
 
         es_query = build_search_query(query, search_fields, category, category_filters, params)
 

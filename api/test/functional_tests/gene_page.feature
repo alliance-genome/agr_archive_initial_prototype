@@ -25,24 +25,25 @@ Feature: navigating the gene page
 
     Examples: Fish
     | id                   | symbol  |
-    | ZDB-GENE-990415-72   | fgf8a   |
-    | ZDB-GENE-030131-3445 | dicer1  |
-    | ZDB-GENE-980526-388  | bmp2a   |
+    | ZFIN:ZDB-GENE-990415-72   | fgf8a   |
+    | ZFIN:ZDB-GENE-030131-3445 | dicer1  |
+    | ZFIN:ZDB-GENE-980526-388  | bmp2a   |
+    | ZFIN:ZDB-GENE-010525-1 | slc4a1a |
 
     Examples: Fly
     | id                | symbol   |
-    | FBgn0083973       | dunk     |
-    | FBgn0037960       | mthl5    |
-    | FBgn0027296       | temp     |
+    | FB:FBgn0083973       | dunk     |
+    | FB:FBgn0037960       | mthl5    |
+    | FB:FBgn0027296       | temp     |
 
     Examples: Worm
     | id                | symbol    |
-    | WBGene00044305    | rad-8     |
-    | WBGene00169423    | 21ur-9605 |
-    | WBGene00000987    | dhs-24    |
+    | WB:WBGene00044305    | rad-8     |
+    | WB:WBGene00169423    | 21ur-9605 |
+    | WB:WBGene00000987    | dhs-24    |
 
     Examples: Yeast
     | id                | symbol   |
-    | S000003256        | THG1     |
-    | S000003513        | YOR1     |
-    | S000000119        | MCM2     |
+    | SGD:S000003256        | THG1     |
+    | SGD:S000003513        | YOR1     |
+    | SGD:S000000119        | MCM2     |
