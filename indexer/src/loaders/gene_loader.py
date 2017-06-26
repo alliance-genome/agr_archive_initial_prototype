@@ -21,28 +21,20 @@ class GeneLoader:
             crossReferences = []
             external_ids = []
             genomic_locations = []
-            start = None
-            end = None
-            strand = None
-            name = None
-            modCrossReference = []
 
             primary_id = geneRecord['primaryId']
             global_id = geneRecord['primaryId']
 
-            #this can be removed when all MODs have their prefixed id files
-            if ':' in geneRecord['primaryId']:
-                local_id = global_id.split(":")[1]
-            else:
-                local_id = global_id
+            local_id = global_id.split(":")[1]
+
 
             modCrossReference = {"id": global_id, "globalCrossRefId": global_id, "localId": local_id, "crossrefCompleteUrl": self.get_complete_url(local_id, global_id)}
             if geneRecord['taxonId'] == "NCBITaxon:9606" or geneRecord['taxonId'] == "NCBITaxon:10090":
                 local_id = geneRecord['primaryId']
 
-            if test_set == 'true':
+            if test_set == True:
                 is_it_test_entry = check_for_test_entry(primary_id)
-                if is_it_test_entry == 'false':
+                if is_it_test_entry == False:
                     continue
 
             if 'crossReferenceIds' in geneRecord:
@@ -63,10 +55,16 @@ class GeneLoader:
                     assembly = genomeLocation['assembly']
                     if 'startPosition' in genomeLocation:
                         start = genomeLocation['startPosition']
+                    else:
+                        start = None
                     if 'endPosition' in genomeLocation:
                         end = genomeLocation['endPosition']
+                    else:
+                        end = None
                     if 'strand' in geneRecord['genomeLocations']:
                         strand = genomeLocation['strand']
+                    else:
+                        strand = None
                     genomic_locations.append(
                         {"chromosome": chromosome, "start": start, "end": end, "strand": strand, "assembly": assembly})
 
@@ -96,7 +94,8 @@ class GeneLoader:
                 "category": "gene",
                 "dateProduced": dateProduced,
                 "dataProvider": dataProvider,
-                "release": release
+                "release": release,
+                "href": None
             }
 
             # Establishes the number of genes to yield (return) at a time.
@@ -131,11 +130,11 @@ class GeneLoader:
         complete_url = None
 
         if 'MGI' in global_id:
-            complete_url = 'http://www.informatics.jax.org/marker/' + local_id
+            complete_url = 'http://www.informatics.jax.org/accession/' + global_id
         if 'RGD' in global_id:
-            complete_url = 'http://rgd.mcw.edu/rgdweb/report/gene/main.html?id=' + local_id
+            complete_url = 'http://rgd.mcw.edu/rgdweb/search/search.html?term=' + local_id
         if 'SGD' in global_id:
-            complete_url = 'http://www.yeastgenome.org/locus/' + local_id + '/overview'
+            complete_url = 'http://www.yeastgenome.org/locus/' + local_id
         if 'FB' in global_id:
             complete_url = 'http://flybase.org/reports/' + local_id + '.html'
         if 'ZFIN' in global_id:

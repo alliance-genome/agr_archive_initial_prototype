@@ -4,11 +4,15 @@
 	padding-top: 0.5rem;
 	padding-bottom: 0.5rem;
 }
-
+.content {
+	width:90%;
+        margin: auto;
+}
+.member_sites{background:#ddd;}
 .logo {
 	width: 100%;
 }
-
+.socialMediaContainer{padding-top: 1rem;}
 .appContainer {
 	font-family: Lato, Helvetica, sans-serif;
 }
@@ -16,22 +20,68 @@
 .topHeader {
 	padding: 1rem;
 }
+.topBar {padding-top:0.4em;}
+.solidBg{
+        background:#2598C5;
+}
+
+.miniContact a:link,
+.miniContact a:visited{color:#fff;}
+
+.rightWidgets { text-align:right;}
 
 .midHeader {
-	border-radius: 0;
-	background: black;
-	padding: 0.75rem 1rem;
+        background: #fff;
+	border-top: solid 1px #ddd ;
+	border-bottom: solid 1px #ddd ;
+	padding: 0em;
+        text-transform: uppercase;
+}
+.midHeader.nav-link {
+	padding: 1em;
 }
 
 .nav {
 	display: flex;
 	justify-content: space-between;
-	padding: 0.5rem 0;
+	padding: 0;
 	min-width: 185px;
+       
+}
+.navContainer{
+  border-right: solid 1px #ddd ;
+  position:relative;
 }
 
 .navLink {
-	color: #e2e2e2 !important;
+        color: #e2e2e2 !important;
+        color: #777 !important;
+        padding:1em;
+        text-align:center;
+        position:relative;
+}
+.sub_nav{
+  display: none;
+}
+.sub_nav{
+  justify-content: space-between;
+  border:solid 1px #ddd;
+  width:auto;
+  margin:auto;
+  position:absolute;
+  z-index:10;
+}
+.sub_nav .sub_nav_link {
+  width:auto;
+  margin:auto;
+  white-space:nowrap;
+}
+.sub_nav_link:hover{
+    background:#efefef;
+}
+
+.navContainer:hover .sub_nav{
+   display:block;
 }
 
 .loaderContentContainer {
@@ -41,6 +91,14 @@
 .contentContainer {
 	min-height: 400px;
 	padding: 0.75rem 1rem 0.5rem 1rem;
+}
+.bottomRow {
+       background:#3E82BF;
+       color:#ffffff;
+}
+.footerBar {
+        width: 100%;padding:0;
+        background:#2F72B5;
 }
 
 .footer {

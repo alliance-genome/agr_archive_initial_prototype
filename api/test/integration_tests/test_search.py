@@ -73,7 +73,7 @@ class SearchEndpointsTest(unittest.TestCase):
             }
         }
         self.index = os.environ['ES_INDEX']
-        self.search_fields = ['primaryId', 'name', 'symbol', 'symbol.raw', 'synonyms', 'synonyms.raw', 'description',
+        self.search_fields = ['primaryId', 'secondaryIds', 'name', 'symbol', 'symbol.raw', 'synonyms', 'synonyms.raw', 'description',
                               'external_ids', 'species', 'gene_biological_process', 'gene_molecular_function',
                               'gene_cellular_component', 'go_type', 'go_genes', 'go_synonyms', 'disease_genes',
                               'disease_synonyms', 'diseases.do_name']

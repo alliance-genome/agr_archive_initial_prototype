@@ -6,6 +6,7 @@ class SearchHelpersTest(unittest.TestCase):
     def _query_builder(self, query, fields):
         custom_boosts = {
             "primaryId": 400,
+            "secondaryIds": 100,
             "symbol": 500,
             "symbol.raw": 1000,
             "synonyms": 120,
@@ -56,8 +57,17 @@ class SearchHelpersTest(unittest.TestCase):
 
         self.maxDiff = None
         self.assertEqual(build_search_params(query, fields), {
-            'dis_max': {
-                'queries': self._query_builder("gene", fields)
+            "bool": {
+                "must": [
+                    {
+                        "dis_max": {
+                            'queries': self._query_builder("gene", fields)
+                        }
+                    },
+                    {
+                        "exists": {"field": "category"}
+                    }
+                ]
             }
         })
 
@@ -66,8 +76,17 @@ class SearchHelpersTest(unittest.TestCase):
         fields = ["name", "symbol"]
 
         self.assertEqual(build_search_params(query, fields), {
-            "dis_max": {
-                "queries": self._query_builder(query, fields)
+            "bool": {
+                "must": [
+                    {
+                        "dis_max": {
+                            "queries": self._query_builder(query, fields)
+                        }
+                    },
+                    {
+                        "exists": {"field": "category"}
+                    }
+                ]
             }
         })
 
@@ -76,9 +95,19 @@ class SearchHelpersTest(unittest.TestCase):
         fields = ["name", "symbol"]
 
         self.assertEqual(build_search_params(query, fields), {
-            "dis_max": {
-                "queries": self._query_builder(query[1:-1], fields)
+            "bool": {
+                "must": [
+                    {
+                        "dis_max": {
+                            "queries": self._query_builder(query[1:-1], fields)
+                        }
+                    },
+                    {
+                        "exists": {"field": "category"}
+                    }
+                ]
             }
+
         })
 
     def test_build_search_query_should_return_search_params_only_for_no_category(self):

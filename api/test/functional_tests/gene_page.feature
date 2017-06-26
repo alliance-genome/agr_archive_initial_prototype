@@ -10,6 +10,7 @@ Feature: navigating the gene page
     | HGNC:17889        | APEX2    |
     | HGNC:25818        | BRD9     |
     | HGNC:3686         | FGF8     |
+    | HGNC:7881         | NOTCH1   |
 
     Examples: Rat
     | id                | symbol   |
@@ -22,6 +23,11 @@ Feature: navigating the gene page
     | MGI:109337        | Brca2    |
     | MGI:108202        | Pcbp2    |
     | MGI:2676586       | Foxo6    |
+    | MGI:88180         | Bmp4     |
+    | MGI:109583        | Pten     |
+    | MGI:96765         | Ldlr     |
+    | MGI:1916172       | Dnaic1   |
+    | MGI:96680         | Kras     |
 
     Examples: Fish
     | id                   | symbol  |
@@ -35,6 +41,7 @@ Feature: navigating the gene page
     | FB:FBgn0083973       | dunk     |
     | FB:FBgn0037960       | mthl5    |
     | FB:FBgn0027296       | temp     |
+    | FB:FBgn0033885       | DJ-1alpha |
 
     Examples: Worm
     | id                | symbol    |
@@ -47,3 +54,4 @@ Feature: navigating the gene page
     | SGD:S000003256        | THG1     |
     | SGD:S000003513        | YOR1     |
     | SGD:S000000119        | MCM2     |
+    | SGD:S000001015        | NPR3     |

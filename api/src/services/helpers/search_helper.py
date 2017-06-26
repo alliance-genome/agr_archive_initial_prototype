@@ -133,15 +133,23 @@ def build_search_params(query, search_fields):
     if query is "":
         es_query = {"match_all": {}}
     else:
-        es_query = {'dis_max': {'queries': []}}
+        es_query = {'bool':
+                        {'must': [
+                             {'dis_max': {'queries': []}},
+                             {'exists': {'field': 'category'}}
+                            ]
+                         }
+        }
+
 
         if (query[0] in ('"', "'") and query[-1] in ('"', "'")):
             query = query[1:-1]
 
-        es_query['dis_max']['queries'] = []
+        es_query['bool']['must'][0]['dis_max']['queries'] = []
 
         custom_boosts = {
             "primaryId": 400,
+            "secondaryIds": 100,
             "symbol": 500,
             "symbol.raw": 1000,
             "synonyms": 120,
@@ -173,8 +181,8 @@ def build_search_params(query, search_fields):
                 'query': query
             }
 
-            es_query['dis_max']['queries'].append({'match': match})
-            es_query['dis_max']['queries'].append({'match_phrase_prefix': partial_match})
+            es_query['bool']['must'][0]['dis_max']['queries'].append({'match': match})
+            es_query['bool']['must'][0]['dis_max']['queries'].append({'match_phrase_prefix': partial_match})
 
     return es_query
 
