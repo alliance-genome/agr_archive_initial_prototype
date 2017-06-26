@@ -9,7 +9,7 @@ import ResultsTable from './resultsTable';
 import CategoryLabel from './categoryLabel';
 import fetchData from '../../lib/fetchData';
 import { SEARCH_API_ERROR_MESSAGE } from '../../constants';
-import { receiveResponse, setError, setPending } from './searchActions';
+import { receiveResponse, setError, setPending } from '../../actions/search';
 
 import {
   selectQueryParams,
@@ -110,7 +110,6 @@ class MultiTableComponent extends Component {
       <div className={style.resultContainer}>
         {this.renderGenes()}
         {this.renderGo()}
-        {this.renderDisease()}
       </div>
     );
   }

@@ -1,8 +1,5 @@
 import unittest
-from src.search import build_search_query, build_search_params, \
-    build_es_search_body_request, format_search_results, \
-    build_es_aggregation_body_request, format_aggregation_results, \
-    build_autocomplete_search_body_request, format_autocomplete_results
+from src.services.helpers import *
 from werkzeug.datastructures import ImmutableMultiDict
 
 
@@ -10,8 +7,8 @@ class SearchHelpersTest(unittest.TestCase):
     def _query_builder(self, query, fields):
         custom_boosts = {
             "id": 120,
-            "gene_symbol": 120,
-            "gene_synonyms": 120,
+            "symbol": 120,
+            "synonyms": 120,
             "name": 200,
             "name.symbol": 300,
             "gene_biological_process.symbol": 120,
@@ -110,14 +107,13 @@ class SearchHelpersTest(unittest.TestCase):
         es_query = build_search_params(query, fields)
 
         self.assertEqual(build_search_query(query, fields, category, category_filters, args), {
-            'filtered': {
-                'query': es_query,
-                'filter': {
-                    'bool': {
-                        'must': [{'term': {'category': category}}]
-                    }
-                }
+            'bool': {
+                    'must': [
+                        {'term': {'category': category}},
+                        es_query
+                    ]
             }
+
         })
 
     def test_build_search_query_should_filter_subcategories_if_passed(self):
@@ -137,18 +133,14 @@ class SearchHelpersTest(unittest.TestCase):
         es_query = build_search_params(query, fields)
 
         self.assertEqual(build_search_query(query, fields, category, category_filters, args), {
-            'filtered': {
-                'query': es_query,
-                'filter': {
-                    'bool': {
-                        'must': [
-                            {'term': {'category': category}},
-                            {'term': {'go_names.raw': 'A'}},
-                            {'term': {'go_names.raw': 'B'}},
-                            {'term': {'go_names.raw': 'C'}}
-                        ]
-                    }
-                }
+            'bool': {
+                'must': [
+                    {'term': {'category': category}},
+                    es_query,
+                    {'term': {'go_names.raw': 'A'}},
+                    {'term': {'go_names.raw': 'B'}},
+                    {'term': {'go_names.raw': 'C'}}
+                ]
             }
         })
 
@@ -541,7 +533,7 @@ class SearchHelpersTest(unittest.TestCase):
                         }
                     ]
                 }
-            }, '_source': ['name', 'href', 'category', 'gene_symbol']
+            }, '_source': ['name', 'href', 'category', 'symbol']
         })
 
     def test_build_autocomplete_search_body_request_with_category(self):
@@ -563,7 +555,7 @@ class SearchHelpersTest(unittest.TestCase):
                     }]
                 }
             },
-            '_source': ['name', 'href', 'category', 'gene_symbol']
+            '_source': ['name', 'href', 'category', 'symbol']
         })
 
     def test_build_autocomplete_search_body_request_with_field(self):

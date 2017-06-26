@@ -90,7 +90,7 @@ class SearchBarComponent extends Component {
   render() {
     let _getSuggestionValue = ( d => d.name );
     let _inputProps = {
-      placeholder: 'search a gene, GO term, or disease',
+      placeholder: 'search a gene or GO term',
       value: this.state.value,
       onChange: this.handleTyping.bind(this)
     };
@@ -118,7 +118,7 @@ class SearchBarComponent extends Component {
             />
           <a className={`btn btn-primary ${style.searchBtn}`} href='#' onClick={this.handleSubmit.bind(this)}><i className='fa fa-search' /></a>
         </form>
-        
+
       </div>
     );
   }

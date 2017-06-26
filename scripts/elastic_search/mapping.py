@@ -14,6 +14,11 @@ mapping = {
                         "tokenizer": "whitespace",
                         "filter": ["lowercase", "autocomplete_filter"]
                     },
+                    "autocomplete_search": {
+                        "type": "custom",
+                        "tokenizer": "whitespace",
+                        "filter": "lowercase"
+                    },
                     "symbols": {
                         "type": "custom",
                         "tokenizer": "whitespace",
@@ -39,194 +44,276 @@ mapping = {
     "mappings": {
         "searchable_item": {
             "properties": {
+                "primaryId": {
+                    "type": "keyword"
+                },
                 "name": {
-                    "type": "string",
+                    "type": "text",
                     "fields": {
                         "symbol": {
-                            "type": "string",
+                            "type": "text",
                             "analyzer": "symbols"
+                        },
+                        "autocomplete": {
+                            "type": "text",
+                            "analyzer": "autocomplete",
+                            "search_analyzer": "autocomplete_search"
+                        },
+                        "raw": {
+                            "type": "keyword"
                         }
                     }
                 },
-                "gene_symbol": {
-                    "type": "string",
-                    "analyzer": "symbols"
+                "taxonId": {
+                    "type": "keyword"
                 },
-                "gene_synonyms": {
-                    "type": "string",
-                    "analyzer": "symbols"
-                },
-                "gene_type": {
-                    "type": "string",
+                "symbol": {
+                    "type": "text",
+                    "analyzer": "symbols",
                     "fields": {
+                        "autocomplete": {
+                            "type": "text",
+                            "analyzer": "autocomplete",
+                            "search_analyzer": "autocomplete_search"
+                        },
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "systematicName": {
+                    "type": "text",
+                    "analyzer": "symbols"
+                },
+                "geneSynopsis": {
+                    "type": "text"
+                },
+                "geneSynopsisUrl": {
+                    "type": "keyword"
+                },
+                "geneLiteratureUrl": {
+                    "type": "keyword"
+                },
+                "soTermId": {
+                    "type": "keyword"
+                },
+                "synonyms": {
+                    "type": "text",
+                    "analyzer": "symbols",
+                    "fields": {
+                        "autocomplete": {
+                            "type": "text",
+                            "analyzer": "autocomplete",
+                            "search_analyzer": "autocomplete_search"
+                        },
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "crossReferences": {
+                    "properties": {
+                        "dataProvider": {
+                            "type": "keyword"
+                        },
+                        "id": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "genomeLocations": {
+                    "properties": {
+                        "assembly": {
+                            "type": "keyword"
+                        },
+                        "startPosition": {
+                            "type": "integer"
+                        },
+                        "endPosition": {
+                            "type": "integer"
+                        },
+                        "chromosome": {
+                            "type": "keyword"
+                        },
+                        "strand": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "secondaryIds": {
+                    "type": "keyword"
+                },
+
+                "metaData": {
+                    "properties": {
+                        "dateProduced": {
+                            "type": "date"
+                         },
+                        "dataProvider": {
+                            "type": "keyword"
+                        },
+                        "release": {
+                            "type": "keyword"
                         }
                     }
                 },
                 "gene_chromosomes": {
-                    "type": "string",
+                    "type": "text",
                     "fields": {
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         }
                     }
                 },
                 "gene_chromosome_starts": {
-                    "type": "string",
+                    "type": "text",
                     "fields": {
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         }
                     }
                 },
                 "gene_chromosome_ends": {
-                    "type": "string",
+                    "type": "text",
                     "fields": {
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         }
                     }
                 },
                 "gene_chromosome_strand": {
-                    "type": "string",
+                    "type": "text",
                     "fields": {
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         }
                     }
                 },
                 "description": {
-                    "type": "string"
+                    "type": "text"
                 },
                 "external_ids": {
-                    "type": "string",
+                    "type": "text",
                     "analyzer": "symbols"
                 },
                 "gene_biological_process": {
-                    "type": "string",
+                    "type": "text",
                     "fields": {
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         },
                         "symbol": {
-                            "type": "string",
+                            "type": "text",
                             "analyzer": "symbols"
                         }
 
                     }
                 },
                 "gene_molecular_function": {
-                    "type": "string",
+                    "type": "text",
                     "fields": {
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         },
                         "symbol": {
-                            "type": "string",
+                            "type": "text",
                             "analyzer": "symbols"
                         }
 
                     }
                 },
                 "gene_cellular_component": {
-                    "type": "string",
+                    "type": "text",
                     "fields": {
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         },
                         "symbol": {
-                            "type": "string",
+                            "type": "text",
                             "analyzer": "symbols"
                         }
 
                     }
                 },
                 "species": {
-                    "type": "string",
+                    "type": "text",
                     "fields": {
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         }
                     }
                 },
                 "href": {
-                    "type": "string",
+                    "type": "text",
                     "analyzer": "symbols"
                 },
                 "category": {
-                    "type": "string",
-                    "analyzer": "symbols"
-                },
-                "go_type": {
-                    "type": "string",
+                    "type": "keyword",
                     "fields": {
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
+                        },
+                        "symbol": {
+                            "type": "text",
+                            "analyzer": "symbols"
+                        }
+                    }
+                },
+                "go_type": {
+                    "type": "text",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
                         }
                     }
                 },
                 "go_genes": {
-                    "type": "string",
+                    "type": "text",
                     "analyzer": "symbols",
                     "fields": {
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         }
                     }
                 },
                 "go_species": {
-                    "type": "string",
+                    "type": "text",
                     "fields": {
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         }
                     }
                 },
                 "disease_genes": {
-                    "type": "string",
+                    "type": "text",
                     "analyzer": "symbols",
                     "fields": {
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         }
                     }
                 },
                 "disease_species": {
-                    "type": "string",
+                    "type": "text",
                     "fields": {
                         "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         }
                     }
                 },
                 "disease_synonyms": {
-                    "type": "string"
+                    "type": "text"
                 },
                 "id": {
-                    "type": "string",
+                    "type": "text",
                     "analyzer": "symbols"
                 },
                 "name_key": {
-                    "type": "string",
+                    "type": "text",
                     "analyzer": "symbols",
                     "fields": {
                         "autocomplete": {
-                            "type": "string",
+                            "type": "text",
                             "analyzer": "autocomplete"
                         }
                     }
@@ -234,24 +321,24 @@ mapping = {
                 "homologs": {
                     "properties": {
                         "symbol": {
-                            "type": "string",
+                            "type": "text",
                             "analyzer": "symbols"
                         },
                         "species": {
-                            "type": "string"
+                            "type": "text"
                         },
                         "relationship_type": {
-                            "type": "string"
+                            "type": "text"
                         },
                         "ancestral": {
-                            "type": "string"
+                            "type": "text"
                         },
                         "panther_family": {
-                            "type": "string",
+                            "type": "text",
                             "analyzer": "symbols"
                         },
                         "href": {
-                            "type": "string"
+                            "type": "text"
                         }
                     }
                 }

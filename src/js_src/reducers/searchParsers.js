@@ -1,5 +1,5 @@
 const JOIN_HIGHLIGHT_BY = '...';
-const FILTER_ORDER = ['gene_type', 'species'];
+const FILTER_ORDER = ['biotype', 'species'];
 
 import { makeFieldDisplayName } from '../lib/searchHelpers';
 import { NON_HIGHLIGHTED_FIELDS } from '../constants';
@@ -27,7 +27,7 @@ export function injectHighlightIntoResponse(responseObj) {
 }
 
 export function parseResults(results) {
-  return results.map( d => { 
+  return results.map( d => {
     switch (d.category) {
     case 'gene':
       return parseGeneResult(d);
@@ -51,7 +51,7 @@ export function parseAggs(rawAggs, queryObject) {
       let currentValue = queryObject[d.key];
       let _isActive;
       // look at array fields differently
-      if (typeof currentValue === 'object') { 
+      if (typeof currentValue === 'object') {
         _isActive = (currentValue.indexOf(_d.key) >= 0);
       } else {
         _isActive = _d.key === currentValue;
@@ -98,15 +98,15 @@ function parseCoordinates(d) {
 function parseGeneResult(_d) {
   let d = injectHighlightIntoResponse(_d);
   return {
-    symbol: d.gene_symbol || '(no symbol)',
+    symbol: d.symbol || '(no symbol)',
     category: d.category || 'gene',
-    display_name: d.gene_symbol,
+    display_name: d.symbol,
     href: d.href,
     name: d.name,
     id: d.id || '(no ID)',
     sourceHref: d.href,
-    synonyms: d.gene_synonyms,
-    gene_type: makeFieldDisplayName(d.gene_type),
+    synonyms: d.synonyms,
+    biotype: makeFieldDisplayName(d.soTermName),
     species: d.species,
     highlight: d.highlights,
     homologs: parseLogs(d.homologs),
@@ -149,6 +149,7 @@ function parseDiseaseResult(_d) {
     highlight: d.highlights,
     href: d.href,
     name: d.name,
+    id: d.id,
     omim_id: d.id,
     synonyms: d.disease_synonyms
   };

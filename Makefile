@@ -1,16 +1,27 @@
 # get the Elasticsearch URI from an environment variable, if one is set
 ES_URI := $(or $(ES_URI),$(ES_URI),http://127.0.0.1:9200/)
+ES_INDEX := $(or $(ES_INDEX),$(ES_INDEX),'searchable_items_blue')
+API_PASSWORD := $(or $(API_PASSWORD),$(API_PASSWORD),'api_password')
+PRODUCTION:= $(or $(PRODUCTION),$(PRODUCTION),)
+
+OPTIONS = PRODUCTION=$(PRODUCTION) API_PASSWORD=$(API_PASSWORD) ES_URI=$(ES_URI) ES_AWS=$(ES_AWS) ES_INDEX=$(ES_INDEX)
+
 # if possible have a virtualenv setup first
-build:
+
+build: build-frontend build-backend
+
+build-frontend:
 	npm install
 	npm run build
+
+build-backend:
 	pip install -r requirements.txt
 
 run:
-	ES_URI=$(ES_URI) python src/server.py
+	$(OPTIONS) python src/server.py
 
 run-prod:
-	PRODUCTION=true ES_URI=$(ES_URI) gunicorn src.server:app -k gevent --pid gunicorn.pid --daemon
+	cd src && $(OPTIONS) gunicorn server:app -k gevent --pid gunicorn.pid --daemon
 
 restart:
 	kill -s HUP $(cat gunicorn.pid)
@@ -18,12 +29,19 @@ restart:
 stop:
 	kill -s TERM $(cat gunicorn.pid)
 
-tests: test-py
-	npm test
+tests: test-py test-js
+
+fetch_and_save:
+	cd scripts/elastic_search && $(OPTIONS) python fetch_and_save.py
+
+load_and_index:
+	cd scripts/elastic_search && $(OPTIONS) python load_and_index.py
 
 index:
-	echo $(ES_URI)
-	cd scripts/elastic_search && ES_URI=$(ES_URI) python index.py
+	cd scripts/elastic_search && $(OPTIONS) python fetch_save_index.py
 
 test-py:
-	nosetests -s
+	$(OPTIONS) nosetests -s
+
+test-js:
+	$(OPTIONS) npm test

@@ -1,4 +1,5 @@
 *.DS_Store
+venv
 node_modules
 .tmp
 src/build
@@ -11,3 +12,7 @@ src/server.pyc
 *.bkp
 deploy_variables.sh
 *.pickle
+venv
+.idea
+*.swp
+tmp
