@@ -26,9 +26,9 @@ class MGI(MOD):
 
     def load_genes(self, batch_size, test_set):
         path = "tmp"
-        S3File("mod-datadumps", "MGI_0.6.0_2.tar.gz", path).download()
-        TARFile(path, "MGI_0.6.0_2.tar.gz").extract_all()
-        gene_data = JSONFile().get_data(path + "/MGI_0.6_basicGeneInformation.json")
+        S3File("mod-datadumps", "MGI_0.6.0_3.tar.gz", path).download()
+        TARFile(path, "MGI_0.6.0_3.tar.gz").extract_all()
+        gene_data = JSONFile().get_data(path + "/MGI_0.6.3_basicGeneInformation.json")
         gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
