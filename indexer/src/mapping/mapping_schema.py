@@ -306,6 +306,25 @@ mapping_schema = {
                         "associationType": {
                             "type": "text"
                         },
+                        "evidenceNew": {
+                            "properties": {
+                                "evidenceCodes": {
+                                    "type": "text"
+                                },
+                                "pubmedId": {
+                                     "type": "text"
+                                },
+                                "pubModUrl": {
+                                    "type": "text"
+                                },
+                                "publicationModId": {
+                                    "type": "text"
+                                },
+                                "publicationModUrl":{
+                                    "type": "text"
+                                }
+                            }
+                        },
                         "evidence": {
                             "properties": {
                                 "evidenceCode": {

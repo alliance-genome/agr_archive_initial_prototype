@@ -32,7 +32,7 @@ class AggregateLoader:
         self.do_dataset = DoLoader().get_data()
 
     def load_from_mods(self, test_set):
-        mods = [RGD(), MGI(), ZFIN(), SGD(), WormBase(), FlyBase(), Human()]
+        mods = [WormBase(),MGI()]
 
 
         gene_master_dict = {} # Build a dictionary of sets for all indexed MODs/genes. Used for filtering orthology.
