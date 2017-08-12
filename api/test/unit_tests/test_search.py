@@ -548,24 +548,14 @@ class SearchHelpersTest(unittest.TestCase):
                     "must": [{
                         "dis_max": {
                             "queries": [
-                                {"match": {"symbol.raw": {"query": query, "operator": "and", "boost": 100}}},
-                                {"match": {"symbol.autocomplete": {"query": query, "operator": "and", "boost": 10}}},
+                                {"match": {"name_key.autocomplete": {"query": query, "operator": "and", "boost": 3}}},
+                                {"match": {"name.raw": {"query": query, "operator": "and", "boost": 2}}},
                                 {"match": {"name.autocomplete": {"query": query, "operator": "and", "boost": 1}}},
-                                {"match": {"synonyms.raw": {"query": query, "operator": "and", "boost": 50}}},
-                                {"match": {"synonyms.autocomplete": {"query": query, "operator": "and", "boost": 5}}}
+                                {"match": {"synonyms.raw": {"query": query, "operator": "and", "boost": 2}}},
+                                {"match": {"synonyms.autocomplete": {"query": query, "operator": "and", "boost": 1}}}
                             ]
                         }
-                    }],
-                    "should": [
-                        {
-                            "match": {
-                                "category": {
-                                    "query": "gene",
-                                    "boost": 2
-                                }
-                            }
-                        }
-                    ]
+                    }]
                 }
             }, '_source': ['name', 'href', 'category', 'symbol']
         })
@@ -579,11 +569,11 @@ class SearchHelpersTest(unittest.TestCase):
                     "must": [{
                         "dis_max": {
                             "queries": [
-                                {"match": {"symbol.raw": {"query": query, "operator": "and", "boost": 100}}},
-                                {"match": {"symbol.autocomplete": {"query": query, "operator": "and", "boost": 10}}},
+                                {"match": {"name_key.autocomplete": {"query": query, "operator": "and", "boost": 3}}},
+                                {"match": {"name.raw": {"query": query, "operator": "and", "boost": 2}}},
                                 {"match": {"name.autocomplete": {"query": query, "operator": "and", "boost": 1}}},
-                                {"match": {"synonyms.raw": {"query": query, "operator": "and", "boost": 50}}},
-                                {"match": {"synonyms.autocomplete": {"query": query, "operator": "and", "boost": 5}}}
+                                {"match": {"synonyms.raw": {"query": query, "operator": "and", "boost": 2}}},
+                                {"match": {"synonyms.autocomplete": {"query": query, "operator": "and", "boost": 1}}}
                             ]
                         }
                     }, {

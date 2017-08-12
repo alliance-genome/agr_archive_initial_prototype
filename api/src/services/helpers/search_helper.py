@@ -237,8 +237,6 @@ def build_aggregation_autocomplete_search_body_request(query, category='gene', f
 
     if category != '':
         es_query["query"]["bool"]["must"].append({"match": {"category": category}})
-        if category != "gene":
-            es_query["query"]["bool"].pop("should")
 
     if field != 'name_key':
         es_query['aggs'] = {}
