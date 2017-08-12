@@ -107,10 +107,14 @@ def search_autocomplete():
             "results": None
         })
 
+    es_query = build_autocomplete_search_body_request(query, category, field)
+
     autocomplete_results = es.search(
         index=ES_INDEX,
-        body=build_autocomplete_search_body_request(query, category, field)
+        body=es_query
     )
+
+    print jsonify(es_query).data
 
     return jsonify({
         "results": format_autocomplete_results(autocomplete_results, field)

@@ -229,17 +229,7 @@ def build_aggregation_autocomplete_search_body_request(query, category='gene', f
                             "query": query
                         }
                     }
-                }],
-                "should": [
-                    {
-                        "match": {
-                            "category": {
-                                "query": "gene",
-                                "boost": 2
-                            }
-                        }
-                    }
-                ]
+                }]
             }
         },
         '_source': ['name', 'href', 'category', 'symbol']
@@ -274,20 +264,12 @@ def build_autocomplete_search_body_request(query, category='gene', field='name_k
                 "must": [{
                     "dis_max": {
                         "queries": [
-                            {"match": {"symbol.raw": {"query": query, "operator": "and", "boost": 100}}},
-                            {"match": {"symbol.autocomplete": {"query": query, "operator": "and", "boost": 10}}},
+                            {"match": {"name_key.autocomplete": {"query": query, "operator": "and", "boost": 3}}},
+                            {"match": {"name.raw": {"query": query, "operator": "and", "boost": 2}}},
                             {"match": {"name.autocomplete": {"query": query, "operator": "and", "boost": 1}}},
-                            {"match": {"synonyms.raw": {"query": query, "operator": "and", "boost": 50}}},
-                            {"match": {"synonyms.autocomplete": {"query": query, "operator": "and", "boost": 5}}}
+                            {"match": {"synonyms.raw": {"query": query, "operator": "and", "boost": 2}}},
+                            {"match": {"synonyms.autocomplete": {"query": query, "operator": "and", "boost": 1}}}
                         ]
-                    }
-                }],
-                "should": [{
-                    "match": {
-                        "category": {
-                            "query": "gene",
-                            "boost": 2
-                        }
                     }
                 }]
             }
@@ -297,8 +279,6 @@ def build_autocomplete_search_body_request(query, category='gene', field='name_k
 
     if category != '':
         es_query["query"]["bool"]["must"].append({"match": {"category": category}})
-        if category != "gene":
-            es_query["query"]["bool"].pop("should")
 
     if field != 'name_key':
         es_query['aggs'] = {}
@@ -313,7 +293,6 @@ def build_autocomplete_search_body_request(query, category='gene', field='name_k
         }
 
         es_query['_source'] = [field, 'href', 'category']
-
 
     return es_query
 
