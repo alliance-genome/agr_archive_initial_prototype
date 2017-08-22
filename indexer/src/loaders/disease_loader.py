@@ -1,6 +1,6 @@
 from files import *
 from mods import MOD
-
+import json
 import re
 
 
@@ -13,7 +13,8 @@ class DiseaseLoader:
         dateProduced = disease_data['metaData']['dateProduced']
         dataProvider = disease_data['metaData']['dataProvider']
         release = None
-
+        uniqueId = set()
+        infID = ""
         if 'release' in disease_data['metaData']:
             release = disease_data['metaData']['release']
 
@@ -28,28 +29,24 @@ class DiseaseLoader:
             qualifier = None;
             primaryId = diseaseRecord.get('objectId')
 
-            if 'HGNC' in primaryId:
-                primaryId = primaryId[5:]
+
             if 'qualifier' in diseaseRecord:
                 qualifier = diseaseRecord.get('qualifier')
-            if 'evidence' in diseaseRecord:
+            if 'evidence' in diseaseRecord['evidence']:
                 for evidence in diseaseRecord['evidence']:
-                    evidenceCode = evidence.get('evidenceCode')
-                    pubs = []
-                    for pub in evidence['publications']:
+                    pub = evidence.get('publication')
+
+                    publicationModId = pub.get('modPublicationId')
+                    if publicationModId is not None:
+                        localPubModId = publicationModId.split(":")[1]
+                        pubModUrl= self.get_complete_pub_url(localPubModId, publicationModId)
+                    if pubMedId is not None:
                         pubMedId = pub.get('pubMedId')
-                        if pubMedId is not None:
-                            if ':' in pubMedId:
-                                localPubMedId = pubMedId.split(":")[1]
-                        publicationModId = pub.get('modPublicationId')
-                        if publicationModId is not None:
-                            localPubModId = publicationModId.split(":")[1]
-                        if pubMedId is not None:
-                            pubs.append({'pubMedId': pubMedId, 'pubMedUrl': 'https://www.ncbi.nlm.nih.gov/pubmed/' + localPubMedId})
-                        else:
-                            if publicationModId is not None:
-                                pubs.append({'publicationModId': publicationModId, 'pubModUrl': self.get_complete_pub_url(localPubModId, publicationModId)})
-                    evidenceList.append({"pubs": pubs, "evidenceCode": evidenceCode})
+                        if ':' in pubMedId:
+                            localPubMedId = pubMedId.split(":")[1]
+                            pubMedUrl = self.get_complete_pub_url(localPubMedId, pubMedId)
+                    evidenceCodes = evidence.get('evidenceCodes')
+                    evidenceList.append({"pubMedId": pubMedId, "pubMedUrl": pubMedUrl, "pubModId": publicationModId, "pubModUrl": pubModUrl, "evidenceCodes": evidenceCodes})
 
             if 'objectRelation' in diseaseRecord:
                 diseaseObjectType = diseaseRecord['objectRelation'].get("objectType")
@@ -69,19 +66,20 @@ class DiseaseLoader:
                                                    "experimentalConditionIsStandard": experimentalCondition.get(
                                                        'conditiionIsStandard'),
                                                    "freeTextCondition": experimentalCondition.get('textCondition')})
-            if 'modifier' in diseaseRecord:
-                associationType = diseaseRecord['modifier']['associationType']
-                if 'genetic' in diseaseRecord['modifier']:
-                    for geneticModifier in diseaseRecord['modifier'].get('genetic'):
-                        geneticModifier.append(diseaseRecord['modifier'].get('genetic'))
-                if 'experimentalConditionsText' in diseaseRecord['modifier']:
-                    experimentalConditionsText = diseaseRecord['modifier'].get('experimentalConditionsText')
-
-                modifierQualifier = diseaseRecord['modifier']['qualifier']
-                modifier = {"associationType": associationType,
-                            "geneticModifiers": geneticModifiers,
-                            "experimentalConditionsText": experimentalConditionsText,
-                            "modifierQualifier": modifierQualifier}
+            # if 'modifier' in diseaseRecord:
+            #     associationType = diseaseRecord['modifier']['associationType']
+            #     if 'genetic' in diseaseRecord['modifier']:
+            #         for geneticModifier in diseaseRecord['modifier'].get('genetic'):
+            #             geneticModifier.append(diseaseRecord['modifier'].get('genetic'))
+            #     if 'experimentalConditionsText' in diseaseRecord['modifier']:
+            #         experimentalConditionsText = diseaseRecord['modifier'].get('experimentalConditionsText')
+            #
+            #     #modifierQualifier = diseaseRecord['qualifier']
+            #     modifier = {"associationType": associationType,
+            #                 "geneticModifiers": geneticModifiers,
+            #                 "experimentalConditionsText": experimentalConditionsText#,
+            #                 #"modifierQualifier": modifierQualifier
+            #                 }
 
             if primaryId not in disease_annots:
                 disease_annots[primaryId] = []
@@ -98,8 +96,8 @@ class DiseaseLoader:
                     "experimentalConditions": experimentalConditions,
                     "associationType": diseaseRecord.get('objectRelation').get('associationType'),
                     "diseaseObjectType": diseaseRecord.get('objectRelation').get('objectType'),
-                    #"evidenceList": evidenceList,
-                    "modifier": modifier,
+                    "evidenceList": evidenceList,
+                    #"modifier": modifier,
                     #"objectRelation": objectRelationMap,
                     "evidence": evidenceList,
                     "do_id": diseaseRecord.get('DOid'),
@@ -109,6 +107,29 @@ class DiseaseLoader:
                     "dataProvider": dataProvider,
                     "doIdDisplay": {"displayId": diseaseRecord.get('DOid'), "url": "http://www.disease-ontology.org/?id=" + diseaseRecord.get('DOid'), "prefix": "DOID"}
                 })
+
+                # if 'objectRelation' in diseaseRecord:
+                #     if 'inferredFromID' in diseaseRecord['objectRelation']:
+                #         infID = diseaseRecord['objectRelation'].get('inferredFromID');
+                # else:
+                #     infID = "sierra"
+                # if primaryId == 'MGI:107717':
+                #     print json.dumps(disease_annots[primaryId], indent=4)
+                #     print primaryId + diseaseRecord.get('dateAssigned') + diseaseRecord.get('objectRelation').get(
+                #         'associationType') + infID + diseaseRecord.get('DOid') + diseaseRecord.get('taxonId').join(
+                #         str(p) for p in evidenceList)
+                #     stuff = primaryId + diseaseRecord.get('objectRelation').get(
+                #         'associationType') + infID + diseaseRecord.get('DOid') + diseaseRecord.get('taxonId').join(
+                #         str(p) for p in evidenceList)
+                    # if stuff in uniqueId:
+                    #     print "sierra"
+                    # else:
+                    #     uniqueId.add(stuff)
+        #for thing in uniqueId:
+        #    print thing;
+        #print json.dumps(disease_annots['MGI:107717'], indent=4)
+
+
         return disease_annots
 
     def get_complete_pub_url(self, local_id, global_id):
@@ -128,5 +149,8 @@ class DiseaseLoader:
             complete_url = 'http://zfin.org/' + local_id
         if 'WB:' in global_id:
             complete_url = 'http://www.wormbase.org/db/misc/paper?name=' + local_id
+        if 'PUBMED:' in global_id:
+            complete_url = 'https://www.ncbi.nlm.nih.gov/pubmed/' + local_id
+
 
         return complete_url

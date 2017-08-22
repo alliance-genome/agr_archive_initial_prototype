@@ -23,9 +23,9 @@ class WormBase(MOD):
 
     def load_genes(self, batch_size, test_set):
         path = "tmp"
-        S3File("mod-datadumps", "WB_0.6.1_1.tar.gz", path).download()
-        TARFile(path, "WB_0.6.1_1.tar.gz").extract_all()
-        gene_data = JSONFile().get_data(path + "/WB_0.6.1_BGI.json")
+        S3File("mod-datadumps", "WB_1.0.3_1.tar.gz", path).download()
+        TARFile(path, "WB_1.0.3_1.tar.gz").extract_all()
+        gene_data = JSONFile().get_data(path + "/WB_1.0.3_BGI.json")
         gene_lists = GeneLoader().get_data(gene_data, batch_size, test_set)
         for entry in gene_lists:
              yield entry
@@ -53,9 +53,9 @@ class WormBase(MOD):
 
     def load_diseases(self):
         path = "tmp"
-        S3File("mod-datadumps", "WB_0.6.1_1.tar.gz", path).download()
-        TARFile(path, "WB_0.6.1_1.tar.gz").extract_all()
-        disease_data = JSONFile().get_data(path + "/WB_0.6.1_disease.json")
+        S3File("mod-datadumps", "WB_1.0.3_1.tar.gz", path).download()
+        TARFile(path, "WB_1.0.3_1.tar.gz").extract_all()
+        disease_data = JSONFile().get_data(path + "/WB_1.0.3_disease.json")
         gene_disease_dict = DiseaseLoader().get_data(disease_data)
 
         return gene_disease_dict
